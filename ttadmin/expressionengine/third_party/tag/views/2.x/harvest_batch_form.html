@@ -1,0 +1,11 @@
+<form action="<?php echo $base_uri.AMP.'method=process_harvest';?>" method="post">
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />
+	<?php foreach($hidden_fields as $fields) : ?>
+		<input type="hidden" name="<?=$fields[0]?>" value="<?=$fields[1]?>" />
+	<?php endforeach;?>
+	
+	<p>
+		<input type="submit" name="submit" value="<?php echo str_replace(array('%batch%', '%total%'), array($batch, $total), ee()->lang->line('tag_process_batch_of'));?>" class="submit"  />
+	</p>
+	
+</form>

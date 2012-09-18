@@ -1,0 +1,95 @@
+<form action="<?=$this->base.AMP.'method=update_preferences';?>" method="post">
+	<div class="itemWrapper">
+
+			<table class="tableBorder"  style="width:100%;"  cellspacing="0"  cellpadding="0"  border="0">
+				<tr>
+					<td class="tableHeadingAlt" style="width:25%;"><?=ee()->lang->line('preference');?></td>
+					<td class="tableHeadingAlt" style="width:40%;"><?=ee()->lang->line('setting');?></td>
+					<td class="tableHeadingAlt" style="width:35%;"><?=ee()->lang->line('description');?></td>
+				</tr>
+	
+				<tr>
+					<td class="tableCellOne" width="25%"><strong><?=ee()->lang->line('first_day_of_week'); ?></strong></td>
+					<td class="tableCellOne" width="25%">
+						<select name="first_day_of_week">
+<?php
+for ($i = 0; $i < 7; $i++) :
+?>
+						<option value="<?=$i;?>"<?=($i == $first_day_of_week) ? ' selected="selected"' : '';?>><?=ee()->lang->line('day_'.$i.'_full');?></option>
+<?php
+endfor;
+?>
+						</select>
+					</td>
+					<td class="tableCellOne" width="50%"><?=ee()->lang->line('first_day_of_week_description');?></td>
+				</tr>
+				
+				<tr>
+					<td class="tableCellTwo" width="25%"><strong><?=ee()->lang->line('clock_type'); ?></strong></td>
+					<td class="tableCellTwo" width="40%">
+						<select name="clock_type">
+							<option value="12" <?=($clock_type == '12') ? 'selected="selected"' : '';?>><?=ee()->lang->line('12_hour');?></option>
+							<option value="24" <?=($clock_type == '24') ? 'selected="selected"' : '';?>><?=ee()->lang->line('24_hour');?></option>
+						</select>
+					</td>
+					<td class="tableCellTwo" width="35%"><?=ee()->lang->line('clock_type_description');?></td>
+				</tr>
+				
+				<tr>
+					<td class="tableCellOne" width="25%"><strong><?=ee()->lang->line('default_timezone'); ?></strong></td>
+					<td class="tableCellOne" width="40%">
+<?=str_replace('default', '', $this->view('timezone_menu.html'));?>
+					</td>
+					<td class="tableCellOne" width="35%"><?=ee()->lang->line('default_timezone_description');?></td>
+				</tr>
+				
+				<tr>
+					<td class="tableCellTwo" width="25%"><strong><?=ee()->lang->line('default_date_format'); ?></strong></td>
+					<td class="tableCellTwo" width="40%">
+						<select name="date_format">
+							<option value="mm/dd/yy" <?php if ($date_format == 'mm/dd/yy') echo "selected='selected'";?>>M/D/Y - 02/29/2012</option>
+							<option value="m/d/yy" <?php if ($date_format == 'm/d/yy') echo "selected='selected'";?>>m/d/Y - 2/29/2012</option>
+							<option value="dd/mm/yy" <?php if ($date_format == 'dd/mm/yy') echo "selected='selected'";?>>D/M/Y - 29/02/2012</option>
+							<option value="d/m/yy" <?php if ($date_format == 'd/m/yy') echo "selected='selected'";?>>d/m/Y - 29/2/2012</option>
+							<option value="yy/mm/dd" <?php if ($date_format == 'yy/mm/dd') echo "selected='selected'";?>>Y/M/D - 2012/02/29</option>
+							<option value="yy/m/d" <?php if ($date_format == 'yy/m/d') echo "selected='selected'";?>>Y/m/d - 2012/2/29</option>
+							<option value="yy/dd/mm" <?php if ($date_format == 'yy/dd/mm') echo "selected='selected'";?>>Y/D/M - 2012/29/02</option>
+							<option value="yy/d/m" <?php if ($date_format == 'yy/d/m') echo "selected='selected'";?>>Y/d/m - 2012/29/2</option>
+							<option value="mm-dd-yy" <?php if ($date_format == 'mm-dd-yy') echo "selected='selected'";?>>M-D-Y - 02-29-2012</option>
+							<option value="m-d-yy" <?php if ($date_format == 'm-d-yy') echo "selected='selected'";?>>m-d-Y - 2-29-2012</option>
+							<option value="dd-mm-yy" <?php if ($date_format == 'dd-mm-yy') echo "selected='selected'";?>>D-M-Y - 29-02-2012</option>
+							<option value="d-m-yy" <?php if ($date_format == 'd-m-yy') echo "selected='selected'";?>>d-m-Y - 29-2-2012</option>
+							<option value="yy-mm-dd" <?php if ($date_format == 'yy-mm-dd') echo "selected='selected'";?>>Y-M-D - 2012-02-29</option>
+							<option value="yy-m-d" <?php if ($date_format == 'yy-m-d') echo "selected='selected'";?>>Y-m-d - 2012-2-29</option>
+							<option value="yy-dd-mm" <?php if ($date_format == 'yy-dd-mm') echo "selected='selected'";?>>Y-D-M - 2012-29-02</option>
+							<option value="yy-d-m" <?php if ($date_format == 'yy-d-m') echo "selected='selected'";?>>Y-d-m - 2012-29-2</option>
+						</select>
+					</td>
+					<td class="tableCellTwo" width="35%"><?=ee()->lang->line('default_date_format_description');?></td>
+				</tr>
+				
+				<tr>
+					<td class="tableCellOne" width="25%"><strong><?=ee()->lang->line('default_time_format'); ?></strong></td>
+					<td class="tableCellOne" width="40%">
+						<input type="text" name="time_format" value="<?=$time_format;?>" />
+					</td>
+					<td class="tableCellOne" width="35%"><?=ee()->lang->line('default_time_format_description');?></td>
+				</tr>
+			</table>
+			<div class='clearfix' >&nbsp;</div>
+			<table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
+				<tbody>
+					<tr>
+						<td class="default">
+							<div class="itemWrapper">
+								<input type="submit" class="submit" value="<?=ee()->lang->line('update'); ?>" />					
+							</div>				
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			
+			<div class='clearfix' >&nbsp;</div>
+		</div>
+	</div>
+</form>

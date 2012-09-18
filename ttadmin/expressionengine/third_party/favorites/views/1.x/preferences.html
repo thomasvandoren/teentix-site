@@ -1,0 +1,55 @@
+
+<form method="post" action="<?=$form_url?>" autocomplete="off">
+	<table id="preferences_general" class="tableBorder" style="width:100%;" 
+		   cellspacing='0'  cellpadding='0'  border='0'>
+		<thead>
+			<tr>			
+				<th class="tableHeadingAlt" style=" text-align:left;" colspan="2"><?=$lang_general_preferences?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td class="tableCellOne" style="width:38%;"><?=$lang_add_favorite?></td>
+				<td class="tableCellOne" style="width:62%;">
+					<input name="add_favorite" type="radio" value="y" <?=$add_favorite_yes?>/> 
+					<?=$lang_yes?>
+					<input name="add_favorite" type="radio" value="n" <?=$add_favorite_no?>/> 
+					<?=$lang_no?>
+				</td>
+			</tr>
+		</tbody>	
+	</table>
+
+	<div class='clearfix' >&nbsp;</div>
+
+	<table id="preferences" class="tableBorder" style="width:100%;" 
+		   cellspacing='0'  cellpadding='0'  border='0'>
+		<thead>
+			<tr>
+				<th class="tableHeadingAlt" style="width:3%;  text-align:left;">&nbsp;</th>				
+				<th class="tableHeadingAlt" style="width:35%; text-align:left;"><?=$lang_pref_name?></th>
+				<th class="tableHeadingAlt" style="width:62%; text-align:left;"><?=$lang_pref_value?></th>
+			</tr>
+		</thead>
+		<tbody>
+<?php foreach($prefs as $pref):?>
+			<?php $class = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+			<tr>
+				<td class="<?=$class?>"><?=$pref['row_count']?></td>
+				<td class="<?=$class?>"><?=$pref['pref_lang']?></td>
+				<td class="<?=$class?>">
+					<input 	class="input" type="text" size="40"
+					   		name="<?=$pref['pref_name']?>" 	value="<?=htmlspecialchars($pref['pref_value'], ENT_QUOTES)?>" 
+					   		style="width:100%" maxlength="100" />
+				</td>
+			</tr>
+<?php endforeach; ?>	
+		</tbody>	
+	</table>
+
+	<div class='clearfix' >&nbsp;</div>
+
+	<div class="itemWrapper">
+		<input type="submit" name="submit" value="<?=$lang_update?>" />
+	</div>
+</form>

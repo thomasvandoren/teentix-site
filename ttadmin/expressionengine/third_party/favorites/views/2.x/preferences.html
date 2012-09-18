@@ -1,0 +1,52 @@
+<form method="post" action="<?=$form_url?>" autocomplete="off">
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>">	
+	
+	<table id="preferences_general" class="mainTable padTable" style="width:100%;" 
+		   cellspacing='0'  cellpadding='0'  border='0'>
+		<thead>
+			<tr>			
+				<th colspan="2"><?=$lang_general_preferences?></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr class="odd">
+				<td style="width:38.5%;"><?=$lang_add_favorite?></td>
+				<td style="width:62%;">
+					<input name="add_favorite" type="radio" value="y" <?=$add_favorite_yes?>/> 
+					<?=$lang_yes?>
+					<input name="add_favorite" type="radio" value="n" <?=$add_favorite_no?>/> 
+					<?=$lang_no?>
+				</td>
+			</tr>
+		</tbody>	
+	</table>
+
+	<table id="preferences" class="mainTable padTable" style="width:100%;" 
+		   cellspacing='0'  cellpadding='0'  border='0'>
+		<thead>
+			<tr>
+				<th style="width:3%; ">&nbsp;</th>				
+				<th style="width:35%;"><?=$lang_pref_name?></th>
+				<th style="width:62%;"><?=$lang_pref_value?></th>
+			</tr>
+		</thead>
+		<tbody>
+<?php foreach($prefs as $pref):?>
+			<?php $class = $this->cycle('odd', 'even'); ?>
+			<tr class="<?=$class?>">
+				<td><?=$pref['row_count']?></td>
+				<td><label for="<?=$pref['pref_name']?>"><?=$pref['pref_lang']?></label></td>
+				<td>
+					<input 	class="input" type="text" size="40"
+					   		name="<?=$pref['pref_name']?>" 	value="<?=htmlspecialchars($pref['pref_value'], ENT_QUOTES)?>" 
+					   		maxlength="100" />
+				</td>
+			</tr>
+<?php endforeach; ?>	
+		</tbody>	
+	</table>
+
+	<p>
+		<input class="submit" type="submit" name="submit" value="<?=$lang_update?>" />
+	</p>
+</form>

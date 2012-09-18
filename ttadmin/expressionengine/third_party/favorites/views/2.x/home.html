@@ -1,0 +1,31 @@
+	<h3><?=$lang_statistics?></h3>
+
+	<table class="mainTable padTable" style="width:100%;" id="target"
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th style="width:15%; text-align:left;"><?=$lang_total_favorites?></th>
+				<th style="width:15%; text-align:left;"><?=$lang_total_entries_saved?></th>
+				<th style="width:20%; text-align:left;"><?=$lang_percent_entries_saved?></th>
+				<th style="width:35%; text-align:left;"><?=$lang_top_5?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<tr class="odd">
+				<td><?=$total_favorites?></td>
+				<td><?=$t_entries?></td>
+				<td><?=$p_entries?></td>
+				<td><?php if ( empty($ranked) ): ?>
+						<?=$lang_no_entries_saved?>
+					<?php else: ?>
+						<ol style="padding-left:20px">
+						<?php foreach ($ranked as $item): ?>
+							<li><?=$item?></li>	
+						<?php endforeach;?>	
+						</ol>
+					<?php endif; ?>	
+				</td>
+			</tr>	
+		</tbody>	
+	</table>

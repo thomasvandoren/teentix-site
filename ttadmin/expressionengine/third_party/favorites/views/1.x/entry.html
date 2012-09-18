@@ -1,0 +1,75 @@
+<?php if( ! empty( $entry_data ) ): ?>
+
+	<div class="tableHeading"><?=$lang_entry?></div>
+
+	<table id="entry-stats"	class="tableBorder" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th class="tableHeadingAlt" style="width:7%;  text-align:left;"><?=$lang_entry_id?></th>
+				<th class="tableHeadingAlt" style="width:23%; text-align:left;"><?=$lang_title?></th>
+				<th class="tableHeadingAlt" style="width:30%; text-align:left;"><?=$lang_author?></th>
+				<th class="tableHeadingAlt" style="width:40%; text-align:left;"><?=$lang_entry_date?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<?php $class = /*$this->cycle(*/'tableCellOne'/*, 'tableCellTwo')*/; ?>
+			<tr>
+				<td class="<?=$class?>"><?=$entry_data['entry_id']?></td>
+				<td class="<?=$class?>"><?=$entry_data['title']?></td>
+				<td class="<?=$class?>"><?=$entry_data['screen_name']?></td>
+				<td class="<?=$class?>"><?=$entry_data['entry_date']?></td>
+			</tr>
+		</tbody>	
+	</table>
+<?php endif;?>
+
+<?php if( ! empty( $favorites ) ): ?>
+
+<div class='clearfix'>&nbsp;</div>
+
+	<div class="tableHeading"><?=$lang_favorites?></div>
+
+	<table class="tableBorder" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th class="tableHeadingAlt" style="width:7%;  text-align:left;">&nbsp;</th>
+				<th class="tableHeadingAlt" style="width:23%; text-align:left;"><?=$lang_member?></th>
+				<th class="tableHeadingAlt" style="width:70%; text-align:left;"><?=$lang_entry_date?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+		<?php foreach($favorites as $favorite):?>
+			<?php $class = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+			<tr>
+				<td class="<?=$class?>"><?=$favorite['row_count']?></td>
+				<td class="<?=$class?>">
+					<?php if ( $favorite['url'] ):?>
+						<a href="<?=$favorite['url']?>"><?=$favorite['screen_name']?></a>
+					<?php else:?>
+						<?=$favorite['screen_name']?>
+					<?php endif;?>
+				</td>
+				<td class="<?=$class?>"><?=$favorite['entry_date']?></td>
+			</tr>
+		<?php endforeach;?>	
+		<?php if ( $paginate ): ?>	
+			<tr>
+				<td colspan="3" class="<?php echo $this->cycle('tableCellOne', 'tableCellTwo'); ?>">
+					<?=$paginate?>
+				</td>
+			</tr>
+		<?php endif; ?>
+		</tbody>	
+	</table>
+
+<?php else:?>
+	<div class="tableHeading">
+		<div class="highlight">
+			<?=$lang_no_favorites?>
+		</div>
+	</div>
+<?php endif;?>

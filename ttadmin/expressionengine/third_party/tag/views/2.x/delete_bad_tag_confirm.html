@@ -1,0 +1,10 @@
+<form action="<?php echo $base_uri.AMP.'method=delete_bad_tag';?>" method="post">
+
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />
+	<?php foreach($tag_ids as $tag_id) : ?>
+		<input type="hidden" name="delete[]" value="<?=$tag_id?>" />
+	<?php endforeach;?>
+	<p><strong><?=$bad_tag_delete_question?></strong></p>
+	<p class='notice'><?php echo ee()->lang->line('action_can_not_be_undone');?></p>				
+	<p><input type="submit" name="submit" value="<?php echo ee()->lang->line('remove_bad_tags');?>" class="submit"  /></p>	
+</form>

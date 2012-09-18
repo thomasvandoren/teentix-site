@@ -1,0 +1,34 @@
+		<div id="calendar_calendars">
+			<div id="calendar_select">
+<?php
+	if (count($calendars) > 0) :
+?>
+				<select name="calendar_calendar_id">
+<?php
+		if (count($calendars) > 1) :
+?>
+					<option value="">-- <?=ee()->lang->line('select_a_calendar');?> --</option>
+<?php
+		endif;
+	foreach ($calendars as $k => $row) :
+		$selected = (isset($calendar_id) AND $calendar_id == $row['calendar_id']) ? 'selected="selected"' : ''; 
+		?><option value="<?=$row['calendar_id'];?>" <?=$selected;?>><?=$row['title'];?></option>
+<?php
+	endforeach;
+?>
+				</select>
+			</div>
+			<div id="calendar_new_date">
+				<button>+ <?=ee()->lang->line('add_rule');?></button>
+			</div>
+			
+<?php
+	else :
+?>
+				<div class="error"><p><?=ee()->lang->line('create_calendar_first');?></p></div>
+			</div>
+<?php
+	endif;
+?>
+			<br class="clear" />
+		</div>

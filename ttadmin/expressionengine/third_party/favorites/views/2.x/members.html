@@ -1,0 +1,47 @@
+	<table class="mainTable padTable" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th style="width:3%;  text-align:left;">&nbsp;</th>
+				<th style="width:37%; text-align:left;"><?=$lang_member?></th>
+				<th style="width:60%; text-align:left;"><?=$lang_total_favorites_saved?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+		
+		<?php if( ! empty( $member_data ) ): ?>	
+			
+			<?php foreach($member_data as $member):?>
+				<?php $class = $this->cycle('odd', 'even'); ?>
+				<tr class="<?=$class?>">
+					<td><?=$member['row_count']?></td>
+					<td>
+						<?php if ( $member['url'] ):?>
+							<a href="<?=$member['url']?>"><?=$member['name']?></a>
+						<?php else:?>
+							<?=$member['name']?>
+						<?php endif;?>
+					</td>
+					<td><?=$member['fav_count']?></td>
+				</tr>
+			<?php endforeach;?>
+		
+		<?php else:?>
+			<tr class="odd">
+				<td colspan='3'>
+					<span class="notice"><?=$lang_no_favorites?></span>
+				</td>
+			</tr>
+		<?php endif;?>	
+		</tbody>
+		<?php if ( $paginate ): ?>	
+		<tfoot>
+			<tr class="<?php echo $this->cycle('odd', 'even'); ?>">
+				<td colspan='3'>
+					<?=$paginate?>
+				</td>
+			</tr>
+		</tfoot>
+		<?php endif; ?>	
+	</table>

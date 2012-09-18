@@ -1,0 +1,72 @@
+<?php if( ! empty( $entry_data ) ): ?>
+
+	<h3><?=$lang_entry?></h3>
+
+	<table id="entry-stats"	class="mainTable padTable" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th style="width:7%;  text-align:left;"><?=$lang_entry_id?></th>
+				<th style="width:23%; text-align:left;"><?=$lang_title?></th>
+				<th style="width:30%; text-align:left;"><?=$lang_author?></th>
+				<th style="width:40%; text-align:left;"><?=$lang_entry_date?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<?php $class = /*$this->cycle(*/'odd'/*, 'tableCellTwo')*/; ?>
+			<tr class="<?=$class?>">
+				<td><?=$entry_data['entry_id']?></td>
+				<td><?=$entry_data['title']?></td>
+				<td><?=$entry_data['screen_name']?></td>
+				<td><?=$entry_data['entry_date']?></td>
+			</tr>
+		</tbody>	
+	</table>
+<?php endif;?>
+
+<?php if( ! empty( $favorites ) ): ?>
+
+	<h3><?=$lang_favorites?></h3>
+
+	<table class="mainTable padTable" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th style="width:7%;  text-align:left;">&nbsp;</th>
+				<th style="width:23%; text-align:left;"><?=$lang_member?></th>
+				<th style="width:70%; text-align:left;"><?=$lang_entry_date?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+		<?php foreach($favorites as $favorite):?>
+			<?php $class = $this->cycle('odd', 'even'); ?>
+			<tr class="<?=$class?>">
+				<td><?=$favorite['row_count']?></td>
+				<td>
+					<?php if ( $favorite['url'] ):?>
+						<a href="<?=$favorite['url']?>"><?=$favorite['screen_name']?></a>
+					<?php else:?>
+						<?=$favorite['screen_name']?>
+					<?php endif;?>
+				</td>
+				<td><?=$favorite['entry_date']?></td>
+			</tr>
+		<?php endforeach;?>	
+		<?php if ( $paginate ): ?>	
+			<tr class="<?php echo $this->cycle('odd', 'even'); ?>">
+				<td colspan="3">
+					<?=$paginate?>
+				</td>
+			</tr>
+		<?php endif; ?>
+		</tbody>	
+	</table>
+<?php else:?>
+	<div class="tableHeading">
+		<div class="highlight">
+			<?=$lang_no_favorites?>
+		</div>
+	</div>
+<?php endif;?>

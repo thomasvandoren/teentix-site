@@ -1,0 +1,45 @@
+
+	<table class="tableBorder" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th class="tableHeadingAlt" style="width:3%;  text-align:left;">&nbsp;</th>
+				<th class="tableHeadingAlt" style="width:37%; text-align:left;"><?=$lang_title?></th>
+				<th class="tableHeadingAlt" style="width:60%; text-align:left;"><?=$lang_total_favorites?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+		
+		<?php if( ! empty( $entries ) ): ?>	
+			
+			<?php foreach($entries as $entry):?>
+				<?php $class = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+				<tr>
+					<td class="<?=$class?>"><?=$entry['row_count']?></td>
+					<td class="<?=$class?>">
+						<?php if ( $entry['url'] ):?>
+							<a href="<?=$entry['url']?>"><?=$entry['title']?></a>
+						<?php else:?>
+							<?=$entry['title']?>
+						<?php endif;?>
+					</td>
+					<td class="<?=$class?>"><?=$entry['count']?></td>
+				</tr>
+			<?php endforeach;?>
+		
+			<?php if ( $paginate ): ?>	
+				<?php $class = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+				<tr>
+					<td colspan="3" class="<?=$class?>"><?=$paginate?></td>
+				</tr>
+			<?php endif; ?>
+		<?php else:?>
+			<tr>
+				<td class='tableCellOne' colspan='3'>
+					<div class="highlight"><?=$lang_no_favorites?></div>
+				</td>
+			</tr>
+		<?php endif;?>
+		</tbody>	
+	</table>

@@ -1,0 +1,79 @@
+<?=$js_magic_checkboxes?>
+
+<script type="text/javascript"> 
+jQuery(function($){
+    
+    <?php if (! empty($right_crumb_msg)) : ?>
+		<?php for ($i = 0, $l= count($right_crumb_link); $i < $l; $i++) : ?>
+  			$(".heading h2").append(
+				'<span class="solspaceRightCrumb">' 	+ 
+				'(<a href="<?=$right_crumb_link[$i]?>">' 	+ 
+				'<?=$right_crumb_msg[$i]?><\/a>)<\/span>'
+			);
+		<?php endfor;?>
+  	<?php endif; ?>
+});
+</script>
+
+<style type="text/css">
+
+.solspaceRightCrumb {
+	font-size:			12px;
+	font-weight:		normal;
+	margin-left:		10px;
+}
+
+.solspaceRightCrumb a
+{
+	color: inherit;
+	background-image: url(<?php echo ee()->config->slash_item('theme_folder_url');?>solspace_themes/cp_global_images/arrow_right.gif);
+	background-repeat: no-repeat;
+	padding-left:		15px;
+	margin-left:		3px;
+	margin-right:		3px;
+}
+
+.solspaceRightCrumb a:hover
+{
+	text-decoration: underline;
+}
+
+#mainContent .pageContents p#solspace_version_number {
+	color:			#fff;
+    left: 			100%;
+    margin: 		-38px 0 0 -380px;
+    position: 		absolute;
+    text-align: 	right;
+    text-shadow: 	0 1px 0 #666;
+    width: 			300px;
+    z-index: 		10000;
+}
+</style>
+
+<?php if ($message != ''):?>
+	<script type="text/javascript">
+		jQuery(function($){
+			$.ee_notice('<?php echo addslashes($message);?>',{open: true, type:"success"});
+			setTimeout(function(){ $.ee_notice.destroy(); }, 3000);
+		});
+	</script>
+<?php endif;?>
+
+<style type="text/css">
+	*:focus {
+		outline: none;
+	}
+</style>
+
+<p id="solspace_version_number"><strong><?=$lang_module_version?> <?=$module_version?></strong></p>
+
+<ul class="tab_menu" id="tab_menu_tabs"> 
+<?php foreach($module_menu AS $menu_name => $menu_item) : ?>
+	<li class="content_tab<?=($menu_name == $module_menu_highlight) ? ' current': ''?>"> 
+		<a href="<?php echo $menu_item['link'];?>"><?php echo $menu_item['title'];?></a>  
+	</li> 
+<?php endforeach; ?>
+</ul>  
+<div class="clear_left shun">&nbsp;</div>
+
+

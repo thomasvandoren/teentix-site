@@ -1,0 +1,324 @@
+.clear { clear: both; }
+br.clear { height: 1px; }
+
+#calendar_wrapper a {
+  outline: none;
+}
+
+#calendar_calendars {
+	margin: 5px 0 10px;
+}
+#calendar_select, #calendar_new_date, #calendar_help {
+	float: left;
+}
+ #calendar_new_date button {
+	cursor:pointer;
+}
+
+#calendar_select, #calendar_help {
+	/*margin-top: 7px;*/
+	margin-right:10px;
+} 
+#calendar_help {
+	margin-left: 20px;
+	text-decoration: underline;
+}
+#calendar_new_date a {
+	display: block;
+	height: 35px;
+	width: 131px;
+	background: url(../img/add_rule.png) no-repeat 0 -10px;
+	text-indent: -9999em;
+}
+#calendar_new_date a:hover {
+	background-position: 0 -65px;
+}
+
+#calendar_fields div.line {
+	margin-top: 5px;
+}
+#calendar_fields div.rule {
+	position: relative;
+	margin-right: 15px;
+	padding: 15px 30px;
+	/*float: left;
+	width: auto;*/
+	width: 454px;
+	border: 1px solid #A6B3C0;
+	margin-bottom: 15px;
+	background: #e9eef4;
+	border-radius:5px;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px
+}
+/* --- */
+.hasDatepicker {
+	background-image: url(../img/calendar_icon.png);
+	background-position: right 1px;
+	background-repeat: no-repeat;
+/* 	padding-left: 20px; */
+}
+#calendar_fields div.rule div.repeat {
+  margin-top: 10px;
+  background: none;
+  padding-left: 0;
+}
+#calendar_fields div.rule div.date input {
+	width: 100px;
+}
+#calendar_fields div.rule div.time input {
+	width: 55px;
+	background-image: url(../img/time_icon.png);
+	background-position: right 1px;
+	background-repeat: no-repeat;
+}
+
+#calendar_fields label {
+  	display: inline;
+	line-height:100%;
+}
+
+#calendar_fields div.rule div.time select {
+  margin-left: 5px;
+}
+#calendar_fields div.rule div.repeat_select select,
+#calendar_fields div.rule div.end select {
+	width: 106px;
+	margin-top:2px;
+}
+#calendar_fields div.rule div.options input {
+	width: 25px;
+}
+#calendar_fields div.rule div.options .by_date,
+#calendar_fields div.rule div.options .by_relative {
+	float: left;
+}
+#calendar_fields div.rule div.leader label {
+	padding-top: 5px;
+}
+#calendar_fields div.rule div.group {
+	border-top: 1px solid #A6B3C0;
+	padding-top: 5px;
+	margin-top: 5px;
+}
+#calendar_fields div.rule div.first {
+	border: none;
+}
+#calendar_fields div.rule div.options .clear {
+	font-size: 1em;
+	padding-left: 10px;
+	padding-top: 10px;
+}
+#calendar_fields div.rule div.end input {
+	margin-left: 10px;
+}
+#calendar_fields div.rule div.end .hasDatepicker {
+	width: 106px;
+}
+/* --- */
+
+#calendar_fields div.rule .inactive {
+	display: none;
+}
+#calendar_fields div.rule div.rule_number,
+#calendar_fields div.rule div.rule_close {
+	position: absolute;
+	top: -1px;
+	width: auto;
+	padding: 5px 8px;
+	background-color: #B3C1CD;
+	color: #fff;
+}
+#calendar_fields div.rule div.rule_number {
+	position: absolute;
+	top: -1px;
+	width: 10px;
+	height: 10px;
+	padding: 5px 7px 10px 9px;
+	background-color: #B3C1CD;
+	color: #fff;
+	left: -1px;
+	border-bottom: 1px solid #eee;
+	border-right: 1px solid #eee;
+	border-top: 1px solid #A6B3C0;
+	border-left: 1px solid #A6B3C0;
+	border-top-left-radius:5px; 	
+	-moz-border-radius-topleft:5px; 	
+	-webkit-border-top-left-radius:5px;
+	border-bottom-right-radius:5px; 	
+	-moz-border-radius-bottomright:5px; 	
+	-webkit-border-bottom-right-radius:5px;
+}
+#calendar_fields div.rule div.rule_close {
+	position: absolute;
+	top: -1px;
+	width: 10px;
+	height: 10px;
+	padding: 5px 6px 11px 10px;
+	background-color: #B3C1CD;
+	color: #fff;
+	right: 0;
+	border-top: 1px solid #A6B3C0;
+	border-right: 1px solid #A6B3C0;
+	border-bottom: 1px solid #eee;
+	border-left: 1px solid #eee;
+	cursor:pointer;
+	border-top-right-radius:5px; 	
+	-moz-border-radius-topright:5px; 	
+	-webkit-border-top-right-radius:5px;
+	border-bottom-left-radius:5px; 	
+	-moz-border-radius-bottomleft:5px; 	
+	-webkit-border-bottom-left-radius:5px;
+}
+
+#calendar_fields div.rule div.rule_close a {
+	display: block;
+	height: 100%;
+	width: 100%;
+	color: #fff;
+	font-weight:bold;
+	text-decoration:none;
+}
+
+#calendar_fields div.rule div.rule_close a:hover {text-decoration:none;}
+#calendar_fields div.rule div.all_day {
+	padding-left: 58px;
+	margin-top: 0;
+}
+#calendar_fields div.rule div.leader,
+#calendar_fields div.rule div.time {
+	float: left;
+}
+#calendar_fields div.rule div.leader label {
+	display: block;
+	float: left;
+	width: 50px;
+	padding-right: 10px;
+	text-align: right;
+}
+#calendar_fields div.rule div.options {
+	/*float: left;*/
+	text-align: left;
+}
+#calendar_fields div.rule div.repeat div.options div.picker_three {
+	padding-top: 0;
+	padding-left: 10px;
+}
+
+/* select date overrides */
+
+#calendar_fields div.rule div.repeat div.options div.picker_three.ss_select_dates {
+	padding-top: 	0;
+	padding-left: 	0;
+	margin-top:		30px;
+}
+
+#calendar_fields div.rule div.repeat div.options div.picker_three.ss_select_dates .ui-datepicker-header {
+	padding-top:0px;
+	height: 28px;
+	margin-top:2px;
+}
+
+#calendar_fields div.rule div.repeat div.options div.picker_three.ss_select_dates a {
+	text-decoration:none;
+}
+
+#calendar_fields div.rule div.repeat div.options div.picker_three.ss_select_dates .ui-widget-content .ui-datepicker-selected-day a,
+#calendar_fields div.rule div.repeat div.options div.picker_three.ss_select_dates .ui-widget-content a:hover {
+	border:1px solid #dfd67a;
+	color:#fff;
+}
+
+/* end select date overrides */
+
+#calendar_fields div.rule div.time label,
+#calendar_fields div.rule div.options label {
+	width: auto;
+	padding: 0 10px;
+	text-align: left;
+}
+#calendar_fields div.rule div.selector {
+	float: right;
+	min-height: 30px;
+	line-height: 30px;
+	/*border-top: 1px solid #fff;
+	border-left: 1px solid #fff;*/
+	margin-left: 9px;
+	margin-bottom: 5px;
+}
+#calendar_fields div.rule div.selector div.item {
+	float: left;
+	/*border: 1px solid #fff;*/
+	border-left: 	none;
+	border-top: 	none;
+	margin-left: 	5px;
+	margin-bottom: 	15px;
+	width: 			41px;
+	height: 		30px;
+}
+
+#calendar_fields div.rule div.selector div.newline {
+	clear: left;
+}
+
+#calendar_fields div.rule div.selector div.close {
+	/*border-right: 1px solid #fff;*/
+}
+
+#calendar_fields div.rule div.selector div.close a {
+	width: 			29px;
+	height: 		29px;
+	padding: 		11px 0 0 12px;
+}
+	
+#calendar_fields div.rule div.selector a {
+	display: block;
+	float: left;
+	text-align: center;
+	min-width: 25px;
+	padding: 5px 8px;
+	color: #fff;
+	background-color: #B2BFCC;
+}
+#calendar_fields div.rule div.selector a.selected,
+#calendar_fields div.rule div.selector a:hover,
+#calendar_fields div.rule div.selector div.close a:hover {
+	background-color: #8A98A4;
+	color: #fff;
+}
+#calendar_fields div.rule div.selector div.close a {
+	background-color: #d1d7de;
+	color: #7d8691;
+}
+#calendar_fields div.rule div.picker_three {
+	clear: both;
+	background: none;
+	padding-left: 0;
+	padding-top: 10px;
+}
+.ui-widget-content .ui-datepicker-selected-day { 
+	background: #ffffff url(ui-lightness/images/ui-bg_glass_65_ffffff_1x400.png) 50% 50% repeat-x; 
+	font-weight: bold; 
+	outline: none; 
+}
+
+.ui-widget-content .ui-datepicker-selected-day .ui-icon {
+	background-image: url(ui-lightness/images/ui-icons_ef8c08_256x240.png); 
+}
+
+.ui-widget-content .ui-datepicker-selected-day a { 
+	background-color: #8D98A3; 
+	background-image: none; 
+	color: #fff; 
+	outline: none; 
+	text-decoration: none; 
+	border: 1px #8D98A3 solid;
+}
+
+#ui-datepicker-div {z-index: 1000;}
+
+#calendar_fields .group.end.line {
+	min-height: 15px;
+}
+
+#ui-datepicker-div .ui-datepicker-current-day { border-color:black; }

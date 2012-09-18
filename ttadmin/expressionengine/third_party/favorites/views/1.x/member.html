@@ -1,0 +1,71 @@
+<?php if( ! empty( $member_stats ) ): ?>
+
+	<div class="tableHeading"><?=$lang_member?></div>
+
+	<table id="member-stats"	class="tableBorder" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th class="tableHeadingAlt" style="width:10%; text-align:left;"><?=$lang_member_id?></th>
+				<th class="tableHeadingAlt" style="width:20%; text-align:left;"><?=$lang_name?></th>
+				<th class="tableHeadingAlt" style="width:70%; text-align:left;"><?=$lang_join_date?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			<?php $class = /*$this->cycle(*/'tableCellOne'/*, 'tableCellTwo')*/; ?>
+			<tr>
+				<td class="<?=$class?>"><?=$member_stats['member_id']?></td>
+				<td class="<?=$class?>"><?=$member_stats['screen_name']?></td>
+				<td class="<?=$class?>"><?=$member_stats['join_date']?></td>
+			</tr>
+		</tbody>	
+	</table>
+<?php endif;?>
+
+<div class='clearfix'>&nbsp;</div>
+
+	<div class="tableHeading"><?=$lang_members?></div>
+
+	<table class="tableBorder" style="width:100%;" 
+		   cellspacing='0'  	cellpadding='0'  	border='0'>
+		<thead>
+			<tr>
+				<th class="tableHeadingAlt" style="width:3%;  text-align:left;">&nbsp;</th>
+				<th class="tableHeadingAlt" style="width:37%; text-align:left;"><?=$lang_title?></th>
+				<th class="tableHeadingAlt" style="width:60%; text-align:left;"><?=$lang_entry_date?></th>
+			</tr>
+		</thead>
+	
+		<tbody>
+			
+		<?php if( ! empty( $member_data ) ): ?>
+		
+			<?php foreach($member_data as $member):?>
+				<?php $class = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+				<tr>
+					<td class="<?=$class?>"><?=$member['row_count']?></td>
+					<td class="<?=$class?>">
+							<a href="<?=$member['url']?>" title="<?=$member['title']?>"><?=$member['title']?></a>
+					</td>
+					<td class="<?=$class?>"><?=$member['entry_date']?></td>
+				</tr>
+			<?php endforeach;?>	
+		
+		<?php else:?>
+			<tr>
+				<td class='tableCellOne' colspan='3'>
+					<div class="highlight"><?=$lang_no_member?></div>
+				</td>
+			</tr>
+		<?php endif;?>
+		
+		<?php if ( $paginate ): ?>	
+			<tr>
+				<td colspan="3" class="<?php echo $this->cycle('tableCellOne', 'tableCellTwo'); ?>">
+					<?=$paginate?>
+				</td>
+			</tr>
+		<?php endif; ?>
+		</tbody>	
+	</table>
