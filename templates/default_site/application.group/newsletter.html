@@ -9,7 +9,6 @@
     </div>
   </div>
 
-  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="michiko23@gmail.com" merge_fname='michiko' merge_lname='swiggs' merge_BDATE='1974-02-02' interest_groups='Dance|Film' double_optin='no'}
   
   <div class="row">  
     <div class="four columns">
@@ -18,12 +17,42 @@
     </div>
     
     <div class="eight columns">
-    {exp:channel:entries 
-      entry_id="{segment_3}"  
-    }{app_first_name}
- 
+    {exp:safecracker 
+      channel="applications" 
+      return="application/account/ENTRY_ID" 
+      entry_id="{segment_3}"
+      error_handling="inline"
+      id="application_form"
+      include_jquery="no"
+      safecracker_head="no"  
+    }
+      
+      <fieldset>
+        <legend>TeenTix Newsletter</legend>
         
-    {/exp:channel:entries}
+        <label for="app_newsletter" class="label_checkbox">
+          <input type="checkbox" name="app_newsletter" id="app_newsletter" value="yes" checked="checked">
+          I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
+        </label>
+        
+        <label for="app_email" class="require">Email Address</label>
+        <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
+        
+        <label for="" class="">Interests</label>
+        {field:app_interests}
+        
+        <label for="" class="">Which applies to you?</label>
+        {field:app_member_type}
+        
+      </fieldset>
+      
+      <div class="form_submit">
+        <a href="{path='application/account'}/{segment_3}">Skip</a>
+        <input type="submit" name="submit" value="Next" class="button">
+      </div>
+        
+    {/exp:safecracker}
+    
     </div>
     
     
