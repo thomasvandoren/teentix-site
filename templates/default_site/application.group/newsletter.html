@@ -1,0 +1,34 @@
+{embed="inc/.header"
+  body_class="application"
+}
+{embed="inc/.nav"}  
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>TeenTix Application</h1>
+    </div>
+  </div>
+
+  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="michiko23@gmail.com" merge_fname='michiko' merge_lname='swiggs' merge_BDATE='1974-02-02' interest_groups='Dance|Film' double_optin='no'}
+  
+  <div class="row">  
+    <div class="four columns">
+      <h4>2. Sign up for the weekly newsletter.</h4>
+      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+    </div>
+    
+    <div class="eight columns">
+    {exp:channel:entries 
+      entry_id="{segment_3}"  
+    }{app_first_name}
+ 
+        
+    {/exp:channel:entries}
+    </div>
+    
+    
+    
+  </div>
+  
+  
+{embed="inc/.footer"}

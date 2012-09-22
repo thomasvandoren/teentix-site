@@ -1,79 +1,96 @@
-{embed="inc/.header"}
+{embed="inc/.header"
+  body_class="application"
+}
 {embed="inc/.nav"}  
   
   <div class="row">
     <div class="twelve columns">
-      <h1>TeenTix Application</h1>
+      <h1>Join TeenTix</h1>
     </div>
   </div>
-  
-  <!-- Three-up Content Blocks -->
+
   
   <div class="row">  
+    <div class="four columns">
+      <h4>1. Apply for the TeenTix pass.</h4>
+      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+    </div>
+    
     <div class="eight columns">
     {exp:safecracker 
       channel="applications" 
-      return="application/ENTRY_ID" 
-      entry_id="{segment_2}" 
-      dynamic_title="[app_first_name] [app_middle_name] [app_last_name] Pass Application" 
+      return="application/newsletter/ENTRY_ID" 
+      dynamic_title="[app_first_name] [app_last_name] Pass Application" 
       error_handling="inline"
+      id="application_form"
       include_jquery="no"
-      logged_out_member_id="3"
-      
+      logged_out_member_id="2" 
+      safecracker_head="no"  
     }
         
-        <fieldset>
-          <h3>Applicant Info</h3>
+        <fieldset id="app_info">
+          <legend>Applicant Info</legend>
           
-          <label for="app_first_name">First Name</label>
-          <input type="text" name="app_first_name" id="app_first_name" value="{app_first_name}">
+          <div class="row">
+            <div class="five columns">
+              <label for="app_first_name" class="require">First Name</label>
+              <input type="text" name="app_first_name" id="app_first_name" value="{app_first_name}" class="required">
+            </div>
+            
+            <div class="two columns">
+              <label for="app_middle_initial">Middle Initial</label>
+              <input type="text" name="app_middle_initial" id="app_middle_initial" value="{app_middle_initial}">
+            </div>
+            
+            <div class="five columns">
+              <label for="app_last_name" class="require">Last Name</label>
+              <input type="text" name="app_last_name" id="app_last_name" value="{app_last_name}" class="required">
+            </div>
+          </div>
           
-          <label for="app_middle_name">Middle Name</label>
-          <input type="text" name="app_middle_name" id="app_middle_name" value="{app_middle_name}">
+              
+          <label for="app_phone" class="require">Best Contact Phone Number</label>
+          <input type="text" name="app_phone" id="app_phone" value="{app_phone}" class="required">
+          {!--<label for="app_phone_alt">Alternative Phone Number</label>
+          <input type="text" name="app_phone_alt" id="app_phone_alt" value="{app_phone_alt}">--}
+        
           
-          <label for="app_last_name">Last Name</label>
-          <input type="text" name="app_last_name" id="app_last_name" value="{app_last_name}">
-          
-          <label for="app_phone">Best Contact Phone Number</label>
-          <input type="text" name="app_phone" id="app_phone" value="{app_phone}">
-          
-          <label for="app_phone_alt">Alternative Phone Number</label>
-          <input type="text" name="app_phone_alt" id="app_phone_alt" value="{app_phone_alt}">
-          
-          <label for="app_email">Email Address</label>
-          <input type="text" name="app_email" id="app_email" value="{app_email}">
-          
-          <label for="app_birthdate">Birthdate</label>
-          <input type="text" name="app_birthdate" id="app_birthdate" value="{app_birthdate}">
+          <label for="app_birthdate" class="require">Birthdate</label>
+          {field:app_birthdate}
+          {!--<div class="date_input">
+            <input type="text" name="app_birthmonth" id="app_birthmonth" value="" placeholder="MM" size="2" class="required">&ndash;
+            <input type="text" name="app_birthday" id="app_birthday" value="" placeholder="DD" size="2" class="required">&ndash;
+            <input type="text" name="app_birthyear" id="app_birthyear" value="" placeholder="YYYY" size="4" class="required">
+          </div>--}
         
         </fieldset>
         
-        <fieldset> 
-          <h3>Mailing Address</h3>
-          <label for="app_address">Address</label>
-          <input type="text" name="app_address" id="app_address" value="{app_address}">
+        <fieldset id="app_address"> 
+          <legend>Mailing Address</legend>
+          <label for="app_address" class="require">Address</label>
+          <input type="text" name="app_address" id="app_address" value="{app_address}" class="required">
           
-          <label for="app_city">City</label>
-          <input type="text" name="app_city" id="app_city" value="{app_city}">
+          <label for="app_city" class="require">City</label>
+          <input type="text" name="app_city" id="app_city" value="{app_city}" class="eight required">
           
-          <label for="app_state">State</label>
-          <input type="text" name="app_state" id="app_state" value="{app_state}">
+          <label for="app_state" class="require">State</label>
+          <input type="text" name="app_state" id="app_state" value="{app_state}" class="eight required">
           
-          <label for="app_zip">Zip Code</label>
-          <input type="text" name="app_zip" id="app_zip" value="{app_zip}">
+          <label for="app_zip" class="require">Zip Code</label>
+          <input type="text" name="app_zip" id="app_zip" value="{app_zip}" class="four required">
           
-          <label for="app_country">Country</label>
-          <input type="text" name="app_country" id="app_country" value="{app_country}">
+          <label for="app_country">Country (If not US)</label>
+          <input type="text" name="app_country" id="app_country" value="{app_country}" class="eight">
         </fieldset>
         
-        <fieldset>
-          <h3>Other Info</h3>
+        <fieldset id="app_other">
+          <legend>Other Info</legend>
           
           <label for="app_school">School</label>
           <input type="text" name="app_school" id="app_school" value="{app_school}">
           
-          <label for="app_hear_about">How did you hear abou TeenTix?</label>
-          <select name="app_hear_about">
+          <label for="app_hear_about">How did you hear about TeenTix?</label>
+          <select name="app_hear_about" class="six">
             {options:app_hear_about}
               <option value="{option_value}"{selected}>{option_name}</option>
             {/options:app_hear_about}
@@ -89,38 +106,28 @@
           {/if}
           
         </fieldset>
-
-        <input type="submit" name="submit" value="Submit">
+        
+        {!--<fieldset>
+          <legend>TeenTix Newsletter</legend>
+          
+          <label for ="app_newsletter">
+            <input type="checkbox" name="app_newsletter" id="app_newsletter" value="y" checked="checked">
+            I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
+          </label>
+          <label for="app_email" class="require">Email Address</label>
+          <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
+        </fieldset>--}
+        
+        <div class="form_submit">
+          <input type="submit" name="submit" value="Next" class="button">
+        </div>
+        
     {/exp:safecracker}
     </div>
     
-    <div class="four columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    </div>
+    
     
   </div>
   
-  
-  <!-- Call to Action Panel -->
-  <div class="row">
-    <div class="twelve columns">
-    
-      <div class="panel">
-        <h4>Get in touch!</h4>
-            
-        <div class="row">
-          <div class="nine columns">
-            <p>We'd love to hear from you, you attractive person you.</p>
-          </div>
-          <div class="three columns">
-            <a href="#" class="radius button right">Contact Us</a>
-          </div>
-        </div>
-      </div>
-      
-    </div>
-  </div>
   
 {embed="inc/.footer"}

@@ -35,6 +35,31 @@
   // $('.block-grid.three-up>li:nth-child(3n+1)').css({clear: 'both'});
   // $('.block-grid.four-up>li:nth-child(4n+1)').css({clear: 'both'});
   // $('.block-grid.five-up>li:nth-child(5n+1)').css({clear: 'both'});
+  
+  $.validator.addMethod("valueNotEquals", function(value, element, arg){
+    return arg != value;
+  }, "Value must not equal arg.");
+
+  $("#application_form select[name='app_birthdate[]']").each(function() {
+    $(this).addClass("required");
+  });
+  
+  $('#application_form').validate({
+    rules: {
+     'app_birthdate[]': { valueNotEquals: "0" }
+    },
+    messages: {
+     'app_birthdate[]': {
+      valueNotEquals: "Please select your birthdate."
+     }
+    }
+  });
+  
+  $('#app_newsletter').click(function() {
+    $(this).parent().next().toggleClass('require');
+    $(this).parent().next().next().toggleClass('required');
+  });
+  
 
   // Hide address bar on mobile devices
   if (Modernizr.touch) {

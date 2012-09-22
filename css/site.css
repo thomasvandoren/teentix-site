@@ -14,10 +14,46 @@
 ----------------------------------------- */
 
 
+/* Forms */
+fieldset {
+  padding: 20px 12px;
+  margin-bottom: 30px;
+}
+fieldset legend {
+  font-size: 22px;
+}
+select { 
+  font-size: 13px;
+  font-family: Helvetica, Arial, san-serif;
+  padding: 5px;
+}
+label {
+  color: #999;
+} 
+label.require {
+  font-weight: bold;
+  color: #000;
+}
+label.error {
+  margin-top: -8px;
+  margin-bottom: 8px;
+}
+.form_submit {
+  text-align: center;
+}
+.date_input input {
+  display: inline;
+  width: auto;
+}
+
 
 /* -----------------------------------------
-   Page Name 1
+   Application
 ----------------------------------------- */
+.application select {
+  width: auto;
+  margin-bottom: 12px;
+}
 
 
 
