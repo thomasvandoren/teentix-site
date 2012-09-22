@@ -52,6 +52,16 @@
      'app_birthdate[]': {
       valueNotEquals: "Please select your birthdate."
      }
+    },
+    errorPlacement: function(error, element) {
+      if (element.attr("name") == "app_birthdate[]")
+      {
+        error.insertAfter(element.parent());
+      }
+      //else
+      //{
+       //error.insertAfter(element);
+      //}
     }
   });
   

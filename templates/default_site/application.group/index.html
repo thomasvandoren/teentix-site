@@ -56,7 +56,9 @@
         
           
           <label for="app_birthdate" class="require">Birthdate</label>
-          {field:app_birthdate}
+          <div class="birthdate_select">
+            {field:app_birthdate}
+          </div>
           {!--<div class="date_input">
             <input type="text" name="app_birthmonth" id="app_birthmonth" value="" placeholder="MM" size="2" class="required">&ndash;
             <input type="text" name="app_birthday" id="app_birthday" value="" placeholder="DD" size="2" class="required">&ndash;
@@ -65,7 +67,7 @@
         
         </fieldset>
         
-        <fieldset id="app_address"> 
+        <fieldset id="app_mailing_address"> 
           <legend>Mailing Address</legend>
           <label for="app_address" class="require">Address</label>
           <input type="text" name="app_address" id="app_address" value="{app_address}" class="required">
