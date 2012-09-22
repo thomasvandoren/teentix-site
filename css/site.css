@@ -54,6 +54,10 @@ label.error {
   width: auto;
   margin-bottom: 12px;
 }
+.application .terms {
+  background: #f6f6f6;
+  padding: 20px;
+}
 
 
 

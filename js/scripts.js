@@ -23,11 +23,11 @@
   $.fn.foundationMediaQueryViewer ? $doc.foundationMediaQueryViewer() : null;
   
     
-    $.fn.foundationTabs             ? $doc.foundationTabs() : null;
+  $.fn.foundationTabs             ? $doc.foundationTabs() : null;
     
   
   
-    $("#featured").orbit();
+  $("#featured").orbit();
   
 
   // UNCOMMENT THE LINE YOU WANT BELOW IF YOU WANT IE8 SUPPORT AND ARE USING .block-grids
@@ -36,6 +36,8 @@
   // $('.block-grid.four-up>li:nth-child(4n+1)').css({clear: 'both'});
   // $('.block-grid.five-up>li:nth-child(5n+1)').css({clear: 'both'});
   
+  
+  //Form Validations
   $.validator.addMethod("valueNotEquals", function(value, element, arg){
     return arg != value;
   }, "Value must not equal arg.");
@@ -54,14 +56,9 @@
      }
     },
     errorPlacement: function(error, element) {
-      if (element.attr("name") == "app_birthdate[]")
-      {
+      if (element.attr("name") == "app_birthdate[]") {
         error.insertAfter(element.parent());
       }
-      //else
-      //{
-       //error.insertAfter(element);
-      //}
     }
   });
   

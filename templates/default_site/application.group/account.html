@@ -10,19 +10,62 @@
   </div>
   {exp:channel:entries 
     entry_id="{segment_3}"  
-  }{app_newsletter} {app_email} {app_first_name} {app_last_name} {app_interests backspace="1"}{option}|{/app_interests} {app_member_type}
-  {!--exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="michiko23@gmail.com" merge_fname='michiko' merge_lname='swiggs' merge_BDATE='1974-02-02' merge_MTYPE='' interest_groups='Dance|Film' double_optin='no'--}
+  }
+  {if app_newsletter == 'yes'}
+  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="{app_email}" merge_fname="{app_first_name}" merge_lname="{app_last_name}" merge_BDATE='{app_birthdate format="%Y-%m-%d"}' merge_MTYPE='{app_member_type}' interest_groups='{app_interests backspace="1"}{option}|{/app_interests}' double_optin='no'}
+  {/if}
 {/exp:channel:entries}  
   <div class="row">  
     <div class="four columns">
-      <h4>This is a content section.</h4>
+      <h4>3. Create a TeenTix.com website account.</h4>
       <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
     </div>
     
     <div class="eight columns">
     {exp:channel:entries 
       entry_id="{segment_3}"  
-    }{app_first_name}
+    }
+    {exp:user:register form:name="some_name" return="template_group/template"  admin_register="yes"  }
+      <fieldset>
+        <legend>Create an account</legend>
+        
+        <label for="username" class="require">Email/Username</label>
+        <input type="text" name="username" value="{app_email}"  class="required" />
+        
+        <label for="screen_name" class="require">Screen Name:</label>
+        <input type="text" name="screen_name" class="required" />
+         
+        <label for="password" class="require">Password:</label>
+        <input type="password" name="password" class="required" />
+        
+        <label for="password_confirm" class="require">Confirm Password:</label>
+        <input type="password" name="password_confirm" class="required" />
+         
+        {if captcha}
+        <p>Please enter in the word you see below: <input type="text" name="captcha" size="40" /></p>
+        <p>{captcha}</p>
+        {/if}
+        
+        <div class="terms">
+          <h5>Terms of Use</h5>
+          <p>In order to provide the service, there are some limitations on the type of content that can be published on TeenTix.com.</p>
+  
+          <p>You may not impersonate others on TeenTix.com in a manner that does or is intended to mislead, confuse, or deceive others.</p>
+          <p>You may not publish or post other people's private and confidential information</p>
+          <p>You may not publish or post direct, specific threats of violence against others.</p>
+          <p>We will respond to clear and complete notices of alleged copyright infringement. Our copyright procedures are set forth in the Terms of Service.</p>
+          <p>You may not use our service for any unlawful purposes or in furtherance of illegal activities. International users agree to comply with all local laws regarding online conduct and acceptable content.</p>
+        </div>
+        
+        <label for="accept_terms" class="require"><input type="checkbox" name="accept_terms" value="yes" class="required" /> Accept Terms?</label>
+         
+        <p><input type="submit" value="Submit" /></p>
+        
+        {if no_results}
+        <p>You're currently logged in, and must be logged out to view this form.</p>
+        {/if}
+      </fieldset>    
+    {/exp:user:register}  
  
         
     {/exp:channel:entries}
