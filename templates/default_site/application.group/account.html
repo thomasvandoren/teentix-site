@@ -10,8 +10,8 @@
   </div>
   {exp:channel:entries 
     entry_id="{segment_3}"  
-  }{app_email}
-  {!--exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="michiko23@gmail.com" merge_fname='michiko' merge_lname='swiggs' merge_BDATE='1974-02-02' interest_groups='Dance|Film' double_optin='no'--}
+  }{app_newsletter} {app_email} {app_first_name} {app_last_name} {app_interests backspace="1"}{option}|{/app_interests} {app_member_type}
+  {!--exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="michiko23@gmail.com" merge_fname='michiko' merge_lname='swiggs' merge_BDATE='1974-02-02' merge_MTYPE='' interest_groups='Dance|Film' double_optin='no'--}
 {/exp:channel:entries}  
   <div class="row">  
     <div class="four columns">
