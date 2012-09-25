@@ -62,6 +62,28 @@
     }
   });
   
+  $('#account_form').validate({
+    rules: {
+      username: { 
+        email: true 
+      },
+      screen_name: { 
+        minlength: 5 
+      },
+      password: { 
+        minlength: 5 
+      },
+      password_confirm: {
+        equalTo: "#password"
+      }
+    },
+    errorPlacement: function(error, element) {
+      if (element.attr("name") == "accept_terms") {
+        error.insertAfter(element.parent());
+      }
+    }
+  });
+  
   $('#app_newsletter').click(function() {
     $(this).parent().next().toggleClass('require');
     $(this).parent().next().next().toggleClass('required');
