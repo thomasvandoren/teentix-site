@@ -1,0 +1,42 @@
+{if logged_in}
+  {!-- redirect="account" --}
+{/if}
+{embed="inc/.header"
+  body_class="account"
+}
+{embed="inc/.nav"}  
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>Sign in to your TeenTix account</h1>
+    </div>
+  </div>
+
+  <div class="row">  
+    <div class="four columns">
+      <h4>3. Create a TeenTix.com website account.</h4>
+      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+      <p><a href="{path='account/password'}">Reset your password</a></p>
+    </div>
+    
+    <div class="eight columns">
+    {exp:member:login_form return="account" id="login-form"}
+      <fieldset>
+        <legend>Login to your account</legend>
+        
+        <label for="username" class="require">Email Address* </label>
+        <input type="text" name="username" class="required" />
+        
+        <label for="password" class="require">Password* </label>
+        <input type="password" name="password" class="required" />
+        
+        <p><input type="submit" name="submit" value="Submit" /></p>
+      </fieldset>
+    {/exp:member:login_form} 
+         
+    </div>   
+    
+  </div>
+  
+  
+{embed="inc/.footer"}

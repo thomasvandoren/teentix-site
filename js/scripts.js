@@ -84,6 +84,10 @@
     }
   });
   
+  $('#nav-bar-login form').validate();
+  $('#login-form').validate();
+  $('#forgot_password_form').validate();
+  
   $('#app_newsletter').click(function() {
     $(this).parent().next().toggleClass('require');
     $(this).parent().next().next().toggleClass('required');

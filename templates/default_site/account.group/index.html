@@ -1,34 +1,40 @@
 {embed="inc/.header"
-  body_class="application"
+  body_class="account"
 }
 {embed="inc/.nav"}  
   
   <div class="row">
     <div class="twelve columns">
-      <h1>Sign in to your TeenTix account</h1>
+      <h1>Hi, {username}.</h1>
     </div>
   </div>
 
   <div class="row">  
     <div class="four columns">
-      <h4>3. Create a TeenTix.com website account.</h4>
+      <h4>Your Account</h4>
       <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
     </div>
     
-    <div class="six columns">
-    {exp:member:login_form return="account"}
-      <fieldset>
-        <legend>Login to your account</legend>
-        
-        <label for="username">Email Address: </label>
-        <input type="text" name="username" class="required" />
-        
-        <label for="password">Password: </label>
-        <input type="password" name="password" class="required" />
-        
-        <p><input type="submit" name="submit" value="Submit" /></p>
-      </fieldset>
-    {/exp:member:login_form} 
+    <div class="eight columns">
+      <h4>Your account </h4>
+    {exp:user:edit}
+       
+      <p>Location <input name="location" value="{location}" /></p>
+      <p>Accept User Email <input type="checkbox" name="accept_user_email" value="y" {if accept_user_email == "y"}checked="checked"{/if} /></p>
+      <p>Your Member Field <input name="your_member_field" value="{your_member_field}" /></p>
+       
+      <p>Email <input name="email" value="{email}" /></p>
+      <p>Username <input name="username" value="{username}" /></p>
+      <p>Screen Name <input name="screen_name" value="{screen_name}" /></p>
+       
+      <p>Create a New Password? <input type="password" name="password" /></p>
+      <p>Password Confirm <input type="password" name="password_confirm" /></p>
+      <p>Current Password <input type="password" name="current_password" /></p>
+       
+      <p><input type="submit" value="Submit" /></p>
+       
+   {/exp:user:edit}  
+    
          
     </div>   
     
