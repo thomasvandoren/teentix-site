@@ -45,8 +45,12 @@ label.error {
   display: inline;
   width: auto;
 }
-input[type="checkbox"] {
-  margin-bottom: 10px;
+.label_checkbox {
+  padding-left: 20px;
+  margin-bottom: 20px;
+}
+.label_checkbox input {
+  margin-left: -20px;
 }
 
 
@@ -65,6 +69,27 @@ input[type="checkbox"] {
 .application .terms p {
   font-size: 12px;
   margin-bottom: .75em;
+}
+.application #accept_terms {
+  margin-bottom: 10px;
+}
+.application .app_interests_list {
+  margin: 20px 0px;
+}
+.application .app_interests_list p,
+.application .app_member_type_list p {
+  margin-bottom: 0px;
+}
+.application .app_interests_list label {
+  float: left;
+  width: 180px;
+  margin-right: 10px;
+}
+.application .app_member_type_list label {
+  padding-left: 20px;
+}
+.application .app_member_type_list input {
+  margin-left: -20px;
 }
 
 

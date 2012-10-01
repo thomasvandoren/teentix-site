@@ -6,10 +6,19 @@
     </div>
     <div class="nine columns">
       <ul class="nav-bar right">
-        <li><a href="#">Link 1</a></li>
-        <li><a href="#">Link 2</a></li>
-        <li><a href="#">Link 3</a></li>
-        <li><a href="#">Link 4</a></li>
+        <li class="has-flyout">
+          <a href="#">Login</a>
+          <div class="flyout" id="nav-bar-login">
+          {exp:member:login_form return=""}
+            <p>Email Address: <input type="text" name="username" /></p>
+            <p>Password: <input type="password" name="password" /></p>
+            <p><input type="submit" name="submit" value="Submit" /></p>
+          {/exp:member:login_form}
+            <p><a href="{site_url}account/new">Create an account</a></p>  
+          </div>
+        </li>
+        <li><a href="{site_url}application">Apply for a pass</a></li>
+        
       </ul>
     </div>
   </div>

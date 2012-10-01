@@ -5,16 +5,9 @@
   
   <div class="row">
     <div class="twelve columns">
-      <h1>TeenTix Application</h1>
+      <h1>Create a TeenTix Account</h1>
     </div>
   </div>
-  {exp:channel:entries 
-    entry_id="{segment_3}"  
-  }
-  {if app_newsletter == 'yes'}
-  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="{app_email}" merge_fname="{app_first_name}" merge_lname="{app_last_name}" merge_BDATE='{app_birthdate format="%Y-%m-%d"}' merge_MTYPE='{app_member_type}' interest_groups='{app_interests backspace="1"}{option}|{/app_interests}' double_optin='no'}
-  {/if}
-  {/exp:channel:entries}  
 
   <div class="row">  
     <div class="four columns">
@@ -23,9 +16,6 @@
     </div>
     
     <div class="eight columns">
-    {exp:channel:entries 
-      entry_id="{segment_3}"  
-    }
     {exp:user:register 
       form:name="account_form"  
       form:id="account_form"   
@@ -36,7 +26,7 @@
         <legend>Create an account</legend>
         
         <label for="username" class="require">Email:</label>
-        <input type="text" name="username" value="{app_email}"  class="required" />
+        <input type="text" name="username" value=""  class="required" />
         
         <label for="screen_name" class="require">Screen Name:</label>
         <input type="text" name="screen_name" class="required" />
@@ -73,12 +63,8 @@
       {/if}   
        
     {/exp:user:register}  
- 
-        
-    {/exp:channel:entries}
-    </div>
-    
-    
+         
+    </div>   
     
   </div>
   
