@@ -37,7 +37,20 @@
   // $('.block-grid.five-up>li:nth-child(5n+1)').css({clear: 'both'});
   
   
-  //Form Validations
+  // Hide address bar on mobile devices
+  if (Modernizr.touch) {
+    $(window).load(function () {
+      setTimeout(function () {
+        window.scrollTo(0, 1);
+      }, 0);
+    });
+  }
+  
+
+/////////////////////////////////////  
+//	Form Validations
+///////////////////////////////////// 
+
   $.validator.addMethod("valueNotEquals", function(value, element, arg){
     return arg != value;
   }, "Value must not equal arg.");
@@ -88,10 +101,26 @@
     }
   });
   
-  $('#account_edit').validate({
+  $('#account_edit_profile').validate({
     errorPlacement: function(error, element) {
       if (element.attr("name") == "app_birthdate[]") {
         error.insertAfter(element.parent());
+      }
+    }
+  });
+  
+  $('#account_edit_settings').validate({
+    rules: {
+      email: { 
+        email: true 
+      },
+      password: { 
+      	required: false,
+        minlength: 5 
+      },
+      password_confirm: {
+      	required: false,
+        equalTo: "#password"
       }
     }
   });
@@ -131,17 +160,57 @@
   $('#nav-bar-login form').validate();
   
   
+/////////////////////////////////////  
+//	Form Value Check
+///////////////////////////////////// 
+  
+	$("#account_username").bind('blur', function() {
+		$.ajax({
+			type: 'GET',
+			url: '/index.php/_ajax/email_check/'+$(this).val(),
+			success: function(data){
+				if (data=="") {
+					$("label.username_return").html("Available");
+					$("label.username_return").removeClass('unavailable').addClass('available');
+				} else {
+					$("label.username_return").html("Not Available");
+					$("label.username_return").removeClass('available').addClass('unavailable');
+				}
+				if ($('#account_username').hasClass('error')) {
+					$("label.username_return").html("");
+				}
+			}
+		})
+		return false;
+	})
+	$("#account_screen_name").bind('blur', function() {
+		$.ajax({
+			type: 'GET',
+			url: '/index.php/_ajax/screen_name_check/'+$(this).val(),
+			success: function(data){
+				if (data=="") {
+					$("label.screen_name_return").html("Available")
+					$("label.screen_name_return").removeClass('unavailable').addClass('available');
+				} else {
+					$("label.screen_name_return").html("Not Available")
+					$("label.screen_name_return").removeClass('available').addClass('unavailable');
+				}
+				if ($('#account_screen_name').hasClass('error')) {
+					$("label.screen_name_return").html("");
+				}
+				if ($('#account_screen_name').val() == "") {
+					$("label.screen_name_return").html("");
+				}
+			}
+		})
+		return false;
+	})
   
 
-  // Hide address bar on mobile devices
-  if (Modernizr.touch) {
-    $(window).load(function () {
-      setTimeout(function () {
-        window.scrollTo(0, 1);
-      }, 0);
-    });
-  }
-  
+
+/////////////////////////////////////  
+//	Favorites
+/////////////////////////////////////   
   
   $('a.Favorites_Save') .click (function() {
       var link = $(this).attr('href')

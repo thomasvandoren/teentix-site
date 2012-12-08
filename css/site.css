@@ -29,7 +29,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Forms */
 fieldset {
-  padding: 20px 12px;
+	background: #f9f9f9;
+  padding: 20px 15px;
   margin-bottom: 30px;
 }
 fieldset legend {
@@ -48,8 +49,22 @@ label.require {
   color: #000;
 }
 label.error {
-  margin-top: -8px;
-  margin-bottom: 8px;
+	margin-top: -8px;
+	margin-bottom: 10px;
+}
+label.field_return  {
+  padding-top: 24px;
+}
+label.field_return {
+	display: none;
+}
+label.field_return.available {
+	display: block;
+	color: green;
+}
+label.field_return.unavailable {
+	display: block;
+	color: red;
 }
 .form_submit {
   text-align: center;
@@ -382,6 +397,8 @@ ul.breadcrumbs {
 	clear: both;
 	padding: 10px 23px;
 }
+
+
 
 
 

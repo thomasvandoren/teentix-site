@@ -17,21 +17,23 @@
     </div>
     
     <div class="nine columns">
-    {exp:user:edit}
+    {exp:user:edit
+    	form:id="account_edit_settings" 
+    }
       
       <fieldset>
 	      <legend>Account Settings</legend>
 	      <div class="row">
 	      	<label class="four columns">Email</label>
 	      	<div class="eight columns">
-	      		<input type="email" name="email" value="{email}" />
+	      		<input type="email" name="email" value="{email}" class="required" />
 	      	</div>
 	      </div>
 	      
 	      <div class="row">
 	      	<label class="four columns">New Password</label>
 	      	<div class="eight columns">
-	      		<input type="password" name="password" />
+	      		<input type="password" name="password" id="password" />
 	      	</div>
 	      </div>
 	      
@@ -47,7 +49,7 @@
 	      <div class="row">
 	      	<label class="four columns">Current Password</label>
 	      	<div class="eight columns">
-	      		<input type="password" name="current_password" />
+	      		<input type="password" name="current_password"  class="required" />
 	      	</div>
 	      </div>
 	       

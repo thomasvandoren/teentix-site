@@ -83,6 +83,35 @@
 				<h3>Private Information</h3>
 				<div class="row">
 					<div class="four columns">
+						<p>Name</p>
+					</div>
+					<div class="eight columns">
+						<p>{if first_name OR last_name}{first_name} {middle_initial} {last_name}
+						{if:else}<span class="no_info">No name saved</span>{/if}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Email</p>
+					</div>
+					<div class="eight columns">
+						<p>{email}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Phone Number</p>
+					</div>
+					<div class="eight columns">
+						<p>
+							{if phone_number}{phone_number}
+							{if:else}<span class="no_info">No phone number saved</span>{/if}
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					
+					<div class="four columns">
 						<p>Birthdate</p>
 					</div>
 					<div class="eight columns">
@@ -110,15 +139,7 @@
 					</p>
 					</div>
 				</div>
-				<div class="row">
-					<div class="four columns">
-						<p>Name</p>
-					</div>
-					<div class="eight columns">
-						<p>{if first_name OR last_name}{first_name} {middle_initial} {last_name}
-						{if:else}<span class="no_info">No name saved</span>{/if}</p>
-					</div>
-				</div>
+				
 				<div class="row">
 					<div class="four columns">
 						<p>Mailing Address</p>
@@ -131,17 +152,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="row">
-					<div class="four columns">
-						<p>Phone Number</p>
-					</div>
-					<div class="eight columns">
-						<p>
-							{if phone_number}{phone_number}
-							{if:else}<span class="no_info">No phone number saved</span>{/if}
-						</p>
-					</div>
-				</div>
+				
 				<div class="row">
 					<div class="four columns">
 						<p>Interests</p>

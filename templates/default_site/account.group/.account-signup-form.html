@@ -10,18 +10,36 @@
 }
   <fieldset>
     <legend>Account Info</legend>
-    
-    <label for="username" class="require">Email*</label>
-    <input type="text" name="username" value="{embed:email}"  class="required" />
-    
-    <label for="screen_name" class="require">Screen Name*</label>
-    <input type="text" name="screen_name" class="required" />
-     
-    <label for="password" class="require">Password*</label>
-    <input type="password" name="password" id="password" class="required" />
-    
-    <label for="password_confirm" class="require">Confirm Password*</label>
-    <input type="password" name="password_confirm" id="password_confirm" class="required" />
+    <div class="row">
+    	<div class="nine columns">
+    		<label for="username" class="require">Email*</label>
+		    <input type="text" name="username" value="{embed:email}" id="account_username" class="required" />
+    	</div>
+    	<div class="three columns">
+    		<label class="field_return username_return"></label>
+    	</div>
+    </div>
+    <div class="row">
+    	<div class="nine columns">
+    		<label for="screen_name" class="require">Public Screen Name*</label>
+		    <input type="text" name="screen_name" id="account_screen_name" class="required" />
+    	</div>
+    	<div class="three columns">
+    		<label class="field_return screen_name_return"></label>
+    	</div>
+    </div>
+    <div class="row">
+    	<div class="nine columns">
+    		<label for="password" class="require">Password*</label>
+    		<input type="password" name="password" id="password" class="required" />
+    	</div>
+    </div>
+    <div class="row">
+    	<div class="nine columns">
+    		<label for="password_confirm" class="require">Confirm Password*</label>
+		    <input type="password" name="password_confirm" id="password_confirm" class="required" />
+    	</div>
+    </div>
     
   </fieldset>
   
