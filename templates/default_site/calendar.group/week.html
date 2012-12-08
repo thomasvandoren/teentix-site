@@ -1,0 +1,92 @@
+{embed="inc/.header"
+	title="Calendar"
+	body_class="calendar week"
+}
+
+{embed="inc/.nav"
+	end_title="Weekly"
+}
+    
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">Calendar: Weekly
+      </h1>
+    </div>
+  </div>
+  
+{embed="calendar/.calendar-nav"}
+  
+  <div class="row">
+		<div id="main" class="nine columns">
+		
+			<div id="weekly_calendar">
+			{exp:calendar:cal 
+				enable="custom_fields" 
+				pad_short_weeks="y" 
+				dynamic="off"
+	    {if segment_3 == ''}
+	    	date_range_start="0 weeks begin"
+	    {/if}
+	    {if segment_3 != ""}
+	    	date_range_start="{segment_3}-{segment_4}-{segment_5}" 
+	    	date_range_end="{segment_3}-{segment_4}-{segment_5}"
+	    {/if}
+			}
+	
+			{display_each_week}
+				<div class="header">
+				  <div class="left">
+				     <a href="{path='calendar/week'}/{prev_week format="%Y/%m/%d"}/">&laquo; Prev</a>
+				  </div>
+				  <div class="right">
+				     <a href="{path='calendar/week'}/{next_week format="%Y/%m/%d"}/">Next &raquo;</a>
+				  </div>
+				  <div class="center">
+				     <h4>Week of {week format="%F %j, %Y"}</h4>
+				  </div>			  
+				</div><!-- end .header -->
+				
+			  {display_each_day}
+			  <div class="row">
+				  <div class="day three columns">
+						<h5>
+							{day format="%l"}<br />
+							<a href="{path='calendar/day'}/{day format="%Y/%m/%d"}/">{day format="%M %j, %Y"}</a>
+						</h5>
+					</div>
+					<div class="nine columns">
+						<ul class="event-list">
+						{if day_event_total == 0}<li>No events for this day.</li>{/if}
+						  {events}
+						  <li class="event">
+						  	<span class="event-time">
+				      	{if event_all_day}
+				      		All day
+				      	{if:else}
+				      		{event_start_date format="%g:%i%a"}
+				      	{/if}
+				      	</span>
+				      	<strong><a href="{url_title_path='calendar/event'}">{event_title}</a></strong> 
+				      	{related_entries id="event_venue"}
+								  <span class="event-venue">{title}</span>
+							  {/related_entries}
+						  </li>
+						  {/events}
+						</ul>
+				  </div>
+				  <hr />
+			  </div>
+			  {/display_each_day}
+			{/display_each_week}
+			{/exp:calendar:cal}
+			</div><!-- end #weekly_calendar -->
+
+		</div><!-- end #main -->
+
+		<div id="sidebar" class="three columns">
+  	{embed="calendar/.sidebar"}
+    </div><!-- end #sidebar -->
+
+	</div>
+		
+{embed="inc/.footer"}

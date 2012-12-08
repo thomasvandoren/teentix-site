@@ -1,0 +1,92 @@
+<form id="module_edit_template_form" method="post" name="filter" action="<?=$base_uri.'&method=save_template'; ?>">
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />		
+	
+	<input type='hidden' name='template_id' value='<?=$caller->output($template_data['template_id'])?>' />
+	<?php if ($template_data['template_locked'] == 'yes') : ?>
+		<input type='hidden' name='template_label' value='<?=$caller->output($template_data['template_label'])?>' />
+		<input type='hidden' name='template_name' value='<?=$caller->output($template_data['template_name'])?>' />
+	<?php endif;?>
+	
+<table class="mainTable padTable" style="width:100%;" cellspacing="0" cellpadding="0" border="0">
+	<thead>
+		<tr>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+
+	<tbody>
+	
+		<tr class="even">
+			<td style='width:30%;'>
+				<label for="template_label"><?=ee()->lang->line('template_label')?></label>
+			</td>
+		
+			<td  style='width:70%;'>
+				<?php if ($template_data['template_locked'] == 'yes') : ?>
+					<?=$caller->output($template_data['template_label'])?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='template_label' id='template_label' value='<?=$caller->output($template_data['template_label'])?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+		
+		<tr class="odd">
+			<td style='width:30%;'>
+				<label for="template_name"><?=ee()->lang->line('template_name')?></label>
+				<div class="subtext"><?=ee()->lang->line('template_name_subtext')?></div>
+			</td>
+		
+			<td style='width:70%;'>
+				<?php if ($template_data['template_locked'] == 'yes') : ?>
+					<?=$caller->output($template_data['template_name'])?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='template_name' id='template_name' value='<?=$caller->output($template_data['template_name'])?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+
+		<tr class="even">
+			<td style='width:30%;'>
+				<label for="subject"><?=ee()->lang->line('email_subject')?></label>
+			</td>
+			
+			<td style='width:70%;'>
+				<input dir='ltr' style='width:50%' type='text' name='subject' id='subject' value='<?=$caller->output($template_data['subject'])?>' size='35' maxlength='40' class='input' />
+
+			</td>
+		</tr>
+		
+		<tr class="odd">
+			<td style='width:30%;'>
+				<label for='wordwrap'><?=ee()->lang->line('wordwrap')?></label>
+			</td>
+		
+			<td style='width:70%;'>
+				<select name='wordwrap' class='select'>
+					<option value='y' <?=(($template_data['wordwrap'] == 'y') ? "selected='selected'" : '')?>><?=ee()->lang->line('yes')?></option>
+					<option value='n' <?=(($template_data['wordwrap'] == 'n') ? "selected='selected'" : '')?>><?=ee()->lang->line('no')?></option>
+				</select>
+			</td>
+		</tr>
+		
+		<tr class="even">
+			<td style='width:30%; vertical-align:top;'>
+				<label for='message'><?=ee()->lang->line('email_message')?></label>
+				<div class="subtext"><?=ee()->lang->line('email_message_subtext')?></div>
+			</td>
+		
+			<td style='width:70%;'>
+				<textarea  dir='ltr' style='width:input;' name='message' id='message' cols='90' rows='20' class='10' 50%><?=$caller->output($template_data['message'])?></textarea>
+		</td>
+		</tr>
+
+
+	</tbody>
+</table>
+
+	<p><input type='submit' class='submit' value='<?=ee()->lang->line('save_template')?>'  /></p>
+	
+</form>

@@ -1,0 +1,91 @@
+{exp:channel:entries channel="blog" limit="1"}
+{embed="inc/.header"
+	title="{title} | Blog"
+	body_class="blog single"
+}
+
+{embed="inc/.nav"
+	end_title="{title}"
+} 
+    
+  <div class="row">
+    <div id="main" class="eight columns">
+    	<div class="entry">
+				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
+				<h1 id="page-name">{title}</h1>
+				<div class="social-butons">
+				<!-- AddThis Button BEGIN -->
+					<div class="addthis_toolbox addthis_default_style ">
+						<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
+						<a class="addthis_button_tweet"></a>
+						<a class="addthis_button_pinterest_pinit"></a>
+						<a class="addthis_counter addthis_pill_style"></a>
+					</div>
+					<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b179a669bc22d4"></script>
+				<!-- AddThis Button END -->
+				</div>
+  		{if blog_image}
+  			<a href="{url_title_path='blog'}">
+  			{exp:ce_img:pair src="{blog_image}" width="220"}
+				<img src="{made}" alt="" width="{width}" height="{height}" />
+				{/exp:ce_img:pair}
+  			</a>
+    	{/if}
+    		{blog_body}
+    	</div>
+    {/exp:channel:entries}
+    	
+    	<div class="entry-nav">
+	    {exp:channel:next_entry channel="blog"}
+		    <p class="entry-next">Next entry: <a href="{path='blog'}">{title}</a></p>
+			{/exp:channel:next_entry}
+	
+			{exp:channel:prev_entry channel="blog"}
+		    <p class="entry-prev">Previous entry: <a href="{path='blog'}">{title}</a></p>
+			{/exp:channel:prev_entry}
+			</div>
+			
+			<div id="comments">
+				<h3>Comments</h3>
+			{exp:comment:entries sort="asc" limit="20"}
+        {comment}
+        <p>By {name} on {comment_date format="%Y %m %d"}</p>
+			{/exp:comment:entries}
+			</div>
+			<div id="comment-form">
+			{exp:comment:form channel="blog" preview="channel/preview"}
+
+      {if logged_out}
+        <label for="name">Name:</label> <input type="text" name="name" value="{name}" size="50" /><br />
+        <label for="email">Email:</label> <input type="text" name="email" value="{email}" size="50" /><br />
+        <label for="location">Location:</label> <input type="text" name="location" value="{location}" size="50" /><br />
+        <label for="url">URL:</label> <input type="text" name="url" value="{url}" size="50" /><br />
+      {/if}
+
+        <label for="comment">Comment:</label><br />
+        <textarea name="comment" cols="70" rows="10">{comment}</textarea>
+        <label><input type="checkbox" name="save_info" value="yes" {save_info} /> Remember my personal information</label><br />
+        <label><input type="checkbox" name="notify_me" value="yes" {notify_me} /> Notify me of follow-up comments?</label><br />
+
+      {if captcha}
+        <label for="captcha">Please enter the word you see in the image below:</label><br />
+        <p>{captcha}<br />
+        <input type="text" name="captcha" value="{captcha_word}" maxlength="20" /></p>
+      {/if}
+
+        <input type="submit" name="submit" value="Submit" />
+        <input type="submit" name="preview" value="Preview" />
+
+			{/exp:comment:form}
+			</div>
+    </div>
+
+
+
+  	<div id="sidebar" class="four columns">
+      <p>sidebar</p>
+    </div>
+  
+  </div>
+
+{embed="inc/.footer"}

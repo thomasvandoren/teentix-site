@@ -1,0 +1,230 @@
+
+<form id="filter" method="post" name="filter" action="<?=$base_uri.'&method=view_ratings'; ?>">
+	<?php if ( ! empty($entry_id)) : ?>	
+		<input type="hidden" name="entry_id" value="<?=$entry_id?>" />
+	<?php endif;?>
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />		
+	<fieldset>
+	
+		<legend>
+			<strong>
+				<?php if ( ! empty($entry_id)) : ?>
+					<?=ee()->lang->line('ratings_for_entry');?> : "<?=$entry_title?>"
+				<?php else : ?>
+					<?=ee()->lang->line('all_ratings');?>
+				<?php endif; ?>
+			</strong>
+		</legend>
+		
+		<select name='collection' class='select'>
+			<option value=''><?=ee()->lang->line('filter_by_collection')?></option>
+			<option value='all' <?=(($selected['collection'] == 'all') ? 'selected="selected"' : '')?>><?=ee()->lang->line('all_collections')?></option>
+			
+			<?php if ($empty_collections == 'y') : ?>
+				<option value='empty' <?=(($selected['collection'] == 'empty') ? 'selected="selected"' : '')?>><?=ee()->lang->line('empty_collections')?></option>
+			<?php endif;?>
+			
+				<?php foreach($collections as $collection) : ?>
+					<option <?=(($selected['collection'] == $collection) ? 'selected="selected"' : '')?> value='<?=$caller->output($collection)?>'><?=$caller->output($collection)?></option>
+				<?php endforeach;?>
+		</select>
+	
+		&nbsp;&nbsp;
+		
+		<select name='rating_status' class='select'>
+			<option <?=(($selected['rating_status'] == 'all')    ? 'selected="selected"' : '')?> value=''><?=ee()->lang->line('filter_by_rating_status')?></option>
+			<option <?=(($selected['rating_status'] == 'open')   ? 'selected="selected"' : '')?> value='open'><?=ee()->lang->line('open')?></option>
+			<option <?=(($selected['rating_status'] == 'closed') ? 'selected="selected"' : '')?> value='closed'><?=ee()->lang->line('closed')?></option>
+			<option <?=(($selected['rating_status'] == 'quarantined') ? 'selected="selected"' : '')?> value='quarantined'><?=ee()->lang->line('quarantined')?></option>
+			<option <?=(($selected['rating_status'] == 'reported') ? 'selected="selected"' : '')?> value='reported'><?=ee()->lang->line('reported_not_quarantined')?></option>
+		</select>
+		
+		<select name='date_range' class='select'>
+			<option value=''><?=ee()->lang->line('filter_by_entry_date')?></option>
+			<option <?=(($selected['date_range'] == 'today')      ? 'selected="selected"' : '')?> value='today'><?=ee()->lang->line('today')?></option>
+			<option <?=(($selected['date_range'] == 'this_week')  ? 'selected="selected"' : '')?> value='this_week'><?=ee()->lang->line('this_week')?></option>
+			<option <?=(($selected['date_range'] == 'this_month') ? 'selected="selected"' : '')?> value='this_month'><?=ee()->lang->line('this_month')?></option>
+			<option <?=(($selected['date_range'] == 'last_month') ? 'selected="selected"' : '')?> value='last_month'><?=ee()->lang->line('last_month')?></option>
+			<option <?=(($selected['date_range'] == 'this_year')  ? 'selected="selected"' : '')?> value='this_year'><?=ee()->lang->line('this_year')?></option>
+			<option <?=(($selected['date_range'] == 'date_range') ? 'selected="selected"' : '')?> value='date_range'><?=ee()->lang->line('choose_date_range')?></option>
+		</select>
+		
+		<!--- CALENDARS -->
+		
+		<div id="date_range_calendars" style="display:none; text-align:center; width:100%; margin-left: 35%;">
+			
+			<div class="clearfix">&nbsp;</div>
+			
+			<table border='0' cellspacing='7' cellpadding='0'>
+				<tr>
+					<td>
+						<input dir='ltr' style='width:150px' type='text' name='start_date' id='start_date' value='' size='18' maxlength='23' class='input'  onkeyup="update_calendar('start_date', this.value);"  />
+					</td>
+					<td>
+						<input dir='ltr' style='width:150px' type='text' name='end_date' id='end_date' value='' size='18' maxlength='23' class='input'  onkeyup="update_calendar('start_date', this.value);"  />
+					</td>
+				</tr>
+			</table>
+		</div>
+			
+		<!--- KEYWORDS SEARCHING -->
+		
+		<div class="clearfix">&nbsp;</div>
+		
+		<label for="keywords"><?=ee()->lang->line('keywords')?>:</label>
+						
+		&nbsp;
+		
+		<input dir='ltr' style='width:200px' type='text' name='keywords' id='keywords' value='<?=$caller->output($selected['keywords'])?>' size='40' maxlength='200' class='input'  />
+		
+		&nbsp;&nbsp;
+		<input name='submit' type='submit' class='submit' value='<?=ee()->lang->line('search')?>'  />
+		
+		&nbsp;&nbsp;
+		<input name='export' type='submit' class='submit' value='<?=ee()->lang->line('export_ratings')?>'  />
+
+		
+	</fieldset>
+</form>
+
+<form action='<?php echo $caller->output($base_uri.'&method=ratings_actions');?>' method='post' id="module_view_ratings_form">
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />		
+
+	<div class="clearfix">&nbsp;</div>
+	
+	<table class="mainTable padTable magic_checkbox_table"  style="width:100%;"  cellspacing="0"  cellpadding="0"  border="0">
+		<thead>
+  			<tr>
+  				<th><?=ee()->lang->line('edit_rating'); ?></th>
+  				<th><?=ee()->lang->line('rating_date'); ?></th>
+  				<?php if ( empty($entry_id)) :?>
+					<th><?=ee()->lang->line('view_entrys_ratings'); ?></th>
+				<?php endif;?>
+				
+  				<th><?=ee()->lang->line('raters_name'); ?></th>
+  				<th><?=ee()->lang->line('raters_email'); ?></th>
+  				<th><?=ee()->lang->line('collection'); ?></th>
+  				<th>
+  					<?=ee()->lang->line('rating_status');?>
+				
+					<?php if ($rating_reports !== FALSE ) : ?>
+						(<?=ee()->lang->line('report_count');?>)
+					<?php endif; ?>
+  				</th>
+  				<th><?=ee()->lang->line('rating_field'); ?></th>
+  				<th><?=ee()->lang->line('review_field'); ?></th>
+  				
+  				<th style='width:4%;'>
+					<input type="checkbox"  style="float:right; margin-right:6px;" 
+							type="checkbox" name="toggle_all_checkboxes" />
+				</th>
+  			</tr>
+  		</thead>
+  		
+  		<tbody>
+<?php if (empty($ratings)):?>
+  			<tr class="<?=$this->cycle('odd', 'even');?>">
+  				<td colspan="<?=((empty($entry_id)) ? 9 : 8)?>"><span class="notice"><?=ee()->lang->line('no_ratings_found'); ?></span></td>
+  			</tr>
+  			
+<?php else:?>
+	<?php foreach ($ratings as $count => $rating) : ?>
+  			<tr class="<?=$this->cycle('odd', 'even');?>">
+	  			<td><a href="<?=$caller->output($this->base.'&method=edit_ratings_form&rating_id='.$rating['rating_id'])?>"><?=ee()->lang->line('edit_rating')?></a></td>
+				<td><?=ee()->localize->set_human_time($rating['rating_date'])?></td>
+				
+				<?php if ( empty($entry_id)) :?>
+					<td><a href="<?=$caller->output($this->base.'&method=view_ratings&entry_id='.$rating['entry_id'])?>"><?=((isset($entry_titles[$rating['entry_id']])) ? $entry_titles[$rating['entry_id']] : '--')?></a></td>
+				<?php endif;?>
+				
+				<td><?=$rating['name']?></td>
+				<td><?=$rating['email']?></td>
+				<td><?=($rating['collection'] == '' ? '---' : $rating['collection'])?></td>
+				<td>
+					<?=(($rating['quarantine'] == 'y') ? ee()->lang->line('quarantined') : ee()->lang->line($rating['status']))?>
+					
+					<?php if ($rating_reports !== FALSE ) : ?>
+					(<?=$rating_reports[$rating['rating_id']];?>)
+					<?php endif; ?>
+				</td>
+				<td><?=(($rating['rating'] == '') ? '--': $rating['rating'])?></td>
+				<td><?=$rating['review']?></td>
+				<td>
+					<input 	type="checkbox" 
+							style="float:right; margin-right:4px;"
+							id="ratings_selected_id_<?=$count;?>" 
+							name="selected[]" 
+							value="<?=$this->output($rating['rating_id']);?>" />
+				</td>
+  			</tr>
+	<?php endforeach;?>
+<?php endif;?>
+
+		<tr class="<?=$this->cycle('odd', 'even');?>">
+			<td colspan="<?=((empty($entry_id)) ? 9 : 8)?>">
+				<?php if (! empty($paginate)) : ?>
+						<?=$paginate?>
+				<?php endif;?>
+			</td>
+			<td><input style="float:right; margin-right:4px;" class="checkbox" type="checkbox" name="toggle_all_checkboxes" /></td>
+		</tr>
+
+		</tbody>
+	</table>
+
+<?php if( in_array(ee()->session->userdata['group_id'], $caller->preference('can_post_ratings')) OR 
+		  in_array(ee()->session->userdata['group_id'], $caller->preference('can_delete_ratings')) OR
+		  in_array(ee()->session->userdata['group_id'], $caller->preference('can_report_ratings'))) : ?>
+
+	<div style="float:right;">
+		<div class="itemWrapper">
+			<input type='submit' class='submit' value='<?=ee()->lang->line('submit')?>'  />
+			&nbsp;
+			<select name='action' class='select' >
+			
+			<?php if( in_array(ee()->session->userdata['group_id'], $caller->preference('can_delete_ratings'))) : ?>
+				<option value='delete'>Delete Selected</option>
+			<?php endif; ?>
+			
+			<?php if( in_array(ee()->session->userdata['group_id'], $caller->preference('can_post_ratings'))) : ?>
+				<option value='edit'>Edit Selected</option>
+				<option value='edit'>------</option>
+				<option value='status_open'>Status: Open</option>
+				<option value='status_closed'>Status: Closed</option>
+			<?php endif;?>
+			
+			<?php if( in_array(ee()->session->userdata['group_id'], $caller->preference('can_report_ratings'))) : ?>
+				<option value='status_quarantined'>Status: Quarantined</option>
+			<?php endif; ?>
+			</select>
+		</div>
+	</div>
+<div class="clear_left shun">&nbsp;</div>
+<?php endif; ?>
+
+
+</form>
+
+<script type="text/javascript">
+	jQuery(function($){
+		$('#start_date').datepicker({dateFormat : "yy-mm-dd"});
+		$('#end_date').datepicker({dateFormat : "yy-mm-dd"});
+		
+		$("#start_date").datepicker("setDate", "<?=date('Y-m-d', $selected['start_date'])?>");
+		$("#end_date").datepicker("setDate", "<?=date('Y-m-d', $selected['end_date'])?>");
+		
+		$('select[name="date_range"]').change(function(e)
+		{
+			if ($(this).val() == "date_range")
+			{
+				$("#date_range_calendars").slideDown();
+			}
+			else
+			{
+				$("#date_range_calendars").slideUp();
+			}
+		});
+		
+		$('select[name="date_range"]').trigger('change');
+	});
+</script>

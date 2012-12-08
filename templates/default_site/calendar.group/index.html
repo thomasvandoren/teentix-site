@@ -1,0 +1,70 @@
+{embed="inc/.header"
+	title="Calendar"
+	body_class="calendar upcoming"
+}
+
+{embed="inc/.nav"
+	{if segment_2=="category"}
+  	end_title="{exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading}"
+	{/if}	
+}
+    
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">Calendar:
+      {if segment_2=="category"}
+      {exp:channel:category_heading channel="calendar_events"}{category_name}
+			{/exp:channel:category_heading}
+			{if:else}
+				Current Events
+      {/if}
+      </h1>
+    </div>
+  </div>
+  
+{embed="calendar/.calendar-nav"}
+  
+  <div class="row">
+  
+    <div id="main" class="eight columns">
+		{exp:calendar:events 
+			orderby="title" 
+			sort="asc" 
+			date_range_start="today" 
+			show_weeks="4" 
+			dynamic="off"
+			category="{segment_3}"
+		}
+			{if no_results}<p>Sorry, there are no upcoming events.</p>{/if}
+			<div class="entry clearfix">
+			
+				<p class="calendaar-meta"><strong>{categories backspace="3" show_group="1"}<a href="{path='calendar'}">{category_name}</a> | {/categories}</strong>
+				{if event_recurs}
+					{event_start_date format="%D %M %j, %Y"} &ndash; {event_last_date format="%D %M %j, %Y"}					
+				{if:else}
+					{event_start_date format="%D %M %j, %Y"}
+				{/if}
+				</p>
+				
+			{if event_image}
+				{event_image}
+				<a href="{url_title_path='calendar/event'}">{exp:ce_img:single src="{image}" width="120"}</a>
+				{/event_image}
+	  	{/if}
+	  	
+				<h3 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h3>		
+				
+			{related_entries id="event_venue"}
+			  <span class="event-venue">{title}</span>
+		  {/related_entries}
+
+			</div>
+		{/exp:calendar:events}   
+      	
+    </div>
+    <div id="sidebar" class="three columns">
+    	{embed="calendar/.sidebar"}
+    </div>
+  </div>
+  
+{embed="inc/.footer"}

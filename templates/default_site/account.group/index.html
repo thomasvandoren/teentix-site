@@ -1,43 +1,205 @@
+{if logged_out}
+	{redirect="account/login"}
+{/if}
 {embed="inc/.header"
-  body_class="account"
+  body_class="account home"
 }
 {embed="inc/.nav"}  
   
   <div class="row">
     <div class="twelve columns">
-      <h1>Hi, {username}.</h1>
+      <h1>Hi, {screen_name}.</h1>
     </div>
   </div>
 
   <div class="row">  
-    <div class="four columns">
-      <h4>Your Account</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+    <div class="three columns">
+		{embed="account/.sidebar"}
     </div>
     
-    <div class="eight columns">
-      <h4>Your account </h4>
-    {exp:user:edit}
-       
-      <p>Location <input name="location" value="{location}" /></p>
-      <p>Accept User Email <input type="checkbox" name="accept_user_email" value="y" {if accept_user_email == "y"}checked="checked"{/if} /></p>
-      <p>Your Member Field <input name="your_member_field" value="{your_member_field}" /></p>
-       
-      <p>Email <input name="email" value="{email}" /></p>
-      <p>Username <input name="username" value="{username}" /></p>
-      <p>Screen Name <input name="screen_name" value="{screen_name}" /></p>
-       
-      <p>Create a New Password? <input type="password" name="password" /></p>
-      <p>Password Confirm <input type="password" name="password_confirm" /></p>
-      <p>Current Password <input type="password" name="current_password" /></p>
-       
-      <p><input type="submit" value="Submit" /></p>
-       
-   {/exp:user:edit}  
-    
-         
-    </div>   
-    
+    <div class="nine columns">
+     
+     {exp:user:stats} 
+ 
+			<div id="member_profile" class="section">
+				<div class="edit-profile"><a href="{path='account/edit'}" class="button">Edit Profile</a></div>
+				<h3>Your Public Profile </h3>
+				<div class="row">
+					<div class="three columns">
+					{if avatar_filename}
+						<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}'s photo" />
+					{if:else}
+						<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
+					{/if}
+					</div>
+					<div class="nine columns">
+						<h4>{screen_name}</h4>
+						<p>
+							Location: {if location}{location}{if:else}<span class="no_info">No location saved</span>{/if}<br />
+							Website: {if url}<a href="{url}">{url}</a>{if:else}<span class="no_info">No website saved</span>{/if}<br />
+							Facebook: {if facebook}<a href="{facebook}">facebook</a>{if:else}<span class="no_info">No facebook saved</span>{/if}<br />
+							Twitter: {if twitter}<a href="{twitter}">twitter</a>{if:else}<span class="no_info">No twitter saved</span>{/if}<br />
+						</p>
+					</div>
+				</div>				
+			</div><!-- end #member_profile -->
+			{/exp:user:stats} 
+			
+			<div id="member_events" class="section">
+			{exp:favorites:entries
+		    channel="calendar_events"
+		    favorites_count="yes"
+			}
+		    <h3>My Saved Events</h3>
+		    {if favorites_count > 0}
+		    <p>You have {favorites_count} saved event</p>
+		    {/if}
+			{/exp:favorites:entries}
+			 
+			{exp:favorites:entries
+		    channel="calendar_events"
+		    limit="3"
+		    paginate="bottom"
+			}
+			  <div class="row">
+			    <div class="six columns">
+			    	<h4><a href="{url_title_path='calendar/event'}">{title}</a></h4>
+			    </div>
+			    <div class="six columns">
+			      <p>Saved on {favorites_date format="%D, %M %j, %Y at %g:%i %a"}</p>
+			    </div>	
+			  </div>		 
+		    {paginate}
+        <p class="view-all"><a href="{path='account/events'}">View all saved events &raquo;</a></p>
+		    {/paginate}
+		    {if no_results}
+        <p>You have not saved any events.</p>
+        {/if}
+			{/exp:favorites:entries}
+			</div><!-- end #member_events -->
+			
+			{exp:user:stats} 			
+			<div id="member_info" class="section">
+				<h3>Private Information</h3>
+				<div class="row">
+					<div class="four columns">
+						<p>Birthdate</p>
+					</div>
+					<div class="eight columns">
+					<p>
+					{if bday_m}
+						{if bday_m == "01"}January
+						{if:elseif bday_m == "02"}February
+						{if:elseif bday_m == "03"}March
+						{if:elseif bday_m == "04"}April
+						{if:elseif bday_m == "05"}May
+						{if:elseif bday_m == "06"}June
+						{if:elseif bday_m == "07"}July
+						{if:elseif bday_m == "08"}August
+						{if:elseif bday_m == "09"}September
+						{if:elseif bday_m == "10"}October
+						{if:elseif bday_m == "11"}November
+						{if:elseif bday_m == "12"}December
+						{if:else}{/if}
+					{/if} 
+					{if bday_d}{bday_d}{/if}{if bday_y AND bday_d}, {/if}
+					{if bday_y}{bday_y}
+					{if:else}
+					<span class="no_info">No birthdate saved</span>
+					{/if}
+					</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Name</p>
+					</div>
+					<div class="eight columns">
+						<p>{if first_name OR last_name}{first_name} {middle_initial} {last_name}
+						{if:else}<span class="no_info">No name saved</span>{/if}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Mailing Address</p>
+					</div>
+					<div class="eight columns">
+						<p>
+							{if street_address}{street_address}{if:else}<span class="no_info">No mailing address saved</span>{/if}
+							{if city OR state OR zip_code}<br />{city}, {state} {zip_code}{/if}
+							{if country}<br />{country}{/if}
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Phone Number</p>
+					</div>
+					<div class="eight columns">
+						<p>
+							{if phone_number}{phone_number}
+							{if:else}<span class="no_info">No phone number saved</span>{/if}
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Interests</p>
+					</div>
+					<div class="eight columns">
+						<p>
+						{categories}
+						{category_body}{category_name}<br />{/category_body}
+						{/categories} 
+						</p>
+					</div>
+				</div>
+			</div><!-- end #member_info -->
+			 
+			<!--<div id="members_stats" class="section">
+				<h3>Stats</h3>
+				<div class="row">
+					<div class="four columns">
+						<p>Member Since</p>
+					</div>
+					<div class="eight columns">
+						<p>{join_date format="%M %j, %Y %g:%i %a"}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Last Visit</p>
+					</div>
+					<div class="eight columns">
+						<p>{last_visit format="%M %j, %Y %g:%i %a"}</p>
+					</div>
+				</div>		
+			</div><!-- end #member_stats -->
+			
+			<div id="member_comments" class="section">
+				<h3>My Comments</h3>			
+			{if total_comments > 0}
+				<p class="total-count">You have {total_comments} total comments</p>
+				{exp:comment:entries 
+					dynamic="no" 
+					author_id="{member_id}" 
+					limit="5"
+				}
+				<div class="comment">
+	        <p class="posted">Comment for <a href="{comment_url_title_auto_path}">{title}</a> on {comment_date format="%D, %M %j, %Y at %g:%i %a"}</p>
+        	{comment}
+        </div>
+        {paginate}
+        <p class="view-all"><a href="{path='account/comments'}">View all comments &raquo;</a></p>
+		    {/paginate}
+				{/exp:comment:entries}
+			{if:else}
+				<p>You have not left any comments</p>
+			{/if}
+			</div><!-- end #member_comments -->
+			{/exp:user:stats}   
+			
+		</div>			   
   </div>
   
   

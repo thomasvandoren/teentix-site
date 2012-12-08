@@ -1,0 +1,5 @@
+Solspace - Rating Code Pack - Change Log
+
+
+1.0.0 (April 1, 2011)
+ - Initial release.

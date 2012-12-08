@@ -1,0 +1,46 @@
+{embed="inc/.header"
+	title="Participating Organizations"
+	body_class="orgs"
+}
+
+{embed="inc/.nav"
+	segment_1_title="Participating Organizations"
+}
+
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">Participating Organizations</h1>
+    </div>
+  </div>
+  
+  
+  <!-- Three-up Content Blocks -->
+  
+  <div class="row">
+  
+    <div class="twelve columns">
+    {exp:channel:entries channel="organizations" limit="200" orderby="title" sort="asc"}
+    	<div class="org row">
+    		<div class="three columns">
+    			<a href="{url_title_path='organizations'}">
+    			{exp:ce_img:pair src="{org_image}" width="220"}
+					<img src="{made}" alt="" width="{width}" height="{height}" />
+					{/exp:ce_img:pair}
+    			</a>
+    		</div>
+    		<div class="six columns">
+    			<h2><a href="{url_title_path='organizations'}">{title}</a></h2>
+    			<p>{org_contact_info}</p>
+    		</div>
+    		<div class="three columns">
+    			
+    		</div>
+    	
+    	</div>
+		{/exp:channel:entries}
+      	
+    </div>
+    
+  </div>
+
+{embed="inc/.footer"}

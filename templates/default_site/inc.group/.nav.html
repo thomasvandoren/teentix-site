@@ -1,15 +1,15 @@
   <!-- Header and Nav -->
   
-  <div class="row">
+  <div id="header" class="row">
     <div class="three columns">
-      <h1><img src="http://placehold.it/400x100&text=Logo" /></h1>
+      <h1 id="logo"><a href="{site_url}"><img src="http://placehold.it/400x100&text=Logo" /></a></h1>
     </div>
     <div class="nine columns">
-      <ul class="nav-bar right">
+      <ul id="utility-nav" class="nav-bar right">
       {if logged_out}
         <li class="has-flyout">
-          <a href="#">Login</a>
-          <div class="flyout" id="nav-bar-login">
+          <a href="{path='account/login'}">Login</a>
+          <div class="flyout right" id="nav-bar-login">
           
           {exp:member:login_form return="{exp:currentlee}"}
             <label for="username">Email Address:</label>
@@ -26,13 +26,79 @@
         </li>
       {/if}
       {if logged_in}
-        <li><a href="{path='account'}">{username}</a></li>
-        <li><a href="{path='logout'}">Logout</a></li>
+        <li><a href="{path='account'}">Hi {screen_name}!</a></li>
+        <li class="right"><a href="{path='logout'}">Logout</a></li>
       {/if}
-        <li><a href="{path ='application'}">Apply for a pass</a></li>
         
       </ul>
     </div>
   </div>
+  <div id="top-nav" class="row">
+  	<div class="twelve columns">
+	  	<ul id="main-nav" class="nav-bar">
+	      <li {if segment_1==''}class='active'{/if}><a href="{site_url}">Home</a></li>
+	      <li {if segment_1=='calendar'}class='active'{/if}><a href="{path='calendar'}">Calendar</a></li>
+	      <li {if segment_1=='blog'}class='active'{/if}><a href="{path='blog'}">Blog</a></li>
+	      <li {if segment_1=='organizations'}class='active'{/if}><a href="{path='organizations'}">Participating Orgs</a></li>
+	      <li {if segment_1=='venues'}class='active'{/if}><a href="{path='venues'}">Venues</a></li>
+	      <li class="{if segment_1=='about'}active {/if}has-flyout">
+			    <a href="#">About</a>
+			    <a href="#" class="flyout-toggle"><span> </span></a>
+			    <div class="flyout large">
+			    	<div class="row">
+			    		<div class="four columns">
+			    			<h4>About TeenTix</h4>
+			    			<ul>
+				    			<li><a href="#">Sub Nav Item 1</a></li>
+						      <li><a href="#">Sub Nav Item 2</a></li>
+						      <li><a href="#">Sub Nav 3</a></li>
+						      <li><a href="#">Sub Nav 4</a></li>
+						      <li><a href="#">Sub Nav Item 5</a></li>
+						    </ul>
+			    		</div>
+			    		<div class="four columns">
+			    			<h4>Our Partners</h4>
+			    			<ul>
+				    			<li><a href="#">Sub Nav Item 1</a></li>
+						      <li><a href="#">Sub Nav Item 2</a></li>
+						      <li><a href="#">Sub Nav 3</a></li>
+						      <li><a href="#">Sub Nav 4</a></li>
+						      <li><a href="#">Sub Nav Item 5</a></li>
+						    </ul>
+			    		</div>
+			    		<div class="four columns">
+			    			<h4>Get Involved</h4>
+			    			<ul>
+				    			<li><a href="#">Sub Nav Item 1</a></li>
+						      <li><a href="#">Sub Nav Item 2</a></li>
+						      <li><a href="#">Sub Nav 3</a></li>
+						      <li><a href="#">Sub Nav 4</a></li>
+						      <li><a href="#">Sub Nav Item 5</a></li>
+						    </ul>
+			    		</div>
+			    	</div>
+			      
+			  </div>
+	      
+	      <li><a href="{path='contact'}">Contact</a></li>
+	      <li><a href="{path='application'}">Get a TeenTix Pass</a></li>
+	    </ul>
+	  </div>
+  </div>
   
   <!-- End Header and Nav -->
+  {if segment_1 != ""}
+  <div class="row">
+  	<div id="nav-breadcrumb" class="twelve columns">
+  		<ul class="breadcrumbs">
+  			<li><a href="{site_url}">Home</a></li>
+	  	{if segment_1}
+	  		<li {if segment_2 == ""}class="current"{/if}><a href="{site_url}{segment_1}">{if embed:segment_1_title}{embed:segment_1_title}{if:else}{segment_1}{/if}</a></li>
+	  	{/if}
+	  	{if embed:end_title}
+	  		<li class="current"><a href="#">{embed:end_title}</a></li>
+	  	{/if}
+	  	</ul>
+  	</div>
+  </div>
+  {/if}	

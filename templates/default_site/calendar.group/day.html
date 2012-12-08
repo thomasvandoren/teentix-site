@@ -1,0 +1,118 @@
+{embed="inc/.header"
+	title="Calendar"
+	body_class="calendar day"
+}
+
+{embed="inc/.nav"
+	end_title="Daily"
+}
+    
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">Calendar: Week View
+      </h1>
+    </div>
+  </div>
+  
+{embed="calendar/.calendar-nav"}
+  
+  <div class="row">
+		<div id="main" class="nine columns">
+
+			<div id="daily_calendar">
+			
+			{exp:calendar:cal pad_short_weeks="n"
+		  {if segment_3 == ""}
+		  	date_range_start="today" 
+		  	date_range_end="today"
+		  {/if}
+		  {if segment_3 != ""}
+		  	date_range_start="{segment_3}-{segment_4}-{segment_5}" 
+		  	date_range_end="{segment_3}-{segment_4}-{segment_5}"
+		  {/if}
+				dynamic="off"
+			}
+			
+			{display_each_day}
+			  <div class="header">
+		      <div class="left">
+		        <a href="{path='calendar/day'}/{prev_day format="%Y/%m/%d"}/">&laquo; Previous</a>
+		      </div>
+		      <div class="right">
+		        <a href="{path='calendar/day'}/{next_day format="%Y/%m/%d"}/">Next &raquo;</a>
+		      </div>
+		      <div class="center">
+		        <h4>{day format="%l, %F %d, %Y"}</h4>
+		      </div>		      
+			  </div><!-- end .header -->
+			  
+			  <div class="row">  	
+			  {display_each_hour}
+			  	
+				  {if hour_event_total != "0"}
+				  <div class="three columns">
+					  <h5 class="header-hour">{time format="%g %a"}</h5>
+					</div>
+
+				  <div class="nine columns">
+				  {events}
+				  {if event_all_day}
+						<div class="three columns">
+						  <h5 class="header-hour">All Day
+						  </h5>
+						</div>
+						<div class="nine columns">
+						  <div class="entry">
+				        <h4 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h4>
+								<p class="event-info">
+									{related_entries id="event_venue"}
+									  <a href="{url_title_path='venues'}">{title}</a>
+								  {/related_entries}
+								</p>
+							{if event_summary}
+								<div class="event-summary">
+									{event_summary}
+								</div>
+							{/if}
+						  </div><!-- end .entry -->
+						</div>
+						<hr />
+						
+					{if:else}
+					  <div class="entry">
+							<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h4>
+							<p class="event-info">
+								{related_entries id="event_venue"}
+								  <a href="{url_title_path='venues'}">{title}</a> | 
+							  {/related_entries}
+								{event_start_date format="%g:%i %a"}
+								{if event_end_date}
+									{if "{event_start_date format='%g:%i %a'}" != "{event_end_date format='%g:%i%a'}"}
+									 - {event_end_date format="%g:%i%a"}
+									{/if}
+								{/if}
+							</p>
+							{if event_summary}<div class="event-summary">{event_summary}</div>{/if}
+					  </div><!-- end .entry -->			
+					{/if}
+					
+				  {/events}
+				  </div>
+				  <hr />
+				  {/if}
+			  {/display_each_hour}
+			  	
+			  </div>
+			{/display_each_day}
+			{/exp:calendar:cal}
+			
+			</div><!-- end #daily_calendar -->
+
+		</div><!-- end #main -->
+
+		<div id="sidebar" class="three columns">
+  	{embed="calendar/.sidebar"}
+    </div><!-- end #sidebar -->
+
+	</div>		
+{embed="inc/.footer"}

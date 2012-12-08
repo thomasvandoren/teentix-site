@@ -1,0 +1,215 @@
+{exp:calendar:events 
+	orderby="title" sort="asc" 
+	event_name="{segment_3}" 
+	date_range_start="99 months ago" 
+	show_months="999" 
+	dynamic="off"
+}
+{embed="inc/.header"
+	title="{title} | Event"
+	body_class="event single"
+}
+
+{embed="inc/.nav"
+	end_title="{title}"
+} 
+  
+  <div class="row">
+  	<div id="page-header" class="twelve columns">
+  	<h5 id="event-genre">
+			{if event_recommended == "y"}TeenTix Pick{/if}
+			{categories backspace="3" show_group="1"}<a href="{path='calendar'}">{category_name}</a> | {/categories}
+			</h5>
+		
+		  <h1 id="page-name">{event_title}</h1>
+  	</div>
+  </div>
+  
+  <div class="row">
+  	<div id="main" class="eight columns">
+
+			<div class="event">
+			  <h4 id="event-date">			  
+			  {if event_recurs}
+					{event_start_date format="%D %M %j, %Y"} &ndash; {event_last_date format="%D %M %j, %Y"}					
+				{if:else}
+					{event_start_date format="%D %M %j, %Y"}
+				{/if}
+				{if event_availability =="n"}
+					<br /><span class="ticket-available">TeenTix tickets are no longer available</span>
+				{/if}
+				</h4>
+			
+			  <div class="row">
+			  	<div id="event-info" class="six columns">
+						<p>
+					  {related_entries id="event_organization"}
+					  	<strong>Organization</strong> <a href="{url_title_path='organization'}">{title}</a><br />
+					  {/related_entries}
+						{if event_website}
+							<strong>More info</strong> <a href="{event_website}">Event Website</a>
+						{/if}
+					  </p>
+				  </div>
+				  <div id="event-location" class="six columns">
+					  <p>
+					  	<strong>Location</strong><br /> 
+					  {related_entries id="event_venue"}
+						  <a href="{url_title_path='venues'}">{title}</a><br />
+						  {venue_address} 
+					  {/related_entries}
+					  </p>
+				  </div>
+			  </div>
+			  {if event_video_embed}
+				<div class="flex-video widescreen">
+			  	{event_video_embed}
+			  </div>
+			  	{if event_images}
+			  	
+			  	{/if}
+			  {if:else}
+			  	{if event_images}
+			  	
+			  	{/if}
+			  {/if}
+			  <div id="event-description">
+			  {event_description}
+			  </div>
+			
+			
+			 
+			</div>
+			
+		{if no_results}
+			<p>No Results</p>
+		{/if}
+		{/exp:calendar:events}
+		
+		{embed="inc/.comments" channel="calendar_events"}
+		</div>
+
+		<div id="sidebar" class="three columns">
+		{exp:calendar:events 
+			orderby="title" sort="asc" 
+			event_name="{segment_3}" 
+			date_range_start="99 months ago" 
+			show_months="999" 
+			dynamic="off"
+		}
+			<div class="event-favorite">
+				<p>
+			{if logged_in}
+		    {exp:favorites:saved}
+	        {if not_saved}
+            <span class="favorited">
+              <span class="Favorites_Status"></span>
+              <a class="Favorites_Save_Full" href="{path='favorite/add'}/{entry_id}">Save this event</a>
+              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='favorite/add'}">save</a>
+              <a class="Favorites_Delete Favorites_Trigger" style="display:none;" href="{permalink='favorite/add/delete/'}">delete</a>
+            </span>
+	        {/if}
+	        {if saved}
+            <span class="favorited">
+              <span class="Favorites_Status">Event saved</span>
+              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='favorite/add/'}">save</a>
+              <a class="Favorites_Delete Favorites_Trigger" href="{permalink='favorite/add/delete/'}">delete</a>
+            </span>
+	        {/if}
+		    {/exp:favorites:saved}
+		    <br /><a href="">View your saved events</a>
+			{if:else}
+		    <a href="{path='account/login'}" href="#">Login to save this event</a>
+			{/if} 
+				</p> 
+			</div>
+		{/exp:calendar:events}
+			<div class="social-buttons">
+				<!-- AddThis Button BEGIN -->
+				<div class="addthis_toolbox addthis_counter_style">
+					<a class="addthis_button_facebook_like" fb:like:layout="box_count"></a>
+					<a class="addthis_button_tweet" tw:count="vertical"></a>
+					<a class="addthis_button_google_plusone" g:plusone:size="tall"></a>
+					<a class="addthis_counter"></a>
+				</div>
+				<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b1e32f0df63aa4"></script>
+				<!-- AddThis Button END -->
+			</div>
+      <div id="event-upcoming">
+	      <h5>Upcoming Dates</h5>
+	      <ul>
+				{exp:calendar:occurrences 
+	       	event_name="{segment_3}" 
+	       	date_range_start="today" 
+	       	date_range_end="3 months" 
+	       	upcoming_occurrences_limit="100" 
+	       	prior_occurrences_limit="0" 
+	       	dynamic="off"
+				}
+				{if occurrence_count < "6"}
+					{if occurrence_all_day}
+						<li>{occurrence_start_date format="%l %m/%j"}</li>
+					{if:else}
+						<li>{occurrence_start_date format="%l %m/%j at %g:%i%a"}</li>
+					{/if}
+				{/if}
+				{if occurrence_count > "5"}
+					{if occurrence_count == "6"}
+					<div class="hidden">
+					{/if}
+					{if occurrence_all_day}
+						<li>{occurrence_start_date format="%l %m/%j"}</li>
+					{if:else}
+						<li>{occurrence_start_date format="%l %m/%j at %g:%i%a"}</li>
+					{/if}
+					{if occurrence_count == occurrence_total} 
+					</div>
+					<li class="view-more">View more &raquo;</li>
+					{/if}
+				{/if}
+				{/exp:calendar:occurrences}
+	      </ul>
+	    </div>
+		{exp:calendar:events 
+			orderby="title" sort="asc" 
+			event_name="{segment_3}" 
+			date_range_start="99 months ago" 
+			show_months="999" 
+			dynamic="off"
+		}
+    {if event_age_restrictions} 
+			<div id="event-age-restrictions">
+				<h5>Age Restrictions</h5>
+				{event_age_restrictions}
+			</div>
+		{/if}
+		
+			<div id="event-ticket-info">
+				<h5>Ticket Info</h5>
+				<p>Tickets Available<br />
+				{categories backspace="6" show_group="2"}&bull; {category_name}<br />{/categories}
+				{event_ticket_info}
+			</div>
+			
+			<div id="event-box-office-info">
+				<h5>Box Office Info</h5>
+			{related_entries id="event_venue"}
+			  {venue_box_office} 
+		  {/related_entries}
+				{event_box_office_info}
+			</div>
+			
+			<div id="event-links">
+				<h5>Event Links</h5>
+				<p>
+				{if event_website}<a href="{event_website}">Event website</a><br />{/if}
+				{if event_facebook}<a href="{event_facebook}">Facebook page</a><br />{/if}
+				{if event_twitter}<a href="{event_twitter}">Twitter</a><br />{/if}
+				{if event_tumblr}<a href="{event_tumblr}">Tumblr page</a><br />{/if}
+				</p>
+			</div>
+		{/exp:calendar:events}
+		</div>
+	</div>
+  
+{embed="inc/.footer"}

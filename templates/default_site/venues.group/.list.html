@@ -1,0 +1,44 @@
+{embed="inc/.header"
+	title="Venues"
+	body_class="venues"
+}
+
+{embed="inc/.nav"}
+    
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">Venues</h1>
+    </div>
+  </div>
+  
+  
+  <!-- Three-up Content Blocks -->
+  
+  <div class="row">
+  
+    <div class="twelve columns">
+    {exp:channel:entries channel="venues" limit="200" orderby="title" sort="asc"}
+    	<div class="venue row">
+    		<div class="three columns">
+    			<a href="{url_title_path='venues'}">
+    			{exp:ce_img:pair src="{venue_image}" width="220"}
+					<img src="{made}" alt="" width="{width}" height="{height}" />
+					{/exp:ce_img:pair}
+    			</a>
+    		</div>
+    		<div class="six columns">
+    			<h2><a href="{url_title_path='venues'}">{title}</a></h2>
+    			<p>{venue_address}</p>
+    		</div>
+    		<div class="three columns">
+    			
+    		</div>
+    	
+    	</div>
+		{/exp:channel:entries}
+      	
+    </div>
+    
+  </div>
+  
+{embed="inc/.footer"}

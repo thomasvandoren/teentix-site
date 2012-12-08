@@ -1,0 +1,61 @@
+{exp:channel:entries channel="venues" limit="1"}
+{embed="inc/.header"
+	title="{title} | Venues"
+	body_class="venues single"
+}
+
+{embed="inc/.nav"
+	end_title="{title}"
+}
+  
+  
+  <!-- Three-up Content Blocks -->
+  
+  <div class="row">
+  
+    <div class="twelve columns">
+    
+    	<div class="row">
+    		<div class="eight columns">
+    			<h1 id="page-name">{title}</h1>
+    			<p><a href="{venue_website}">{venue_website}</a></p>
+    			{venue_address}    			
+    		</div>
+    		<div class="four columns">
+    		{exp:ce_img:pair src="{venue_image}" width="300"}
+					<img src="{made}" alt="" width="{width}" height="{height}" />
+				{/exp:ce_img:pair}
+    		</div>
+    	</div>
+    	<div class="row">
+    		<div class="six columns">
+    		{if venue_contact_info}
+    			<h4>Contact Info</h4>
+    			{venue_contact_info}
+    		{/if}
+    		{if venue_hours}
+    			<h4>Hours</h4>
+    			{venue_hours}
+    		{/if}
+    		{if venue_box_office}
+    			<h4>Box Office Info</h4>
+    			{venue_box_office}
+    		{/if}
+    		{if venue_facebook}
+    			<p>{venue_facebook}</p>
+    		{/if}
+    		{if venue_twitter}
+    			<p>{venue_twitter}</p>
+    		{/if}
+    		</div>
+    		<div class="six columns">
+    			{venue_google_map}
+    		</div>
+    	</div>
+      	
+    </div>
+    
+  </div>
+{/exp:channel:entries}
+
+{embed="inc/.footer"}

@@ -1,0 +1,125 @@
+{embed="inc/.header"
+  body_class="account pass"
+}
+{embed="inc/.nav"
+	end_title="New Pass Request"
+}
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>Hi, {screen_name}.</h1>
+    </div>
+  </div>
+
+  <div class="row">  
+    <div class="three columns">
+		{embed="account/.sidebar"}
+    </div>
+    
+    <div class="nine columns">
+    	<h3>Request a new TeenTix pass</h3> 
+    	<p>Please make sure your contact information is accurate.</p> 
+		{exp:user:stats} 				
+			 
+			<div id="private_info">
+				<div class="row">
+					<div class="four columns">
+						<p>Name</p>
+					</div>
+					<div class="eight columns">
+						<p>{if first_name OR last_name}{first_name} {middle_initial} {last_name}
+						{if:else}<span class="no_info">No name saved</span>{/if}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="four columns">
+						<p>Birthdate</p>
+					</div>
+					<div class="eight columns">
+					<p>
+					{if bday_m}
+						{if bday_m == "01"}January
+						{if:elseif bday_m == "02"}February
+						{if:elseif bday_m == "03"}March
+						{if:elseif bday_m == "04"}April
+						{if:elseif bday_m == "05"}May
+						{if:elseif bday_m == "06"}June
+						{if:elseif bday_m == "07"}July
+						{if:elseif bday_m == "08"}August
+						{if:elseif bday_m == "09"}September
+						{if:elseif bday_m == "10"}October
+						{if:elseif bday_m == "11"}November
+						{if:elseif bday_m == "12"}December
+						{if:else}{/if}
+					{/if} 
+					{if bday_d}{bday_d}{/if}{if bday_y AND bday_d}, {/if}
+					{if bday_y}{bday_y}
+					{if:else}
+					<span class="no_info">No birthdate saved</span>
+					{/if}
+					</p>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="four columns">
+						<p>Mailing Address</p>
+					</div>
+					<div class="eight columns">
+						<p>
+							{if street_address}{street_address}{if:else}<span class="no_info">No mailing address saved</span>{/if}
+							{if city OR state OR zip_code}<br />{city}, {state} {zip_code}{/if}
+							{if country}<br />{country}{/if}
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="twelve columns">
+						<p><a href="{path='account/edit'}">Edit my contact info &raquo;</a></p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="twelve columns">
+				{if first_name == "" OR last_name == ""	OR bday_m == "" OR bday_d == "" OR bday_y == "" OR street_address == "" OR city == "" OR state == "" OR zip_code == ""}
+					<p><em>Please complete your contact information.</em></p>
+				{if:else}
+					{exp:freeform:form
+				    collection="request_pass"
+				    return="account/new_pass_confirm//%%entry_id%%"
+				    notify="michiko@michiko23.com"
+				    template="pass_notification" 
+				    send_user_email="yes"
+				    user_email_template="pass_delivery" 
+					}
+					 
+					    <input type="hidden" name="name" value="{first_name} {middle_initial} {last_name}" />
+					    <input type="hidden" name="email" value="{email}" />
+					    <input type="hidden" name="street1" value="{street_address}" />
+					    <input type="hidden" name="city" value="{city}" />
+					    <input type="hidden" name="state" value="{state}" />
+					    <input type="hidden" name="zip_code" value="{zip_code}" />
+					    <input type="hidden" name="country" value="{country}" />
+					    <input type="hidden" name="birthdate" value="{bday_m}-{bday_d}-{bday_y}" />
+					    <input type="hidden" name="member" value="{member_id}" />
+					    
+
+					 
+					    <p><input type="submit" name="submit" value="Request a pass" class="button" /></p>
+					 
+					{/exp:freeform:form}
+					
+				{/if}
+					</div>
+				</div>
+
+				
+			</div>
+			 
+		{/exp:user:stats} 
+         
+    </div>   
+    
+  </div>
+  
+  
+{embed="inc/.footer"}

@@ -58,6 +58,8 @@
     errorPlacement: function(error, element) {
       if (element.attr("name") == "app_birthdate[]") {
         error.insertAfter(element.parent());
+      } else {
+      	error.insertAfter(element);
       }
     }
   });
@@ -80,18 +82,55 @@
     errorPlacement: function(error, element) {
       if (element.attr("name") == "accept_terms") {
         error.insertAfter(element.parent());
+      } else {
+      	error.insertAfter(element);
       }
     }
   });
   
-  $('#nav-bar-login form').validate();
-  $('#login-form').validate();
-  $('#forgot_password_form').validate();
+  $('#account_edit').validate({
+    errorPlacement: function(error, element) {
+      if (element.attr("name") == "app_birthdate[]") {
+        error.insertAfter(element.parent());
+      }
+    }
+  });
+  
+  $('#login-form').validate({
+    rules: {
+      username: { 
+        email: true 
+      },
+      password: { 
+        minlength: 5 
+      }
+    }
+  });
+
+  $('#forgot_password_form').validate({
+    rules: {
+      email: { 
+        email: true 
+      }
+    }
+  });
+  
+  $('#newsletter_form').validate({
+    rules: {
+      app_email: { 
+        email: true 
+      }
+    }
+  });
   
   $('#app_newsletter').click(function() {
     $(this).parent().next().toggleClass('require');
     $(this).parent().next().next().toggleClass('required');
   });
+  
+  $('#nav-bar-login form').validate();
+  
+  
   
 
   // Hide address bar on mobile devices
@@ -102,5 +141,36 @@
       }, 0);
     });
   }
+  
+  
+  $('a.Favorites_Save') .click (function() {
+      var link = $(this).attr('href')
+      $('.Favorites_Status').load(link, function() {
+              $('.Favorites_Delete').show();
+          });
+      $(this).hide();
+      return false;
+  });
+  $('a.Favorites_Save_Full') .click (function() {
+      var link = $(this).attr('href')
+      $('.Favorites_Status').load(link, function() {
+              $('.Favorites_Delete').show();
+          });
+      $(this).hide();
+      return false;
+  });
+  
+  $('a.Favorites_Delete') .click (function() {
+      var link = $(this).attr('href')
+      $('.Favorites_Status').load(link, function() {
+              $('.Favorites_Save').show();
+          });
+      $(this).hide();
+      return false;
+  });
+  
+  $('.event .view-more').click(function() {
+  	$(this).prev().toggleClass('hidden');
+  });
 
 })(jQuery, this);

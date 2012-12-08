@@ -1,0 +1,39 @@
+{embed="inc/.header"
+  body_class="application"
+}
+{embed="inc/.nav"
+	end_title="Newsletter Confirmation"
+} 
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>TeenTix Newsletter</h1>
+    </div>
+  </div>
+  {exp:channel:entries 
+    entry_id="{segment_3}"  
+  }
+  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="{app_email}" merge_MTYPE='{app_member_type}' interest_groups='{categories show_group="1" backspace="1"}{category_name}|{/categories}' double_optin='no'}
+  {/exp:channel:entries}  
+
+  <div class="row">  
+    
+    <div class="eight columns">
+      
+      <h4>Thanks for signing up!</h4>
+      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+      
+      <p>Check out the <a href="{path='calendar'}">calendar</a> or the <a href="{path='blog'}">blog</a></p>
+
+    </div>
+    
+    <div class="four columns">
+      &nbsp;
+    </div>
+    
+    
+    
+  </div>
+  
+  
+{embed="inc/.footer"}

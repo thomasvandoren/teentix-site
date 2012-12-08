@@ -1,0 +1,76 @@
+{if logged_out}
+	{redirect="account/login"}
+{/if}
+{embed="inc/.header"
+  body_class="account events"
+}
+{embed="inc/.nav"}  
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>Hi, {screen_name}.</h1>
+    </div>
+  </div>
+
+  <div class="row">  
+    <div class="three columns">
+		{embed="account/.sidebar"}
+    </div>
+    
+    <div class="nine columns">
+   	
+			<div id="member_events">
+			{exp:favorites:entries
+		    channel="calendar_events"
+		    favorites_count="yes"
+			}
+		    <h3>Saved Events</h3>
+		    {if favorites_count > 0}
+		    <p class="total-count">You have {favorites_count} saved event</p>
+		    {/if}
+			{/exp:favorites:entries}
+			 
+				<div class="row header">
+			    <div class="eight columns">
+			    	Event Info
+			    </div>
+			    <div class="four columns">
+			    	Date Saved
+			    </div>
+			  </div>
+				{exp:favorites:entries
+			    channel="calendar_events"
+			    limit="3"
+			    paginate="bottom"
+			    orderby="favorites_date" 
+				}
+				<div class="row">
+			    <div class="eight columns">
+			    	<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{title}</a></h4>
+			    	<p class="event-location">
+			    	{related_entries id="event_venue"}{title}{/related_entries}</p>
+			    </div>
+			    <div class="four columns">
+			      <p>
+			      	{favorites_date format="%D, %M %j, %Y"}<br />
+			      	{favorites_date format="%g:%i %a"}
+			      </p>
+			    </div>	
+			  </div>	 
+			    {paginate}
+		        <p class="paginate">Page {current_page} of {total_pages} pages {pagination_links}</p>
+			    {/paginate}
+			    {if no_results}
+	        <p>You have not saved any events.</p>
+	        {/if}
+				{/exp:favorites:entries}
+				
+			</div><!-- end #member_events -->
+			
+			  
+			
+		</div>			   
+  </div>
+  
+  
+{embed="inc/.footer"}

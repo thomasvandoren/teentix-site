@@ -1,0 +1,99 @@
+{embed="inc/.header"
+	title="Calendar"
+	body_class="calendar month"
+}
+
+{embed="inc/.nav"
+	end_title="Monthly"
+}
+    
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">Calendar: Monthly
+      </h1>
+    </div>
+  </div>
+    
+{embed="calendar/.calendar-nav"}
+  
+  <div class="row">
+		<div id="main" class="nine columns">
+
+			<div id="monthly_calendar">
+		  {exp:calendar:cal
+			{if segment_3 == ''}
+				date_range_start="year-month-01" 
+				date_range_end="year-month-last"
+			{/if}
+			{if segment_3 != ""}
+				date_range_start="{segment_3}-{segment_4}-01" 
+				date_range_end="{segment_3}-{segment_4}-last"
+			{/if}
+			}
+	    {display_each_month}	      
+	      <div class="header">
+				  <div class="left">
+				     <a href="{path='calendar/month'}/{prev_month format="%Y/%m"}/">&laquo; {prev_month format="%F"}</a>
+				  </div>
+				  <div class="right">
+				     <a href="{path='calendar/month'}/{next_month format="%Y/%m"}/">{next_month format="%F"} &raquo;</a>
+				  </div>
+				  <div class="center">
+				     <h4>{month format="%F %Y"}</h4>
+				  </div>			  
+				</div><!-- end .header -->
+				
+	      <table id="calendar_table">
+					<thead>
+						<tr id="days_of_week">
+						   {display_each_day_of_week}
+						   <th class="day_of_week {day_of_week}">{day_of_week}</th>
+						   {/display_each_day_of_week}
+						</tr>
+          </thead>
+          <tbody>
+          {display_each_week}
+            <tr>
+          	{display_each_day}
+            {if day_in_current_month}
+            	<td class="day_cell"><div class="date"><a class="num" href="{path='calendar/day'}/{day format="%Y/%m/%d"}/">{day format="%j"}</a></div>
+            {if:else}
+              <td class="day_cell out_of_range"><div class="date"><span class="num">{day format="%j"}</span></div>
+            {/if}
+              {display_each_hour}
+              	{events}
+                <div 
+                  class="
+                   event {if event_all_day}all_day{/if} 
+                   {if event_first_day}first_day{/if} 
+                   {if event_last_day}last_day{/if} 
+                   {if all_day_event_index_difference > 0}index_difference_{all_day_event_index_difference}{/if}
+                ">
+
+                {if event_all_day == ''}
+                	{event_start_date format="%g"}{if event_start_minute > 0}:{event_start_minute}{/if}{event_start_date format="%a"}
+                {if:else}
+                	All Day
+                {/if}
+                   <a href="{url_title_path='calendar/event'}" title="{event_title}">{event_title}</a>
+                </div>
+                {/events}
+              {/display_each_hour}
+            	</td>
+          	{/display_each_day}
+            </tr>
+          {/display_each_week}
+          </tbody>
+        </table>
+				{/display_each_month}
+			{/exp:calendar:cal}
+			</div><!-- end #monthly_calendar -->
+		</div><!-- end #main -->
+
+		<div id="sidebar" class="three columns">
+  	{embed="calendar/.sidebar"}
+    </div><!-- end #sidebar -->
+
+	</div>
+		
+{embed="inc/.footer"}

@@ -1,21 +1,24 @@
 {embed="inc/.header"
-  body_class="account"
+  body_class="account error"
   titl="{title}"
 }
-{embed="inc/.nav"}  
+{embed="inc/.nav"
+	end_title="Error"
+}
   
   <div class="row">
     <div class="twelve columns">
-      <h1>{heading}</h1>
+      <h1>Sorry!</h1>
     </div>
   </div>
 
   <div class="row">  
-    <div class="four columns">
+    <div class="three columns">
      &nbsp;
     </div>
     
-    <div class="six columns">
+    <div class="nine columns">
+	    <h3>{heading}</h3>
       {content}
       <p>{link}</p>
     </div>   

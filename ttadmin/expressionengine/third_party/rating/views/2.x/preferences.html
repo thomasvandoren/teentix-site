@@ -1,0 +1,153 @@
+<form action="<?=$this->output($base_uri.'&method=save_preferences');?>" method="post" id="module_preferences_form">
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />
+	<table class="mainTable padTable"  style="width:100%;"  cellspacing="0"  cellpadding="0"  border="0">
+	    <thead>
+  				<tr>
+  					<th style="width:25%;"><?=ee()->lang->line('preference')?></th>
+  					<th style="width:40%;"><?=ee()->lang->line('setting')?></th>
+  				</tr>
+  			</thead>
+
+		<tbody>
+			<tr class="odd">
+				<td style='width:50%; vertical-align:top;'>
+					<label for='can_post_ratings' ><?php echo ee()->lang->line('can_post_ratings');?>:</label>
+					<div class="subtext"><?=ee()->lang->line('can_post_ratings_subtext')?></div>
+				</td>
+				<td>
+					<select class="select"  style="width:90%" multiple="multiple" size="5" name="can_post_ratings[]" id="can_post_ratings">
+						<?php				 
+							foreach($member_groups as $value => $text) : 
+								$selected = (in_array($value, $prefs['can_post_ratings'])) ? 'selected="selected"' : '';
+							?>
+							
+							<option value="<?=$value?>" <?=$selected?>><?=$this->output($text)?></option>
+						
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			
+			<tr class="even">
+				<td style='width:50%; vertical-align:top;'>
+					<label for='can_report_ratings' ><?php echo ee()->lang->line('can_report_ratings');?>:</label>
+					<div class="subtext"><?=ee()->lang->line('can_report_ratings_subtext')?></div>
+				</td>
+				<td>
+					<select class="select"  style="width:90%" multiple="multiple" size="5" name="can_report_ratings[]" id="can_report_ratings">
+						<?php				 
+							foreach($member_groups as $value => $text) : 
+								$selected = (in_array($value, $prefs['can_report_ratings'])) ? 'selected="selected"' : '';
+							?>
+							
+							<option value="<?=$value?>" <?=$selected?>><?=$this->output($text)?></option>
+						
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			
+			<tr class="odd">
+				<td style='width:50%;  vertical-align:top;'>
+					<label for='can_delete_ratings' ><?php echo ee()->lang->line('can_delete_ratings');?>:</label>
+					<div class="subtext"><?=ee()->lang->line('can_delete_ratings_subtext')?></div>
+				</td>
+				<td>
+					<select class="select" style="width:90%" multiple="multiple" size="5" name="can_delete_ratings[]" id="can_delete_ratings">
+						<?php 
+							foreach($member_groups as $value => $text) : 
+								$selected = (in_array($value, $prefs['can_delete_ratings'])) ? 'selected="selected"' : '';
+							?>
+							
+							<option value="<?=$value?>" <?=$selected?>><?=$this->output($text)?></option>
+						
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			
+			<tr class="even">
+				<td style='width:50%;  vertical-align:top;'>
+					<label for='enabled_channels' ><?php echo ee()->lang->line('enabled_channels');?>:</label>
+					<div class="subtext"><?=ee()->lang->line('enabled_channels_subtext')?></div>
+				</td>
+				<td>
+					<select class="select" style="width:90%" multiple="multiple" size="5" name="enabled_channels[]" id="enabled_channels">
+						
+						<?php $selected = (in_array('all', $prefs['enabled_channels'])) ? 'selected="selected"' : ''; ?>
+							
+							<option value="all" <?=$selected?>><?=$this->output(ee()->lang->line('all_channels'))?></option>
+						
+						<?php foreach($caller->data->get_sites() as $site_id => $site_label) : ?>
+							<optgroup label='<?=$caller->output($site_label)?>'>
+						
+							<?php
+								foreach($channels[$site_id] as $value => $text) : 
+									$selected = (in_array($value, $prefs['enabled_channels'])) ? 'selected="selected"' : '';
+							?>
+							
+								<option value="<?=$value?>" <?=$selected?>><?=$this->output($text)?></option>
+								
+							<?php endforeach; ?>
+							</optgroup>
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			
+			<tr class="odd">
+				<td style='width:50%;'>
+					<label for='quarantine_minimum' ><?php echo ee()->lang->line('rating_quarantine_minimum');?>:</label>
+					<div class="subtext"><?=ee()->lang->line('rating_quarantine_minimum_subtext')?></div>
+				</td>
+				<td>
+					<input type="text" dir="ltr" style="width:88%" value="<?=$prefs['quarantine_minimum']?>" size="20" class="input" id="quarantine_minimum" name="quarantine_minimum" />	
+				</td>
+			</tr>
+			
+			<tr class="even">
+				<td style='width:50%;'>
+					<label for='require_email'><?php echo ee()->lang->line('rating_require_email');?></label>
+				</td>
+				<td>
+					<select class="select" name="require_email" id="require_email">
+						<?php
+							$options = array('y' => ee()->lang->line('yes'), 'n' => ee()->lang->line('no'));
+						
+							foreach($options as $value => $text) : 
+								$selected = ( $value == $prefs['require_email']) ? 'selected="selected"' : '';
+						?>
+						
+							<option value="<?=$value?>" <?=$selected?>><?=$this->output($text)?></option>
+							
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+			
+			<tr class="odd">
+				<td style='width:50%;'>
+					<label for='use_captcha' ><?php echo ee()->lang->line('rating_use_captcha');?></label>
+					<div class="subtext"><?=ee()->lang->line('rating_use_captcha_subtext')?></div>
+				</td>
+				<td>
+					<select class="select" name="use_captcha" id="use_captcha">
+						<?php
+							$options = array('y' => ee()->lang->line('yes'), 'n' => ee()->lang->line('no'));
+						
+							foreach($options as $value => $text) : 
+								$selected = ($value == $prefs['use_captcha']) ? 'selected="selected"' : '';
+						?>
+						
+							<option value="<?=$value?>" <?=$selected?>><?=$this->output($text)?></option>
+							
+						<?php endforeach; ?>
+					</select>
+				</td>
+			</tr>
+		</tbody>
+		
+	</table>
+	<p style="float:right;"><input type="submit" class="submit" value="<?=ee()->lang->line('save_preferences'); ?>" /> </p>
+	<div class="clear_left shun">&nbsp;</div>
+</form>

@@ -1,0 +1,64 @@
+{embed="inc/.header"
+  body_class="application"
+}
+{embed="inc/.nav"} 
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>TeenTix Newsletter</h1>
+    </div>
+  </div>
+
+  
+  <div class="row">  
+    <div class="four columns">
+      <h4>Sign up for the weekly newsletter.</h4>
+      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+    </div>
+    
+    <div class="eight columns">
+    {exp:safecracker 
+      channel="newsletter" 
+      return="newsletter/thanks/ENTRY_ID" 
+      dynamic_title="[app_email] Newsletter Signup" 
+      error_handling="inline"
+      id="newsletter_form"
+      include_jquery="no"
+      logged_out_member_id="2"
+      safecracker_head="no"  
+    }
+      
+      <fieldset>
+        <legend>Your Info</legend>
+        
+        <label for="app_email" class="require">Email Address</label>
+        <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
+        
+        <div class="app_interests_list clearfix">
+          <p>Interests</p>
+          {categories show_group="1"}
+					<label><input type="checkbox" name="category[]" value="{category_id}" /> {category_name}</label> 
+					{/categories}
+        </div>
+        
+        <div class="app_member_type_list">
+          <p>Which applies to you?</p>
+          {field:app_member_type}
+        </div>
+                
+      </fieldset>
+      
+      <div class="form_submit">
+        <input type="submit" name="submit" value="Submit" class="button">
+      </div>
+        
+    {/exp:safecracker}
+    
+    </div>
+    
+    
+    
+  </div>
+  
+  
+{embed="inc/.footer"}

@@ -1,0 +1,5 @@
+{exp:rating:stats collection="Book Reviews" entry_id="{embed:entry_id}" precision="1"}
+<p>Rated: {stars_overall_avg} ({overall_avg}/5), based on {overall_count} review{if overall_count !="1"}s{/if}.
+   {if logged_in_group_id == "1"}<small> &nbsp; <a href="{path='%prefix%main/delete'}/entry/{embed:entry_id}/">remove ALL ratings for this entry?</a></small>{/if}</p>
+{if rating_no_results}<p>This entry has not been rated yet.</p>{/if}
+{/exp:rating:stats}

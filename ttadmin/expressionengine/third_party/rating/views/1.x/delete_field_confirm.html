@@ -1,0 +1,34 @@
+
+<form action="<?=$caller->output($form_uri)?>" method="post">
+	<div class='hidden'>
+		<?php foreach($delete as $delete_id) : ?>
+			<input type="hidden" name="delete[]" value="<?php echo $delete_id;?>" />
+		<?php endforeach;?>
+	</div>
+
+	<div class='tableHeading'><?php echo $page_title; ?></div>
+
+	<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;'  class='tableBorder' >
+		
+		<tbody>
+			<tr>
+				<td valign="top" class="tableCellOne">
+					<p class="defaultBold"><?php echo $delete_question;?></p>
+			
+					<br />
+				
+					<div class='alert'><?php echo ee()->lang->line('action_can_not_be_undone');?></div>
+							
+					<br />
+							
+					<div class='clearfix'>
+						<input type="submit" name="submit" value="<?php echo ee()->lang->line('delete');?>" class="submit"  />
+					</div>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+		
+	<div class='clearfix' >&nbsp;</div>
+
+</form>

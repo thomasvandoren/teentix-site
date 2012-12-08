@@ -1,0 +1,58 @@
+{embed="%prefix%inc/index" page_title="Delete Rating(s)"}
+</head>
+<body id="home">
+{embed="%prefix%inc/header"}
+
+		<div id="maincolumn">
+		
+			<h2>Rating</h2>
+			
+			<h3>Delete Rating(s)</h3>
+			
+			<p></p>
+
+			<div id="leftcolumn">
+
+{if segment_4}
+  {if segment_3 == "rating"}
+{exp:rating:delete rating_id="{segment_4}"}
+				{if success}<h4>Successful!</h4>
+				{if:else}<h4>Error!</h4>{/if}
+				<p>{message}</p>
+{/exp:rating:delete}
+  {if:elseif segment_3 == "entry"}
+{exp:rating:delete entry_id="{segment_4}"}
+				{if success}<h4>Successful!</h4>
+				{if:else}<h4>Error!</h4>{/if}
+				<p>{message}</p>
+{/exp:rating:delete}
+  {/if}
+{if:else}
+  <p>No rating or entry was specified.</p>
+{/if}
+
+			</div>
+
+			<div id="rightcolumn">
+
+{embed="%prefix%inc/side_column"}
+
+				<div id="aboutcolumn">
+		
+					<h3>About This Page</h3>
+			
+					<p>The "Delete Rating(s)" page handles deleting of a specific rating or all ratings for a given entry (depending on the call made to this page).</p>
+
+					<p>It makes use of the following functions:</p>
+
+					<ul>
+						<li><a href="http://www.solspace.com/docs/detail/rating_delete/">Rating:Delete</a> to handle rating(s) deletion for a given entry.</li>
+					</ul>
+		
+				</div>
+
+			</div>
+	
+		</div>
+		
+{embed="%prefix%inc/footer"}

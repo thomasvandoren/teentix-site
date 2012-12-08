@@ -1,0 +1,26 @@
+
+<!-- BEGIN FORM -->
+
+<form action='<?=$this->output($base_uri.'&method=utilities&row='.$row);?>' method='post' id="module_maintenance_form">
+
+	<div class='tableHeading'><?=$page_title;?></div>
+	
+		<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;'  class='tableBorder magic_checkbox_table' >
+			<tr>
+				<td class='tableHeadingAlt'><?=ee()->lang->line('recount_statistics');?></td>
+			</tr>
+			<tr>
+				<td class='tableCellOne' colspan="5">
+					<?php if ($start == TRUE) : ?>
+						<input name='return' type='submit' class='submit' value='<?=ee()->lang->line('start_recount');?>'  />
+					<?php elseif ( $next_batch > $total_batches ) : ?>
+						<?=ee()->lang->line('recount_complete')?>
+					<?php else : ?>
+						<input name='return' type='submit' class='submit' value='<?=str_replace(array('%next_batch%', '%total_batches%'), array($next_batch, $total_batches), ee()->lang->line('recount_batch_button'));?>'  />
+					<?php endif; ?>
+				</td>
+			</tr>
+		</table>
+</form>
+
+<!-- END FORM -->

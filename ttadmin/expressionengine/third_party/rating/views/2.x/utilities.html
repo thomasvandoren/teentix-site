@@ -1,0 +1,33 @@
+
+<!-- BEGIN FORM -->
+
+<form action='<?=$base_uri.'&method=utilities&row='.$row;?>' method='post' id="module_maintenance_form">	
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />	
+	<table class="mainTable padTable" style="width:100%;" cellspacing="0" cellpadding="0" border="0">
+		<thead>
+			<tr>
+				<th style="width:50%;"><?=$lang_utility?></th>
+				<th><?=$lang_options?></th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr class="<?=$this->cycle('odd', 'even');?>">
+				<td><label><?=ee()->lang->line('recount_statistics')?>:</label>
+					<div class="subtext"><?=$lang_recount_description?></div>
+				</td>
+				<td>
+					<?php if ($start == TRUE) : ?>
+						<input name='return' type='submit' class='submit' value='<?=ee()->lang->line('start_recount');?>'  />
+					<?php elseif ( $next_batch > $total_batches ) : ?>
+						<?=ee()->lang->line('recount_complete')?>
+					<?php else : ?>
+						<input name='return' type='submit' class='submit' value='<?=str_replace(array('%next_batch%', '%total_batches%'), array($next_batch, $total_batches), ee()->lang->line('recount_batch_button'));?>'  />
+					<?php endif; ?>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</form>
+
+<!-- END FORM -->

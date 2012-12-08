@@ -1,7 +1,12 @@
+{if segment_3 == ""}
+	{redirect="newsletter"}
+{/if}
 {embed="inc/.header"
   body_class="application"
 }
-{embed="inc/.nav"}  
+{embed="inc/.nav"
+	end_title="Sign up for our Newsletter"
+} 
   
   <div class="row">
     <div class="twelve columns">
@@ -22,7 +27,7 @@
       return="application/account/ENTRY_ID" 
       entry_id="{segment_3}"
       error_handling="inline"
-      id="application_form"
+      id="newsletter_form"
       include_jquery="no"
       logged_out_member_id="2"
       safecracker_head="no"  
@@ -39,9 +44,11 @@
         <label for="app_email" class="require">Email Address</label>
         <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
         
-        <div class="app_interests_list">
+        <div class="app_interests_list clearfix">
           <p>Interests</p>
-          {field:app_interests}
+          {categories show_group="1"}
+					<label><input type="checkbox" name="category[]" value="{category_id}" /> {category_name}</label> 
+					{/categories}
         </div>
         
         <div class="app_member_type_list">

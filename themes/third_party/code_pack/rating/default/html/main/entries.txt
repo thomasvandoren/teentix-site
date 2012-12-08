@@ -1,0 +1,75 @@
+{embed="%prefix%inc/index" page_title="{if segment_3 == "all"}All {/if}Entries{if segment_3 == "by_author"} by Author{/if}"}
+</head>
+<body id="home">
+{embed="%prefix%inc/header"}
+
+		<div id="maincolumn">
+		
+			<h2>Rating</h2>
+			
+			<h3>{if segment_3 == "all"}All {/if}Entries{if segment_3 == "by_author"} by Author{/if}</h3>
+			
+			<p></p>
+
+			<div id="leftcolumn">
+
+{if segment_3 == "by_author"}
+						<h3>Entries by {exp:member:custom_profile_data member_id="{segment_4}"}<span>{screen_name}</span>{/exp:member:custom_profile_data}</h3>
+						<hr />
+{/if}
+
+%ee2%
+{exp:channel:entries
+%/ee2%
+%ee1%
+{exp:weblog:entries
+%/ee1%
+   {if segment_3 == "by_author"}author_id="{segment_4}"{/if}
+   limit="10"
+   paginate="bottom"
+   dynamic="off"
+}
+<div class="entries">
+    <h4>{exp:rating:stats collection="Book Reviews" entry_id="{entry_id}" precision="1"}<span style="float:right;">{stars_overall_avg} ({overall_avg}/5, based on {overall_count} review{if overall_count !="1"}s{/if})</span>{/exp:rating:stats}
+       <a href="{url_title_path='%prefix%main/entry'}">{title}</a></h4>
+    <p>Author: <a href="{path='%prefix%main/author_profile'}/{author_id}/">{author}</a></p>
+    <p>Description: {if summary}{summary}{if:else}{body}{/if}</p>
+</div>
+{if no_results}<p>No results.</p>{/if}
+{paginate}
+<hr />
+<p>Page {current_page} of {total_pages} pages &nbsp; {pagination_links}</p>
+{/paginate}
+%ee2%
+{/exp:channel:entries}
+%/ee2%
+%ee1%
+{/exp:weblog:entries}
+%/ee1%
+
+			</div>
+
+			<div id="rightcolumn">
+
+{embed="%prefix%inc/side_column"}
+
+				<div id="aboutcolumn">
+		
+					<h3>About This Page</h3>
+			
+					<p>The "All Entries" page displays list of all entries for your site. It simply makes it easier for you during testing phase to navigate to your entries and submit ratings for them. Additionally, this page can be filtered by author ID using the list of authors above.</p>
+
+					<p>It makes use of the following functions:</p>
+
+					<ul>
+						<li><a href="http://expressionengine.com/user_guide/modules/channel/channel_entries.html">Channel:Entries</a> to display a list of all entries.</li>
+						<li><a href="http://www.solspace.com/docs/detail/rating_stats/">Rating:Stats</a> to display stats about ratings for each entry, if available.</li>
+					</ul>
+		
+				</div>
+
+			</div>
+	
+		</div>
+		
+{embed="%prefix%inc/footer"}

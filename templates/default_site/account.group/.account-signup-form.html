@@ -1,0 +1,51 @@
+	<p class="require">
+		<strong>Required information*</strong>
+	</p>
+{exp:user:register 
+  form:name="account_form"  
+  form:id="account_form"   
+  return="account/confirm"  
+  admin_register="yes"  
+  error_page="account/error" 
+}
+  <fieldset>
+    <legend>Account Info</legend>
+    
+    <label for="username" class="require">Email*</label>
+    <input type="text" name="username" value="{embed:email}"  class="required" />
+    
+    <label for="screen_name" class="require">Screen Name*</label>
+    <input type="text" name="screen_name" class="required" />
+     
+    <label for="password" class="require">Password*</label>
+    <input type="password" name="password" id="password" class="required" />
+    
+    <label for="password_confirm" class="require">Confirm Password*</label>
+    <input type="password" name="password_confirm" id="password_confirm" class="required" />
+    
+  </fieldset>
+  
+  <fieldset id="account_terms">
+    <legend>Terms of Use</legend>
+    <div class="terms">
+      <p>In order to provide the service, there are some limitations on the type of content that can be published on TeenTix.com.</p> 
+      <p>You may not impersonate others on TeenTix.com in a manner that does or is intended to mislead, confuse, or deceive others.</p>
+      <p>You may not publish or post other people's private and confidential information</p>
+      <p>You may not publish or post direct, specific threats of violence against others.</p>
+      <p>We will respond to clear and complete notices of alleged copyright infringement. Our copyright procedures are set forth in the Terms of Service.</p>
+      <p>You may not use our service for any unlawful purposes or in furtherance of illegal activities. International users agree to comply with all local laws regarding online conduct and acceptable content.</p>
+    </div>
+
+    <label for="accept_terms" class="require">
+      <input type="checkbox" name="accept_terms" id="accept_terms" value="yes" class="required" title="Please accept the terms of service." /> 
+      Accept Terms?*
+    </label>         
+
+  </fieldset>
+  <p><input type="submit" value="Submit" class="button" /></p>
+    
+  {if no_results}
+  <p>You're currently logged in, and must be logged out to view this form.</p>
+  {/if}   
+   
+{/exp:user:register}  

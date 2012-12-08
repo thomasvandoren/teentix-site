@@ -1,0 +1,40 @@
+
+<!-- BEGIN FORM -->
+
+<form action='<?php echo $this->output($base_uri.'&method=save_field_order');?>' method='post' id="module_edit_field_order_form">
+
+	<div class='tableHeading' ><?=ee()->lang->line('edit_field_order');?></div>
+	
+		<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;'  class='tableBorder' >
+		
+		<tr>
+			<td class='tableHeadingAlt' style="width: 20%" ><?=ee()->lang->line('field_label');?></td>
+			<td class='tableHeadingAlt' style="width: 80%" ><?=ee()->lang->line('field_order');?></td>
+		</tr>
+		
+		<?php if (sizeof($fields) == 0) : ?>
+			<tr>
+				<td class='tableCellOne' colspan="5"><?=ee()->lang->line('no_rating_fields'); ?></td>
+			</tr>
+		<?php endif; ?>
+		
+		<?php foreach($fields as $field) : ?>
+			<?php $switch = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+			<tr>
+				<td style='width:20%;' class="<?=$switch?>">
+					<label for="field_order[<?=$field['field_id']?>]"><?=$field['field_label']?></label>
+				<td class="<?=$switch?>">
+					<input dir='ltr' style='width:5%' type='text' name='field_order[<?=$field['field_id']?>]' id='field_order[<?=$field['field_id']?>]' value='<?=$caller->output($field['field_order'])?>' size='5' maxlength='4' class='input' />		
+				</td>
+			</tr>
+		<?php endforeach;?>
+		
+	</table>
+	
+	<div class='itemWrapperTop' >
+		<input name='return' type='submit' class='submit' value='<?php echo  ee()->lang->line('save_field_order');?>'  />
+	</div>
+
+</form>
+
+<!-- END FORM -->

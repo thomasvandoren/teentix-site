@@ -1,0 +1,65 @@
+
+<form id="module_fields_form" method="post" name="filter" action="<?=$base_uri.'&method=delete_field_confirm'; ?>">
+
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />		
+	
+	<table class="mainTable padTable magic_checkbox_table"  style="width:100%;"  cellspacing="0"  cellpadding="0"  border="0">
+		<thead>
+  			<tr>
+  				<th style="width: 24%"><?=ee()->lang->line('field_label'); ?></th>
+  				<th style="width: 24%"><?=ee()->lang->line('field_short_name'); ?></th>
+  				<th style="width: 24%"><?=ee()->lang->line('field_type'); ?></th>
+  				<th style="width: 24%"><?=ee()->lang->line('field_format'); ?></th>
+  				<th style="width: 4%">
+					<input style="float:right; margin-right:6px;"
+							class="checkbox" type="checkbox" name="toggle_all_checkboxes" />
+				</th>
+  			</tr>
+  		</thead>
+  		
+  		<tbody>
+<?php if (empty($fields)):?>
+  			<tr class="odd">
+  				<td colspan="5"><span class="notice"><?=ee()->lang->line('no_rating_fields'); ?></span></td>
+  			</tr>
+  			
+<?php else:?>
+	<?php foreach ($fields as $count => $field_data) : ?>
+  			<tr class="<?=$this->cycle('odd', 'even');?>">
+	  			<td><?=$field_data['field_label']; ?></td>
+				<td>
+					<a href="<?=$caller->output($base_uri.'&method=edit_field&field_id='.$field_data['field_id'])?>"><?=$field_data['field_name']; ?></a>
+				</td>
+				<td><?=ee()->lang->line('field_type_'.$field_data['field_type']); ?></td>
+				<td><?=ee()->lang->line('field_format_'.$field_data['field_fmt']); ?></td>
+				<td>
+					<?php if ($field_data['locked'] == 'y') :?>
+						<?=ee()->lang->line('locked_field')?>
+					<?php else: ?>
+					<input 	type="checkbox" 
+							style="float:right; margin-right:4px;"
+							id="fields_delete_id_<?=$count;?>" name="delete[]" value="<?=$this->output($field_data['field_id']);?>" />
+					<?php endif; ?>
+				</td>
+  			</tr>
+	<?php endforeach;?>
+<?php endif;?>
+
+		<tr  class="<?=$this->cycle('odd', 'even');?>">
+			<td colspan="4">
+				<?php if (! empty($paginate)) : ?>
+					<?=$paginate?>
+				<?php endif;?>
+			</td>
+			<td><input 	class="checkbox" 
+						style="float:right; margin-right:4px;"
+						type="checkbox" name="toggle_all_checkboxes" /></td>
+		</tr>
+		</tbody>
+	</table>
+
+	<p style="float:right;">
+		<input type='submit' class='submit' value='<?=ee()->lang->line('delete_fields')?>'  />
+	</p>
+<div class="clear_left shun">&nbsp;</div>
+</form>

@@ -1,0 +1,15 @@
+{exp:switchee variable = "{segment_2}" parse="inward"}
+
+{case value=""}
+	{embed="organizations/.list"}
+{/case}
+
+{case value="#^P(\d+)$#|''"}
+	{embed="organizations/.list"}
+{/case}
+
+{case default="Yes"}
+	{embed="organizations/.single"}
+{/case}
+
+{/exp:switchee}

@@ -1,0 +1,201 @@
+
+<?php $caller->view('calendar.js');?>
+
+<!-- BEGIN FORM -->
+
+<form action='<?php echo $this->output($base_uri);?>' method='post' id="module_rated_entries_form">
+
+	<div class='tableHeading' ><?php echo ee()->lang->line('search_for_rated_entries');?></div>
+	
+	<div class='box'>
+		
+			<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;' >
+				<tr>
+					<td class='itemWrapper'>
+						<select name='collection' class='select'>
+							<option value=''><?=ee()->lang->line('filter_by_collection')?></option>
+							<option value='all' <?=(($selected['collection'] == 'all') ? 'selected="selected"' : '')?>><?=ee()->lang->line('all_collections')?></option>
+							
+							<?php if ($empty_collections == 'y') : ?>
+								<option value='empty' <?=(($selected['collection'] == 'empty') ? 'selected="selected"' : '')?>><?=ee()->lang->line('empty_collections')?></option>
+							<?php endif;?>
+							
+								<?php foreach($collections as $collection) : ?>
+									<option <?=(($selected['collection'] == $collection) ? 'selected="selected"' : '')?> value='<?=$caller->output($collection)?>'><?=$caller->output($collection)?></option>
+								<?php endforeach;?>
+						</select>
+					
+						&nbsp;&nbsp;
+	
+						<select name='channel_id[]' class='select'>
+							<option value=''><?=ee()->lang->line('filter_by_weblog')?></option>
+							<option value='all' <?=((in_array('all', $selected['channel_id'])) ? 'selected="selected"' : '')?>>All</option>
+								
+								<?php foreach($rated_sites as $site_id => $site_label) :?>
+									<optgroup label="<?=$site_label?>">
+									<?php foreach($rated_channels[$site_id] as $channel_id => $channel_label) : ?>
+										<option <?=((in_array($channel_id, $selected['channel_id'])) ? 'selected="selected"' : '')?> value='<?=$caller->output($channel_id)?>'><?=$caller->output($channel_label)?></option>
+									<?php endforeach;?>
+									</optgroup>
+								<?php endforeach;?>
+								
+						</select>
+						
+						<select name='rating_status' class='select'>
+							<option <?=(($selected['rating_status'] == 'all')    ? 'selected="selected"' : '')?> value=''><?=ee()->lang->line('filter_by_rating_status')?></option>
+							<option <?=(($selected['rating_status'] == 'open')   ? 'selected="selected"' : '')?> value='open'><?=ee()->lang->line('open')?></option>
+							<option <?=(($selected['rating_status'] == 'closed') ? 'selected="selected"' : '')?> value='closed'><?=ee()->lang->line('closed')?></option>
+						</select>
+						
+						<select name='date_range' onchange='if (jQuery(this).val() == "date_range") {jQuery("#date_range_calendars").show();} else{jQuery("#date_range_calendars").hide();} return false;' class='select'>
+							<option value=''><?=ee()->lang->line('filter_by_entry_date')?></option>
+							<option <?=(($selected['date_range'] == 'today')      ? 'selected="selected"' : '')?> value='today'><?=ee()->lang->line('today')?></option>
+							<option <?=(($selected['date_range'] == 'this_week')  ? 'selected="selected"' : '')?> value='this_week'><?=ee()->lang->line('this_week')?></option>
+							<option <?=(($selected['date_range'] == 'this_month') ? 'selected="selected"' : '')?> value='this_month'><?=ee()->lang->line('this_month')?></option>
+							<option <?=(($selected['date_range'] == 'last_month') ? 'selected="selected"' : '')?> value='last_month'><?=ee()->lang->line('last_month')?></option>
+							<option <?=(($selected['date_range'] == 'this_year')  ? 'selected="selected"' : '')?> value='this_year'><?=ee()->lang->line('this_year')?></option>
+							<option <?=(($selected['date_range'] == 'date_range') ? 'selected="selected"' : '')?> value='date_range'><?=ee()->lang->line('choose_date_range')?></option>
+						</select>
+						
+					</td>
+				</tr>
+				
+				<tr>
+					<td>
+						<div id="date_range_calendars" style="display:none; text-align:center; width:100%; margin-left: 35%;">
+							<table border='0' cellspacing='7' cellpadding='0'>
+								<tr>
+									<td>
+										<input dir='ltr' style='width:150px' type='text' name='start_date' id='start_date' value='<?=ee()->localize->set_human_time($selected['start_date'])?>' size='18' maxlength='23' class='input'  onkeyup="update_calendar('start_date', this.value);"  />
+									</td>
+									<td>
+										<input dir='ltr' style='width:150px' type='text' name='end_date' id='end_date' value='<?=ee()->localize->set_human_time($selected['end_date'])?>' size='18' maxlength='23' class='input'  onkeyup="update_calendar('start_date', this.value);"  />
+									</td>
+								</tr>
+								<tr>
+									<td>
+<script type="text/javascript">
+	var start_date	= new calendar(
+							"start_date", 
+							new Date(<?=(ee()->localize->set_localized_time($selected['start_date']) * 1000)?>), 
+							true
+							);
+	
+	document.write(start_date.write());
+</script>
+										<div class='lightLinks' >
+										<a href="javascript:void(0);" onclick="set_to_now('start_date', '<?=ee()->localize->set_human_time()?>', '<?=(ee()->localize->set_localized_time() * 1000)?>')" >Today</a>
+										</div>
+									</td>
+							
+									<td>								
+<script type="text/javascript">
+	var end_date	= new calendar(
+							"end_date", 
+							new Date(<?=(ee()->localize->set_localized_time($selected['end_date']) * 1000)?>), 
+							true
+							);
+	
+	document.write(end_date.write());
+</script>
+										<div class='lightLinks' >
+										<a href="javascript:void(0);" onclick="set_to_now('end_date', '<?=ee()->localize->set_human_time()?>', '<?=(ee()->localize->set_localized_time() * 1000)?>')" >Today</a>
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+				
+				<tr>
+					<td class='itemWrapper'>
+						<div class='default' >
+							<label for="keywords"><?=ee()->lang->line('keywords')?>:</label>
+						
+							&nbsp;
+							
+							<input dir='ltr' style='width:200px' type='text' name='keywords' id='keywords' value='<?=$caller->output($selected['keywords'])?>' size='40' maxlength='200' class='input'  />
+							
+							&nbsp;&nbsp;
+							
+							<select name='keyword_search' class='select' >
+								<option <?=(($selected['keyword_search'] == 'title') ? 'selected="selected"' : '')?> value='title'><?=ee()->lang->line('titles')?></option>
+								<option <?=(($selected['keyword_search'] == 'title_and_content') ? 'selected="selected"' : '')?> value='title_and_content'><?=ee()->lang->line('titles_and_content')?></option>
+							</select>
+							
+							&nbsp;&nbsp;
+							<input name='submit' type='submit' class='submit' value='<?=ee()->lang->line('search')?>'  />
+						</div>
+					</td>
+				</tr>
+			</table>
+		
+		</div>
+	</form>
+	
+
+<script type='text/javascript'>
+			
+	// depending on timezones, local settings and localization prefs, its possible for js to misinterpret the day, 
+	// but the humanized time is correct, so we activate the humanized time to sync the calendar
+
+	function activate_calendars()
+	{
+		update_calendar('start_date', document.getElementById('start_date').value);
+		update_calendar('end_date', document.getElementById('end_date').value);
+		current_month	= '';
+		current_year	= '';
+		last_date		= '';
+	}
+	
+	activate_calendars();
+	
+	<?php if ($selected['date_range'] == 'date_range') :?>
+		jQuery("#date_range_calendars").show();
+	<?php endif;?>
+	
+</script>
+
+<table class='tableBorder'  style='width:100%;'  cellspacing='0'  cellpadding='0'  border='0' >
+	<thead>
+		<tr>
+			<td class='tableHeadingAlt' style='width:13%;'><?php echo ee()->lang->line('edit_entry');?></td>
+			<td class='tableHeadingAlt' style='width:12%;'><?php echo ee()->lang->line('view_ratings');?></td>
+			<td class='tableHeadingAlt' style='width:5%;'><?php echo ee()->lang->line('last_rating_date');?></td>
+			<td class='tableHeadingAlt' style='width:15%;'><?php echo ee()->lang->line('rating_count');?></td>
+		</tr>
+	</thead>
+	
+	<tbody>
+		<?php if (sizeof($rated_entries) == 0) : ?>
+			<tr>
+				<td class='tableCellOne' colspan="9"><strong><?php echo ee()->lang->line('no_rated_entries_found');?></strong></td>
+			</tr>
+		<?php endif;?>
+	
+		<?php foreach ($rated_entries as $entry_data) : ?>
+			<?php $class = $this->cycle('tableCellOne', 'tableCellTwo');?>
+			<tr>
+				<td class='<?php echo $class;?>'><a href="<?=$caller->output(BASE."&C=edit&M=edit_entry&entry_id={$entry_data['entry_id']}");?>"><?=$entry_data['title']?></a></td>
+				<td class='<?php echo $class;?>'><a href="<?=$caller->output($this->base.'&method=view_ratings&entry_id='.$entry_data['entry_id'])?>"><?=ee()->lang->line('view_ratings')?></a></td>
+				
+				<?php if ( empty($entry_data['count'])) : // all ratings are closed ?>
+					<td class='<?php echo $class;?>'>---</td>
+					<td class='<?php echo $class;?>'>---</td>
+				<?php else : ?>
+					<td class='<?php echo $class;?>'><?=ee()->localize->set_human_time($entry_data['last_rating_date'])?></td>
+					<td class='<?php echo $class;?>'><?=$entry_data['count']?></td>
+				<?php endif;?>
+			</tr>
+		<?php endforeach;?>
+	</tbody>
+	
+</table>
+
+
+<?php if ( ! empty( $paginate ) ) : ?>
+	<div class="crumblinks">
+		<?=$paginate; ?>
+	</div>			
+<?php endif; ?>

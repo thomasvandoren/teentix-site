@@ -1,0 +1,55 @@
+
+<!-- BEGIN FORM -->
+
+<form action='<?=$this->output($base_uri.'&method=delete_field_confirm');?>' method='post' id="module_fields_form">
+
+	<div class='tableHeading' ><?=ee()->lang->line('manage_fields');?></div>
+	
+		<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;'  class='tableBorder magic_checkbox_table' >
+			<tr>
+				<td class='tableHeadingAlt' style="width: 20%" ><?=ee()->lang->line('field_label');?></td>
+				<td class='tableHeadingAlt' style="width: 20%" ><?=ee()->lang->line('field_short_name');?></td>
+				<td class='tableHeadingAlt' style="width: 20%" ><?=ee()->lang->line('field_type');?></td>
+				<td class='tableHeadingAlt' style="width: 20%" ><?=ee()->lang->line('field_format');?></td>
+				<td class='tableHeadingAlt' style="width: 20%" ><input class='checkbox' type='checkbox' name='toggle_all_checkboxes' /><?=ee()->lang->line('delete');?></td>
+			</tr>
+			
+			<?php if (sizeof($fields) == 0) : ?>
+				<tr>
+					<td class='tableCellOne' colspan="5"><?=ee()->lang->line('no_rating_fields'); ?></td>
+				</tr>
+			<?php endif; ?>
+			
+			<?php foreach($this->output($fields) as $count => $field_data) : ?>
+			<?php $switch = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+				<tr>
+					<td style="width: 20%" class='<?=$switch;?>'><?=$field_data['field_label']; ?></td>
+					<td style="width: 20%" class='<?=$switch;?>'>
+						<a href="<?=$caller->output($base_uri.'&method=edit_field&field_id='.$field_data['field_id'])?>"><?=$field_data['field_name']; ?></a>
+					</td>
+					<td style="width: 20%" class='<?=$switch;?>'><?=ee()->lang->line('field_type_'.$field_data['field_type']); ?></td>
+					<td style="width: 20%" class='<?=$switch;?>'><?=ee()->lang->line('field_format_'.$field_data['field_fmt']); ?></td>
+					<td style="width: 20%" class='<?=$switch;?>'>
+						<?php if ($field_data['locked'] == 'y') :?>
+							<?=ee()->lang->line('locked_field')?>
+						<?php else: ?>
+						<input type="checkbox" id="fields_delete_id_<?=$count;?>" name="delete[]" value="<?=$this->output($field_data['field_id']);?>" />
+						<?php endif; ?>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		</table>
+		
+	<?php if ( ! empty( $paginate ) ) : ?>
+			<div class="crumblinks">
+				<?=$paginate;?>
+			</div>
+	<?php endif; ?>
+		
+	<div class='itemWrapperTop' >
+		<input name='return' type='submit' class='submit' value='<?= ee()->lang->line('delete_fields');?>'  />
+	</div>
+
+</form>
+
+<!-- END FORM -->

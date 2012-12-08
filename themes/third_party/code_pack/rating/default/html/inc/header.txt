@@ -1,0 +1,35 @@
+<div id="header">
+
+	<div id="logo"></div>
+
+	<div id="smallmenu">
+		<ul>
+{if logged_out}
+			<li class="first"><a href="{path='members/login'}/">Login</a></li>
+			<li class=""><a href="{path='member/register'}/">Register</a></li>
+{/if}
+{if logged_in}
+			<li class="">Hi <b style="text-transform:none;">{logged_in_screen_name}</b>!</li>
+			<li class=""><a href="{path='member/profile'}/">My Account</a></li>
+			<li class=""><a href="{path='LOGOUT'}">Log out</a></li>
+{/if}
+			<li class=""><a href="{site_url}">Site Home</a></li>
+		</ul>
+	</div>
+</div>
+
+<div class="spacer"></div>
+
+<div id="wrapper">
+
+	<div id="mainmenu">
+		<ul>
+			<li><a href="{path='%prefix%main'}/">Top Entries</a></li>
+			<li><a href="{path='%prefix%main/top_entries_bayesian'}/">Top Entries (Bayesian)</a></li>
+			<li><a href="{path='%prefix%main/entries/all'}/">All Entries</a></li>
+			<li><a href="{path='%prefix%main/my_ratings'}/">My Ratings</a></li>
+		</ul>
+	</div>
+	
+	<div id="content">
+	

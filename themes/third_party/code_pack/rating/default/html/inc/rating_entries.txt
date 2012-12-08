@@ -1,0 +1,41 @@
+{exp:rating:entries collection="Book Reviews" entry_id="{embed:entry_id}" paginate="bottom" limit="10"}
+ 
+<div class="rating" style="clear:both;padding:5px 0;border-top:1px solid #e0e0e0;display:inline-block;">
+   <div style="float:left;width:185px;text-align:right;padding-right:10px;">
+      <p>{if screen_name}<a href="{path='members'}/{member_id}/"><b>{screen_name}</b></a>{if:else}<b>{name}</b> (Guest){/if}</p>
+      <p><small>{rating_date format="%F %j, %Y at %g:%i %a"}</small></p>
+   </div>
+   <div style="float:left;width:65px;">
+      <img src="{if avatar}{avatar_url}{if:else}{%prefix%theme_folder_url}images/icon_profile.gif{/if}" height="50" width="50" alt="{screen_name}'s avatar" />
+   </div>
+   <div style="float:left;width:380px;display:inline-block;">
+      <small style="float:right;text-align:right;">
+         {exp:rating:rating_vote_stats rating_id="{rating_id}"}
+            {if total_votes > 0}{total_votes} vote{if total_votes > 1}s{/if} | {/if}
+            {if not_already_voted}<a href="{path='%prefix%main/vote'}/{rating_id}/up/">up</a> ({up_percent}%) | <a href="{path='%prefix%main/vote'}/{rating_id}/down/">down</a> ({down_percent}%){/if}
+            {if already_voted}up ({up_percent}%) | down ({down_percent}%){/if}
+         {/exp:rating:rating_vote_stats}
+         {exp:rating:reporting_allowed rating_id="{rating_id}"}
+            {if success} | <a href="{path='%prefix%main/report'}/{rating_id}/">report</a>{/if}
+            {if failure}{/if}
+         {/exp:rating:reporting_allowed}
+         {if can_edit}
+            | <a href="{path='%prefix%main/edit'}/{rating_id}/">edit</a>
+         {/if}
+         {if can_delete}
+            | <a href="{path='%prefix%main/delete'}/rating/{rating_id}/">delete</a>
+         {/if}
+      </small>
+      <p>{stars}{rating}{/stars}</p>
+      <p>{review}</p>
+   </div>
+</div>
+
+{if rating_no_results}<p>This entry has not been rated yet.</p>{/if}
+ 
+{rating_paginate}
+<hr />
+<p class="paginate">Page {current_page} of {total_pages} pages</span> {pagination_links}</p>
+{/rating_paginate}
+ 
+{/exp:rating:entries}

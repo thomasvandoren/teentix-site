@@ -1,0 +1,52 @@
+{if logged_out}
+	{redirect="account/login"}
+{/if}
+{embed="inc/.header"
+  body_class="account comments"
+}
+{embed="inc/.nav"}  
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>Hi, {screen_name}.</h1>
+    </div>
+  </div>
+
+  <div class="row">  
+    <div class="three columns">
+		{embed="account/.sidebar"}
+    </div>
+    
+    <div class="nine columns">   
+			
+			{exp:user:stats} 						
+			<div id="member_comments">
+				<h3>My Comments</h3>			
+			{if total_comments > 0}
+				<p class="total-count">You have {total_comments} total comments</p>
+				{exp:comment:entries 
+					dynamic="no" 
+					author_id="{member_id}" 
+					limit="20"
+				}
+				<div class="comment">
+	        <p class="posted">Comment for <a href="{comment_url_title_auto_path}">{title}</a> on {comment_date format="%D, %M %j, %Y at %g:%i %a"}</p>
+        	{comment}
+        </div>
+        {paginate}
+	      <div class="paginate">
+	        <p>Page {current_page} of {total_pages} pages {pagination_links}</p>
+	      </div>
+		    {/paginate}
+				{/exp:comment:entries}
+			{if:else}
+				<p>You have not left any comments</p>
+			{/if}
+			</div><!-- end #member_comments -->
+			{/exp:user:stats}   
+			
+		</div>			   
+  </div>
+  
+  
+{embed="inc/.footer"}

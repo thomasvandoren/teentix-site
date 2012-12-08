@@ -1,0 +1,51 @@
+
+<!-- BEGIN FORM -->
+
+<form action='<?=$this->output($base_uri.'&method=delete_templates_confirm');?>' method='post' id="module_templates_form">
+
+	<div class='tableHeading' ><?=$page_title;?></div>
+	
+		<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;'  class='tableBorder magic_checkbox_table' >
+			<tr>
+				<td class='tableHeadingAlt' style="width: 20%" ><?=ee()->lang->line('template_label');?></td>
+				<td class='tableHeadingAlt' style="width: 20%" ><?=ee()->lang->line('template_name');?></td>
+				<td class='tableHeadingAlt' style="width: 20%" ><input class='checkbox' type='checkbox' name='toggle_all_checkboxes' />&nbsp;<?=ee()->lang->line('delete');?></td>
+			</tr>
+			
+			<?php if (sizeof($templates) == 0) : ?>
+				<tr>
+					<td class='tableCellOne' colspan="5"><?=ee()->lang->line('no_rating_templates'); ?></td>
+				</tr>
+			<?php endif; ?>
+			
+			<?php foreach($this->output($templates) as $count => $template_data) : ?>
+			<?php $switch = $this->cycle('tableCellOne', 'tableCellTwo'); ?>
+				<tr>
+					<td style="width: 20%" class='<?=$switch;?>'><?=$template_data['template_label']; ?></td>
+					<td style="width: 20%" class='<?=$switch;?>'>
+						<a href="<?=$caller->output($base_uri.'&method=edit_template&template_id='.$template_data['template_id'])?>"><?=$template_data['template_name']; ?></a>
+					</td>
+					<td style="width: 20%" class='<?=$switch;?>'>
+						<?php if ($template_data['locked'] == 'y') :?>
+							<?=ee()->lang->line('locked_template')?>
+						<?php else: ?>
+						<input type="checkbox" id="templates_delete_id_<?=$count;?>" name="delete[]" value="<?=$this->output($template_data['template_id']);?>" />
+						<?php endif; ?>
+					</td>
+				</tr>
+			<?php endforeach; ?>
+		</table>
+		
+	<?php if ( ! empty( $paginate ) ) : ?>
+			<div class="crumblinks">
+				<?=$paginate;?>
+			</div>
+	<?php endif; ?>
+		
+	<div class='itemWrapperTop' >
+		<input name='return' type='submit' class='submit' value='<?= ee()->lang->line('delete_templates');?>'  />
+	</div>
+
+</form>
+
+<!-- END FORM -->

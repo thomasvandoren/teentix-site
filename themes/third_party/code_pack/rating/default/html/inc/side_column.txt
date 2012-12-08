@@ -1,0 +1,11 @@
+				<div id="sidecolumn">
+
+					<h4>Entries by Authors</h4>
+
+					<ul>
+						{exp:query sql="SELECT screen_name, member_id FROM exp_members WHERE group_id = (SELECT group_id FROM exp_member_groups WHERE group_id = '1' LIMIT 1)"}
+						<li><a href="{path='%prefix%main/entries/by_author'}/{member_id}/">{screen_name}</a></li>
+						{/exp:query}
+					</ul>
+
+				</div>

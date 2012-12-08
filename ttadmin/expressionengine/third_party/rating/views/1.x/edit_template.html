@@ -1,0 +1,92 @@
+
+<!-- BEGIN FORM -->
+
+<form action='<?php echo $this->output($base_uri.'&method=save_template');?>' method='post' id="module_edit_template_form">
+
+	<div class='hidden'>
+		<input type='hidden' name='template_id' value='<?=$caller->output($template_data['template_id'])?>' />
+		<?php if ($template_data['template_locked'] == 'yes') : ?>
+			<input type='hidden' name='template_label' value='<?=$caller->output($template_data['template_label'])?>' />
+			<input type='hidden' name='template_name' value='<?=$caller->output($template_data['template_name'])?>' />
+		<?php endif;?>
+	</div>
+
+	<div class='tableHeading' ><?php echo ($template_data['template_id'] == '') ? ee()->lang->line('add_template') : ee()->lang->line('edit_template');?></div>
+	
+	<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;'  class='tableBorder' >
+		
+		<tr>
+			<td class='tableCellOneBold' style='width:30%;'>
+				<label for="template_label"><?=ee()->lang->line('template_label')?></label>
+			</td>
+		
+			<td class='tableCellOne'  style='width:70%;'>
+				<?php if ($template_data['template_locked'] == 'yes') : ?>
+					<?=$caller->output($template_data['template_label'])?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='template_label' id='template_label' value='<?=$caller->output($template_data['template_label'])?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+		
+		<tr>
+			<td class='tableCellTwoBold' style='width:30%;'>
+				<label for="template_name"><?=ee()->lang->line('template_name')?></label>
+				<div class="subtext"><?=ee()->lang->line('template_name_subtext')?></div>
+			</td>
+		
+			<td class='tableCellTwo' style='width:70%;'>
+				<?php if ($template_data['template_locked'] == 'yes') : ?>
+					<?=$caller->output($template_data['template_name'])?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='template_name' id='template_name' value='<?=$caller->output($template_data['template_name'])?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+
+		<tr>
+			<td class='tableCellOneBold' style='width:30%;'>
+				<label for="subject"><?=ee()->lang->line('email_subject')?></label>
+			</td>
+			
+			<td class='tableCellOne' style='width:70%;'>
+				<input dir='ltr' style='width:50%' type='text' name='subject' id='subject' value='<?=$caller->output($template_data['subject'])?>' size='35' maxlength='40' class='input' />
+
+			</td>
+		</tr>
+		
+		<tr>
+			<td class='tableCellTwoBold' style='width:30%;'>
+				<label for='wordwrap'><?=ee()->lang->line('wordwrap')?></label>
+			</td>
+		
+			<td class='tableCellTwo' style='width:70%;'>
+				<select name='wordwrap' class='select'>
+					<option value='y' <?=(($template_data['wordwrap'] == 'y') ? "selected='selected'" : '')?>><?=ee()->lang->line('yes')?></option>
+					<option value='n' <?=(($template_data['wordwrap'] == 'n') ? "selected='selected'" : '')?>><?=ee()->lang->line('no')?></option>
+				</select>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class='tableCellOneBold' style='width:30%; vertical-align:top;'>
+				<label for='message'><?=ee()->lang->line('email_message')?></label>
+				<div class="subtext"><?=ee()->lang->line('email_message_subtext')?></div>
+			</td>
+		
+			<td class='tableCellOne' style='width:70%;'>
+				<textarea  dir='ltr' style='width:input;' name='message' id='message' cols='90' rows='20' class='10' 50%><?=$caller->output($template_data['message'])?></textarea>
+		</td>
+		</tr>
+		
+	</table>
+	
+	<div class='itemWrapperTop' >
+		<input name='return' type='submit' class='submit' value='<?php echo  ee()->lang->line('save_template');?>'  />
+	</div>
+
+</form>
+
+<!-- END FORM -->

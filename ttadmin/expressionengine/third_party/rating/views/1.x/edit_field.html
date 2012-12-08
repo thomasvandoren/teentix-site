@@ -1,0 +1,110 @@
+
+<!-- BEGIN FORM -->
+
+<form action='<?php echo $this->output($base_uri.'&method=save_field');?>' method='post' id="module_edit_field_form">
+
+	<div class='hidden'>
+		<input type='hidden' name='field_id' value='<?=$caller->output($field_id)?>' />
+		<?php if ($field_locked == 'yes') : ?>
+			<input type='hidden' name='field_label' value='<?=$caller->output($field_label)?>' />
+			<input type='hidden' name='field_name' value='<?=$caller->output($field_name)?>' />
+			<input type='hidden' name='field_type' value='<?=$caller->output($field_type)?>' />
+		<?php endif;?>
+	</div>
+
+	<div class='tableHeading' ><?php echo ($field_id == '') ? ee()->lang->line('add_field') : ee()->lang->line('edit_field');?></div>
+	
+	<table border='0'  cellspacing='0' cellpadding='0' style='width:100%;'  class='tableBorder' >
+		
+		<tr>
+			<td class='tableCellOneBold' style='width:30%;'>
+				<label for="field_label"><?=ee()->lang->line('field_label')?></label>
+			</td>
+		
+			<td class='tableCellOne'  style='width:70%;'>
+				<?php if ($field_locked == 'yes') : ?>
+					<?=$caller->output($field_label)?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='field_label' id='field_label' value='<?=$caller->output($field_label)?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+		
+		<tr>
+			<td class='tableCellTwoBold' style='width:30%;'>
+				<label for="field_name"><?=ee()->lang->line('field_name')?></label>
+				<div class="subtext"><?=ee()->lang->line('field_name_subtext')?></div>
+			</td>
+		
+			<td class='tableCellTwo' style='width:70%;'>
+				<?php if ($field_locked == 'yes') : ?>
+					<?=$caller->output($field_name)?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='field_name' id='field_name' value='<?=$caller->output($field_name)?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+
+		<tr>
+			<td class='tableCellOneBold' style='width:30%;'>
+				<label for="field_type"><?=ee()->lang->line('field_type')?></label>
+			</td>
+			
+			<td class='tableCellOne' style='width:70%;'>
+				<?php if ($field_locked == 'yes') : ?>
+					<?=$caller->output(ee()->lang->line('field_type_'.$field_type))?>
+				<?php else : ?>			
+					<select name='field_type' class='select' >
+						<option value='number' <?=(($field_type == 'number') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_type_number')?></option>
+						<option value='text' <?=(($field_type == 'text') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_type_text')?></option>
+						<option value='textarea' <?=(($field_type == 'textarea') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_type_textarea')?></option>
+					</select>
+				<?php endif;?>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class='tableCellTwoBold' style='width:30%;'>
+				<label for='field_fmt'><?=ee()->lang->line('field_format')?></label>
+			</td>
+		
+			<td class='tableCellTwo' style='width:70%;'>
+				<select name='field_fmt' class='select'>
+					<option value='none' <?=(($field_fmt == 'none') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_format_none')?></option>
+					<option value='br' <?=(($field_fmt == 'br') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_format_br')?></option>
+					<option value='xhtml' <?=(($field_fmt == 'xhtml') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_format_xhtml')?></option>
+				</select>
+			</td>
+		</tr>
+		
+		<tr>
+			<td class='tableCellOneBold' style='width:30%;'>
+				<label for='field_maxl'><?=ee()->lang->line('field_length')?></label>
+			</td>
+			
+			<td class='tableCellOne' style='width:70%;'>
+				<input dir='ltr' style='width:5%' type='text' name='field_maxl' id='field_maxl' value='<?=$caller->output($field_maxl)?>' size='35' maxlength='3' class='input' />
+			</td>
+		</tr>
+		
+		<tr>
+			<td class='tableCellTwoBold' style='width:30%;'>
+				<label for='field_order'><?=ee()->lang->line('field_order')?></label>
+			</td>
+		
+			<td class='tableCellTwo' style='width:70%;'>
+				<input dir='ltr' style='width:5%' type='text' name='field_order' id='field_order' value='<?=$caller->output($field_order)?>' size='35' maxlength='40' class='input' />		
+			</td>
+		</tr>
+		
+	</table>
+	
+	<div class='itemWrapperTop' >
+		<input name='return' type='submit' class='submit' value='<?php echo  ee()->lang->line('save_field');?>'  />
+	</div>
+
+</form>
+
+<!-- END FORM -->

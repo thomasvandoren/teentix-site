@@ -1,0 +1,134 @@
+
+<script type="text/javascript">
+
+(function(global){
+
+	global.AddOnBuilder = global.AddOnBuilder || {};
+	var AddOnBuilder = global.AddOnBuilder;
+
+	global.Solspace = global.Solspace || {};
+	global.Solspace.prototype = AddOnBuilder;
+	var Solspace = global.Solspace;
+	
+})(window);
+
+Solspace.rating = Solspace.rating || (function(global, $) 
+{
+	var utils = {};
+	var version = '<?=RATING_VERSION?>';
+	
+	utils.version = function()
+	{
+		return version;
+	};
+	
+	utils.display_rating_fields = function()
+	{
+		jQuery('select[name^=visible_fields] option').each(function(i)
+		{
+			if (jQuery(this).attr("selected") == true)
+			{
+				jQuery('tr[id$="-rating_field_' + jQuery(this).val()+'"]').show();
+			}
+			else
+			{
+				jQuery('tr[id$="-rating_field_' + jQuery(this).val()+'"]').hide();
+			}
+		});
+	};
+	
+	return utils;
+	
+})(window, jQuery);
+
+jQuery(function($)
+{
+	jQuery('select[name^=visible_fields]').change(function(){ Solspace.rating.display_rating_fields(); });
+});
+
+</script>
+
+
+<!-- BEGIN FORM -->
+
+	<div class='tableHeading'><?=ee()->lang->line('visible_fields');?></div>
+	
+	<div class='box'>
+		<table border='0' cellspacing='0' cellpadding='0' style='width:100%;' >
+			<tr>
+				<td style="vertical-align:top;">
+					<select name='visible_fields' multiple="multiple" class='select' size="3" style="width:200px;">
+						<?php foreach($rating_fields as $field) : ?>
+							<option <?=((in_array($field['field_name'], $selected['rating_fields'])) ? 'selected="selected"' : '')?> value='<?=$field['field_name']?>'><?=$field['field_label']?></option>
+						<?php endforeach;?>
+					</select>
+					
+				</td>
+			</tr>
+		</table>
+	</div>
+	
+<form action='<?php echo $this->output($base_uri.'&method=edit_ratings');?>' method='post' id="module_edit_ratings_form">
+
+	<?php foreach ($ratings as $count => $rating) : ?>
+
+		<table class='tableBorder' style='width:100%;' cellspacing='0' cellpadding='0' border='0'>
+			<thead>
+				<tr>
+					<td class='tableHeadingAlt' style='width:15%;'><?php echo ee()->lang->line('field_label');?></td>
+					<td class='tableHeadingAlt' style='width:85%;'><?php echo ee()->lang->line('field_value');?></td>
+				</tr>
+			</thead>
+			<tbody>
+			
+				<tr>
+					<td class="tableCellTwoBold" style='width:15%;'><strong><?=ee()->lang->line('raters_name')?></strong></td>
+					<td class="tableCellTwo" style='width:85%;'><?=$rating['name']?></td>
+				</tr>
+			
+				<tr>
+					<td class='tableCellOneBold' style='width:15%;'><label for="rating_status[<?=$rating['rating_id']?>]"><?=ee()->lang->line('rating_status')?></label></td>
+					<td class='tableCellOne' style='width:85%;'>
+						<select name="rating_status[<?=$rating['rating_id']?>]" class='select'>
+							<option <?=(($rating['quarantine'] != 'y' && $rating['status'] == 'open') ? 'selected="selected"' : '')?> value='open'><?=ee()->lang->line('open')?></option>
+							<option <?=(($rating['quarantine'] != 'y' && $rating['status'] == 'closed') ? 'selected="selected"' : '')?> value='closed'><?=ee()->lang->line('closed')?></option>
+							
+							<?php if (in_array(ee()->session->userdata['group_id'], $caller->preference('can_report_ratings'))) : ?>
+								<option <?=(($rating['quarantine'] == 'y') ? 'selected="selected"' : '')?> value='quarantined'><?=ee()->lang->line('quarantined')?></option>
+							<?php endif;?>
+						</select>
+					</td>
+				</tr>
+			
+				<?php foreach ($rating_fields as $field) : ?>
+					<?php $class = $this->cycle('tableCellTwo', 'tableCellOne');?>
+					<tr id="rating_id_<?=$rating['rating_id']?>-rating_field_<?=$field['field_name']?>" <?=((in_array($field['field_name'], $selected['rating_fields'])) ? '' : 'style="display:none"')?>>
+						<td style='width:15%;' class='<?=$class?>Bold'><label for="<?=$caller->output($field['field_name'])?>[<?=$rating['rating_id']?>]"><?=$field['field_label']?></label></td>
+						<td style='width:85%;' class='<?=$class?>'>
+							<?php if ($field['field_type'] == 'textarea') : ?>
+								<textarea dir='ltr' style='width:75%;'
+										  name='<?=$caller->output($field['field_name'])?>[<?=$rating['rating_id']?>]' 
+										  id='<?=$caller->output($field['field_name'])?>_<?=$rating['rating_id']?>' 
+										  cols='90' rows='6' 
+										  class='textarea'><?=$caller->output($rating[$field['field_name']])?></textarea>
+							<?php else : ?>
+								<input dir='ltr' style='width:75%'
+									   type='text'
+									   name='<?=$caller->output($field['field_name'])?>[<?=$rating['rating_id']?>]'
+									   id='<?=$caller->output($field['field_name'])?>_<?=$rating['rating_id']?>'
+									   value='<?=$caller->output($rating[$field['field_name']])?>'
+									   size='35' maxlength="<?=$field['field_maxl']?>" class='input' />
+							<?php endif;?>
+						</td>
+					</tr>
+				<?php endforeach;?>
+			</tbody>
+			
+		</table>
+	<?php endforeach; ?>
+
+	<div class="itemWrapper">
+		<input  type='submit' class='submit' value='<?=ee()->lang->line('submit')?>'  />
+	</div>
+
+</form>

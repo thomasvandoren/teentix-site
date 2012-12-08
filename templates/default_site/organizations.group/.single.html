@@ -1,0 +1,43 @@
+{exp:channel:entries channel="organizations" limit="1"}
+{embed="inc/.header"
+	title="{title} | Participating Organizations"
+	body_class="orgs single"
+}
+
+{embed="inc/.nav"
+	segment_1_title="Participating Organizations"
+	end_title="{title}"
+}
+  
+  
+  <!-- Three-up Content Blocks -->
+  
+  <div class="row">
+  
+    <div class="twelve columns">
+    
+    	<div class="row">
+    		<div class="eight columns">
+    			<h1 id="page-name">{title}</h1>
+    			<p><a href="{org_website}">{org_website}</a></p>
+    			{org_contact_info} 	
+  			{if org_facebook}
+    			<p>{org_facebook}</p>
+    		{/if}
+    		{if org_twitter}
+    			<p>{org_twitter}</p>
+    		{/if}		
+    		</div>
+    		<div class="four columns">
+    		{exp:ce_img:pair src="{org_image}" width="300"}
+					<img src="{made}" alt="" width="{width}" height="{height}" />
+				{/exp:ce_img:pair}
+    		</div>
+    	</div>
+      	
+    </div>
+    
+  </div>
+{/exp:channel:entries}
+
+{embed="inc/.footer"}

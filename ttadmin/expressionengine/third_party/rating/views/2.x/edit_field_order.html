@@ -1,0 +1,35 @@
+<form action="<?=$this->output($base_uri.'&method=save_field_order');?>" method="post" id="module_edit_field_order_form">
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />
+	
+	<table class="mainTable padTable"  style="width:100%;"  cellspacing="0"  cellpadding="0"  border="0">
+	    <thead>
+  				<tr>
+  					<th style="width:25%;"><?=ee()->lang->line('field_label')?></th>
+  					<th style="width:40%;"><?=ee()->lang->line('field_order')?></th>
+  				</tr>
+  			</thead>
+
+		<tbody>
+		
+			<?php if (sizeof($fields) == 0) : ?>
+				<tr class="odd">
+					<td colspan="2"><?=ee()->lang->line('no_rating_fields'); ?></td>
+				</tr>
+			<?php endif; ?>
+		
+		<?php foreach($fields as $field) : ?>
+			<tr class="<?=$caller->cycle('odd', 'even')?>">
+				<td style='width:20%;'>
+					<label for="field_order[<?=$field['field_id']?>]"><?=$field['field_label']?></label>
+				<td>
+					<input dir='ltr' style='width:5%' type='text' name='field_order[<?=$field['field_id']?>]' id='field_order[<?=$field['field_id']?>]' value='<?=$caller->output($field['field_order'])?>' size='5' maxlength='4' class='input' />		
+				</td>
+			</tr>
+		<?php endforeach;?>
+	
+	
+		</tbody>
+		
+	</table>
+	<p><input type="submit" class="submit" value="<?=ee()->lang->line('save_field_order'); ?>" /> </p>
+</form>

@@ -1,0 +1,110 @@
+<form id="module_edit_field_form" method="post" name="filter" action="<?=$base_uri.'&method=save_field'; ?>">
+	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />		
+	
+	<input type='hidden' name='field_id' value='<?=$caller->output($field_id)?>' />
+	<?php if ($field_locked == 'yes') : ?>
+		<input type='hidden' name='field_label' value='<?=$caller->output($field_label)?>' />
+		<input type='hidden' name='field_name' value='<?=$caller->output($field_name)?>' />
+		<input type='hidden' name='field_type' value='<?=$caller->output($field_type)?>' />
+	<?php endif;?>
+	
+<table class="mainTable padTable" style="width:100%;" cellspacing="0" cellpadding="0" border="0">
+	<thead>
+		<tr>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+
+	<tbody>
+	
+		<tr class="even">
+			<td style='width:30%;'>
+				<label for="field_label"><?=ee()->lang->line('field_label')?></label>
+			</td>
+		
+			<td  style='width:70%;'>
+				<?php if ($field_locked == 'yes') : ?>
+					<?=$caller->output($field_label)?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='field_label' id='field_label' value='<?=$caller->output($field_label)?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+		
+		<tr class="odd">
+			<td style='width:30%;'>
+				<label for="field_name"><?=ee()->lang->line('field_name')?></label>
+				<div class="subtext"><?=ee()->lang->line('field_name_subtext')?></div>
+			</td>
+		
+			<td style='width:70%;'>
+				<?php if ($field_locked == 'yes') : ?>
+					<?=$caller->output($field_name)?>
+				<?php else : ?>
+					<input dir='ltr' style='width:50%' type='text' name='field_name' id='field_name' value='<?=$caller->output($field_name)?>' size='35' maxlength='40' class='input' />
+				<?php endif;?>
+			</td>
+		</tr>
+		
+
+		<tr class="even">
+			<td style='width:30%;'>
+				<label for="field_type"><?=ee()->lang->line('field_type')?></label>
+			</td>
+			
+			<td style='width:70%;'>
+				<?php if ($field_locked == 'yes') : ?>
+					<?=$caller->output(ee()->lang->line('field_type_'.$field_type))?>
+				<?php else : ?>			
+					<select name='field_type' class='select' >
+						<option value='number' <?=(($field_type == 'number') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_type_number')?></option>
+						<option value='text' <?=(($field_type == 'text') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_type_text')?></option>
+						<option value='textarea' <?=(($field_type == 'textarea') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_type_textarea')?></option>
+					</select>
+				<?php endif;?>
+			</td>
+		</tr>
+		
+		<tr class="odd">
+			<td style='width:30%;'>
+				<label for='field_fmt'><?=ee()->lang->line('field_format')?></label>
+			</td>
+		
+			<td style='width:70%;'>
+				<select name='field_fmt' class='select'>
+					<option value='none' <?=(($field_fmt == 'none') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_format_none')?></option>
+					<option value='br' <?=(($field_fmt == 'br') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_format_br')?></option>
+					<option value='xhtml' <?=(($field_fmt == 'xhtml') ? "selected='selected'" : '')?>><?=ee()->lang->line('field_format_xhtml')?></option>
+				</select>
+			</td>
+		</tr>
+		
+		<tr class="even">
+			<td style='width:30%;'>
+				<label for='field_maxl'><?=ee()->lang->line('field_length')?></label>
+			</td>
+			
+			<td style='width:70%;'>
+				<input dir='ltr' style='width:5%' type='text' name='field_maxl' id='field_maxl' value='<?=$caller->output($field_maxl)?>' size='35' maxlength='3' class='input' />
+			</td>
+		</tr>
+		
+		<tr class="odd">
+			<td style='width:30%;'>
+				<label for='field_order'><?=ee()->lang->line('field_order')?></label>
+			</td>
+		
+			<td style='width:70%;'>
+				<input dir='ltr' style='width:5%' type='text' name='field_order' id='field_order' value='<?=$caller->output($field_order)?>' size='35' maxlength='40' class='input' />		
+			</td>
+		</tr>
+
+
+	</tbody>
+</table>
+
+	<p><input type='submit' class='submit' value='<?=ee()->lang->line('submit')?>'  /></p>
+	
+</form>

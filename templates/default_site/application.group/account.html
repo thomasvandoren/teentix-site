@@ -1,7 +1,12 @@
+{if segment_3 == ""}
+	{redirect="account/new"}
+{/if}
 {embed="inc/.header"
   body_class="application"
 }
-{embed="inc/.nav"}  
+{embed="inc/.nav"
+	end_title="Create Account"
+} 
   
   <div class="row">
     <div class="twelve columns">
@@ -12,69 +17,23 @@
     entry_id="{segment_3}"  
   }
   {if app_newsletter == 'yes'}
-  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="{app_email}" merge_fname="{app_first_name}" merge_lname="{app_last_name}" merge_BDATE='{app_birthdate format="%Y-%m-%d"}' merge_MTYPE='{app_member_type}' interest_groups='{app_interests backspace="1"}{option}|{/app_interests}' double_optin='no'}
+  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="{app_email}" merge_fname="{app_first_name}" merge_lname="{app_last_name}" merge_BDATE='{app_birthdate format="%Y-%m-%d"}' merge_MTYPE='{app_member_type}' interest_groups='{categories show_group="1" backspace="1"}{category_name}|{/categories}' double_optin='no'}
   {/if}
+  
   {/exp:channel:entries}  
 
   <div class="row">  
     <div class="four columns">
       <h4>3. Create a TeenTix.com website account.</h4>
       <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+      <p>Already have an account? <a href="{path='account/login'}">Login here</a>.</p>
     </div>
     
     <div class="eight columns">
     {exp:channel:entries 
       entry_id="{segment_3}"  
     }
-    {exp:user:register 
-      form:name="account_form"  
-      form:id="account_form"   
-      return="application/confirm"  
-      admin_register="yes"  
-    }
-      <fieldset>
-        <legend>Create an account</legend>
-        
-        <label for="username" class="require">Email:</label>
-        <input type="text" name="username" value="{app_email}"  class="required" />
-        
-        <label for="screen_name" class="require">Screen Name:</label>
-        <input type="text" name="screen_name" class="required" />
-         
-        <label for="password" class="require">Password:</label>
-        <input type="password" name="password" id="password" class="required" />
-        
-        <label for="password_confirm" class="require">Confirm Password:</label>
-        <input type="password" name="password_confirm" id="password_confirm" class="required" />
-        
-      </fieldset>
-      
-      <fieldset>
-        <legend>Terms of Use</legend>
-        <div class="terms">
-          <p>In order to provide the service, there are some limitations on the type of content that can be published on TeenTix.com.</p> 
-          <p>You may not impersonate others on TeenTix.com in a manner that does or is intended to mislead, confuse, or deceive others.</p>
-          <p>You may not publish or post other people's private and confidential information</p>
-          <p>You may not publish or post direct, specific threats of violence against others.</p>
-          <p>We will respond to clear and complete notices of alleged copyright infringement. Our copyright procedures are set forth in the Terms of Service.</p>
-          <p>You may not use our service for any unlawful purposes or in furtherance of illegal activities. International users agree to comply with all local laws regarding online conduct and acceptable content.</p>
-        </div>
-
-        <label for="accept_terms" class="require">
-          <input type="checkbox" name="accept_terms" id="accept_terms" value="yes" class="required" title="Please accept the terms of service." /> 
-          Accept Terms?
-        </label>         
-
-      </fieldset>
-      <p><input type="submit" value="Submit" class="button" /></p>
-        
-      {if no_results}
-      <p>You're currently logged in, and must be logged out to view this form.</p>
-      {/if}   
-       
-    {/exp:user:register}  
- 
-        
+	    {embed="account/.account-signup-form" email="{app_email}"}
     {/exp:channel:entries}
     </div>
     
