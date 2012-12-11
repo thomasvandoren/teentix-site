@@ -169,6 +169,7 @@
 			type: 'GET',
 			url: '/_ajax/email_check/'+$(this).val(),
 			success: function(data){
+				console.log(data);
 				if (data=="") {
 					$("label.username_return").html("Available");
 					$("label.username_return").removeClass('unavailable').addClass('available');
