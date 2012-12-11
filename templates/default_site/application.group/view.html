@@ -11,26 +11,27 @@
 
   
   <div class="row">  
+  {exp:channel:entries 
+      channel="applications"  
+    }
     <div class="four columns">
-      <h4></h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+      <h4>Application Info</h4>
+
+	    <p><strong>Application Date</strong><br />
+	    {entry_date format="%M %j, %Y %g:%i %a"}
+	    </p>
+	    <p><strong>Status</strong><br />
+	    {status}
+	    </p>
+	    
+	    <p><a href="{cp_url}?S=0&D=cp&C=content_publish&M=entry_form&channel_id=8&entry_id={entry_id}"><strong>Edit Application</strong></a><br />
+	    </p>
     </div>
     
     <div class="eight columns">
-		{exp:channel:entries 
-      channel="applications"  
-    }
+		
       <h3>Applicant Info</h3>
-      
-      <div class="row">
-        <div class="four columns">
-          <p class="secondary label">Application Date</p>
-        </div>       
-        <div class="eight columns">
-	        <p>{entry_date format="%M %j, %Y %g:%i %a"}</p>
-	      </div>
-      </div>
-      
+
       <div class="row">
         <div class="four columns">
           <p class="secondary label">Name</p>
@@ -139,12 +140,9 @@
 	      </div>
       </div>
       
-        
-    {/exp:channel:entries}
     </div>
     
-    
-    
+  {/exp:channel:entries}
   </div>
   
   
