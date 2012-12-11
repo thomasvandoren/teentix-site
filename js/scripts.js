@@ -170,7 +170,7 @@
 			url: '/_ajax/email_check/'+$(this).val(),
 			success: function(data){
 				console.log(data);
-				if (data=="") {
+				if (data== null) {
 					$("label.username_return").html("Available");
 					$("label.username_return").removeClass('unavailable').addClass('available');
 				} else {
