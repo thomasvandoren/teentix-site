@@ -170,7 +170,7 @@
 			url: '/_ajax/email_check/'+$(this).val(),
 			success: function(data){
 				console.log(data);
-				if (data != "false") {
+				if (data != false) {
 					$("label.username_return").html("Not Available");
 					$("label.username_return").removeClass('available').addClass('unavailable');				
 				} else {
@@ -190,12 +190,12 @@
 			type: 'GET',
 			url: '/_ajax/screen_name_check/'+$(this).val(),
 			success: function(data){
-				if (data=="") {
-					$("label.screen_name_return").html("Available")
-					$("label.screen_name_return").removeClass('unavailable').addClass('available');
-				} else {
+				if (data != false) {
 					$("label.screen_name_return").html("Not Available")
 					$("label.screen_name_return").removeClass('available').addClass('unavailable');
+				} else {					
+					$("label.screen_name_return").html("Available")
+					$("label.screen_name_return").removeClass('unavailable').addClass('available');
 				}
 				if ($('#account_screen_name').hasClass('error')) {
 					$("label.screen_name_return").html("");
