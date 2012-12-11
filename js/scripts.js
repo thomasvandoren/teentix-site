@@ -170,7 +170,8 @@
 			url: '/_ajax/email_check/'+$(this).val(),
 			success: function(data){
 				console.log(data);
-				if (data != false) {
+				if (data != "false") {
+					console.log(data);
 					$("label.username_return").html("Not Available");
 					$("label.username_return").removeClass('available').addClass('unavailable');				
 				} else {
@@ -190,7 +191,7 @@
 			type: 'GET',
 			url: '/_ajax/screen_name_check/'+$(this).val(),
 			success: function(data){
-				if (data != false) {
+				if (data != "false") {
 					$("label.screen_name_return").html("Not Available")
 					$("label.screen_name_return").removeClass('available').addClass('unavailable');
 				} else {					
