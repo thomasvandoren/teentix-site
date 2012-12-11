@@ -1,3 +1,3 @@
 {exp:query sql="select username from exp_members where username = '{segment_3}'"}
-{username}
+{if username}{username}{if:else}false{/if}
 {/exp:query}
