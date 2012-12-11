@@ -163,8 +163,8 @@
 /////////////////////////////////////  
 //	Form Value Check
 ///////////////////////////////////// 
-  
-	$("#account_username").bind('blur', function() {
+
+	function checkEmail(event,elem) {
 		$.ajax({
 			type: 'GET',
 			url: '/index.php/_ajax/email_check/'+$(this).val(),
@@ -182,8 +182,9 @@
 			}
 		})
 		return false;
-	})
-	$("#account_screen_name").bind('blur', function() {
+	};
+	
+	function checkScreenname() {
 		$.ajax({
 			type: 'GET',
 			url: '/index.php/_ajax/screen_name_check/'+$(this).val(),
@@ -204,7 +205,11 @@
 			}
 		})
 		return false;
-	})
+	};
+  
+	$("#account_username").bind('blur', checkEmail);
+	$("#account_screen_name").bind('blur', checkScreenname);
+	$("#account_form #account_username").focus();
   
 
 
