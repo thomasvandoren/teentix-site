@@ -164,7 +164,7 @@
 //	Form Value Check
 ///////////////////////////////////// 
 
-	function checkEmail(event,elem) {
+	function checkEmail() {
 		$.ajax({
 			type: 'GET',
 			url: '/index.php/_ajax/email_check/'+$(this).val(),
