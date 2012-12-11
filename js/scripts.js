@@ -167,7 +167,7 @@
 	function checkEmail() {
 		$.ajax({
 			type: 'GET',
-			url: '/index.php/_ajax/email_check/'+$(this).val(),
+			url: '/_ajax/email_check/'+$(this).val(),
 			success: function(data){
 				if (data=="") {
 					$("label.username_return").html("Available");
@@ -187,7 +187,7 @@
 	function checkScreenname() {
 		$.ajax({
 			type: 'GET',
-			url: '/index.php/_ajax/screen_name_check/'+$(this).val(),
+			url: '/_ajax/screen_name_check/'+$(this).val(),
 			success: function(data){
 				if (data=="") {
 					$("label.screen_name_return").html("Available")
