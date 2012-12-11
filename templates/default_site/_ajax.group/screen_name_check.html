@@ -1,3 +1,4 @@
 {exp:query sql="select screen_name from exp_members where screen_name = '{segment_3}'"}
-{if screen_name}{screen_name}{if:else}false{/if}
+{screen_name}
+{if no_results}false{/if}
 {/exp:query}

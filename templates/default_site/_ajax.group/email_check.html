@@ -1,3 +1,4 @@
 {exp:query sql="select email from exp_members where email = '{segment_3}'"}
-{if email}{email}{if:else}false{/if}
+{email}
+{if no_results}false{/if}
 {/exp:query}
