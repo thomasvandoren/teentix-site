@@ -167,7 +167,7 @@
 	function checkEmail() {
 		$.ajax({
 			type: 'GET',
-			dataType: 'html',
+			dataType: 'text',
 			url: '/_ajax/email_check/'+$(this).val(),
 			success: function(data){
 				console.log(data);
