@@ -1,0 +1,151 @@
+{embed="inc/.header"
+  body_class="application"
+}
+{embed="inc/.nav"} 
+  
+  <div class="row">
+    <div class="twelve columns">
+      <h1>View application</h1>
+    </div>
+  </div>
+
+  
+  <div class="row">  
+    <div class="four columns">
+      <h4></h4>
+      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+    </div>
+    
+    <div class="eight columns">
+		{exp:channel:entries 
+      channel="applications"  
+    }
+      <h3>Applicant Info</h3>
+      
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Application Date</p>
+        </div>       
+        <div class="eight columns">
+	        <p>{entry_date format="%M %j, %Y %g:%i %a"}</p>
+	      </div>
+      </div>
+      
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Name</p>
+        </div>       
+        <div class="eight columns">
+	        <p>{app_first_name} {app_middle_initial} {app_last_name}</p>
+	      </div>
+      </div>
+      
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Phone</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{app_phone}</p>
+	      </div>
+      </div>
+			
+			<div class="row">
+        <div class="four columns">
+          <p class="secondary label">Birthdate</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{app_birthdate format="%M %j, %Y"}</p>
+	      </div>
+      </div>
+			
+			<h3>Mailing Address</h3>
+			
+			<div class="row">
+        <div class="four columns">
+          <p class="secondary label">Address</p>
+        </div>        
+        <div class="eight columns">
+	        <p>
+	        	{app_address}<br />
+	        	{app_city}, {app_state} {app_zip}<br />
+	        	{app_country}
+	        </p>
+	      </div>
+      </div>
+      
+      <h3>Other Info</h3>
+			
+			<div class="row">
+        <div class="four columns">
+          <p class="secondary label">School</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{if app_school}{app_school}{if:else}<em>Not specified</em>{/if}</p>
+	      </div>
+      </div>
+        
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Heard about TeenTix</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{if app_hear_about}{app_hear_about:label}{if:else}<em>Not specified</em>{/if}</p>
+	      </div>
+      </div>
+      
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Referred by</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{if app_referred}{app_referred}{if:else}<em>Not specified</em>{/if}</p>
+	      </div>
+      </div>
+      
+      <h3>Email and Newsletter</h3>
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Email</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{if app_email}<a href="mailto:{app_email}">{app_email}</a>{if:else}<em>Not specified</em>{/if}</p>
+	      </div>
+      </div>
+      
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Signed up for Newsletter</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{if app_newsletter}{app_newsletter}{if:else}No{/if}</p>
+	      </div>
+      </div>
+      
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Interests</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{if app_interests}{app_interests}{if:else}<em>Not specified</em>{/if}</p>
+	      </div>
+      </div>
+      
+      <div class="row">
+        <div class="four columns">
+          <p class="secondary label">Member Type</p>
+        </div>        
+        <div class="eight columns">
+	        <p>{if app_member_type}{app_member_type:label}{if:else}<em>Not specified</em>{/if}</p>
+	      </div>
+      </div>
+      
+        
+    {/exp:channel:entries}
+    </div>
+    
+    
+    
+  </div>
+  
+  
+{embed="inc/.footer"}
