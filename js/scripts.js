@@ -170,12 +170,12 @@
 			url: '/_ajax/email_check/'+$(this).val(),
 			success: function(data){
 				console.log(data);
-				if (data== null) {
+				if (data != "") {
+					$("label.username_return").html("Not Available");
+					$("label.username_return").removeClass('available').addClass('unavailable');				
+				} else {
 					$("label.username_return").html("Available");
 					$("label.username_return").removeClass('unavailable').addClass('available');
-				} else {
-					$("label.username_return").html("Not Available");
-					$("label.username_return").removeClass('available').addClass('unavailable');
 				}
 				if ($('#account_username').hasClass('error')) {
 					$("label.username_return").html("");
