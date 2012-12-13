@@ -181,6 +181,9 @@
 				if ($('#account_username').hasClass('error')) {
 					$("label.username_return").html("");
 				}
+				if ($('#account_username').val() == "") {
+					$("label.username_return").html("");
+				}
 			}
 		})
 		
