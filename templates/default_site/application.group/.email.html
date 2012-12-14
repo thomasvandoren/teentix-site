@@ -2,7 +2,7 @@
   entry_id="{embed:entry_id}"  
 	parse="inward"
 }
-{exp:email_from_template to="{app_email}" subject="Your Temporary Teen Tix Pass"}
+{exp:email_from_template to="{app_email}" subject="Your Temporary Teen Tix Pass" echo="off"}
 	
 	Hi {app_first_name} {app_last_name}!
 	We have received your Teen Tix application on {entry_date format='%Y-%m-%d'}.

@@ -2,6 +2,7 @@
 	{redirect="account/new"}
 {/if}
 {embed="inc/.header"
+	title="Create a TeenTix Account | Application"
   body_class="application"
 }
 {embed="inc/.nav"
@@ -13,26 +14,6 @@
       <h1>TeenTix Application</h1>
     </div>
   </div>
-  {exp:channel:entries 
-    entry_id="{segment_3}"  
-  }
-  {if app_newsletter == 'yes'}
-	  {exp:mailchimp_ee:subscribe 
-	  	api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" 
-	  	list_id="0d9d72b4f4" 
-	  	email_address="{app_email}" 
-	  	merge_fname="{app_first_name}" 
-	  	merge_lname="{app_last_name}" 
-	  	merge_BDATE='{app_birthdate format="%Y-%m-%d"}' 
-	  	merge_MTYPE='{app_member_type}' 
-	  	interest_groups='{categories show_group="1" backspace="1"}{category_name}|{/categories}' 
-	  	double_optin='no'
-	  }
-  {/if}
-
-	{embed="application/.email" entry_id="{segment_3}"}
-  
-  {/exp:channel:entries}  
 
   <div class="row">  
     <div class="four columns">
@@ -48,10 +29,28 @@
 	    {embed="account/.account-signup-form" email="{app_email}"}
     {/exp:channel:entries}
     </div>
-    
-    
-    
+        
   </div>
   
+{exp:channel:entries 
+  entry_id="{segment_3}"  
+}
+{if app_newsletter == 'yes'}
+  {exp:mailchimp_ee:subscribe 
+  	api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" 
+  	list_id="0d9d72b4f4" 
+  	email_address="{app_email}" 
+  	merge_fname="{app_first_name}" 
+  	merge_lname="{app_last_name}" 
+  	merge_BDATE='{app_birthdate format="%Y-%m-%d"}' 
+  	merge_MTYPE='{app_member_type}' 
+  	interest_groups='{categories show_group="1" backspace="1"}{category_name}|{/categories}' 
+  	double_optin='no'
+  }
+{/if}
+
+{embed="application/.email" entry_id="{segment_3}"}
+
+{/exp:channel:entries}  
   
 {embed="inc/.footer"}
