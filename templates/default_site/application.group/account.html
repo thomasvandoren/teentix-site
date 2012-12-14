@@ -15,23 +15,28 @@
   </div>
   {exp:channel:entries 
     entry_id="{segment_3}"  
-    parse="inward"
   }
   {if app_newsletter == 'yes'}
-  {exp:mailchimp_ee:subscribe api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" list_id="0d9d72b4f4" email_address="{app_email}" merge_fname="{app_first_name}" merge_lname="{app_last_name}" merge_BDATE='{app_birthdate format="%Y-%m-%d"}' merge_MTYPE='{app_member_type}' interest_groups='{categories show_group="1" backspace="1"}{category_name}|{/categories}' double_optin='no'}
+	  {exp:mailchimp_ee:subscribe 
+	  	api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" 
+	  	list_id="0d9d72b4f4" 
+	  	email_address="{app_email}" 
+	  	merge_fname="{app_first_name}" 
+	  	merge_lname="{app_last_name}" 
+	  	merge_BDATE='{app_birthdate format="%Y-%m-%d"}' 
+	  	merge_MTYPE='{app_member_type}' 
+	  	interest_groups='{categories show_group="1" backspace="1"}{category_name}|{/categories}' 
+	  	double_optin='no'
+	  }
   {/if}
 
-	{exp:email_from_template to="{app_email}" from="info@teentix.org" subject="Hello!" echo="off"}
-	
-		This tag content is being viewed at {uri_string}. Sending notification to {to}!
-	
-	{/exp:email_from_template} 
+	{embed="application/.email" entry_id="{segment_3}"}
   
   {/exp:channel:entries}  
 
   <div class="row">  
     <div class="four columns">
-      <h4>3. Create a TeenTix.com website account.</h4>
+      <h4>2. Create a TeenTix.com website account.</h4>
       <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
       <p>Already have an account? <a href="{path='account/login'}">Login here</a>.</p>
     </div>

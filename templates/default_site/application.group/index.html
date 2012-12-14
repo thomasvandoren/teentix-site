@@ -22,7 +22,7 @@
 			</p>
     {exp:safecracker 
       channel="applications" 
-      return="application/newsletter/ENTRY_ID" 
+      return="application/account/ENTRY_ID" 
       dynamic_title="[app_first_name] [app_last_name] Pass Application" 
       error_handling="inline"
       id="application_form"
@@ -33,7 +33,7 @@
         
         <fieldset id="app_info">
           <legend>Applicant Info</legend>
-          
+          <p>Please fill out the information for the TeenTix pass holder</p>
           <div class="row">
             <div class="five columns">
               <label for="app_first_name" class="require">First Name*</label>
@@ -58,23 +58,39 @@
           <input type="text" name="app_phone_alt" id="app_phone_alt" value="{app_phone_alt}">--}
         
           
-          <label for="app_birthdate" class="require">Birthdate (You must be between 13 and 19 years old)*<br />
+          <label for="app_birthdate" class="require">Birthdate (Applicant must be between 13 and 19 years old)*<br />
           	
           </label>
           <div class="birthdate_select">
             {field:app_birthdate}
           </div>
-          {!--<div class="date_input">
-            <input type="text" name="app_birthmonth" id="app_birthmonth" value="" placeholder="MM" size="2" class="required">&ndash;
-            <input type="text" name="app_birthday" id="app_birthday" value="" placeholder="DD" size="2" class="required">&ndash;
-            <input type="text" name="app_birthyear" id="app_birthyear" value="" placeholder="YYYY" size="4" class="required">
-          </div>--}
+          
+          <label for="app_school">School</label>
+          <input type="text" name="app_school" id="app_school" value="{app_school}">
         
+        	<div class="app_interests_list clearfix">
+	          <p>Interests?</p>
+	          {categories show_group="1"}
+						<label><input type="checkbox" name="category[]" value="{category_id}" /> {category_name}</label> 
+						{/categories}
+	        </div>
+	        
+        </fieldset>
+        
+        <fieldset id="app_mailing_address"> 
+          <legend>E-mail Address</legend>
+          <p>Please provide us with an email address to receive your temporary pass.</p>
+          <label for="app_email" class="require">Email Address</label>
+	        <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
+	        <label for="app_newsletter" class="label_checkbox">
+	          <input type="checkbox" name="app_newsletter" id="app_newsletter" value="yes" checked="checked">
+	          I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
+	        </label>
         </fieldset>
         
         <fieldset id="app_mailing_address"> 
           <legend>Mailing Address</legend>
-          <p>Please provide us with a mailing address to send you your pass.</p>
+          <p>Please provide us with a mailing address to receive your permanent pass.</p>
           <label for="app_address" class="require">Address*</label>
           <input type="text" name="app_address" id="app_address" value="{app_address}" class="required">
           
@@ -93,9 +109,13 @@
         
         <fieldset id="app_other">
           <legend>Other Info</legend>
-          
-          <label for="app_school">School</label>
-          <input type="text" name="app_school" id="app_school" value="{app_school}">
+  
+	        <div class="app_member_type_list">
+	          <p>Which applies to you?</p>
+	          <label><input type="radio" name="app_member_type" value="teen"  />&nbsp;I am a Teen (currently aged 13-19)</label>
+	          <label><input type="radio" name="app_member_type" value="parent"  />&nbsp;I am a Parent or Guardian applying for a teen</label>
+	          <label><input type="radio" name="app_member_type" value="other"  />&nbsp;Other</label>
+	        </div>      
           
           <label for="app_hear_about">How did you hear about TeenTix?</label>
           <select name="app_hear_about" class="six">
@@ -108,23 +128,12 @@
           <input type="text" name="app_referred" id="app_referred" value="{app_referred}">
           
           {if captcha}
-                  <label for="captcha">Please enter the word you see in the image below:</label>
-                  {captcha}
-                  <input type="text" name="captcha" value="{captcha_word}" maxlength="20">
+            <label for="captcha">Please enter the word you see in the image below:</label>
+            {captcha}
+            <input type="text" name="captcha" value="{captcha_word}" maxlength="20">
           {/if}
           
         </fieldset>
-        
-        {!--<fieldset>
-          <legend>TeenTix Newsletter</legend>
-          
-          <label for ="app_newsletter">
-            <input type="checkbox" name="app_newsletter" id="app_newsletter" value="y" checked="checked">
-            I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
-          </label>
-          <label for="app_email" class="require">Email Address</label>
-          <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
-        </fieldset>--}
         
         <div class="form_submit">
           <input type="submit" name="submit" value="Next" class="button">

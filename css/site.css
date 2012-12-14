@@ -375,12 +375,16 @@ ul.breadcrumbs {
 }
 .application .app_interests_list p,
 .application .app_member_type_list p {
-  margin-bottom: 0px;
+  margin-bottom: 5px;
+  font-weight: bold;
 }
 .application .app_interests_list label {
   float: left;
   width: 180px;
   margin-right: 10px;
+}
+.application .app_member_type_list {
+	margin: 20px 0px;
 }
 .application .app_member_type_list label {
   padding-left: 20px;
