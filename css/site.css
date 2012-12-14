@@ -354,6 +354,11 @@ ul.breadcrumbs {
 /* -----------------------------------------
    Application
 ----------------------------------------- */
+.application form p {
+	font-size: 14px;
+	color: #4D4D4D;
+	font-weight: 500;
+}
 .application select {
   width: auto;
   margin-bottom: 12px;
@@ -376,7 +381,6 @@ ul.breadcrumbs {
 .application .app_interests_list p,
 .application .app_member_type_list p {
   margin-bottom: 5px;
-  font-weight: bold;
 }
 .application .app_interests_list label {
   float: left;

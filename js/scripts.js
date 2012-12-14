@@ -61,7 +61,12 @@
   
   $('#application_form').validate({
     rules: {
-     'app_birthdate[]': { valueNotEquals: "0" }
+     'app_birthdate[]': { 
+     	valueNotEquals: "0" 
+     },
+     app_email : {
+     	email: true
+     }
     },
     messages: {
      'app_birthdate[]': {
