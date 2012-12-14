@@ -46,6 +46,7 @@ class Email_from_template {
 	    $this->cc = "";
 	    $this->bcc = "";
 		$this->from = $this->EE->config->item('webmaster_email');
+		$this->from_name = $this->EE->config->item('webmaster_name'); //get default from name -ms
 		$this->subject = "Email-from-Template: ".$this->EE->uri->uri_string();
 		$this->echo_tagdata = TRUE;
 		$this->append_debug = FALSE;
@@ -55,6 +56,7 @@ class Email_from_template {
 		$mailtype = (($mailtype = $this->EE->TMPL->fetch_param('mailtype')) == "html") ? "html" : "text";
 		
 		$from = (($from = $this->EE->TMPL->fetch_param('from')) === FALSE) ? $this->from : $this->EE->security->xss_clean($from);
+		$from_name = (($from_name = $this->EE->TMPL->fetch_param('from_name')) === FALSE) ? $this->from_name : $this->EE->security->xss_clean($from_name);  //get from name -ms
 		$to = (($to = $this->EE->TMPL->fetch_param('to')) === FALSE) ? $this->to : $this->EE->security->xss_clean($to);
 		$cc = (($cc = $this->EE->TMPL->fetch_param('cc')) === FALSE) ? FALSE : $this->EE->security->xss_clean($cc);
 		$bcc = (($bcc = $this->EE->TMPL->fetch_param('bcc')) === FALSE) ? FALSE : $this->EE->security->xss_clean($bcc);
@@ -84,6 +86,7 @@ class Email_from_template {
 		
 		$single_variables = array(
 			'from' => $from,
+			'from_name' => $from_name,  //set from name variable -ms
 			'to' => $to,
 			'cc' => $cc,
 			'bcc' => $bcc,
@@ -126,8 +129,8 @@ class Email_from_template {
 		$this->EE->TMPL->log_item('MAILTYPE: ' . $mailtype);
 		$this->EE->email->mailtype = $mailtype;
 
-		$this->EE->TMPL->log_item('FROM: ' . $from);
-		$this->EE->email->from($from);
+		$this->EE->TMPL->log_item('FROM: ' . $from_name . " <" . $from . ">"); //print from to debugger -ms
+		$this->EE->email->from($from, $from_name); //set from name and email for email -ms
 
 		$this->EE->TMPL->log_item('TO: ' . $to);
 		$this->EE->email->to($to); 
