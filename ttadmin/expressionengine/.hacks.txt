@@ -1,0 +1,3 @@
+/ttadmin/expressionengine/third_party/email_from_template/pi.email_from_template.php
+added from name functionality 
+lines 49, 59, 89, 132, 133
