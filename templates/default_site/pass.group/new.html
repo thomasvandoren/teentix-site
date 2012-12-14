@@ -1,0 +1,19 @@
+{exp:channel:entries 
+  entry_id="{segment_3}"  
+  dynamic="no"
+}
+	{if segment_4 == entry_date}
+
+		{exp:calendar:date base_date="{entry_date format='%Y-%m-%d'}" output_date="2 weeks" } 
+			
+			{embed="pass/.pass" name="{app_first_name} {app_last_name}" issue_date="{current_time format='%M %j, %Y'}" expiration_date="{date format='%M %j, %Y'}"}		
+			
+		{/exp:calendar:date} 
+		 
+		{if no_results}{redirect="pass/expired"}{/if}
+	
+	{if:else}
+		{redirect="pass/expired"}
+	{/if}
+	
+{/exp:channel:entries}
