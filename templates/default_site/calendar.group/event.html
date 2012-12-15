@@ -44,7 +44,7 @@
 			  	<div id="event-info" class="six columns">
 						<p>
 					  {related_entries id="event_organization"}
-					  	<strong>Organization</strong> <a href="{url_title_path='organization'}">{title}</a><br />
+					  	<strong>Organization</strong> <a href="{url_title_path='organizations'}">{title}</a><br />
 					  {/related_entries}
 						{if event_website}
 							<strong>More info</strong> <a href="{event_website}">Event Website</a>
@@ -104,20 +104,20 @@
 	        {if not_saved}
             <span class="favorited">
               <span class="Favorites_Status"></span>
-              <a class="Favorites_Save_Full" href="{path='favorite/add'}/{entry_id}">Save this event</a>
-              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='favorite/add'}">save</a>
-              <a class="Favorites_Delete Favorites_Trigger" style="display:none;" href="{permalink='favorite/add/delete/'}">delete</a>
+              <a class="Favorites_Save_Full" href="{path='_ajax/favorite_add'}/{entry_id}">Save this event</a>
+              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add'}">save</a>
+              <a class="Favorites_Delete Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add/delete/'}">delete</a>
             </span>
 	        {/if}
 	        {if saved}
             <span class="favorited">
               <span class="Favorites_Status">Event saved</span>
-              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='favorite/add/'}">save</a>
-              <a class="Favorites_Delete Favorites_Trigger" href="{permalink='favorite/add/delete/'}">delete</a>
+              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add/'}">save</a>
+              <a class="Favorites_Delete Favorites_Trigger" href="{permalink='_ajax/favorite_add/delete/'}">delete</a>
             </span>
 	        {/if}
 		    {/exp:favorites:saved}
-		    <br /><a href="">View your saved events</a>
+		    <br /><a href="{path='account/events'}">View your saved events</a>
 			{if:else}
 		    <a href="{path='account/login'}" href="#">Login to save this event</a>
 			{/if} 
