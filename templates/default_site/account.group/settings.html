@@ -19,27 +19,31 @@
     <div class="nine columns">
     {exp:user:edit
     	form:id="account_edit_settings" 
+    	error_page="account/error" 
     }
       
       <fieldset>
 	      <legend>Account Settings</legend>
 	      <div class="row">
-	      	<label class="four columns">Email</label>
-	      	<div class="eight columns">
-	      		<input type="email" name="email" value="{email}" class="required" />
+	      	<label class="three columns">Email</label>
+	      	<div class="six columns">
+	      		<input type="email" name="email" value="{email}" class="required" id="account_username" data-current="{email}" />
+	      	</div>
+	      	<div class="three columns">
+	      		<label class="field_return username_return"></label>
 	      	</div>
 	      </div>
 	      
 	      <div class="row">
-	      	<label class="four columns">New Password</label>
-	      	<div class="eight columns">
+	      	<label class="three columns">New Password</label>
+	      	<div class="six columns end">
 	      		<input type="password" name="password" id="password" />
 	      	</div>
 	      </div>
 	      
 	      <div class="row">
-	      	<label class="four columns">Password Confirm</label>
-	      	<div class="eight columns">
+	      	<label class="three columns">Password Confirm</label>
+	      	<div class="six columns end">
 	      		<input type="password" name="password_confirm" />
 	      	</div>
 	      </div>
@@ -47,8 +51,8 @@
 	      <hr />
 	      <p>In order to update your email or password, you'll have to submit the current password:</p>
 	      <div class="row">
-	      	<label class="four columns">Current Password</label>
-	      	<div class="eight columns">
+	      	<label class="three columns">Current Password</label>
+	      	<div class="six columns end">
 	      		<input type="password" name="current_password"  class="required" />
 	      	</div>
 	      </div>

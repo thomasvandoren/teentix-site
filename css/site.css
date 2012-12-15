@@ -442,7 +442,7 @@ ul.breadcrumbs {
 .account p.require {
 	text-align: right;
 }
-.account #member_profile .row {
+.account.home #member_profile .row {
 	background: #f6f6f6;
 	padding: 20px 10px;
 }
@@ -457,4 +457,10 @@ ul.breadcrumbs {
 	padding: 10px 0px;
 	border-top: 1px solid #ddd;
 }
-
+.account.edit label.field_return,
+.account.settings label.field_return  {
+  padding-top: 10px;
+}
+.account.edit .label_birthdate_error {
+	color: #cc0000;
+}

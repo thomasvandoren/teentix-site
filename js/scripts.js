@@ -107,11 +107,24 @@
   });
   
   $('#account_edit_profile').validate({
+  	rules: {
+      screen_name: { 
+        minlength: 5 
+      }
+    },
     errorPlacement: function(error, element) {
-      if (element.attr("name") == "app_birthdate[]") {
-        error.insertAfter(element.parent());
+      if ((element.attr("name") == "bday_m") || (element.attr("name") == "bday_d") || (element.attr("name") == "bday_y")) {
+        $('.label_birthdate_error').html('Select your birthdate');
+      } else {
+      	error.insertAfter(element);
       }
     }
+  });
+  
+  $('#account_edit_profile #bday_m, #account_edit_profile #bday_d, #account_edit_profile #bday_y').change(function(){
+  	if (($("#account_edit_profile #bday_m").val() != "") && ($("#account_edit_profile #bday_d").val() != "") && ($("#account_edit_profile #bday_y").val() != "")) {
+  		$('.label_birthdate_error').html('');
+  	}
   });
   
   $('#account_edit_settings').validate({
@@ -189,6 +202,9 @@
 				if ($('#account_username').val() == "") {
 					$("label.username_return").html("");
 				}
+				if ($('#account_username').val() == $('#account_username').data('current')) {
+					$("label.username_return").html("");
+				}
 			}
 		})
 		
@@ -211,6 +227,9 @@
 					$("label.screen_name_return").html("");
 				}
 				if ($('#account_screen_name').val() == "") {
+					$("label.screen_name_return").html("");
+				}
+				if ($('#account_screen_name').val() == $('#account_screen_name').data('current')) {
 					$("label.screen_name_return").html("");
 				}
 			}

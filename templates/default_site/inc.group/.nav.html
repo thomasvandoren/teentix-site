@@ -102,3 +102,15 @@
   	</div>
   </div>
   {/if}	
+  
+  {if embed:end_title == "Error"}
+  <div class="row">
+  	<div id="nav-breadcrumb" class="twelve columns">
+  		<ul class="breadcrumbs">
+  			<li><a href="{site_url}">Home</a></li>
+	  		<li><a href="{site_url}account">Account</a></li>
+	  		<li class="current"><a href="#">{embed:end_title}</a></li>
+	  	</ul>
+  	</div>
+  </div>
+  {/if}

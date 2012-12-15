@@ -20,11 +20,15 @@
     {exp:user:edit
     	return="account/index"
     	form:id="account_edit_profile"  
+    	password_required="n"
+    	screen_name_password_required="no" 
+    	error_page="account/error" 
     }
     	<p class="require">
 				<strong>Required information*</strong>
 			</p>
-      <fieldset>
+			
+      <fieldset id="member_profile">
       	
 	      <legend>Public Profile </legend>
 	      <div class="row">
@@ -41,43 +45,46 @@
 				</div>
 				
 	      <div class="row">
-	      	<label class="require three columns">Screen Name</label>
-	      	<div class="nine columns">
-	      		<input class="required" type="text" name="screen_name" value="{screen_name}" />
+	      	<label class="require three columns">Screen Name*</label>
+	      	<div class="six columns">
+	      		<input class="required" type="text" name="screen_name" value="{screen_name}" id="account_screen_name" data-current="{screen_name}" />
+	      	</div>
+	      	<div class="three columns">
+	      		<label class="field_return screen_name_return"></label>
 	      	</div>
 	      </div>
 	      
 	      <div class="row">
 	      	<label class="three columns">Location</label>
-	      	<div class="nine columns">
+	      	<div class="six columns end">
 	      		<input type="text" name="location" value="{location}" />
 	      	</div>
 	      </div>
 	      <div class="row">
 	      	<label class="three columns">Website</label>
-	      	<div class="nine columns">
+	      	<div class="six columns end">
 	      		<input type="text" name="url" value="{url}" />
 	      	</div>
 	      </div>
 	      <div class="row">
 	      	<label class="three columns">Facebook URL</label>
-	      	<div class="nine columns">
+	      	<div class="six columns end">
 	      		<input type="text" name="facebook" value="{facebook}" />
 	      	</div>
 	      </div>
 	      <div class="row">
 	      	<label class="three columns">Twitter URL</label>
-	      	<div class="nine columns">
+	      	<div class="six columns end">
 	      		<input type="text" name="twitter" value="{twitter}" />
 	      	</div>
 	      </div>
 	        
       </fieldset>
       
-      <fieldset>
+      <fieldset id="member_info">
 	      <legend>Private Information </legend>
 	      <div class="row">
-	      	<label class="require three columns">Birthdate</label>
+	      	<label class="require three columns">Birthdate*</label>
 	      	<div class="nine columns">
 	      		<p>
 		      	<select class="required" name="bday_m" id="bday_m" style="width: 125px;">
@@ -133,6 +140,8 @@
 						
 						<select class="required" name="bday_y" id="bday_y" style="width: 100px;">
 							<option value="">Year</option>
+							<option value="2008" {if bday_y == "2008"}selected="selected"{/if}>2008</option>
+							<option value="2007" {if bday_y == "2007"}selected="selected"{/if}>2007</option>
 							<option value="2006" {if bday_y == "2006"}selected="selected"{/if}>2006</option>
 							<option value="2005" {if bday_y == "2005"}selected="selected"{/if}>2005</option>
 							<option value="2004" {if bday_y == "2004"}selected="selected"{/if}>2004</option>
@@ -236,6 +245,7 @@
 							<option value="1906" {if bday_y == "1906"}selected="selected"{/if}>1906</option>
 							<option value="1905" {if bday_y == "1905"}selected="selected"{/if}>1905</option>
 						</select>
+						<label class="label_birthdate_error"></label>
 						</p>
 	      	</div>
 	      </div>
