@@ -1,0 +1,15 @@
+body {
+	font-family: Helvetica Neue, Helvetica, Arial, san-serif;
+}
+.float_left {
+	float: left;
+	margin: 0px 20px 10px 0px;
+}
+.float_right {
+	float: right;
+	margin: 0px 0px 10px 20px;
+}
+.image_center {
+	display: block;
+	margin: 10px auto;
+}
