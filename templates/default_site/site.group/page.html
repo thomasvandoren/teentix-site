@@ -1,0 +1,26 @@
+{exp:channel:entries limit="1"}
+{embed="inc/.header"
+	title="{title}"
+	body_class="static single"
+}
+
+{embed="inc/.nav"
+	end_title="{title}"
+} 
+    
+  <div class="row">
+    <div id="main" class="eight columns">
+    	<div class="entry">
+				<h1 id="page-name">{title}</h1>
+    		{general_body}
+    	</div>
+    {/exp:channel:entries}
+    </div>
+
+  	<div id="sidebar" class="four columns">
+      <p>sidebar</p>
+    </div>
+  
+  </div>
+
+{embed="inc/.footer"}

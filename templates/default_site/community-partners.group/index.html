@@ -1,0 +1,15 @@
+{exp:switchee variable = "{segment_2}" parse="inward"}
+
+{case value=""}
+	{embed="community-partners/.list"}
+{/case}
+
+{case value="#^P(\d+)$#|''"}
+	{embed="community-partners/.list"}
+{/case}
+
+{case default="Yes"}
+	{embed="community-partners/.single"}
+{/case}
+
+{/exp:switchee}

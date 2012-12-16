@@ -1,0 +1,52 @@
+{embed="inc/.header"
+	title="Community Partners"
+	body_class="partners"
+}
+
+{embed="inc/.nav"
+	segment_1_title="Community Partners"
+}
+
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">Community Partners</h1>
+    </div>
+  </div>
+  
+{exp:channel:entries url_title="community-partners"}
+	<div class="row">
+		<div class="eight columns">
+			{general_body}
+		</div>
+	</div>
+  	
+{/exp:channel:entries}
+  
+  <div class="row">
+  
+    <div class="twelve columns">
+    {exp:channel:entries channel="partners" limit="200" orderby="title" sort="asc"}
+    	<div class="org row">
+    		<div class="three columns">
+    			<a href="{url_title_path='community-partners'}">
+    			{exp:ce_img:pair src="{org_image}" width="220"}
+					<img src="{made}" alt="" width="{width}" height="{height}" />
+					{/exp:ce_img:pair}
+    			</a>
+    		</div>
+    		<div class="six columns">
+    			<h2><a href="{url_title_path='community-partners'}">{title}</a></h2>
+    			<p>{org_contact_info}</p>
+    		</div>
+    		<div class="three columns">
+    			
+    		</div>
+    	
+    	</div>
+		{/exp:channel:entries}
+      	
+    </div>
+    
+  </div>
+
+{embed="inc/.footer"}
