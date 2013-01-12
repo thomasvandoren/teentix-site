@@ -1,38 +1,65 @@
+	<div id="utility-nav">
+		<nav class="top-bar">
+		  <ul>
+		  	<li>
+		  		<div id="utility-search" class="search-form">
+	  			{exp:search:simple_form channel="news"}
+            <input type="text" name="keywords" id="keywords" value="" placeholder="Search TeenTix" size="18" maxlength="100">
+            <input type="submit" value="GO" class="submit small button">
+					{/exp:search:simple_form}
+		  		</div>
+		  	</li>
+		    <li class="toggle-topbar"><a href="#"></a></li>
+		  </ul>
+		  <section>
+		    <ul class="left">
+		      <li><a href="{site_url}newsletter">Get our newsletter</a></li>		      
+		    </ul>
+		
+		    <ul class="right">
+		    {if logged_out}
+	        <li class="has-dropdown">
+	          <a href="{path='account/login'}">Login</a>
+	          <ul class="dropdown">
+			        <li id="nav-bar-login">
+			          
+		          {exp:member:login_form return="{exp:currentlee type='url'}"}
+		            <label for="username">Email Address:</label>
+		            <input type="text" name="username" class="required" />
+		            <label for="password">Password:</label>
+		            <input type="password" name="password" class="required" />
+		            <input type="submit" name="submit" value="Submit" class="submit button small" />
+		          {/exp:member:login_form}
+		              
+			        </li>
+			        <li><a href="{site_url}account/new">Create an account</a></li>
+							<li><a href="{path='account/password'}">Reset your password</a></li>
+			      </ul>
+	          
+	        </li>
+	      {/if}
+	      {if logged_in}
+	        <li><a href="{path='account'}">Welcome {screen_name}!</a></li>
+	        <li class="right"><a href="{path='logout'}">Logout</a></li>
+	      {/if}
+		    </ul>
+		  </section>
+		</nav><!-- end .top-bar -->
+
+	</div><!-- end #utility-nav -->
+	
   <!-- Header and Nav -->
   
   <div id="header" class="row">
-    <div class="three columns">
-      <h1 id="logo"><a href="{site_url}"><img src="http://placehold.it/400x100&text=Logo" /></a></h1>
-    </div>
-    <div class="nine columns">
-      <ul id="utility-nav" class="nav-bar right">
-      {if logged_out}
-        <li class="has-flyout">
-          <a href="{path='account/login'}">Login</a>
-          <div class="flyout right" id="nav-bar-login">
-          
-          {exp:member:login_form return="{exp:currentlee}"}
-            <label for="username">Email Address:</label>
-            <input type="text" name="username" class="required" />
-            <label for="password">Password:</label>
-            <input type="password" name="password" class="required" />
-            <p><input type="submit" name="submit" value="Submit" /></p>
-          {/exp:member:login_form}
-            <p>
-              <a href="{site_url}account/new">Create an account</a><br />
-              <a href="{path='account/password'}">Reset your password</a>
-            </p>  
-          </div>
-        </li>
-      {/if}
-      {if logged_in}
-        <li><a href="{path='account'}">Hi {screen_name}!</a></li>
-        <li class="right"><a href="{path='logout'}">Logout</a></li>
-      {/if}
-        
-      </ul>
+    <div class="twelve columns">
+    	<div id="how-to-graphic">
+	      <h1 id="logo"><a href="{site_url}"><img src="http://placehold.it/400x100&text=Logo" /></a></h1>
+	      <div id="get-info"><a href="{path='application'}" class="small button">More Info</a></div>
+				<div id="get-pass"><a href="{path='application'}" class="small button">Get Your Pass</a></div>
+			</div>
     </div>
   </div>
+  
   <div id="top-nav" class="row">
   	<div class="twelve columns">
 	  	<ul id="main-nav" class="nav-bar">
@@ -40,11 +67,11 @@
 	      <li {if segment_1=='calendar'}class='active'{/if}><a href="{path='calendar'}">Calendar</a></li>
 	      <li {if segment_1=='blog'}class='active'{/if}><a href="{path='blog'}">Blog</a></li>
 	      <li {if segment_1=='organizations'}class='active'{/if}><a href="{path='organizations'}">Participating Orgs</a></li>
-	      <li {if segment_1=='venues'}class='active'{/if}><a href="{path='venues'}">Venues</a></li>
+	      <li {if segment_1=='venues'}class='active'{/if}><a href="{path='venues'}">Locations</a></li>
 	      <li class="{if segment_1=='about'}active {/if}has-flyout">
 			    <a href="#">About</a>
 			    <a href="#" class="flyout-toggle"><span> </span></a>
-			    <div class="flyout large">
+			    <div class="flyout large right">
 			    	<div class="row">
 			    		<div class="four columns">
 			    			<h4>About TeenTix</h4>
@@ -74,7 +101,7 @@
 			  </div>
 	      
 	      <li><a href="{path='contact'}">Contact</a></li>
-	      <li><a href="{path='application'}">Get a TeenTix Pass</a></li>
+	      
 	    </ul>
 	  </div>
   </div>

@@ -30,15 +30,37 @@
     </div>
     
     <div class="four columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+    {exp:channel:entries channel="blog" limit="1"}
+    	
+    	<div class="entry">
+  		{if blog_image}
+  			<a href="{url_title_path='blog'}">
+  			{exp:ce_img:pair src="{blog_image}" width="220"}
+				<img src="{made}" alt="" width="{width}" height="{height}" />
+				{/exp:ce_img:pair}
+  			</a>
+    	{/if}    	
+				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
+    		<h3><a href="{url_title_path='blog'}">{title}</a></h3>
+  		
+    	</div>
+		{/exp:channel:entries} 
     </div>
     
     <div class="four columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+    {exp:channel:entries channel="blog" limit="4"}
+    	<div class="entry">    	
+				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
+    		<h4><a href="{url_title_path='blog'}">{title}</a></h4>
+  		{if blog_image}
+  			<a href="{url_title_path='blog'}">
+  			{exp:ce_img:pair src="{blog_image}" width="220"}
+				<img src="{made}" alt="" width="{width}" height="{height}" />
+				{/exp:ce_img:pair}
+  			</a>
+    	{/if}
+    	</div>
+		{/exp:channel:entries} 
     </div>
     
   </div>

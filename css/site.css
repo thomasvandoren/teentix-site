@@ -27,6 +27,8 @@ h1, h2, h3, h4, h5, h6 {
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
 
+
+
 /* Forms */
 fieldset {
 	background: #f9f9f9;
@@ -80,6 +82,82 @@ label.field_return.unavailable {
 .label_checkbox input {
   margin-left: -20px;
 }
+input.submit:hover {
+	cursor: pointer;
+}
+
+
+/* -----------------------------------------
+   Utility Nav
+----------------------------------------- */
+.top-bar,
+.top-bar ul,
+.top-bar ul > li a:not(.button)  {
+	height: 36px;
+	line-height: 36px;
+	margin-bottom: 0px;
+}
+.top-bar {
+	margin-bottom: 0px;
+}
+.top-bar ul > li:hover, .top-bar ul > li.active {
+	background: transparent;
+}
+.top-bar ul > li.has-dropdown .dropdown li {
+	background: #ccc;
+}
+.top-bar ul > li.has-dropdown .dropdown li a:hover {
+	background: #aaa;
+}
+.top-bar ul > li.has-dropdown .dropdown li a {
+	color: #000;
+}
+#utility-search {
+	width: 260px;
+	padding: 4px 0px 0px 20px;
+}
+#utility-search form {
+	margin: 0px;
+	padding: 0px;
+}
+#utility-search input {
+	float: left;
+	margin: 0px;
+}
+#utility-search input#keywords {
+	width: 200px;
+	padding: 3px 5px;
+	height: 28px;
+}
+#utility-search input.submit {
+	height: 28px;
+	padding: 3px 6px;
+}
+#utility-nav .right {
+	margin-right: 10px;
+}
+#utility-nav .dropdown {
+	top: 36px;
+	background: #ccc;
+}
+#utility-nav #nav-bar-login {
+	padding: 10px;
+	background: #ccc;
+}
+#utility-nav #nav-bar-login form {
+	margin: 0px;
+}
+#utility-nav #nav-bar-login label {
+  color: #333;
+  font-size: 12px;
+  font-weight: bold;
+  padding-left: 0px;
+  margin-bottom: 3px;
+  text-transform: none;
+}
+#utility-nav #nav-bar-login input[type=text] {
+	width: 200px;
+}
 
 
 
@@ -87,39 +165,45 @@ label.field_return.unavailable {
    Header
 ----------------------------------------- */
 #header {
-	margin-top: 20px;
+	margin-top: 0px;
+}
+#header #how-to-graphic {
+	position: relative;
+	width: 100%;
+	height: 140px;
+	background: #eee;
 }
 #logo {
 	margin: 0px;
+	width: 200px;
+	position: absolute;
+	left: 10px;
+	top: 40px;
 }
-#utility-nav {
-	background: none;
-	margin: 0px;
+#header #get-info {
+	position: absolute;
+	top: 30px;
+	right: 10px;
+	text-align: center;
 }
-#utility-nav > li {
-	background: #ccc;
-	border: none;
-	line-height: 28px;
+#header #get-pass {
+	position: absolute;
+	top: 70px;
+	right: 10px;
+	text-align: center;
 }
-#utility-nav > li > a:first-child {
-	color: #000;
-	padding: 0px 10px;
+#header #get-info a,
+#header #get-pass a {
+	width: 100px;
 }
-#utility-nav form {
-  line-height: 1.3em;
-}
-#utility-nav input {
-  margin-bottom: 5px;
-}
-#utility-nav .flyout {
-	top: 28px;
-}
+
 
 
 /* -----------------------------------------
-   Nav Bar
+   Top Bar
 ----------------------------------------- */
 #main-nav {
+	margin-top: 0px;
 	margin-bottom: 0px;
 }
 #main-nav .flyout ul {
@@ -131,7 +215,13 @@ label.field_return.unavailable {
 #main-nav .flyout li a {
 	padding: 3px 0px;
 }
-
+#main-nav > li > a:first-child {
+	padding: 0px 29px;
+	text-transform: uppercase;
+}
+#main-nav > li.has-flyout > a:first-child {
+	padding-right: 40px;
+}
 /* breadcrumb */
 #nav-breadcrumb {
 	font-size: 12px;
@@ -143,6 +233,7 @@ ul.breadcrumbs {
 	background: none;
 	border: none;
 }
+
 
 
 /* -----------------------------------------
