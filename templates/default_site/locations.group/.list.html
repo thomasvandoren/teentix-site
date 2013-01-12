@@ -1,13 +1,13 @@
 {embed="inc/.header"
-	title="Venues"
-	body_class="venues"
+	title="Locations"
+	body_class="locations"
 }
 
 {embed="inc/.nav"}
     
   <div class="row">
     <div class="twelve columns">
-      <h1 id="page-name">Venues</h1>
+      <h1 id="page-name">Locations</h1>
     </div>
   </div>
   
@@ -17,18 +17,18 @@
   <div class="row">
   
     <div class="twelve columns">
-    {exp:channel:entries channel="venues" limit="200" orderby="title" sort="asc"}
-    	<div class="venue row">
+    {exp:channel:entries channel="locations" limit="200" orderby="title" sort="asc"}
+    	<div class="location row">
     		<div class="three columns">
-    			<a href="{url_title_path='venues'}">
-    			{exp:ce_img:pair src="{venue_image}" width="220"}
+    			<a href="{url_title_path='locations'}">
+    			{exp:ce_img:pair src="{location_image}" width="220"}
 					<img src="{made}" alt="" width="{width}" height="{height}" />
 					{/exp:ce_img:pair}
     			</a>
     		</div>
     		<div class="six columns">
-    			<h2><a href="{url_title_path='venues'}">{title}</a></h2>
-    			<p>{venue_address}</p>
+    			<h2><a href="{url_title_path='locations'}">{title}</a></h2>
+    			<p>{location_address}</p>
     		</div>
     		<div class="three columns">
     			

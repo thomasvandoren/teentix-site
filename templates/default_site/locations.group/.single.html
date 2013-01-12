@@ -1,7 +1,7 @@
-{exp:channel:entries channel="venues" limit="1"}
+{exp:channel:entries channel="locations" limit="1"}
 {embed="inc/.header"
-	title="{title} | Venues"
-	body_class="venues single"
+	title="{title} | Locations"
+	body_class="locations single"
 }
 
 {embed="inc/.nav"
@@ -18,38 +18,38 @@
     	<div class="row">
     		<div class="eight columns">
     			<h1 id="page-name">{title}</h1>
-    			<p><a href="{venue_website}">{venue_website}</a></p>
-    			{venue_address}    			
+    			<p><a href="{location_website}">{location_website}</a></p>
+    			{location_address}    			
     		</div>
     		<div class="four columns">
-    		{exp:ce_img:pair src="{venue_image}" width="300"}
+    		{exp:ce_img:pair src="{location_image}" width="300"}
 					<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
     		</div>
     	</div>
     	<div class="row">
     		<div class="six columns">
-    		{if venue_contact_info}
+    		{if location_contact_info}
     			<h4>Contact Info</h4>
-    			{venue_contact_info}
+    			{location_contact_info}
     		{/if}
-    		{if venue_hours}
+    		{if location_hours}
     			<h4>Hours</h4>
-    			{venue_hours}
+    			{location_hours}
     		{/if}
-    		{if venue_box_office}
+    		{if location_box_office}
     			<h4>Box Office Info</h4>
-    			{venue_box_office}
+    			{location_box_office}
     		{/if}
-    		{if venue_facebook}
-    			<p>{venue_facebook}</p>
+    		{if location_facebook}
+    			<p>{location_facebook}</p>
     		{/if}
-    		{if venue_twitter}
-    			<p>{venue_twitter}</p>
+    		{if location_twitter}
+    			<p>{location_twitter}</p>
     		{/if}
     		</div>
     		<div class="six columns">
-    			{venue_google_map}
+    			{location_google_map}
     		</div>
     	</div>
       	
