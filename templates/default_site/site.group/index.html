@@ -25,40 +25,37 @@
   <div class="row">  
     <div class="four columns">
       <img src="http://placehold.it/400x300&text=[img]" />
-      <h4>This is a content section.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
     </div>
     
     <div class="four columns">
-    {exp:channel:entries channel="blog" limit="1"}
+    {exp:channel:entries channel="blog" limit="1" status="featured"}
     	
     	<div class="entry">
   		{if blog_image}
   			<a href="{url_title_path='blog'}">
-  			{exp:ce_img:pair src="{blog_image}" width="220"}
+  			{exp:ce_img:pair src="{blog_image}" width="300" height="225" crop="yes"}
 				<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
   			</a>
     	{/if}    	
-				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
     		<h3><a href="{url_title_path='blog'}">{title}</a></h3>
-  		
+{!--     		<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p> --}
+    		<p>
+    		{exp:trunchtml chars="320" inline="..." ending="<a href='{path=site/comments}'>read on</a>"}	    		
+	    		{exp:strip_html keep='b|em'}
+					{blog_body}
+					{/exp:strip_html}
+				{/exp:trunchtml} 
+				</p> 		
     	</div>
 		{/exp:channel:entries} 
     </div>
     
     <div class="four columns">
-    {exp:channel:entries channel="blog" limit="4"}
-    	<div class="entry">    	
+    {exp:channel:entries channel="blog" limit="5"}
+    	<div class="entry">
 				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
     		<h4><a href="{url_title_path='blog'}">{title}</a></h4>
-  		{if blog_image}
-  			<a href="{url_title_path='blog'}">
-  			{exp:ce_img:pair src="{blog_image}" width="220"}
-				<img src="{made}" alt="" width="{width}" height="{height}" />
-				{/exp:ce_img:pair}
-  			</a>
-    	{/if}
     	</div>
 		{/exp:channel:entries} 
     </div>

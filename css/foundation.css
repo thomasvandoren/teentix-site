@@ -249,7 +249,7 @@ form.custom .custom.disabled { background-color: #ddd; }
 .lt-ie9 form.custom div.custom.dropdown a.selector { height: 30px; }
 
 /* The Grid ---------------------- */
-.row { width: 940px; max-width: 100%; min-width: 768px; margin: 0 auto; }
+.row { width: 960px; max-width: 100%; min-width: 768px; margin: 0 auto; }
 .row .row { width: auto; max-width: none; min-width: 0; margin: 0 -10px; }
 .row.collapse .column, .row.collapse .columns { padding: 0; }
 .row .row { width: auto; max-width: none; min-width: 0; margin: 0 -10px; }
@@ -979,7 +979,7 @@ div.progress.round .meter { -webkit-border-radius: 1000px; -moz-border-radius: 1
 */
 /* <nav> */
 .top-bar { background: #222222; height: 45px; line-height: 45px; margin: 0 0 30px; padding: 0; width: 100%; /* Contain width to .row width */ /* First <ul> for branding, title, name, etc */ /* topbar global <ul> styles */ /* Style for when you add 'fixed' as a class to .top-bar */ }
-.top-bar.contain-to-grid { margin: 0 auto; position: relative; width: 940px; /* Get the black bar to extend all the way */ /* Contained and fixed at the top */ }
+.top-bar.contain-to-grid { margin: 0 auto; position: relative; width: 960px; /* Get the black bar to extend all the way */ /* Contained and fixed at the top */ }
 .top-bar.contain-to-grid:before, .top-bar.contain-to-grid:after { background: #222222; content: ""; display: block; height: 45px; position: absolute; width: 1000px; }
 .top-bar.contain-to-grid:before { left: -100%; }
 .top-bar.contain-to-grid:after { right: -100%; }
@@ -1042,7 +1042,7 @@ div.progress.round .meter { -webkit-border-radius: 1000px; -moz-border-radius: 1
 .lt-ie9 .top-bar ul li.has-dropdown > ul li { padding-right: 0; }
 
 /* Mobile Styles */
-@media only screen and (max-width: 940px) { .top-bar { margin-bottom: 0; overflow: hidden; /* Override contain to grid stuff for breakpoint */ /* Setting up the sliding area */ /* When the Small Nav is Showing */ }
+@media only screen and (max-width: 960px) { .top-bar { margin-bottom: 0; overflow: hidden; /* Override contain to grid stuff for breakpoint */ /* Setting up the sliding area */ /* When the Small Nav is Showing */ }
   .top-bar .js-generated { display: block; }
   .top-bar.contain-to-grid { margin: 0 auto; width: auto; }
   .top-bar.contain-to-grid:before, .top-bar.contain-to-grid:after { display: none; }

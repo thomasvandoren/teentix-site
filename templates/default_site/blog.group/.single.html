@@ -1,4 +1,4 @@
-{exp:channel:entries channel="blog" limit="1"}
+{exp:channel:entries channel="blog" limit="1" status="not closed"}
 {embed="inc/.header"
 	title="{title} | Blog"
 	body_class="blog single"
@@ -26,7 +26,7 @@
 				</div>
   		{if blog_image}
   			<a href="{url_title_path='blog'}">
-  			{exp:ce_img:pair src="{blog_image}" width="220"}
+  			{exp:ce_img:pair src="{blog_image}" width="620"}
 				<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
   			</a>
