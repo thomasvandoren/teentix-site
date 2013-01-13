@@ -17,29 +17,22 @@
   <!-- Three-up Content Blocks -->
   
   <div class="row">
-  
-    <div class="twelve columns">
+  	<ul id="org-grid" class="block-grid five-up">
     {exp:channel:entries channel="organizations" limit="200" orderby="title" sort="asc"}
-    	<div class="org row">
-    		<div class="three columns">
-    			<a href="{url_title_path='organizations'}">
-    			{exp:ce_img:pair src="{org_image}" width="220"}
+    	<li class="org">
+    		<div class="org-logo">
+	  			<a href="{url_title_path='organizations'}">
+	  			{exp:ce_img:pair src="{org_image}" width="150" height="150" filter="grayscale"}
 					<img src="{made}" alt="" width="{width}" height="{height}" />
 					{/exp:ce_img:pair}
-    			</a>
-    		</div>
-    		<div class="six columns">
-    			<h2><a href="{url_title_path='organizations'}">{title}</a></h2>
-    			<p>{org_contact_info}</p>
-    		</div>
-    		<div class="three columns">
-    			
-    		</div>
-    	
-    	</div>
+					</a>
+				</div>
+				<h4 class="org-name"><a href="{url_title_path='organizations'}">{title}</a></h4>
+  			
+    	</li>
 		{/exp:channel:entries}
       	
-    </div>
+    </ul>
     
   </div>
 

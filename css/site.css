@@ -237,10 +237,34 @@ ul.breadcrumbs {
 
 
 /* -----------------------------------------
+   Blog Entries
+----------------------------------------- */
+.entry {
+	line-height: 1.5em;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 20px;
+	margin-bottom: 20px;
+}
+.entry-date {
+	font-size: 12px;
+	margin-bottom: 3px;
+	text-transform: uppercase;
+}
+
+
+
+/* -----------------------------------------
    Home
 ----------------------------------------- */
 .home #main-featured {
 	margin-top: 20px;
+}
+.home .entry {
+	padding: 10px 0px;
+	margin: 0px;
+}
+.home .entry h4 {
+	margin-bottom: 0px
 }
 
 
@@ -418,6 +442,43 @@ ul.breadcrumbs {
 /* -----------------------------------------
    Orgs
 ----------------------------------------- */
+#org-grid {
+	margin: 10px 0px;
+}
+#org-grid > li { 
+	padding: 0 10px 10px; 
+}
+#org-grid .org-logo {
+	height: 170px;
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	margin-bottom: 10px;
+	text-align: center;
+	display: table;
+}
+#org-grid .org-logo a {
+	height: 150px;
+	display: table-cell;	
+	vertical-align: middle;
+}
+#org-grid .org-logo img {	
+	max-height: 150px;
+}
+#org-grid .org-name {
+	text-align: center;
+	font-size: 14px;
+	margin-bottom: 20px;
+}
+#org-grid .org-name a {
+	color: #000;
+}
+.orgs.single #org-logo {
+	margin-bottom: 10px;
+}
+.orgs.single #org-contact p {
+	margin-bottom: 0px;
+}
 
 
 
@@ -430,16 +491,8 @@ ul.breadcrumbs {
 /* -----------------------------------------
    Blog
 ----------------------------------------- */
-.blog .entry {
-	line-height: 1.5em;
-	border-bottom: 1px solid #ccc;
-	padding-bottom: 20px;
-	margin-bottom: 20px;
-}
-.blog .entry-date {
-	margin-bottom: 3px;
-	text-transform: uppercase;
-}
+
+
 
 
 /* -----------------------------------------
