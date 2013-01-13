@@ -51,6 +51,10 @@ Matrix = function(field, inputName, label, cols, rowInfo, minRows, maxRows) {
 	obj.dom.$tbody = $('> tbody:first', obj.dom.$table);
 	obj.dom.$addBtn = $('> a.matrix-add:first', obj.dom.$field);
 
+	obj.$tab = $();
+	obj.$ee1Label = $();
+	obj.$ee2Label = $();
+
 	// -------------------------------------------
 	//  Menu
 	// -------------------------------------------
@@ -62,7 +66,10 @@ Matrix = function(field, inputName, label, cols, rowInfo, minRows, maxRows) {
 	});
 	obj.menu.$addAbove = $('<li>'+Matrix.lang.add_row_above+'</li>').appendTo(obj.menu.$ul);
 	obj.menu.$addBelow = $('<li>'+Matrix.lang.add_row_below+'</li>').appendTo(obj.menu.$ul);
-	obj.menu.$ul.append($('<li class="br" />'));
+	obj.menu.$ul.append('<li class="br" />');
+    obj.menu.$moveToTop = $('<li>'+Matrix.lang.move_to_top+'</li>').appendTo(obj.menu.$ul);
+    obj.menu.$moveToBottom = $('<li>'+Matrix.lang.move_to_bottom+'</li>').appendTo(obj.menu.$ul);
+    obj.menu.$ul.append('<li class="br" />');
 	obj.menu.$delete = $('<li>'+Matrix.lang.delete_row+'</li>').appendTo(obj.menu.$ul);
 
 	obj.menu.reset = function(){
@@ -71,7 +78,10 @@ Matrix = function(field, inputName, label, cols, rowInfo, minRows, maxRows) {
 		var stopPropagation = function(e){ e.stopPropagation(); };
 		obj.menu.$addAbove.unbind().bind('mousedown', stopPropagation);
 		obj.menu.$addBelow.unbind().bind('mousedown', stopPropagation);
+		obj.menu.$moveToTop.unbind().bind('mousedown', stopPropagation);
+		obj.menu.$moveToBottom.unbind().bind('mousedown', stopPropagation);
 		obj.menu.$delete.unbind().bind('mousedown', stopPropagation);
+
 	};
 
 	obj.menu.showing = false;
@@ -86,10 +96,11 @@ Matrix = function(field, inputName, label, cols, rowInfo, minRows, maxRows) {
 	 * Initialize Existing Rows
 	 */
 	obj.initRows = function(){
-		$('> tr', obj.dom.$tbody).not(obj.dom.$norows).each(function(index){
-			var row = new Matrix.Row(obj, index, rowInfo[index].id, rowInfo[index].cellSettings, this);
-			obj.rows.push(row);
-		});
+        $('> tr', obj.dom.$tbody).not(obj.dom.$norows).each(function(index){
+            var rowID = $(this).find('th > input').val() || $(this).parents('table').next('input').val();
+            var row = new Matrix.Row(obj, index, rowID, rowInfo, this);
+            obj.rows.push(row);
+        });
 
 		obj.totalRows = obj.rows.length;
 	};
@@ -129,6 +140,32 @@ Matrix = function(field, inputName, label, cols, rowInfo, minRows, maxRows) {
 	// -------------------------------------------
 	//  Row Management
 	// -------------------------------------------
+
+    obj.moveRow = function (rowObject, direction) {
+
+        if (direction == "bottom") {
+
+            targetIndex = rowObject.field.totalRows - 1;
+            rowObject.field.rows[targetIndex].dom.$tr.after(rowObject.field.rows[rowObject.index].dom.$tr);
+
+        } else {
+
+            targetIndex = 0;
+            rowObject.field.rows[targetIndex].dom.$tr.before(rowObject.field.rows[rowObject.index].dom.$tr);
+
+        }
+
+        // update field.rows array
+        rowObject.field.rows.splice(rowObject.index, 1);
+        rowObject.field.rows.splice(targetIndex, 0, rowObject);
+
+        for (var i = 0; i <= rowObject.field.totalRows; i++) {
+            if (typeof rowObject.field.rows[i] != "undefined") {
+                rowObject.field.rows[i].updateIndex(i);
+             }
+        }
+
+    };
 
 	/**
 	 * Add Row
@@ -439,6 +476,24 @@ Matrix.Row = function(field, index, id, cellSettings, tr){
 		// -------------------------------------------
 
 		obj.field.menu.reset();
+
+        if (obj.field.totalRows < 2) {
+            obj.field.menu.$moveToTop.addClass('disabled');
+            obj.field.menu.$moveToBottom.addClass('disabled');
+        } else {
+            obj.field.menu.$moveToTop.removeClass('disabled');
+            obj.field.menu.$moveToBottom.removeClass('disabled');
+
+            obj.field.menu.$moveToTop.unbind('click').bind('click', function () {
+                obj.field.moveRow(obj, 'top');
+                getRowAttributes();
+
+            });
+            obj.field.menu.$moveToBottom.unbind('click').bind('click', function () {
+                obj.field.moveRow(obj, 'bottom');
+                getRowAttributes();
+            });
+        }
 
 		if (obj.field.minRows && obj.field.totalRows <= obj.field.minRows) {
 			// disable Delete Row option
@@ -813,8 +868,5 @@ Matrix.unbind = function(celltype, event){
 
 	delete callbacks[event][celltype];
 };
-
-
-
 
 })(jQuery);

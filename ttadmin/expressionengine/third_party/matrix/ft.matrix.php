@@ -20,10 +20,21 @@ class Matrix_ft extends EE_Fieldtype {
 
 	var $has_array_data = TRUE;
 
-	var $bundled_celltypes = array('text', 'date', 'file');
-
 	var $entry_id;
 	var $var_id; // Set by Low Variables
+	var $is_draft = 0; // Set by Better Workflow
+
+	/**
+	 * @var EE
+	 */
+	public $EE;
+
+	/**
+     * @var boolean
+	 */
+	private static $_RTE_installed = null;
+
+	private $_bundled_celltypes = array('text', 'date', 'file', 'number');
 
 	/**
 	 * Fieldtype Constructor
@@ -31,6 +42,16 @@ class Matrix_ft extends EE_Fieldtype {
 	function __construct()
 	{
 		parent::__construct();
+
+		// Make RTE available only if EE version is at least 2.5.3 and it is actually installed
+		if (is_null(self::$_RTE_installed))
+		{
+			self::$_RTE_installed = version_compare(APP_VER, '2.5.3', '>=') && $this->EE->db->select('fieldtype_id')->where('name', 'rte')->get('fieldtypes')->row();
+		}
+		if (self::$_RTE_installed)
+		{
+			$this->_bundled_celltypes[] = 'rte';
+		}
 
 		// -------------------------------------------
 		//  Prepare Cache
@@ -266,6 +287,7 @@ class Matrix_ft extends EE_Fieldtype {
 				'entry_id'  => array('type' => 'int', 'constraint' => 10, 'unsigned' => TRUE),
 				'field_id'  => array('type' => 'int', 'constraint' => 6, 'unsigned' => TRUE),
 				'var_id'    => array('type' => 'int', 'constraint' => 6, 'unsigned' => TRUE),
+				'is_draft' => array('type' => 'TINYINT', 'constraint' => '1', 'unsigned' => TRUE, 'default' => 0),
 				'row_order' => array('type' => 'int', 'constraint' => 4, 'unsigned' => TRUE)
 			));
 
@@ -294,7 +316,7 @@ class Matrix_ft extends EE_Fieldtype {
 
 	/**
 	 * Convert FF Matrix Field
-	 * 
+	 *
 	 * @todo - find unique words and add them to the exp_channel_data cell
 	 */
 	function _convert_ff_matrix_field($settings, $field)
@@ -468,7 +490,62 @@ class Matrix_ft extends EE_Fieldtype {
 			$this->EE->db->query('ALTER TABLE exp_matrix_data ADD var_id INT(6) UNSIGNED AFTER field_id, ADD INDEX (var_id)');
 		}
 
+		if (version_compare($from, '2.5', '<'))
+		{
+			$this->EE->load->dbforge();
+
+			// Add is_draft column for Better Workflow add-on by Electric Putty.
+			$new_field = array(
+				'is_draft' => array('type' => 'TINYINT', 'constraint' => '1', 'unsigned' => TRUE, 'default' => 0),
+			);
+
+			$this->EE->dbforge->add_column('matrix_data', $new_field);
+
+			$rows = $this->EE->db->where('col_type', 'text')->get('matrix_cols')->result_object();
+			foreach ($rows as $row)
+			{
+				$settings = unserialize(base64_decode($row->col_settings));
+				if (in_array($settings['content'], array('numeric', 'integer', 'decimal')))
+				{
+					$new_settings = array(
+						'min_value' => '',
+						'max_value' => '',
+						'decimals' => '0'
+					);
+
+					switch ($settings['content'])
+					{
+						case 'numeric':
+							$this->EE->db->query("ALTER TABLE exp_matrix_data MODIFY `col_id_" . $row->col_id . "` DECIMAL(12,2)");
+							$new_settings['decimals'] = 2;
+							break;
+						case 'integer':
+							$this->EE->db->query("ALTER TABLE exp_matrix_data MODIFY `col_id_" . $row->col_id . "` INT ");
+							break;
+						case 'decimal':
+							$this->EE->db->query("ALTER TABLE exp_matrix_data MODIFY `col_id_" . $row->col_id . "` DECIMAL(14,4)");
+							$new_settings['decimals'] = 4;
+							break;
+					}
+
+					$this->EE->db->update('matrix_cols', array('col_settings' => base64_encode(serialize($new_settings)), 'col_type' => 'number'), array('col_id' => $row->col_id));
+				}
+			}
+
+		}
+
 		return TRUE;
+	}
+
+	/**
+	 * Uninstall
+	 */
+	function uninstall()
+	{
+		$this->EE->load->dbforge();
+		$this->EE->dbforge->drop_table('matrix_data');
+		$this->EE->dbforge->drop_table('matrix_cols');
+
 	}
 
 	// --------------------------------------------------------------------
@@ -653,6 +730,49 @@ class Matrix_ft extends EE_Fieldtype {
 	// --------------------------------------------------------------------
 
 	/**
+	 * Get All Celltype Settings
+	 *
+	 * @return array
+	 */
+	private function _get_all_celltype_settings()
+	{
+		if (! isset($this->cache['all_celltype_settings']))
+		{
+			$this->cache['all_celltype_settings'] = array();
+
+			$this->EE->db->select('name, settings');
+			$query = $this->EE->db->get('fieldtypes');
+
+			foreach ($query->result() as $row)
+			{
+				$settings = is_array($row->settings) ? $row->settings : unserialize(base64_decode($row->settings));
+				$this->cache['all_celltype_settings'][$row->name] = $settings;
+			}
+		}
+
+		return $this->cache['all_celltype_settings'];
+	}
+
+	/**
+	 * Get Celltype Settings
+	 *
+	 * @param string $name
+	 * @return array
+	 */
+	private function _get_celltype_settings($name)
+	{
+		// get all of the celltype settings up front
+		$all_celltype_settings =& $this->_get_all_celltype_settings();
+
+		if (! isset($all_celltype_settings[$name]) || ! is_array($all_celltype_settings[$name]))
+		{
+			$all_celltype_settings[$name] = array();
+		}
+
+		return $all_celltype_settings[$name];
+	}
+
+	/**
 	 * Get Celltype Class
 	 */
 	private function _get_celltype_class($name, $text_fallback = FALSE)
@@ -661,26 +781,37 @@ class Matrix_ft extends EE_Fieldtype {
 		if (substr($name, -3) == '_ft') $name = substr($name, 0, -3);
 		$name = strtolower($name);
 
-		// is this a bundled celltype?
-		if (in_array($name, $this->bundled_celltypes))
-		{
-			$class = 'Matrix_'.$name.'_ft';
+		static $classCache = array();
 
-			if (! class_exists($class))
-			{
-				// load it from matrix/celltypes/
-				require_once PATH_THIRD.'matrix/celltypes/'.$name.EXT;
-			}
+		if (!empty($classCache[$name]))
+		{
+			$class = $classCache[$name];
 		}
 		else
 		{
-			$class = ucfirst($name).'_ft';
-			$this->EE->load->library('api');
-			$this->EE->api->instantiate('channel_fields');
-			$this->EE->api_channel_fields->include_handler($name);
+
+			// is this a bundled celltype?
+			if (in_array($name, $this->_bundled_celltypes))
+			{
+				$class = 'Matrix_'.$name.'_ft';
+
+				if (! class_exists($class))
+				{
+					// load it from matrix/celltypes/
+					require_once PATH_THIRD.'matrix/celltypes/'.$name.EXT;
+				}
+			}
+			else
+			{
+				$class = ucfirst($name).'_ft';
+				$this->EE->load->library('api');
+				$this->EE->api->instantiate('channel_fields');
+				$this->EE->api_channel_fields->include_handler($name);
+			}
+			$classCache[$name] = $class;
 		}
 
-		if (class_exists($class))
+		if (class_exists($class) && !(version_compare(APP_VER, '2.5.3', '<') && $class == 'Matrix_rte_ft'))
 		{
 			// method_exists() is supposed to accept the class name (string),
 			// but running into at least one server where that's not the case...
@@ -688,16 +819,6 @@ class Matrix_ft extends EE_Fieldtype {
 
 			if (method_exists($ft, 'display_cell'))
 			{
-				if (! isset($this->cache['celltype_global_settings'][$name]))
-				{
-					$this->EE->db->select('settings');
-					$this->EE->db->where('name', $name);
-					$query = $this->EE->db->get('fieldtypes');
-
-					$settings = $query->row('settings');
-					$this->cache['celltype_global_settings'][$name] = is_array($settings) ? $settings : unserialize(base64_decode($settings));
-				}
-
 				return $class;
 			}
 		}
@@ -717,9 +838,7 @@ class Matrix_ft extends EE_Fieldtype {
 		if (! $class) return FALSE;
 
 		$celltype = new $class();
-
-		$global_settings = $this->cache['celltype_global_settings'][$name];
-		$celltype->settings = $global_settings && is_array($global_settings) ? $global_settings : array();
+		$celltype->settings = $this->_get_celltype_settings($name);
 
 		return $celltype;
 	}
@@ -735,36 +854,35 @@ class Matrix_ft extends EE_Fieldtype {
 		// so don't worry about caching the results
 
 		// begin with what we already know about
-		$ft_names = array_merge($this->bundled_celltypes);
+		$ft_names = array_merge($this->_bundled_celltypes);
 
 		// get the fieldtypes from exp_fieldtypes
-		$query = $this->EE->db->select('name, settings')
+		$query = $this->EE->db->select('name')
 		                      ->get('fieldtypes');
-
-		if (! isset($this->cache['celltype_global_settings']))
-		{
-			$this->cache['celltype_global_settings'] = array();
-		}
 
 		foreach ($query->result_array() as $ft)
 		{
 			$ft_names[] = $ft['name'];
-			$this->cache['celltype_global_settings'][$ft['name']] = unserialize(base64_decode($ft['settings']));
 		}
 
 		// now get the actual celltype instances
 		$celltypes = array();
+		$names = array();
 
 		foreach ($ft_names as $name)
 		{
-			if (($ct = $this->_get_celltype($name)) !== FALSE)
+			if (!isset($celltypes[$name]))
 			{
-				$celltypes[$name] = $ct;
+				if (($ct = $this->_get_celltype($name)) !== FALSE)
+				{
+					$celltypes[$name] = $ct;
+					$names[] = $ct->info['name'];
+				}
 			}
 		}
 
-		// sort them alphabetically
-		ksort($celltypes);
+		// sort them alphabetically by name
+		array_multisort($names, $celltypes);
 
 		return $celltypes;
 	}
@@ -868,14 +986,15 @@ class Matrix_ft extends EE_Fieldtype {
 		$this->_insert_js('MatrixConf.lang = { '
 			. 'delete_col: "'.lang('delete_col').'" };');
 
-		// load the language file
+		// load the language files
 		$this->EE->lang->loadfile('matrix');
+		$this->EE->lang->loadfile('admin_content');
 
 		// -------------------------------------------
 		//  Get the celltypes
 		// -------------------------------------------
-
 		$celltypes = $this->_get_all_celltypes();
+
 		$celltypes_select_options = array();
 		$celltypes_js = array();
 
@@ -979,6 +1098,11 @@ class Matrix_ft extends EE_Fieldtype {
 
 			foreach ($cols as $col_index => &$col)
 			{
+				// If suddenly we can't find this column anymore, for example, if it got uninstalled.
+				if (empty($celltypes[$col['col_type']]))
+				{
+					$col['col_type'] = 'text';
+				}
 				$col_id = $is_new ? 'col_new_'.$col_index : 'col_id_'.$col['col_id'];
 
 				$class = 'matrix';
@@ -1143,7 +1267,7 @@ class Matrix_ft extends EE_Fieldtype {
 			'colspan' => '2',
 			'data'    => $conf_setting[0]
 			           . $conf_setting[1]
-		));		
+		));
 	}
 
 	/**
@@ -1239,11 +1363,17 @@ class Matrix_ft extends EE_Fieldtype {
 
 		if (!empty($post['col_order']))
 		{
-			foreach ($post['col_order'] as $col_order => $col_id)
+			foreach ($post['col_order'] as $col_order => $col_name)
 			{
-				$col = $post['cols'][$col_id];
-
+				$col = $post['cols'][$col_name];
 				$celltype = $this->_get_celltype($col['type']);
+
+				$is_new = (substr($col_name, 0, 8) == 'col_new_');
+				if (! $is_new)
+				{
+					$col_id = substr($col_name, 7);
+					$celltype->col_id = $col_id;
+				}
 
 				$cell_settings = isset($col['settings']) ? $col['settings'] : array();
 
@@ -1264,8 +1394,6 @@ class Matrix_ft extends EE_Fieldtype {
 					'col_order'        => $col_order,
 					'col_settings'     => base64_encode(serialize($cell_settings))
 				);
-
-				$is_new = (substr($col_id, 0, 8) == 'col_new_');
 
 				if ($is_new)
 				{
@@ -1295,7 +1423,6 @@ class Matrix_ft extends EE_Fieldtype {
 				}
 				else
 				{
-					$col_id = substr($col_id, 7);
 					$col_data['col_id'] = $col_id;
 					$primary_col_name = 'col_id_'.$col_id;
 
@@ -1555,6 +1682,8 @@ class Matrix_ft extends EE_Fieldtype {
 				. 'add_row_above: "'.lang('add_row_above').'", '
 				. 'add_row_below: "'.lang('add_row_below').'", '
 				. 'delete_row: "'.lang('delete_row').'", '
+				. 'move_to_top: "'.lang('move_to_top').'", '
+				. 'move_to_bottom: "'.lang('move_to_bottom').'", '
 				. 'remove_file: "'.lang('remove_file').'", '
 				. 'select_file_error: "'.lang('select_file_error').'" };');
 
@@ -1603,7 +1732,8 @@ class Matrix_ft extends EE_Fieldtype {
 			// include this->settings in col settings
 			$col_settings[$col['col_id']] = array_merge($this->settings, (is_array($col['col_settings']) ? $col['col_settings'] : array()));
 
-			$celltype = $this->_get_celltype($col['col_type']);
+			// For unknown celltypes, always fall back to text.
+			$celltype = $this->_get_celltype($col['col_type'], TRUE);
 			$this->_add_package_path($celltype);
 			$celltype->settings = array_merge($celltype->settings, $col_settings[$col['col_id']]);
 			$celltype->field_name = $this->field_name;
@@ -1792,7 +1922,9 @@ class Matrix_ft extends EE_Fieldtype {
 		//  Table Body
 		// -------------------------------------------
 
-		$rows_js = array();
+		$row_settings_js = array();
+
+		$row_ids = array();
 
 		$tbody = '<tbody class="matrix">';
 
@@ -1816,8 +1948,6 @@ class Matrix_ft extends EE_Fieldtype {
 			// new?
 			$is_new = (substr($row_name, 0, 8) == 'row_new_');
 			if ($is_new) $total_new_rows++;
-
-			$row_js = array('id' => $row_name, 'cellSettings' => array());
 
 			$tr_class = 'matrix';
 			if ($row_count == 1) $tr_class .= ' matrix-first';
@@ -1861,8 +1991,8 @@ class Matrix_ft extends EE_Fieldtype {
 					$td_class .= ' matrix-error';
 				}
 
-				// get new instance of this celltype
-				$celltype = $this->_get_celltype($col['col_type']);
+				// get new instance of this celltype, fall back to text, if unknown
+				$celltype = $this->_get_celltype($col['col_type'], TRUE);
 				$this->_add_package_path($celltype);
 
 				$cell_name = $this->field_name.'['.$row_name.']['.$col_name.']';
@@ -1892,7 +2022,7 @@ class Matrix_ft extends EE_Fieldtype {
 				{
 					if (isset($cell_html['settings']))
 					{
-						$row_js['cellSettings'][$col_name] = $cell_html['settings'];
+						$row_settings_js[$col_name] = $cell_html['settings'];
 					}
 
 					if (isset($cell_html['class']))
@@ -1908,7 +2038,7 @@ class Matrix_ft extends EE_Fieldtype {
 
 			$tbody .= '</tr>';
 
-			$rows_js[] = $row_js;
+			$row_ids[] = $row_name;
 		}
 
 		$tbody .= '</tbody>';
@@ -1930,7 +2060,7 @@ class Matrix_ft extends EE_Fieldtype {
 		if ($single_row_mode)
 		{
 			// no <th>s in the <tbody>, so we need to store the row_order outside of the table
-			$r .= '<input type="hidden" name="'.$this->field_name.'[row_order][]" value="'.$rows_js[0]['id'].'" />';
+			$r .= '<input type="hidden" name="'.$this->field_name.'[row_order][]" value="'.$row_ids[0].'" />';
 		}
 		else
 		{
@@ -1949,16 +2079,24 @@ class Matrix_ft extends EE_Fieldtype {
 		$r .= '</div>';
 
 		// initialize the field js
-		$js = 'jQuery(document).ready(function(){'
-		    .   'var m = new Matrix("#'.$field_id.'", "'.$this->field_name.'", '
-		    .     '"' . (isset($this->settings['field_label']) ? addslashes($this->settings['field_label']) : '') . '", '
-		    .     $this->EE->javascript->generate_json($cols_js, TRUE) . ', '
-		    .     $this->EE->javascript->generate_json($rows_js, TRUE) . ', '
-		    .     $min_rows . ', '
-		    .     $max_rows
-		    .   ');' . NL
-		    .   'm.totalNewRows = '.$total_new_rows.';'
-		    . '});';
+		$js = 'function initMatrix_'.md5($field_id).'(){'
+			.   'var m = new Matrix("#'.$field_id.'", "'.$this->field_name.'", '
+			.     '"' . (isset($this->settings['field_label']) ? addslashes($this->settings['field_label']) : '') . '", '
+			.     $this->EE->javascript->generate_json($cols_js, TRUE) . ', '
+			.     $this->EE->javascript->generate_json($row_settings_js, TRUE) . ', '
+			.     $min_rows . ', '
+			.     $max_rows
+			.   ');' . NL
+			.   'm.totalNewRows = '.$total_new_rows.';' . NL
+			. '};'. NL
+			. 'jQuery(document).ready(function(){'. NL
+			.   'initMatrix_'.md5($field_id).'();'. NL
+			. '});'. NL
+			. 'if (typeof(Bwf) != \'undefined\'){'. NL
+			.    'Bwf.bind(\'matrix\', \'previewClose\', function(){'. NL
+			.      'initMatrix_'.md5($field_id).'();'. NL
+			.    '});'. NL
+			. '}';
 
 		$this->_insert_js($js);
 
@@ -2011,6 +2149,22 @@ class Matrix_ft extends EE_Fieldtype {
 							$celltype = $this->_get_celltype($col['col_type']);
 							$celltype->settings = $col['celltype_settings'];
 							$celltype->settings['row_name'] = $row_name;
+
+							$celltype->field_name = $this->field_name;
+							$celltype->col_id = $col['col_id'];
+							$celltype->cell_name = $col['col_name'];
+							if (isset($row['row_id'])) $celltype->row_id = $row['row_id'];
+
+							// get the cell html
+							if ($this->var_id)
+							{
+								$celltype->var_id = $celltype->settings['var_id'] = $this->var_id;
+							}
+							else
+							{
+								$celltype->field_id = $celltype->settings['field_id'] = $this->field_id;
+							}
+
 
 							if (($error = $celltype->validate_cell($cell_data)) !== TRUE)
 							{
@@ -2093,6 +2247,7 @@ class Matrix_ft extends EE_Fieldtype {
 		if (empty($this->cache['post_data'][$this->field_id])) return;
 
 		$data = $this->cache['post_data'][$this->field_id];
+		$data['is_draft'] = $this->is_draft;
 		$keywords = $this->_save($data);
 
 		// Update exp_channel_data with the keywords
@@ -2134,6 +2289,7 @@ class Matrix_ft extends EE_Fieldtype {
 		{
 			$cols = $this->_get_cols($this->field_id);
 			$this->entry_id = $this->settings['entry_id'];
+			$this->is_draft = $data['is_draft'];
 		}
 
 		// -------------------------------------------
@@ -2214,6 +2370,7 @@ class Matrix_ft extends EE_Fieldtype {
 						{
 							$celltype->field_id = $celltype->settings['field_id'] = $this->field_id;
 							$celltype->settings['entry_id'] = $this->entry_id;
+							$celltype->settings['is_draft'] = $this->is_draft;
 						}
 
 						$cell_data = $celltype->save_cell($cell_data);
@@ -2274,17 +2431,18 @@ class Matrix_ft extends EE_Fieldtype {
 				{
 					$row_data['field_id'] = $this->field_id;
 					$row_data['entry_id'] = $this->entry_id;
+					$row_data['is_draft'] = $this->is_draft;
 				}
 
 				// -------------------------------------------
 			    //  'matrix_save_row' hook
 			    //   - Modify the row data before it gets saved to exp_matrix_data
-			    // 
+			    //
 			        if ($this->EE->extensions->active_hook('matrix_save_row'))
 			        {
 			            $row_data = $this->EE->extensions->call('matrix_save_row', $this, $row_data);
 			        }
-			    // 
+			    //
 			    // -------------------------------------------
 
 				if ($is_new)
@@ -2423,6 +2581,12 @@ class Matrix_ft extends EE_Fieldtype {
 	 */
 	private function _data_query($params = array(), $select_mode = 'data', $select_aggregate = '')
 	{
+		// Check to see if we need to retrieve the EE Entry's Matrix rows, or the BWF Draft's Matrix Rows
+ 		if (isset($this->EE->session->cache['ep_better_workflow']['is_draft']) && $this->EE->session->cache['ep_better_workflow']['is_draft'])
+	 	{
+			$this->is_draft = 1;
+	 	}
+
 		// -------------------------------------------
 		//  Get the columns
 		// -------------------------------------------
@@ -2594,7 +2758,8 @@ class Matrix_ft extends EE_Fieldtype {
 		else
 		{
 			$sql .= ' WHERE field_id = '.$this->field_id.'
-		                AND entry_id = '.$this->entry_id;
+		                AND entry_id = '.$this->entry_id.'
+						AND is_draft = '.$this->is_draft;
 		}
 
 		if ($use_where)
@@ -2639,7 +2804,7 @@ class Matrix_ft extends EE_Fieldtype {
 		// -------------------------------------------
 		//  'matrix_data_query' hook
 		//   - Override the SQL query
-		// 
+		//
 			if ($this->EE->extensions->active_hook('matrix_data_query'))
 			{
 				$query = $this->EE->extensions->call('matrix_data_query', $this, $params, $sql, $select_mode);
@@ -2648,7 +2813,7 @@ class Matrix_ft extends EE_Fieldtype {
 			{
 				$query = $this->EE->db->query($sql);
 			}
-		// 
+		//
 		// -------------------------------------------
 
 		switch ($select_mode)
@@ -2703,6 +2868,7 @@ class Matrix_ft extends EE_Fieldtype {
 	 */
 	function replace_tag($data, $params = array(), $tagdata = FALSE)
 	{
+
 		// ignore if no tagdata
 		if (! $tagdata) return;
 
@@ -2792,6 +2958,7 @@ class Matrix_ft extends EE_Fieldtype {
 			"{$var_prefix}field_total_rows" => $this->_field_total_rows
 		);
 		$tagdata = $this->EE->functions->var_swap($tagdata, $vars);
+
 		$tagdata = $this->EE->functions->prep_conditionals($tagdata, $vars);
 
 		// process each row
@@ -2829,7 +2996,8 @@ class Matrix_ft extends EE_Fieldtype {
 
 				if ($col['in_use'])
 				{
-					$celltype = $this->_get_celltype($col['col_type']);
+					// Fall back to text on unknown cell type
+					$celltype = $this->_get_celltype($col['col_type'], TRUE);
 
 					$celltype_vars = array(
 						'col_id'     => $col['col_id'],
@@ -3186,29 +3354,43 @@ class Matrix_ft extends EE_Fieldtype {
 
 		// find the next celltype tag
 		$offset = 0;
-		while (preg_match('/'.LD."{$var_prefix}(".implode('|', array_keys($tags)).')(:(\w+))?(\s+.*)?'.RD.'/sU', $tagdata, $matches, PREG_OFFSET_CAPTURE, $offset))
+		$field_names = array_keys($tags);
+		rsort($field_names);
+		while (preg_match('/'.LD."{$var_prefix}(?P<field_name>".implode('|', $field_names).')(?::)?(?P<modifier>\w+)?(?::)' .
+				'?(?P<modifier_parameter>\w+)?(?P<params>\s+.*?)?'.RD.'/s', $tagdata, $matches, PREG_OFFSET_CAPTURE, $offset))
 		{
-			$field_name = $matches[1][0];
+
+			$field_name = $matches['field_name'][0];
 			$field = $tags[$field_name];
 
 			$tag_pos = $matches[0][1];
 			$tag_len = strlen($matches[0][0]);
 			$tagdata_pos = $tag_pos + $tag_len;
-			$endtag = LD."/{$var_prefix}{$field_name}".(isset($matches[2][0]) ? $matches[2][0] : '').RD;
+			$endtag = LD."/{$var_prefix}{$field_name}".( ! empty($matches['modifier'][0]) ?  ':' . $matches['modifier'][0] : '').RD;
 			$endtag_len = strlen($endtag);
 			$endtag_pos = strpos($tagdata, $endtag, $tagdata_pos);
-			$modifier = !empty($matches[3][0]) ? $matches[3][0] : 'tag';
+			$modifier = !empty($matches['modifier'][0]) ? $matches['modifier'][0] : 'tag';
 			$tag_func = 'replace_'.$modifier;
 
 			$class = $this->_get_celltype_class($field['type'], TRUE);
 			$method_exists = method_exists($class, $tag_func);
 			$use_catchall = FALSE;
 
-			if (! $method_exists)
+			// if a replace method doesn't exist or we have additional parameter to pass along
+			if (! $method_exists OR ! empty($matches['modifier_parameter'][0]))
 			{
 				// Does the celltype have a 'catchall' tag?
 				$tag_func = 'replace_tag_catchall';
 				$method_exists = method_exists($class, $tag_func);
+				if (!empty($matches['modifier'][0]))
+				{
+					$modifier = $matches['modifier'][0] . (!empty($matches['modifier_parameter'][0]) ? ':' . $matches['modifier_parameter'][0] : '');
+				}
+				else
+				{
+					$modifier = '';
+				}
+
 				$use_catchall = TRUE;
 			}
 
@@ -3217,11 +3399,11 @@ class Matrix_ft extends EE_Fieldtype {
 				// get the params
 				$params = array();
 
-				if (isset($matches[4][0]) && $matches[4][0] && preg_match_all('/\s+([\w-:]+)\s*=\s*([\'\"])([^\2]*)\2/sU', $matches[4][0], $param_matches))
+				if (isset($matches['params'][0]) && $matches['params'][0] && preg_match_all('/\s+(?P<parameter>[\w-:]+)\s*=\s*([\'\"])(?P<value>[^\2]*)\2/sU', $matches['params'][0], $param_matches))
 				{
-					for ($j = 0; $j < count($param_matches[0]); $j++)
+					for ($j = 0; $j < count($param_matches['parameter']); $j++)
 					{
-						$params[$param_matches[1][$j]] = $param_matches[3][$j];
+						$params[$param_matches['parameter'][$j]] = $param_matches['value'][$j];
 					}
 				}
 
@@ -3230,7 +3412,8 @@ class Matrix_ft extends EE_Fieldtype {
 				  ?  substr($tagdata, $tagdata_pos, $endtag_pos - $tagdata_pos)
 				  :  '';
 
-				$celltype = $this->_get_celltype($field['type']);
+				// Fall back to text cell if celltype not found
+				$celltype = $this->_get_celltype($field['type'], TRUE);
 				$this->_add_package_path($celltype);
 
 				foreach ($field['vars'] as $key => $value)
@@ -3262,4 +3445,66 @@ class Matrix_ft extends EE_Fieldtype {
 		}
 	}
 
+	/**
+	 * Save a Better Workflow draft
+	 *
+	 * @param array $data Field data as submitted form publish form
+	 * @param string $action 'create' or 'upadte'
+	 * @return string
+	 */
+	function draft_save($data, $action)
+	{
+		if(!is_array($data)) return '';
+		$this->field_id = $this->settings['field_id'];
+		// Are we in create mode?
+		if($action == 'create')
+		{
+			// If so any existing Row ID needs to be made a new row
+			$draft_data = array();
+			$c = 0;
+			foreach($data['row_order'] as $row_id)
+			{
+				$new_row_id = 'row_new_'.$c;
+				$draft_data['row_order'][] = $new_row_id;
+				$draft_data[$new_row_id] = $data[$row_id];
+				$c++;
+			}
+		}
+		else
+		{
+			$draft_data = $data;
+		}
+		$draft_data['is_draft'] = 1;
+		return $this->_save($draft_data);
+	}
+
+	/**
+	 * Delete a Better Workflow draft
+	 */
+	function draft_discard()
+	{
+		// Delete all the current draft content
+		$this->EE->db->delete('matrix_data', array('entry_id' => $this->settings['entry_id'], 'field_id' => $this->settings['field_id'], 'is_draft' => 1));
+		return;
+	}
+
+	/**
+	 * Publish a Better Workflow draft
+	 */
+	function draft_publish()
+	{
+		// Get the entry_id and field_id
+		$entry_id = $this->settings['entry_id'];
+		$field_id = $this->settings['field_id'];
+
+		// Delete all the current live content
+		$this->EE->db->delete('matrix_data', array('entry_id' => $entry_id, 'field_id' => $field_id, 'is_draft' => 0));
+
+		// Update the current draft content to be live
+		$this->EE->db->where('entry_id', $entry_id);
+		$this->EE->db->where('field_id', $field_id);
+		$this->EE->db->update('matrix_data', array('is_draft' => 0));
+
+		return;
+	}
 }
