@@ -1,0 +1,90 @@
+.bsmContainer {
+  /* container that surrounds entire bsmSelect widget */
+}
+
+.publish_the_selectatron .bsmContainer i {display: none;}
+
+.publish_the_selectatron .bsmSelect {
+  /* the newly created regular 'select' */
+  display: inline;
+}
+
+.publish_the_selectatron .bsmOptionDisabled {
+  /* disabled options in new select */
+  color: #999;
+}
+
+.publish_the_selectatron  select.bsmSelect {width: 50%; margin-top: 10px;}
+
+.publish_the_selectatron  .bsmHighlight {
+  /* the highlight span */
+  float: right;
+  padding: 0;
+  margin: 0 0 0 1em;
+}
+
+.publish_the_selectatron .bsmListSortable {
+  /* html list that contains selected items */
+  margin: 1.25em 0 1em 0;
+  position: relative;
+  display: block;
+  padding-left: 0;
+  list-style: none;
+}
+
+.publish_the_selectatron .bsmListItem {
+  /* li item from the html list above */
+  position: relative;
+  margin-left: 0;
+  padding-left: 0;
+  list-style: none;
+  width: 100%;
+  margin: 0 0 -1px 0;
+  line-height: 1em;
+  -webkit-border-radius: 10px;
+  -webkit-box-shadow: 0 0 5px rgba(0,0,0,0.1);
+  margin:  3px 0 3px 0;
+  padding: 5px;
+  background-color: ;
+  border: 1px solid #fff;
+  	background: #fff url(../gfx/item.png)  repeat-x left bottom;
+	background: -moz-linear-gradient(top, #fff, #f6f6f6); /* gecko */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fff), color-stop(1, #f6f6f6));
+	font-weight: bold;
+	text-shadow: 1px 1px 2px #fff;
+}
+
+.publish_the_selectatron .bsmListItem.ui-sortable-helper {
+	-webkit-transform: scale(1.01);
+	-webkit-box-shadow: 0 0 5px rgba(0,0,0,0.3);
+	opacity: 0.8;
+}
+
+.publish_the_selectatron .bsmListItem:hover {
+  background: #fff;
+}
+
+.publish_the_selectatron .bsmListItemLabel {
+  /* this is a span that surrounds the text in the item, except for the remove link */
+  padding: 5px;
+  display: block;
+}
+
+.publish_the_selectatron .bsmListSortable .bsmListItemLabel {
+  cursor: move;
+}
+
+.publish_the_selectatron .bsmListItemRemove {
+  /* the remove link in each list item */
+  position: absolute;
+  right: 8px;
+  top: 7px;
+  padding: 2px 5px;
+  text-decoration: none !important;
+  border: 1px solid #e7e7e7;
+  text-shadow: 1px 1px 0 #fff;
+	background: -moz-linear-gradient(bottom, #fff, #e7e7e7); /* gecko */
+	background: -webkit-gradient(linear, left bottom, left top, color-stop(0, #fff), color-stop(1, #e7e7e7));
+	-webkit-border-radius: 5px;
+}
+
