@@ -10,18 +10,13 @@
 }
   
   
-  <!-- Three-up Content Blocks -->
-  
-  <div class="row">
+  <div id="main-content" class="row">
   
     <div class="twelve columns">
-    
-    	<div class="row">
-    		<div class="eight columns">
-    			<h1 id="page-name">{title}</h1>
-    				
-    			{org_description}	
-    		</div>
+    	<a href="{cp_url}?S=0&D=cp&C=content_publish&M=entry_form&entry_id={entry_id}" class="edit" target="_blank">[ edit ]</a>
+    	<h1 id="page-name">{title}</h1>
+    	
+    	<div class="row">    		
     		<div class="four columns">
     		{exp:ce_img:pair src="{org_image}" width="220"}
     			<div id="org-logo">
@@ -52,12 +47,19 @@
 	    			<p>{org_twitter}</p>
 	    		{/if}
 	    		</div>
+	    	{if org_locations}	    			
+    			{embed="organizations/.locations" entry_id="{org_locations}"}	    		
+	    	{/if}
+    		</div>
+    		
+    		<div class="eight columns">			
+    			{org_description}	
     		</div>
     	</div>
       	
     </div>
     
-  </div>
+  </div><!-- end #main-content -->
 {/exp:channel:entries}
 
 {embed="inc/.footer"}

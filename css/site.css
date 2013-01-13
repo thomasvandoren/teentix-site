@@ -22,6 +22,11 @@ h1, h2, h3, h4, h5, h6 {
 	display: none;
 }
 
+.edit {
+	color: #cc0000;
+	font-size: 11px;
+}
+
 /* Contain floats: nicolasgallagher.com/micro-clearfix-hack/ */ 
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
@@ -225,7 +230,7 @@ input.submit:hover {
 /* breadcrumb */
 #nav-breadcrumb {
 	font-size: 12px;
-	padding: 10px 10px 20px 10px;
+	padding: 10px 0px 20px 0px;
 }
 ul.breadcrumbs {
 	padding: 0px;
@@ -234,6 +239,20 @@ ul.breadcrumbs {
 	border: none;
 }
 
+
+
+
+/* -----------------------------------------
+   Main Content
+----------------------------------------- */
+#main-content {
+	position: relative;
+}
+#main-content .edit {
+	position: absolute;
+	top: 0px;
+	right: 10px;
+}
 
 
 /* -----------------------------------------
@@ -439,11 +458,13 @@ ul.breadcrumbs {
 	color: #2795B6;
 }
 
+
+
 /* -----------------------------------------
    Orgs
 ----------------------------------------- */
 #org-grid {
-	margin: 10px 0px;
+	margin: 10px -10px;
 }
 #org-grid > li { 
 	padding: 0 10px 10px; 
@@ -474,7 +495,7 @@ ul.breadcrumbs {
 	color: #000;
 }
 .orgs.single #org-logo {
-	margin-bottom: 10px;
+	margin-bottom: 10px;z
 }
 .orgs.single #org-contact p {
 	margin-bottom: 0px;
