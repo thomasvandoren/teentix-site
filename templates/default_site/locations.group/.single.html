@@ -10,53 +10,83 @@
     
   <div id="main-content" class="row">
   
-    <div class="twelve columns">
-    	{edit_this}
-    	<h1 id="page-name">{title}</h1>
-    	<div class="row">
-    		<div class="four columns">   			
-    			<p><a href="{location_website}">{location_website}</a></p>
-    			{location_address}    			
-    		</div>
-    		<div class="eight columns">
-    		{exp:ce_img:pair src="{location_image}" width="300"}
-					<img src="{made}" alt="" width="{width}" height="{height}" />
+  	{edit_this}
+  	
+		<div class="eight columns"> 
+  		<h1 id="page-name">{title}</h1>
+  		<div class="row">
+  			<div class="eight columns">
+  			{if location_website}					
+	  			<p class="org-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}</a></p>
+	  		{/if}
+	  		{if location_address}
+	  			<p class="org-address">{location_address}</p>
+	  		{/if}
+	  		{if location_phone}
+	  			<p class="org-phone">{location_phone}</p>
+	  		{/if}
+	  		{if location_email}
+	  			<p class="org-email">
+	  			{location_email}
+	    			{if name}{name}: {/if}{encode="{email}" title="{email}"}<br />
+	  			{/location_email}
+	  			</p>
+	  		{/if}	   			
+  			</div>
+  			<div class="four columns">
+  			{exp:ce_img:pair src="{location_logo}" width="300"}
+  				<div class="location-logo">
+						<img src="{made}" alt="" width="{width}" height="{height}" />
+					</div>
 				{/exp:ce_img:pair}
-    		</div>
-    	</div>
-    	<div class="row">
-    		<div class="six columns">
-    		{if location_contact_info}
-    			<h4>Contact Info</h4>
-    			{location_contact_info}
-    		{/if}
-    		{if location_hours}
-    			<h4>Hours</h4>
-    			{location_hours}
-    		{/if}
-    		{if location_box_office}
-    			<h4>Box Office Info</h4>
-    			{location_box_office}
-    		{/if}
-    		{if location_facebook}
-    			<p>{location_facebook}</p>
-    		{/if}
-    		{if location_twitter}
-    			<p>{location_twitter}</p>
-    		{/if}
-    		<div id="location-orgs">
-					<h4>Organizations who have at this location</h4>
+  			</div>
+  		</div>  		
+  		{location_google_map}	
+  	{if location_gallery}
+			<div id="gallery">
+			{location_gallery}
+				<div>
+				  <img src="{image}" alt="{caption}" />
+				  <p class="caption">{caption}</p>
 				</div>
-    		{reverse_related_entries channel="organizations" sort="desc" orderby="title"}
-          <p><a href="{url_title_path='organizations'}">{title}</a></p>
-        {/reverse_related_entries}
-    		</div>
-    		<div class="six columns">
-    			{location_google_map}
-    		</div>
-    	</div>
-      	
-    </div>
+			{/location_gallery}
+			</div>
+		{/if}
+		</div>
+		<div class="four columns">
+			<div id="location-social" class="social-links">
+			{if location_facebook}
+  			<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_facebook}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_facebook}{/exp:parse_url}</a></p>
+  		{/if}
+  		{if location_twitter}
+  			<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_twitter}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_twitter}{/exp:parse_url}</a></p>
+  		{/if}
+  		</div>
+		{if location_hours}
+			<h4>Hours</h4>
+			{location_hours}
+		{/if}
+		{if location_box_office}
+			<h4>Box Office Info</h4>
+			{location_box_office}
+		{/if}
+			<div id="location-events">
+  			<h4>Upcoming Events</h4>
+			{reverse_related_entries channel="calendar_events" sort="desc" orderby="title"}
+        <p><a href="{url_title_path='calendar/event'}">{title}</a></p>
+       {if no_reverse_related_entries} 
+       	<p>There are currently no events.</p>
+       {/if}
+      {/reverse_related_entries}
+
+  		</div>
+			<div id="location-orgs">
+				<h4>Organizations who have events at this location</h4>			
+			{reverse_related_entries channel="organizations" sort="desc" orderby="title"}
+	      <p><a href="{url_title_path='organizations'}">{title}</a></p>
+	    {/reverse_related_entries}
+	    </div>
+  	</div>
     
   </div>
 {/exp:channel:entries}

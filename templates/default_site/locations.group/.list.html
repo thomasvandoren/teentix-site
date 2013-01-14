@@ -11,24 +11,38 @@
     </div>
   
     <div class="twelve columns">
+    	<div class="header row">
+    		<div class="eight columns">
+    			<p>Name and Contact Info</p>
+    		</div>
+    		<div class="four columns">
+    			<p>Neighborbood</p>
+    		</div>
+    	</div>
     {exp:channel:entries channel="locations" limit="200" orderby="title" sort="asc"}
     	<div class="location row">
-    		<div class="three columns">
+    		<div class="two columns">
     			<a href="{url_title_path='locations'}">
-    			{exp:ce_img:pair src="{location_image}" width="220"}
+    			{exp:ce_img:pair src="{location_logo}" width="220" height="150"}
 					<img src="{made}" alt="" width="{width}" height="{height}" />
 					{/exp:ce_img:pair}
     			</a>
     		</div>
     		<div class="six columns">
-    			<h2><a href="{url_title_path='locations'}">{title}</a></h2>
-    			<p>{location_address}</p>
+    			<h3 class="location-name"><a href="{url_title_path='locations'}">{title}</a></h3>
+    			<p class="location-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}</a></p>
+    			<p class="location-address">{location_address}</p>
+    			<p class="location-phone">{location_phone}</p>
     		</div>
-    		<div class="three columns">
-    			
+    		<div class="four columns">
+    			<p>
+    			{categories}{category_name}
+    			{/categories}
+    			</p>
     		</div>
     	
     	</div>
+    	<hr />
 		{/exp:channel:entries}
       	
     </div>

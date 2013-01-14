@@ -22,7 +22,7 @@ h1, h2, h3, h4, h5, h6 {
 	display: none;
 }
 
-.edit {
+.edit-this {
 	color: #cc0000;
 	font-size: 11px;
 }
@@ -248,9 +248,9 @@ ul.breadcrumbs {
 #main-content {
 	position: relative;
 }
-#main-content .edit {
+#main-content .edit-this {
 	position: absolute;
-	top: 0px;
+	top: -10px;
 	right: 10px;
 }
 
@@ -504,9 +504,28 @@ ul.breadcrumbs {
 
 
 /* -----------------------------------------
-   Venues
+   Locations
 ----------------------------------------- */
-
+.locations .row.header {
+	background:  #000;
+	
+	margin-bottom: 10px;
+}
+.locations .row.header p {
+	margin: 0px;
+	color: #fff;
+	font-weight: bold;
+	text-transform: uppercase;
+}
+.locations .row.location {
+}
+.locations .location-name {
+	margin-bottom: 3px;
+}
+.locations .location-website,
+.locations .location-address {
+	margin-bottom: 3px;
+}
 
 
 /* -----------------------------------------

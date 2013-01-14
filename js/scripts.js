@@ -28,6 +28,13 @@
   
   
   $("#featured").orbit();
+  $("#gallery").orbit({ 
+  	animation: 'fade',
+  	startClockOnMouseOut: true,
+  	timer: false,
+  	bullets: true,
+  	captions: true 
+  });
     
 
   // UNCOMMENT THE LINE YOU WANT BELOW IF YOU WANT IE8 SUPPORT AND ARE USING .block-grids

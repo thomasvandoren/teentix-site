@@ -18,8 +18,7 @@
   			<div class="eight columns">
   				<h1 id="page-name">{title}</h1>
 					<div id="org-contact">
-					{if org_website}
-						
+					{if org_website}					
 		  			<p class="org-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{org_website}{/exp:parse_url}</a></p>
 		  		{/if}
 		  		{if org_address}
@@ -63,7 +62,7 @@
   		<div id="org-events">
   			<h4>Upcoming Events</h4>
 			{reverse_related_entries channel="calendar_events" sort="desc" orderby="title"}
-        <p><a href="{url_title_path='organizations'}">{title}</a></p>
+        <p><a href="{url_title_path='calendar/event'}">{title}</a></p>
        {if no_reverse_related_entries} 
        	<p>There are currently no events.</p>
        {/if}
