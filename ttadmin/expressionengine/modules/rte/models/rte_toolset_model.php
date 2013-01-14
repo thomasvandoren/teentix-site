@@ -5,8 +5,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.5
  * @filesource
  */
@@ -20,7 +20,7 @@
  * @subpackage	Modules
  * @category	Modules
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Rte_toolset_model extends CI_Model {
 	
@@ -30,11 +30,11 @@ class Rte_toolset_model extends CI_Model {
 	 * @access	public
 	 * @return	array
 	 */
-	public function get_member_prefs()
+	public function get_member_prefs($member_id = 0)
 	{
 		// get member's toolset preference
 		$prefs = $this->db->select('rte_enabled, rte_toolset_id')
-			->where('member_id', $this->session->userdata('member_id'))
+			->where('member_id', $member_id)
 			->get('members')
 			->row_array();
 	
@@ -46,12 +46,13 @@ class Rte_toolset_model extends CI_Model {
 	 * Get all toolsets available for the current member
 	 * 
 	 * @access	public
+	 * @param	int $member_id Member ID for whose toolsets we want
 	 * @return	array The tools in ID => name format
 	 */
-	public function get_member_toolsets()
+	public function get_member_toolsets($member_id = 0)
 	{
 		// get all available toolsets
-		$toolsets = $this->db->where('member_id', $this->session->userdata('member_id'))
+		$toolsets = $this->db->where('member_id', $member_id)
 			->or_where("member_id = '0' AND enabled = 'y'")
 			->get('rte_toolsets')
 			->result_array();

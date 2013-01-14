@@ -5,8 +5,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -30,7 +30,7 @@ require_once(EE_APPPATH.'core/EE_Config'.EXT);
  * @subpackage	Core
  * @category	Core
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Installer_Config Extends EE_Config {
 	
@@ -158,7 +158,13 @@ class Installer_Config Extends EE_Config {
 		{
 			$table_name = 'exp_sites';
 		}
-
+		
+		// Preferences table won't exist pre-1.6
+		if ( ! $this->EE->db->table_exists($table_name))
+		{
+			return;
+		}
+		
 		$query = $this->EE->db->query("SELECT `site_system_preferences` FROM $table_name WHERE site_id = '1'");
 
 		$all_preferences = unserialize($query->row('site_system_preferences'));

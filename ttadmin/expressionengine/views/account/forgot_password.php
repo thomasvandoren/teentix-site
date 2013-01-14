@@ -95,7 +95,7 @@ input.submit {
 </head>
 <body id="login" onload="<?=$cp_page_onload?>">
 
-<div id="branding"><a href="http://expressionengine.com/"><img src="<?=PATH_CP_GBL_IMG?>ee_logo_branding.gif" width="250" height="28" alt="<?=lang('powered_by')?> ExpressionEngine" /></a></div>
+<div id="branding"><a href="http://ellislab.com/"><img src="<?=PATH_CP_GBL_IMG?>ee_logo_branding.gif" width="250" height="28" alt="<?=lang('powered_by')?> ExpressionEngine" /></a></div>
 
 	<div id="content">
 	
@@ -107,7 +107,7 @@ input.submit {
 
 <dl>
 	<dt><?=lang('submit_email_address')?>:</dt>
-	<dd><?=form_input(array('style' => 'width:100%', 'size' => '35', 'dir' => 'ltr', 'name' => "email", 'id' => "email", 'maxlength' => 80))?></dd>
+	<dd><?=form_input(array('style' => 'width:100%', 'size' => '35', 'dir' => 'ltr', 'name' => "email", 'id' => "email", 'maxlength' => 80, 'autocomplete' => 'off'))?></dd>
 </dl>
 
 <p><?=form_submit('submit', lang('submit'), 'class="submit"')?> <span><a href="<?=BASE.AMP.'C=login'?>"><?=lang('return_to_login')?></a></span></p>

@@ -5,8 +5,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -20,7 +20,7 @@
  * @subpackage	Core
  * @category	Model
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Channel_entries_model extends CI_Model {
 
@@ -296,7 +296,7 @@ class Channel_entries_model extends CI_Model {
 						->where('member_id', $this->session->userdata('member_id'))
 						->get('ping_servers');
 
-		$member_id = ($qry->row('count') === 0) ? 0 : $this->session->userdata('member_id');
+		$member_id = ($qry->row('count') == 0) ? 0 : $this->session->userdata('member_id');
 
 		$qry = $this->db->select('id, server_name, is_default')
 						->where('site_id', $this->config->item('site_id'))

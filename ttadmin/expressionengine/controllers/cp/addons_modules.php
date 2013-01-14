@@ -5,8 +5,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -21,7 +21,7 @@
  * @subpackage	Control Panel
  * @category	Control Panel
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Addons_modules extends CI_Controller {
 
@@ -114,9 +114,14 @@ class Addons_modules extends CI_Controller {
 		$names	 = array();
 		$data	 = array();
 		$updated = array();
-		
+
 		foreach ($modules as $module => $module_info)
 		{
+			if (IS_CORE && in_array($module, $this->core->standard_modules))
+			{
+				continue;
+			}
+
 			if ( ! $can_admin)
 			{
 				if ( ! in_array($module, $allowed_mods))
@@ -185,7 +190,9 @@ class Addons_modules extends CI_Controller {
 				$UPD = new $class;
 				$UPD->_ee_path = APPPATH;
 		
-				if ($UPD->version > $version && method_exists($UPD, 'update') && $UPD->update($version) !== FALSE)
+				if (version_compare($UPD->version, $version, '>')
+					&& method_exists($UPD, 'update')
+					&& $UPD->update($version) !== FALSE)
 				{
 					$this->db->update('modules', array('module_version' => $UPD->version), array('module_name' => ucfirst($module)));
 					$updated[] = $name.': '.lang('updated_to_version').' '.$UPD->version;

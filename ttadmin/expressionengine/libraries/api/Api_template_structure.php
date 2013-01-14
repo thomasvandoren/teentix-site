@@ -5,8 +5,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -20,7 +20,7 @@
  * @subpackage	Core
  * @category	Core
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Api_template_structure extends Api {
 	
@@ -101,7 +101,7 @@ class Api_template_structure extends Api {
 	 * @param	array
 	 * @return	int
 	 */
-	function create_template_group($data, $duplicate = FALSE)
+	function create_template_group($data, $duplicate_group = FALSE)
 	{
 		if ( ! is_array($data) OR count($data) == 0)
 		{
@@ -167,7 +167,7 @@ class Api_template_structure extends Api {
 		if (is_numeric($duplicate_group))
 		{
 			$fields = array('template_name', 'template_data', 'template_type', 'template_notes', 'cache', 'refresh', 'no_auth_bounce', 'allow_php', 'php_parse_location');
-			$query = $this->EE->template_model->get_templates($site_id, $fields, array('group_id' => $duplicate_group));
+			$query = $this->EE->template_model->get_templates($site_id, $fields, array('templates.group_id' => $duplicate_group));
 		
 			if ($query->num_rows() > 0)
 			{
@@ -207,7 +207,7 @@ class Api_template_structure extends Api {
 								'site_id'				=> $this->EE->config->item('site_id')
 							 );
 				
-				$this->EE->template_model->create_template($template_data);
+				$this->EE->template_model->create_template($data);
 			}
 		}
 		

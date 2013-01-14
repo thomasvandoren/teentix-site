@@ -5,8 +5,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -20,7 +20,7 @@
  * @subpackage	Core
  * @category	Model
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Category_model extends CI_Model {
 
@@ -60,7 +60,7 @@ class Category_model extends CI_Model {
 	 *
 	 * So in the file upload preferences, we use:
 	 *			WHERE exclude_group = 0
-	 *			OR exclude_group != 1
+	 *			OR exclude_group = 1
 	 *
 	 * And basically the opposite on channel group assignment preferences.
 	 *
@@ -85,8 +85,7 @@ class Category_model extends CI_Model {
 		
 		if ($include !== 0)
 		{
-			$this->db->where('exclude_group', 0)
-					 ->or_where('exclude_group', (int) $include);
+			$this->db->where('(exclude_group = "0" OR exclude_group = "' . (int) $include . '")', NULL, FALSE);
 		}
 
 		return $this->db->select('group_id, group_name, sort_order')

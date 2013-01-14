@@ -53,7 +53,8 @@ if ($EE_view_disable !== TRUE)
 						'name'	=> 'password',
 						'class' => 'field',
 						'maxlength' => 40,
-						'value' => set_value('password')
+						'value' => set_value('password'),
+						'auto_complete' => 'off'
 						)
 					)
 				)
@@ -67,7 +68,8 @@ if ($EE_view_disable !== TRUE)
 						'name'	=> 'password_confirm',
 						'class' => 'field',
 						'maxlength' => 40,
-						'value' => set_value('password_confirm')
+						'value' => set_value('password_confirm'),
+						'auto_complete' => 'off'
 						)
 					)
 				)

@@ -6,8 +6,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -21,7 +21,7 @@
  * @subpackage	Core
  * @category	Core
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class EE_Core {
 	
@@ -83,10 +83,10 @@ class EE_Core {
 		}
 		
 		// application constants
-		define('IS_FREELANCER',	FALSE);
-		define('APP_NAME',		'ExpressionEngine'.(IS_FREELANCER ? ' Freelancer' : ''));
-		define('APP_BUILD',		'20120606');
-		define('APP_VER',		'2.5.2');
+		define('IS_CORE',		FALSE);
+		define('APP_NAME',		'ExpressionEngine'.(IS_CORE ? ' Core' : ''));
+		define('APP_BUILD',		'20121220');
+		define('APP_VER',		'2.5.5');
 		define('SLASH',			'&#47;');
 		define('LD',			'{');
 		define('RD',			'}');
@@ -105,8 +105,10 @@ class EE_Core {
 			'safecracker', 'search', 'simple_commerce', 'stats',
 			'updated_sites', 'wiki'
 		);
-		
-		
+		$this->standard_modules = array('blacklist', 'email', 'forum', 'ip_to_nation',
+			'mailinglist', 'member', 'moblog', 'query', 'simple_commerce',
+			'updated_sites', 'wiki');
+
 		// Set a liberal script execution time limit, making it shorter for front-end requests than CI's default
 		if (function_exists("set_time_limit") == TRUE AND @ini_get("safe_mode") == 0)
 		{
@@ -222,8 +224,29 @@ class EE_Core {
 		unset($theme_path);
 		
 		// Define Third Party Theme Path and URL
-		define('PATH_THIRD_THEMES',	PATH_THEMES.'third_party/');
-		define('URL_THIRD_THEMES',	$this->EE->config->slash_item('theme_folder_url').'third_party/');
+		if ($this->EE->config->item('path_third_themes'))
+		{
+			define(
+				'PATH_THIRD_THEMES',
+				rtrim(realpath($this->EE->config->item('path_third_themes')), '/').'/'
+			);
+		}
+		else
+		{
+			define('PATH_THIRD_THEMES',	PATH_THEMES.'third_party/');
+		}
+		
+		if ($this->EE->config->item('url_third_themes'))
+		{
+			define(
+				'URL_THIRD_THEMES',
+				rtrim($this->EE->config->item('url_third_themes'), '/').'/'
+			);
+		}
+		else
+		{
+			define('URL_THIRD_THEMES',	$this->EE->config->slash_item('theme_folder_url').'third_party/');
+		}
 		
 		// Is this a stylesheet request?  If so, we're done.
 		if (isset($_GET['css']) OR (isset($_GET['ACT']) && $_GET['ACT'] == 'css')) 
@@ -476,7 +499,7 @@ class EE_Core {
 		// @todo remove after 2.1.1's release, move to the update script
 		if (strncmp($this->EE->config->item('doc_url'), 'http://expressionengine.com/docs', 32) == 0)
 		{
-			$this->EE->config->update_site_prefs(array('doc_url' => 'http://expressionengine.com/user_guide/'));
+			$this->EE->config->update_site_prefs(array('doc_url' => 'http://ellislab.com/expressionengine/user-guide/'));
 		}
 	}
 	
@@ -540,7 +563,7 @@ class EE_Core {
 		$profile_trigger = $this->EE->config->item('profile_trigger');
 		
 		
-		if ( ! IS_FREELANCER && $forum_trigger && 
+		if ( ! IS_CORE && $forum_trigger && 
 			in_array($this->EE->uri->segment(1), preg_split('/\|/', $forum_trigger, -1, PREG_SPLIT_NO_EMPTY)))
 		{
 			require PATH_MOD.'forum/mod.forum.php';
@@ -548,7 +571,7 @@ class EE_Core {
 			return;
 		}
 		
-		if ( ! IS_FREELANCER && $profile_trigger && $profile_trigger == $this->EE->uri->segment(1))
+		if ( ! IS_CORE && $profile_trigger && $profile_trigger == $this->EE->uri->segment(1))
 		{
 			// We do the same thing with the member profile area.  
 		
@@ -635,9 +658,7 @@ class EE_Core {
 			}
 		}
 
-		require APPPATH.'libraries/Template.php';
-
-		$this->EE->TMPL = new EE_Template();
+		$this->EE->load->library('template', NULL, 'TMPL');
 
 		// Parse the template
 		$this->EE->TMPL->run_template_engine($template_group, $template);
@@ -666,7 +687,7 @@ class EE_Core {
 			}
 		}
 	
-		if ( ! isset($last_clear) && $this->EE->config->item('enable_online_user_tracking') != 'n')
+		if ( ! isset($last_clear))
 		{
 			$this->EE->db->select('last_cache_clear');
 			$this->EE->db->where('site_id', $this->EE->config->item('site_id'));

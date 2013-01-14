@@ -47,7 +47,7 @@ class EE_Schema {
 			  `site_label` varchar(100) NOT NULL default '',
 			  `site_name` varchar(50) NOT NULL default '',
 			  `site_description` text NULL,
-			  `site_system_preferences` TEXT NOT NULL ,
+			  `site_system_preferences` mediumtext NOT NULL ,
 			  `site_mailinglist_preferences` TEXT NOT NULL ,
 			  `site_member_preferences` TEXT NOT NULL ,
 			  `site_template_preferences` TEXT NOT NULL ,
@@ -166,7 +166,7 @@ class EE_Schema {
 		$Q[] = "CREATE TABLE exp_security_hashes (
 			 hash_id int(10) unsigned NOT NULL auto_increment,
 			 date int(10) unsigned NOT NULL,
-			 ip_address varchar(45) default '0' NOT NULL,
+			 session_id varchar(40) default '0' NOT NULL,
 			 hash varchar(40) NOT NULL,
 			 PRIMARY KEY `hash_id` (`hash_id`),
 			 KEY `hash` (`hash`)
@@ -318,8 +318,8 @@ class EE_Schema {
 			  join_date int(10) unsigned default '0' NOT NULL,
 			  last_visit int(10) unsigned default '0' NOT NULL, 
 			  last_activity int(10) unsigned default '0' NOT NULL, 
-			  total_entries smallint(5) unsigned NOT NULL default '0',
-			  total_comments smallint(5) unsigned NOT NULL default '0',
+			  total_entries mediumint(8) unsigned NOT NULL default '0',
+			  total_comments mediumint(8) unsigned NOT NULL default '0',
 			  total_forum_topics mediumint(8) default '0' NOT NULL,
 			  total_forum_posts mediumint(8) default '0' NOT NULL,
 			  last_entry_date int(10) unsigned default '0' NOT NULL,
@@ -1394,7 +1394,7 @@ class EE_Schema {
 						'site_bootstrap_checksums'		=> ''
 					);
 						
-		$Q[] = $this->EE->db->insert_string('exp_sites', $site);
+		$Q[] = $this->EE->db->insert_string('sites', $site);
 				
 		$Q[] = "INSERT INTO exp_member_groups VALUES ('1', 1, 'Super Admins', '', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y',  'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', '', 'y', 'y', 'y', '0', 'y', '20', '60', 'y', 'y', 'y', 'y', 'y')";
 		$Q[] = "INSERT INTO exp_member_groups VALUES ('2', 1, 'Banned', '', 'y', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n', 'n',  'n', 'n', '', 'n', 'n', 'n', '60', 'n', '20', '60', 'n', 'n', 'n', 'n', 'n')";

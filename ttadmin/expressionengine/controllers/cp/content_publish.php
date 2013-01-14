@@ -8,8 +8,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -23,7 +23,7 @@
  * @subpackage	Control Panel
  * @category	Control Panel
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Content_publish extends CI_Controller {
 
@@ -126,7 +126,17 @@ class Content_publish extends CI_Controller {
 	public function entry_form()
 	{
 		$this->load->library('form_validation');
-		
+
+        // Needed for custom tabs loaded by layout_model from the db table
+        // exp_layout_publish where the whole layout (fields and tabs) are
+        // stored in serialized form.  This language file contains the
+        // localized names for the fields and tabs.  We may want to push
+        // this call deeper down the rabbit hole so that it is simply
+        // always available whenever we load the layout_model.  Or this
+        // may be the only spot we use it.  Not sure, so sticking it
+        // here for now.  -Daniel B.
+        $this->lang->loadfile('publish_tabs_custom');		
+
 		$entry_id	= (int) $this->input->get_post('entry_id');
 		$channel_id	= (int) $this->input->get_post('channel_id');
 		
@@ -644,7 +654,7 @@ class Content_publish extends CI_Controller {
 		
 		$r = '';
 
-		$entry_title = $this->typography->format_characters(stripslashes($resrow['title']));
+		$entry_title = $this->typography->format_characters($resrow['title']);
 
 		foreach ($fields as $key => $val)
 		{
@@ -669,7 +679,7 @@ class Content_publish extends CI_Controller {
 				}
 				else
 				{
-					$r .= $this->typography->parse_type(stripslashes($resrow[$key]),
+					$r .= $this->typography->parse_type($resrow[$key],
 											 array(
 														'text_format'	=> $resrow['field_ft_'.$expl['1']],
 														'html_format'	=> $channel_info->channel_html_formatting,
@@ -2369,7 +2379,7 @@ class Content_publish extends CI_Controller {
 					{
 						$settings[$val['field_id']]['field_data'] = $entry_data[$val['field_id']];
 					}
-					
+				    	
 					$this->_tab_labels[$tab]	= lang($tab);
 					$this->_module_tabs[$tab][] = array(
 													'id' 	=> $val['field_id'],
@@ -2536,8 +2546,13 @@ class Content_publish extends CI_Controller {
 				
 				if (count($this->_file_manager['file_list']))
 				{
-					$button_js[] = array('name' => $button->tag_name, 'key' => $button->accesskey, 'replaceWith' => '', 'className' => $button->classname);
-					$this->javascript->set_global('filebrowser.image_tag', $button->tag_open);
+					$button_js[] = array(
+						'name'			=> $button->tag_name,
+						'key'			=> $button->accesskey,
+						'replaceWith'	=> '',
+						'className'		=> $button->classname.' id'.$button->id
+					);
+					$this->javascript->set_global('filebrowser.image_tag_'.$button->id, $button->tag_open);
 				}
 			}
 			elseif(strpos($button->classname, 'markItUpSeparator') !== FALSE)
@@ -2547,16 +2562,21 @@ class Content_publish extends CI_Controller {
 			}
 			else
 			{
-				$button_js[] = array('name' => $button->tag_name, 'key' => strtoupper($button->accesskey), 'openWith' => $button->tag_open, 'closeWith' => $button->tag_close, 'className' => $button->classname);
+				$button_js[] = array(
+					'name'		=> $button->tag_name,
+					'key'		=> strtoupper($button->accesskey),
+					'openWith'	=> $button->tag_open,
+					'closeWith'	=> $button->tag_close,
+					'className'	=> $button->classname.' id'.$button->id
+				);
 			}
 		}
 		
-		// We force an image button if it doesn't already exist
-		if ($has_image == FALSE && count($this->_file_manager['file_list']))
-		{
-					$button_js[] = array('name' => 'img', 'key' => '', 'replaceWith' => '', 'className' => 'btn_img');
-					$this->javascript->set_global('filebrowser.image_tag', '<img src="[![Link:!:http://]!]" alt="[![Alternative text]!]" />');			
-		}
+		// Set global variable for optional file browser button
+		$this->javascript->set_global(
+			'filebrowser.image_tag',
+			'<img src="[![Link:!:http://]!]" alt="[![Alternative text]!]" />'
+		);
 		
 		$markItUp = $markItUp_writemode = array(
 			'nameSpace'		=> "html",

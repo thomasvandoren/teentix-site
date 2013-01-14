@@ -6,8 +6,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -21,7 +21,7 @@
  * @subpackage	Modules
  * @category	Modules
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 
 class Member_settings extends Member {
@@ -1352,14 +1352,18 @@ class Member_settings extends Member {
 	{
 		$query = $this->EE->db->query("SELECT username, screen_name FROM exp_members WHERE member_id = '".$this->EE->session->userdata('member_id')."'");
 
-		return $this->_var_swap($this->_load_element('username_password_form'),
-								array(
-										'row:username_form'				=>	($this->EE->session->userdata['group_id'] == 1 OR $this->EE->config->item('allow_username_change') == 'y') ? $this->_load_element('username_row') : $this->_load_element('username_change_disallowed'),
-										'path:update_username_password'	=>	$this->_member_path('update_userpass'),
-										'username'						=>	$query->row('username') ,
-										'screen_name'					=>	$this->_convert_special_chars($query->row('screen_name') )
-									 )
-								);
+		return $this->_var_swap(
+			$this->_load_element('username_password_form'),
+			array(
+				'row:username_form'				=>	
+					($this->EE->session->userdata['group_id'] == 1 OR $this->EE->config->item('allow_username_change') == 'y') ? 
+						$this->_load_element('username_row') : 
+						$this->_load_element('username_change_disallowed'),
+				'path:update_username_password'	=>	$this->_member_path('update_userpass'),
+				'username'						=>	$query->row('username') ,
+				'screen_name'					=>	$this->_convert_special_chars($query->row('screen_name') )
+			)
+		);
 	}
 
 	// --------------------------------------------------------------------

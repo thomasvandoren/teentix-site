@@ -5,8 +5,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -20,7 +20,7 @@
  * @subpackage	Core
  * @category	Libraries
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 class Members {
 	
@@ -135,12 +135,6 @@ class Members {
 				{
 					@unlink($this->EE->config->slash_item('avatar_path').$query->row('avatar_filename') );
 				}
-
-				if (REQ == 'CP')
-				{
-					$this->EE->session->set_flashdata('message_success', lang($removed));
-					$this->EE->functions->redirect(BASE.AMP.'C=myaccount'.AMP.'M=edit_avatar'.AMP.'id='.$id);
-				}
 			}
 			elseif ($type == 'photo')
 			{
@@ -163,12 +157,6 @@ class Members {
 				$this->EE->db->update('members');
 
 				@unlink($this->EE->config->slash_item('photo_path').$query->row('photo_filename') );
-
-				if (REQ == 'CP')
-				{
-					// Returning type, method to call + args.
-					return array('page', 'edit_avatar', array(lang($removed)));
-				}
 			}
 			else
 			{
@@ -191,15 +179,14 @@ class Members {
 				$this->EE->db->update('members');
 
 				@unlink($this->EE->config->slash_item('sig_img_path').$query->row('sig_img_filename') );
-
-				if (REQ == 'CP')
-				{
-					$this->EE->session->set_flashdata('message_success', lang($removed));
-					$this->EE->functions->redirect(BASE.AMP.'C=myaccount'.AMP.'M=edit_signature'.AMP.'id='.$id);
-				}
 			}
 			
-			if (REQ == 'PAGE')
+			if (REQ == 'CP')
+			{
+				$this->EE->session->set_flashdata('message_success', lang($removed));
+				$this->EE->functions->redirect(BASE.AMP.'C=myaccount'.AMP.'M='.$edit_image.AMP.'id='.$id);
+			}
+			else if (REQ == 'PAGE')
 			{
 				return array('var_swap',
 							array('success',

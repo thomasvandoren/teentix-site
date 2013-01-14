@@ -6,8 +6,8 @@
  * @package		ExpressionEngine
  * @author		EllisLab Dev Team
  * @copyright	Copyright (c) 2003 - 2012, EllisLab, Inc.
- * @license		http://expressionengine.com/user_guide/license.html
- * @link		http://expressionengine.com
+ * @license		http://ellislab.com/expressionengine/user-guide/license.html
+ * @link		http://ellislab.com
  * @since		Version 2.0
  * @filesource
  */
@@ -21,7 +21,7 @@
  * @subpackage	Core
  * @category	Filemanager
  * @author		EllisLab Dev Team
- * @link		http://expressionengine.com
+ * @link		http://ellislab.com
  */
 
 class Filemanager {
@@ -892,8 +892,8 @@ class Filemanager {
 
 		// Mask the URL if we're coming from the CP
 		$sync_files_url = (REQ == "CP") ?
-			$this->EE->cp->masked_url('http://expressionengine.com/user_guide/cp/content/files/sync_files.html') :
-			'http://expressionengine.com/user_guide/cp/content/files/sync_files.html';
+			$this->EE->cp->masked_url('http://ellislab.com/expressionengine/user-guide/cp/content/files/sync_files.html') :
+			'http://ellislab.com/expressionengine/user-guide/cp/content/files/sync_files.html';
 
 		return array(
 			'rows'			=> $this->_browser_get_files($dir, $file_params),
@@ -1838,6 +1838,8 @@ class Filemanager {
 
 		foreach ($files as &$file)
 		{
+			$file['file_name'] = urlencode($file['file_name']);
+			
 			// Get thumb information
 			$thumb_info = $this->get_thumb($file, $dir['id']);
 			
@@ -1850,7 +1852,7 @@ class Filemanager {
 					title="'.$file['file_name'].'" 
 					onclick="$.ee_filebrowser.placeImage('.$file['file_id'].'); return false;"
 				>
-					'.$file['file_name'].'
+					'.urldecode($file['file_name']).'
 				</a>';
 			
 			$file['short_name']		= ellipsize($file['title'], 13, 0.5);
@@ -2051,7 +2053,7 @@ class Filemanager {
 			'file_name'		=> $clean_filename,
 			'upload_path'	=> $dir['server_path'],
 			'allowed_types'	=> $allowed_types,
-			'max_size'		=> round($dir['max_size']/1024, 2)
+			'max_size'		=> round($dir['max_size']/1024, 3)
 		);
 		
 		$this->EE->load->helper('xss');
@@ -2340,6 +2342,13 @@ class Filemanager {
 		
 		// Delete the existing file's raw files, but leave the database record
 		$this->EE->file_model->delete_raw_file($file_name, $directory_id);
+
+		// It is possible the file exists but is NOT in the DB yet
+		if (empty($existing_file))
+		{
+			$new_file->modified_by_member_id = $this->EE->session->userdata('member_id');
+			return $new_file;
+		}
 		
 		// Delete the new file's database record, but leave the files
 		$this->EE->file_model->delete_files($new_file->file_id, FALSE);
@@ -2352,6 +2361,7 @@ class Filemanager {
 			'modified_date'			=> $new_file->modified_date,
 			'modified_by_member_id'	=> $this->EE->session->userdata('member_id')
 		));
+		
 		$existing_file->file_size				= $new_file->file_size;
 		$existing_file->file_hw_original		= $new_file->file_hw_original;
 		$existing_file->modified_date			= $new_file->modified_date;
@@ -2388,7 +2398,7 @@ class Filemanager {
 		$config = array(
 			'upload_path'	=> $upload_directory['server_path'],
 			'allowed_types'	=> ($this->EE->session->userdata('group_id') == 1) ? 'all' : $upload_directory['allowed_types'],
-			'max_size'		=> round($upload_directory['max_size']/1024, 2),
+			'max_size'		=> round($upload_directory['max_size']/1024, 3),
 			'max_width'		=> $upload_directory['max_width'],
 			'max_height'	=> $upload_directory['max_height']
 		);

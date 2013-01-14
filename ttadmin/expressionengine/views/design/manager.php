@@ -72,7 +72,7 @@ if ($EE_view_disable !== TRUE)
 
 				<?=$this->load->view('_shared/message')?>
 
-				<?php if ($can_admin_templates): ?>
+				<?php if ($can_admin_design): ?>
 					<div id="prefRowTemplate" style="display:none">
 						<table class="templateTable accessTable" border="0" cellspacing="0" cellpadding="0">
 							<tr>
@@ -151,8 +151,6 @@ if ($EE_view_disable !== TRUE)
 
 					<?php
 					
-					$prefs_json = array();
-					
 					$this->table->set_template($table_template);
 						foreach ($templates as $group): 
 							$temp = current($group);
@@ -173,7 +171,7 @@ if ($EE_view_disable !== TRUE)
 							<?php
 							$main_table_headings = array(lang('edit_template'), lang('view'));
 							
-							if ($can_admin_templates)
+							if ($can_admin_design)
 							{
 								$main_table_headings = array_merge($main_table_headings, array(lang('access'), lang('preferences')));
 							}
@@ -183,20 +181,6 @@ if ($EE_view_disable !== TRUE)
 							$this->table->set_heading($main_table_headings);
 
 							foreach ($group as $template):
-								$prefs_json[$template['template_id']] = array(
-									'id' => $template['template_id'],
-									'group_id' => $template['group_id'],
-									'name' => $template['template_name'],
-									'type' => $template['template_type'],
-									'cache' => $template['cache'],
-									'refresh' => $template['refresh'],
-									'allow_php' => $template['allow_php'],
-									'php_parsing' => $template['php_parse_location'],
-									'hits' => $template['hits'],
-									'access' => $template['access'],
-									'no_auth_bounce' => $template['no_auth_bounce'],
-									'enable_http_auth' => $template['enable_http_auth']
-								);
 								
 								$delete_link = ($template['template_name'] == 'index') ? '--' :
 								'<a href="'.BASE.AMP.'C=design'.AMP.'M=template_delete_confirm'.AMP.
@@ -209,7 +193,7 @@ if ($EE_view_disable !== TRUE)
 									 'class' => 'templateName '.$template['class']),
 									'<a rel="external" href="'.$template['view_path'].'">'.lang('view').'</a>');
 									
-								if ($can_admin_templates)
+								if ($can_admin_design)
 								{
 									$main_table_data = array_merge($main_table_data, array('<a href="#" class="show_access_link" id="show_access_link_'.$template['template_id'].'">'.lang('access').'</a>',
 									'<a href="#" class="show_prefs_link" id="show_prefs_link_'.$template['template_id'].'">'.lang('edit_preferences').'</a>'));
@@ -227,12 +211,7 @@ if ($EE_view_disable !== TRUE)
 							</div>
 						<?php
 						endforeach;
-						
-						$prefs_json = $this->javascript->generate_json($prefs_json);
 					?>
-					<script type="text/javascript" charset="utf-8">
-						EE.pref_json = <?=$prefs_json?>;
-					</script>
 				</div>
 			</div>
 			
