@@ -654,3 +654,26 @@ ul.breadcrumbs {
 .account.edit .label_birthdate_error {
 	color: #cc0000;
 }
+
+
+/* -----------------------------------------
+   Footer
+----------------------------------------- */
+#footer {
+	background: #000;
+	color: #fff;
+	width: 100%;
+	padding: 40px 0px;
+}
+#footer .footer-header {
+	color: #fff;
+	border-bottom: 1px solid #ccc;
+	line-height: 1em;
+	padding-bottom: 5px;
+}
+#footer li {
+	list-style: none;
+}
+#footer li.spacer {
+	height: 20px;
+}
