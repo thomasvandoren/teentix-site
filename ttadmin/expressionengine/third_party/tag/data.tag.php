@@ -1,29 +1,20 @@
 <?php if ( ! defined('EXT') ) exit('No direct script access allowed');
- 
- /**
- * Solspace - Tag
+
+/**
+ * Tag - Data Models
  *
  * @package		Solspace:Tag
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2012, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/Tag/
- * @version		4.1.1
- * @filesource 	./system/expressionengine/third_party/tag/
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/tag
+ * @license		http://www.solspace.com/license_agreement
+ * @version		4.2.1
+ * @filesource	tag/data.tag.php
  */
- 
- /**
- * Tag Module Class - Data Models
- *
- * Data Models for the Tag Module
- *
- * @package 	Solspace:Tag
- * @author		Solspace Dev Team
- * @filesource 	./system/expressionengine/third_party/tag/data.tag.php
- */
- 
+
 require_once 'addon_builder/data.addon_builder.php';
 
-class Tag_data extends Addon_builder_data_tag 
+class Tag_data extends Addon_builder_data_tag
 {
 	public $delimiters = array(
 		'colon'			=> ':',
@@ -32,14 +23,14 @@ class Tag_data extends Addon_builder_data_tag
 		'newline'		=> "\n",
 		'pipe'			=> '|',
 		'semicolon' 	=> ';',
-		'space'			=> ' ', 		
+		'space'			=> ' ',
 		'tab'			=> "\t",
 		'tilde'			=> '~',
 	);
-	
+
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * get_tag_separator
 	 *
@@ -47,20 +38,20 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	string	name of seperator
 	 * @return	string	seperator
 	 */
-    
+
 	public function get_tag_separator($name = '')
-    { 	
+    {
 		$delim = array_key_exists($name, $this->delimiters) ? $this->delimiters[$name] : end($this->delimiters);
-		
+
 		reset($this->delimiters);
-			
-		return $delim; 
+
+		return $delim;
 	}
 	//END get_tag_separator
-	
-	
+
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * get_tag_separator
 	 *
@@ -68,30 +59,30 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	string	name of tag group
 	 * @return	string	group id
 	 */
-    
+
 	public function get_tag_group_id_by_name($name = '')
-    { 	
+    {
 		$return = FALSE;
-			
+
 		$query = ee()->db->query(
 			"SELECT tag_group_id
 			 FROM	exp_tag_groups
 			 WHERE	tag_group_short_name = '" . ee()->db->escape_str($name) . "'
 			 OR		tag_group_name = '" . ee()->db->escape_str($name) . "'"
 		);
-		
+
 		if ($query->num_rows() > 0)
 		{
 			$return = $query->row('tag_group_id');
 		}
-			
-		return $return; 
+
+		return $return;
 	}
 	//END get_tag_group_id_by_name
-	
-	
+
+
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * insert_new_tag_group
 	 *
@@ -99,24 +90,20 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	string	name of new tag group
 	 * @return	int		insert id of new string
 	 */
-    
-	public function insert_new_tag_group($tag_group_name)
-    { 	
-		ee()->load->helper('url');
-		
-		$tag_group_short_name   = strtolower(url_title($tag_group_name, 'underscore'));
-		
+
+	public function insert_new_tag_group($tag_group_name, $tag_group_short_name)
+    {
 		$query = ee()->db->query(
-			"SELECT * 
+			"SELECT *
 			 FROM	exp_tag_groups
 			 WHERE	tag_group_short_name = '" . ee()->db->escape_str($tag_group_short_name) . "'"
 		);
-		
+
 		if ($query->num_rows() > 0)
 		{
 			return FALSE;
 		}
-		
+
 		ee()->db->query(
 			ee()->db->insert_string(
 				'exp_tag_groups',
@@ -138,18 +125,18 @@ class Tag_data extends Addon_builder_data_tag
 		if ( ! $this->column_exists($new_col, 'exp_tag_tags'))
 		{
 			ee()->db->query(
-				"ALTER TABLE 	`exp_tag_tags` 
+				"ALTER TABLE 	`exp_tag_tags`
 				 ADD COLUMN 	{$new_col} 		int(10) NOT NULL DEFAULT '0'"
 			);
 		}
-			
-		return $insert_id; 
+
+		return $insert_id;
 	}
 	//END insert_new_tag_group
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get Tag Groups
 	 * returns an array of id => short_name tag groups
@@ -158,9 +145,9 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	bool	use cache
 	 * @return	array	id => short_name
 	 */
-    
+
 	public function get_tag_groups( $use_cache = TRUE )
-    { 	
+    {
 		// --------------------------------------------
 		//  Prep Cache, Return if Set
 		// --------------------------------------------
@@ -174,16 +161,16 @@ class Tag_data extends Addon_builder_data_tag
 		}
 
 		$this->cached[$cache_name][$cache_hash] = array();
-		
+
 		// --------------------------------------------
 		//  Perform the Actual Work
 		// --------------------------------------------
 
-		$sql = "SELECT	tag_group_id, tag_group_name 
+		$sql = "SELECT	tag_group_id, tag_group_name
 				FROM  	exp_tag_groups";
 
 		$query = ee()->db->query($sql);
-		
+
 		if ($query->num_rows() > 0)
 		{
 			foreach($query->result_array() as $row)
@@ -201,7 +188,7 @@ class Tag_data extends Addon_builder_data_tag
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Tag Total Entries SQL Insert
 	 * returns a parse string for total entries
@@ -227,20 +214,20 @@ class Tag_data extends Addon_builder_data_tag
 		{
 			return $this->cached[$cache_name][$cache_hash];
 		}
-		
+
 		// --------------------------------------------
 		//  Perform the Actual Work
 		// --------------------------------------------
 
-		$prefix 	= ($prefix AND is_string($prefix)) ? trim($prefix) : ''; 
+		$prefix 	= ($prefix AND is_string($prefix)) ? trim($prefix) : '';
 
 		$query = ee()->db->query(
-			"SELECT	tag_group_id, tag_group_short_name 
+			"SELECT	tag_group_id, tag_group_short_name
 			 FROM  	exp_tag_groups"
 		);
-	
+
 		$insert 	= '';
-		
+
 		if ($query->num_rows() > 0)
 		{
 			foreach($query->result_array() as $row)
@@ -248,11 +235,11 @@ class Tag_data extends Addon_builder_data_tag
 				$id 	= $row['tag_group_id'];
 				$name 	= $row['tag_group_short_name'];
 
-				$insert .= (($prefix !== '') ? $prefix . '.' : '') . 
-						'`total_entries_' . $id . "`,\n"; 
-				//we want to also parse the total_entries_short_name								
-				$insert .= (($prefix !== '') ? $prefix . '.' : '') . 
-						'`total_entries_' . $id . 
+				$insert .= (($prefix !== '') ? $prefix . '.' : '') .
+						'`total_entries_' . $id . "`,\n";
+				//we want to also parse the total_entries_short_name
+				$insert .= (($prefix !== '') ? $prefix . '.' : '') .
+						'`total_entries_' . $id .
 						'` as `total_entries_' . $name . "`,\n";
 			}
 		}
@@ -275,7 +262,7 @@ class Tag_data extends Addon_builder_data_tag
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * get_entry_tags_by_tag_name
 	 *
@@ -283,9 +270,9 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	array	Array of tags
 	 * @return	array
 	 */
-    
+
 	public function get_entry_tags_by_tag_name($tags = array())
-    { 			
+    {
 		// --------------------------------------------
 		//  Prep Cache, Return if Set
 		// --------------------------------------------
@@ -299,18 +286,18 @@ class Tag_data extends Addon_builder_data_tag
 		}
 
 		$this->cached[$cache_name][$cache_hash] = array();
-		
+
 		// --------------------------------------------
 		//  Perform the Actual Work
 		// --------------------------------------------
 
-		$sql = "SELECT	tag_id, tag_name 
-				FROM  	exp_tag_tags 
-				WHERE 	tag_name 
+		$sql = "SELECT	tag_id, tag_name
+				FROM  	exp_tag_tags
+				WHERE 	tag_name
 				IN	  	('" . implode("','", ee()->db->escape_str($tags)) . "')";
 
 		$query = ee()->db->query($sql);
-		
+
 		if ($query->num_rows() > 0)
 		{
 			$this->cached[$cache_name][$cache_hash] = $query->result_array();
@@ -320,13 +307,13 @@ class Tag_data extends Addon_builder_data_tag
 		//  Return Data
 		// --------------------------------------------
 
-		return $this->cached[$cache_name][$cache_hash];	
+		return $this->cached[$cache_name][$cache_hash];
     }
     // END get_module_preferences()
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * get all tags from an entry
 	 *
@@ -334,9 +321,9 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	array	Array of Channel/Weblog IDs
 	 * @return	array
 	 */
-    
+
 	public function get_entry_tags_by_id($entry_id, $options = array(), $cache = TRUE)
-    { 			
+    {
 		// --------------------------------------------
 		//  Prep Cache, Return if Set
 		// --------------------------------------------
@@ -351,7 +338,7 @@ class Tag_data extends Addon_builder_data_tag
 
 		$this->cached[$cache_name][$cache_hash] = array();
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	options
 		//--------------------------------------------
 
@@ -359,34 +346,34 @@ class Tag_data extends Addon_builder_data_tag
 			'tag_group_id'		=> 1,
 			'entry_type'		=> 'channel',
 		);
-		
+
 		$options = array_merge($defaults, $options);
-		
+
 		//lets just do this to prevent mistakes
 		unset($defaults);
-		
+
 		// --------------------------------------------
 		//  Perform the Actual Work
 		// --------------------------------------------
 
-		$sql = "SELECT 		te.entry_id, t.tag_name, t.tag_id 
+		$sql = "SELECT 		te.entry_id, t.tag_name, t.tag_id
 				FROM 		exp_tag_tags t
-			 	LEFT JOIN 	exp_tag_entries te 
+			 	LEFT JOIN 	exp_tag_entries te
 			 	ON 			t.tag_id 	= te.tag_id
 				WHERE		te.entry_id = " . ee()->db->escape_str($entry_id) . "
 				AND 		te.type 	= '" . ee()->db->escape_str($options['entry_type']) . "'";
-				
+
 		if ($options['tag_group_id'] !== '')
 		{
-			$sql .= " AND te.tag_group_id IN (" . 
-						str_replace('|', ',', ee()->db->escape_str($options['tag_group_id'])) . 
+			$sql .= " AND te.tag_group_id IN (" .
+						str_replace('|', ',', ee()->db->escape_str($options['tag_group_id'])) .
 					  ")";
-		}		
+		}
 
 		$sql .= "GROUP BY tag_id ORDER BY t.tag_name";
-		
+
 		$query = ee()->db->query($sql);
-		
+
 		if ($query->num_rows() > 0)
 		{
 			$this->cached[$cache_name][$cache_hash] = $query->result_array();
@@ -396,13 +383,13 @@ class Tag_data extends Addon_builder_data_tag
 		//  Return Data
 		// --------------------------------------------
 
-		return $this->cached[$cache_name][$cache_hash];	
+		return $this->cached[$cache_name][$cache_hash];
     }
     // END get_module_preferences()
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * get tag ids from a certain group
 	 *
@@ -411,9 +398,9 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	bool	use the cache?
 	 * @return	mixed	array if items found, false if none found in group
 	 */
-    
+
 	public function get_tag_ids_by_group_id($group_id = 0, $cache = TRUE)
-    { 	
+    {
 		// --------------------------------------------
 		//  Prep Cache, Return if Set
 		// --------------------------------------------
@@ -427,28 +414,28 @@ class Tag_data extends Addon_builder_data_tag
 		}
 
 		$this->cached[$cache_name][$cache_hash] = FALSE;
-		
+
 		$group_query = ee()->db->query(
 			"SELECT DISTINCT tag_id
 			 FROM 			 exp_tag_entries
 			 WHERE			 tag_group_id = " . ee()->db->escape_str($group_id) . "
-			 ORDER BY		 tag_id" 
+			 ORDER BY		 tag_id"
 		);
-		
+
 		if ($group_query->num_rows() > 0)
 		{
 			$this->cached[$cache_name][$cache_hash] = array_keys(
 				$this->prepare_keyed_result($group_query, 'tag_id')
 			);
 		}
-		
+
 		return $this->cached[$cache_name][$cache_hash];
 	}
 	//END get_tag_ids_by_group_id
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get the Preference for the Module for the Current Site
 	 *
@@ -456,74 +443,74 @@ class Tag_data extends Addon_builder_data_tag
 	 * @param	array	Array of Channel/Weblog IDs
 	 * @return	array
 	 */
-    
+
 	public function get_module_preferences()
-    { 		
+    {
  		// --------------------------------------------
         //  Prep Cache, Return if Set
         // --------------------------------------------
- 		
+
  		$cache_name = __FUNCTION__;
  		$cache_hash = $this->_imploder(func_get_args());
- 		
+
  		if (isset($this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')]))
  		{
  			return $this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')];
  		}
- 		
+
  		$this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')] = array();
- 		
+
  		// --------------------------------------------
         //  Perform the Actual Work
         // --------------------------------------------
-        
+
         $possible_params = array('where', 'order_by', 'limit');
-        
-        $query = ee()->db->query("SELECT * FROM exp_tag_preferences 
+
+        $query = ee()->db->query("SELECT * FROM exp_tag_preferences
         						  WHERE site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."'");
-        					 
+
         foreach($query->result_array() as $row)
         {
         	$this->cached[$cache_name][$cache_hash][$row['site_id']][$row['tag_preference_name']] = $row['tag_preference_value'];
         }
-       
+
  		// --------------------------------------------
         //  Return Data
         // --------------------------------------------
- 		
- 		return $this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')];	
+
+ 		return $this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')];
     }
 	// END get_module_preferences()
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * Get the ids of items that have names
 	 *
 	 * @access	public
-	 * @param	bool	use cache or no (helpful when making changes in the middle of a document)	
+	 * @param	bool	use cache or no (helpful when making changes in the middle of a document)
 	 * @return	array 	Array of Channel/Weblog IDs
 	 */
-    
+
 	public function get_tab_channel_ids( $use_cache = TRUE )
     {
  		// --------------------------------------------
         //  Prep Cache, Return if Set
         // --------------------------------------------
- 		
+
  		$cache_name = __FUNCTION__;
  		$cache_hash = $this->_imploder(func_get_args());
- 		
+
  		if ($use_cache AND isset($this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')]))
  		{
  			return $this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')];
  		}
 
 		$ids_with_names = array();
-		
+
 		$prefs = $this->get_module_preferences($use_cache);
-		
+
 		//just find the prefs that are tab name related
 		//we want an array of the channel ID numbers with the tab name as a value
 		foreach($prefs as $key => $value)
@@ -541,83 +528,83 @@ class Tag_data extends Addon_builder_data_tag
 		//cache result (if $use_cache is false, this will still write the unchache result to cache)
 		$this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')] = $ids_with_names;
 
- 		return $this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')];	
+ 		return $this->cached[$cache_name][$cache_hash][ee()->config->item('site_id')];
 	}
 	//END get_tab_channel_ids
-	
+
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * javascript autocomplete for tag field
 	 *
-	 * @access	public	
-	 * @return	string 	
+	 * @access	public
+	 * @return	string
 	 */
-    
+
 	public function tag_field_autocomplete_js()
     {
-		return '<script type="text/javascript" src="' . 
-					$this->sc->addon_theme_url . 
+		return '<script type="text/javascript" src="' .
+					$this->sc->addon_theme_url .
 					'js/jquery.tag_autocomplete.js"></script>';
 	}
 	//END tag_field_autocomplete_js
-		
+
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * javascript for tag field
 	 *
-	 * @access	public	
-	 * @return	string 	
+	 * @access	public
+	 * @return	string
 	 */
-    
+
 	public function tag_field_js()
     {
-		return '<script type="text/javascript" src="' . 
-					$this->sc->addon_theme_url . 
+		return '<script type="text/javascript" src="' .
+					$this->sc->addon_theme_url .
 					'js/tag.js"></script>';
 	}
 	//END tag_field_js
-	
+
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * css for tag field
 	 *
-	 * @access	public	
-	 * @return	string 	
+	 * @access	public
+	 * @return	string
 	 */
-    
+
 	public function tag_field_css()
     {
-		return '<link rel="stylesheet" type="text/css" ' . 
-						'media="screen" charset="utf-8" href="' . 
-						$this->sc->addon_theme_url . 
+		return '<link rel="stylesheet" type="text/css" ' .
+						'media="screen" charset="utf-8" href="' .
+						$this->sc->addon_theme_url .
 						'css/tag.css" />';
 	}
 	//END tag_field_css
-	
+
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * css for tag field
 	 *
-	 * @access	public	
-	 * @return	string 	
+	 * @access	public
+	 * @return	string
 	 */
-    
+
 	public function tag_front_css()
     {
-		return '<link rel="stylesheet" type="text/css" ' . 
-						'media="screen" charset="utf-8" href="' . 
-						$this->sc->addon_theme_url . 
+		return '<link rel="stylesheet" type="text/css" ' .
+						'media="screen" charset="utf-8" href="' .
+						$this->sc->addon_theme_url .
 						'css/front_base.css" />';
 	}
 	//END tag_front_css
-	
+
 }
 // END CLASS Tag_data

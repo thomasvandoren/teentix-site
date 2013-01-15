@@ -1,23 +1,23 @@
 ;(function($, global){
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	vars and settings
 	//--------------------------------------------
-	
+
 	var ssData = global.solspaceTag	= global.solspaceTag || {};
-	
+
 	global.solspaceTag.domReadyFired = false;
 
 	var settings = {
 		//static because this is for the hidden field
-		'taSeparator' : "\n" 
+		'taSeparator' : "\n"
 	}
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	ghetto templates. No plugins required
 	//	the array joining just makes reading them easier
 	//--------------------------------------------
-	
+
 	var views = {};
 
 	views.currentTag = [
@@ -28,7 +28,7 @@
 			'<\/span>',
 		'<\/div>'
 	].join('\n');
-	
+
 	views.suggestTag = [
 		'<div class="suggest_tag white_grad" data-tag="{tagName}">',
 			'<span class="plus"><\/span>',
@@ -37,7 +37,7 @@
 			'<\/span>',
 		'<\/div>'
 	].join('\n');
-	
+
 	//parses out brackets from view files a bit like EE
 	/*
 		use like:
@@ -62,44 +62,48 @@
 		return template;
 	}
 	//END view
-	
-	
-	//--------------------------------------------  
+
+
+	//--------------------------------------------
 	//	stringy stringy cleany cleany
 	//--------------------------------------------
-	
+
 	function cleanString(str)
 	{
 		str = $.trim(
 			//strip HTML
-			str.replace(/(<([^>]+)>)/ig,''). 
+			str.replace(/(<([^>]+)>)/ig,'').
 			//strip EE tags
-			replace(/(\{([^\}]+)\})/ig,''). 
+			replace(/(\{([^\}]+)\})/ig,'').
 			//protect apostrophes inside words
-			replace(/(\w)\'(\w)/ig,'$1__PROTECTED_APOSTROPHE__$2'). 
+			replace(/(\w)\'(\w)/ig,'$1__PROTECTED_APOSTROPHE__$2').
 			//keep ampersands between two words
-			replace(/(\w\s)\&(\s\w)/ig,'$1__PROTECTED_AMPERSAND__$2'). 
+			replace(/(\w\s)\&(\s\w)/ig,'$1__PROTECTED_AMPERSAND__$2').
 			// strip punctuation
-			replace(/([^\u3400-\u4db5\u4e00-\u9fa5\uf900-\ufa6a\u3041-\u3094\u30a1-\u30fa\w\d\s]+)/ig, '').
+			replace(/['";:,.\/\?\\-]/g, '').
+			//old strip punctuation was a whitelist which incorrectly
+			//removed utf-8 chars out of this range. Blacklist is better
+			//here.
+			//replace(/([^\u3400-\u4db5\u4e00-\u9fa5\uf900-\ufa6a\u3041-\u3094\u30a1-\u30fa\w\d\s]+)/ig, '').
 			// unprotect ampersands and apostrophes
-			replace('__PROTECTED_APOSTROPHE__', "'").replace('__PROTECTED_AMPERSAND__', "&") 
+			replace('__PROTECTED_APOSTROPHE__', "'").replace('__PROTECTED_AMPERSAND__', "&")
 		);
-	
+
 		return str.match(/^ *$/) ? '' : str.split(/\s+/g).join('||');
 	}
 	//END cleanString
-	
-	
-	//--------------------------------------------  
+
+
+	//--------------------------------------------
 	//	gets all field's data for parsing suggestions
 	//--------------------------------------------
-	
+
 	function getFieldData(fieldID)
 	{
 		var str 		= [],
 			value		= '',
 			extraFields = ssData['suggestFields'][fieldID];
-	
+
 		if (extraFields.length > 0)
 		{
 			$.each(extraFields, function(i, item){
@@ -110,117 +114,117 @@
 				});
 			});
 		}
-	
+
 		$('textarea[name^=field_id]').each(function(i)
 		{
 			value = $.trim(this.value);
 			if (value != '') str.push(cleanString(value));
 		});
-	
+
 		$('input[name^=field_id]').each(function(i)
 		{
 			value = $.trim(this.value);
 			if ($.trim(value) != '') str.push(cleanString(value));
 		});
-		
+
 		//wygwam support
 		$('[id^="cke_contents_"] iframe').each(function(i)
 		{
 			value = $.trim($(this).contents().find('body').html());
 			if (value != '') str.push(cleanString(value));
 		})
-	
+
 		return str.join('||');
 	}
 	//END getFieldData
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	prevent default shortcut
 	//	abstracted in case we need to add more
 	//--------------------------------------------
-	
+
 	function preventDefault(event)
 	{
 		event.preventDefault();
 		return false;
 	}
-		
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	add tag
 	//--------------------------------------------
-	
+
 	function addTag(fieldID, tagName, callback)
 	{
 		var currentTags	= ssData['currentTags'][fieldID],
 			domCache	= ssData['dom'][fieldID],
-			tagLimit	= ssData.tagLimit;	
-			
+			tagLimit	= ssData.tagLimit;
+
 		if (tagName === '' || (tagLimit != 0 && currentTags.length >= tagLimit))
 		{
 			return;
-		}	
-		
+		}
+
 		tagName = changeQuotes(tagName, 'real');
-		
+
 		//is it actually there?
 		if ($.inArray(tagName, currentTags) == -1)
 		{
 			currentTags.push(tagName);
-			
-			//add tag to items div  
+
+			//add tag to items div
 			domCache['current_tags'].
 				prepend(view(views.currentTag, {'tagName' : changeQuotes(tagName, 'entities')}));
-			
+
 			//fix field
 			domCache['hidden_input'].val(currentTags.join(settings.taSeparator));
-						
+
 			//hide ac window in case we didn't chose what it asked for
 			$('.tag_ac_results').hide();
 
 			//webkit has render problems with the tags
 			if ($.browser.webkit)
 			{
-				$('.current_tag[data-tag="' + tagName.replace(/"/mg, '\\"') + '"]', 
+				$('.current_tag[data-tag="' + tagName.replace(/"/mg, '\\"') + '"]',
 					domCache['current_tags']).css('webkitTransform', 'scale(1)');
 			}
 		}
-		
+
 		//did top tags change?
 		checkTopTags(fieldID);
-		
+
 		//did we hit our limit?
 		checkTagLimit(fieldID);
-		
+
 		//stupid IE7
 		// fixIE7Widths(fieldID);
-		
+
 		//was this a suggested tag?
 		//remove any suggested tags with the same name
 		$('.suggest_tag[data-tag="' + tagName.replace(/"/mg, '\\"') + '"]', domCache['suggest_tags']).remove();
-		
+
 		if (typeof callback == 'function')
 		{
 			callback();
 		}
 	}
-	
+
 	// -------------------------------------
 	//	changes &quot; to '"' and back
 	// -------------------------------------
 
 	function changeQuotes(tagName, convertTo)
-	{		
+	{
 		return (
-			(convertTo == 'real') ? 
-				tagName.replace(/\&quot\;/mg, '"').replace(/\&\#039\;/mg, "'") : 
+			(convertTo == 'real') ?
+				tagName.replace(/\&quot\;/mg, '"').replace(/\&\#039\;/mg, "'") :
 				tagName.replace(/"/mg, '&quot;').replace(/'/mg, '&#039;')
 		);
 	}
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	remove tag
 	//--------------------------------------------
-	
+
 	function removeTag(fieldID, tagName)
 	{
 		var currentTags	= ssData['currentTags'][fieldID],
@@ -228,7 +232,7 @@
 			tagName 	= changeQuotes(tagName, 'real'),
 			//is it there?
 			position 	= $.inArray(tagName, currentTags);
-		
+
 		if (position > -1)
 		{
 			//remove tag
@@ -236,44 +240,44 @@
 
 			domCache['hidden_input'].val(currentTags.join(settings.taSeparator));
 		}
-		
+
 		//did top tags change?
 		checkTopTags(fieldID);
-		
+
 		//did we hit our limit?
 		checkTagLimit(fieldID);
 	}
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	suggest tags
 	//--------------------------------------------
-	
+
 	function suggestTags(fieldID, xid, callback)
 	{
 		var currentTags	= ssData['currentTags'][fieldID],
 			domCache	= ssData['dom'][fieldID];
-		
+
 		//clear (makes sure that eventlisteners are removed in IE)
 		domCache['suggest_tags_holder'].
 				find('.suggest_tag').remove().
 			end().
 			append(views.loading);
-		
+
 		$.post(
 			ssData.suggestTagsURL[fieldID],
 			{
-				XID 		: xid, 
-				str			: getFieldData(fieldID), 
+				XID 		: xid,
+				str			: getFieldData(fieldID),
 				existing	: currentTags.join('||'),
 				return_type	: 'json'
 			},
-			function(data) 
-			{					
+			function(data)
+			{
 				if (data.suggestions.length > 0)
-				{				
+				{
 					addSuggestedTags(fieldID, data.suggestions);
 				}
-				
+
 				if (typeof callback == 'function')
 				{
 					callback();
@@ -282,46 +286,46 @@
 			'json'
 		);
 	}
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	insert suggested tags into view
 	//--------------------------------------------
-	
+
 	function addSuggestedTags(fieldID, tags)
 	{
 		var currentTags	= ssData['currentTags'][fieldID],
 			domCache	= ssData['dom'][fieldID];
-						
+
 		$.each(tags, function(i, tag){
-			//add tag to items div  
+			//add tag to items div
 			$(view(views.suggestTag, {'tagName' : changeQuotes(tag, 'entities') })).
 				insertAfter(domCache['refresh_suggest']);
 		});
 	}
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	top tags check
 	//--------------------------------------------
-	
+
 	function checkTopTags(fieldID)
 	{
 		var currentTags		= ssData['currentTags'][fieldID],
 			topTags			= ssData['topTags'][fieldID],
 			domCache		= ssData['dom'][fieldID],
-			$top_tags		= domCache['top_tags'];	
+			$top_tags		= domCache['top_tags'];
 
 		//if any of our top tags are in current tags
-		//'disable' enable if not	
+		//'disable' enable if not
 		$.each(topTags, function(i, tag){
 
 			//ok, this is batty, but here you have to replace the quotes
 			//with slashed ones because when '&quot;' is in a javascript
 			//string, its the literall letters, but when its in html
-			//javascript sees it as '"', so using '&quot;' here wont work :/ 		
+			//javascript sees it as '"', so using '&quot;' here wont work :/
 			var $tag = $('.top_tag[data-tag=\"' + tag.replace(/"/mg, '\\"') + '\"]', $top_tags);
 
 			if ($.inArray(tag, currentTags) > -1)
-			{				
+			{
 				$tag.addClass('used').
 					find('.plus').hide();
 			}
@@ -332,29 +336,29 @@
 			}
 		});
 	}
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	get hight of a hidden element
 	//--------------------------------------------
-	
+
 	function getJQHeight($element)
 	{
 		var height, position, cssHeight;
-		
+
 		if ($element.css('display') == "none")
 		{
 			position 	= $element.css('position');
 			cssHeight 	= $element.css('height');
-			
+
 			$element.css({
 				//'position'	:'absolute',
 				'visibility':'hidden',
 			    'display'	:'block',
 				'height'	: ''
 			});
-			
+
 			height = $element.height();
-			
+
 			$element.css({
 				//'position'	:position,
 				'visibility':'visible',
@@ -366,21 +370,21 @@
 		{
 			height = $element.height();
 		}
-		
+
 		return height;
 	}
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	errors
 	//--------------------------------------------
-	
+
 	function checkTagLimit(fieldID)
-	{		
+	{
 		var domCache			= ssData['dom'][fieldID],
 			currentTags			= ssData['currentTags'][fieldID],
 			tagLimit			= ssData.tagLimit,
 			langLimitReached 	= ssData.langItems.tag_limit_reached.replace('%num%', tagLimit);
-		
+
 		if (tagLimit != 0 && currentTags.length >= tagLimit)
 		{
 			domCache['tag_input'].attr('disabled', 'disabled');
@@ -392,10 +396,10 @@
 			domCache['error_dialog'].hide();
 		}
 	}
-		
+
 	function setFieldEvents ($parent)
 	{
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	yes i am breaking convention with underscores
 		//	but this lets us know these are elements
 		//	and not data
@@ -407,7 +411,7 @@
 			$new_tags_section_name	= $('div.solspace_tag_new_tags .tag_section_name', $parent),
 			$new_tags_section_data	= $('div.solspace_tag_new_tags .tag_section_data', $parent),
 			$suggest_tags 			= $('div.solspace_tag_suggest_tags', $parent),
-			$suggest_tags_holder	= $('div.tag_section_data', $suggest_tags),				
+			$suggest_tags_holder	= $('div.tag_section_data', $suggest_tags),
 			$top_tags 				= $('div.solspace_tag_top_tags', $parent),
 			$tag_input				= $("input[name='tag_input']", $parent),
 			$refresh_suggest		= $('div.refresh_suggest_tags', $parent),
@@ -421,12 +425,12 @@
 			currentTags				= ssData['currentTags'][fieldID],
 			topTags					= ssData['topTags'][fieldID],
 			allOpen					= ssData['allOpen'][fieldID],
-			
+
 			//have to show these to get the heights properly
 			//hidden later
 			suggest_tags_height		= $suggest_tags.show().height(),
 			top_tags_height			= $top_tags.show().height();
-	
+
 		// -------------------------------------
 		//	convert top and current quotes
 		// -------------------------------------
@@ -434,7 +438,7 @@
 		// 	just one way or the other in here
 		// 	or in PHP, but for now, this fixes
 		// -------------------------------------
-			
+
 		$.each(currentTags, function(i, item){
 			currentTags[i] = changeQuotes(currentTags[i], 'real');
 		});
@@ -443,10 +447,10 @@
 			topTags[i] = changeQuotes(topTags[i], 'real');
 		});
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	helper caches for universal functions
-		//--------------------------------------------	
-		
+		//--------------------------------------------
+
 		ssData['dom'][fieldID] = {
 			'parent'				: $parent,
 			'current_tags' 			: $current_tags,
@@ -457,15 +461,15 @@
 			'refresh_suggest'		: $refresh_suggest,
 			'error_dialog'			: $error_dialog,
 			'hidden_input' 			: $('#solspace_tag_ta_' + fieldID, $parent)
-		};						
-		
-		//--------------------------------------------  
+		};
+
+		//--------------------------------------------
 		//	need to set these to 0 because we needed
 		//	thier heights for smooth animation
 		// 	also if the all open pref is here, we need
 		//	open it up by default
 		//--------------------------------------------
-		
+
 		if (allOpen !== "yes")
 		{
 			$suggest_tags.hide();//.css({ 'height' : 0 });
@@ -477,26 +481,26 @@
 			$top_tags_button.hide();
 			$new_tags_section_name.show();
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	set top tags styles if used
 		//--------------------------------------------
-		
+
 		checkTopTags(fieldID);
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	check tag limit coming in
 		//--------------------------------------------
-		
+
 		checkTagLimit(fieldID);
-		
-		
-		//--------------------------------------------  
+
+
+		//--------------------------------------------
 		//	close buttons for optional sections
 		//--------------------------------------------
-		
+
 		$('.tag_section_closer', $suggest_tags).click(function(){
-			
+
 			$suggest_tags.hide('fast', function(){
 				if ($suggest_tags.css('display') == 'none' && $top_tags.css('display') == 'none')
 				{
@@ -505,12 +509,12 @@
 					});
 				}
 			});
-			
+
 			$suggest_tags_button.show().fadeIn('fast');
 		});
-		
+
 		$('.tag_section_closer', $top_tags).click(function(){
-							
+
 			$top_tags.hide('fast', function(){
 				if ($suggest_tags.css('display') == 'none' && $top_tags.css('display') == 'none')
 				{
@@ -519,62 +523,62 @@
 					});
 				}
 			});
-			
+
 			$top_tags_button.show().fadeIn('fast');
 		});
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	suggest opener
 		//--------------------------------------------
 
-		$suggest_tags_button.click(function(e){				
+		$suggest_tags_button.click(function(e){
 			$new_tags_section_data.removeClass('all_closed');
-			
+
 			//sets it hidden height for smooth animation
-			$suggest_tags.css('height', getJQHeight($suggest_tags));							
-			
+			$suggest_tags.css('height', getJQHeight($suggest_tags));
+
 			$suggest_tags.slideDown('fast', function(){
 				//blank the height for dynamic expansion
 				$suggest_tags.css('height', '');
 			});
-			
+
 			$new_tags_section_name.show('fast', function(){
 				$suggest_tags_button.fadeOut('fast', function() {
 				    $suggest_tags_button.hide();
 				});
 			});
-							
-			suggestTags(fieldID, xid);				
+
+			suggestTags(fieldID, xid);
 
 			return preventDefault(e);
 		});
-		
-		
-		//--------------------------------------------  
+
+
+		//--------------------------------------------
 		//	top tags opener
 		//--------------------------------------------
-		
-		$top_tags_button.click(function(e){	
+
+		$top_tags_button.click(function(e){
 			$new_tags_section_data.removeClass('all_closed');
-			
+
 			//sets it hidden height for smooth animation
-			$suggest_tags.css('height', getJQHeight($top_tags));			
-			
+			$suggest_tags.css('height', getJQHeight($top_tags));
+
 			$top_tags.slideDown('fast', function(){
 				//blank the height for dynamic expansion
 				$suggest_tags.css('height', '');
 			});
-			
+
 			$new_tags_section_name.show('fast', function(){
 				$top_tags_button.fadeOut('fast', function() {
 				    $top_tags_button.hide();
 				});
-			});				
+			});
 
 			return preventDefault(e);
 		});
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	suggest tags
 		//--------------------------------------------
 
@@ -584,27 +588,27 @@
 				find('.refresh').hide().
 			end().
 				find('.loading').show();
-			
+
 			suggestTags(fieldID, xid, function(){
 				//resets
 				$refresh_suggest.
 					find('.loading').hide().
 				end().
 					find('.refresh').show();
-			}); 
+			});
 
 			return preventDefault(e);
 		});
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	autocomplete
 		//--------------------------------------------
-								
+
 		var useResult = false;
-		
+
 		if (typeof $.fn.tag_autocomplete !== 'undefined')
 		{
-			$tag_input.tag_autocomplete(ssData.autocompleteURL,	{		
+			$tag_input.tag_autocomplete(ssData.autocompleteURL[fieldID],	{
 				multiple			: false,
 				mustMatch			: false,
 				autoFill			: false,
@@ -612,14 +616,14 @@
 				selectFirst			: false,
 				delay				: 300,
 				multipleSeparator	: '||',
-				extraParams			: { 
+				extraParams			: {
 					XID			: ssData.secureFormHash,
-					current_tags: function() { 
-						return currentTags.join('||'); 
-					} 
+					current_tags: function() {
+						return currentTags.join('||');
+					}
 				}
-			}).tag_result(function(that, tagName){				
-			
+			}).tag_result(function(that, tagName){
+
 				//this likes to return array results? :|
 				if ($.isArray(tagName))
 				{
@@ -634,10 +638,10 @@
 
 				//prevent normal from running
 				useResult = true;
-			}).keydown(function(e){ 
+			}).keydown(function(e){
 
 				//did someone click enter?
-				if (e.which == 13)	
+				if (e.which == 13)
 				{
 					//this has to be done here or we lose it :/
 					var $that 		= $(this),
@@ -652,7 +656,7 @@
 						}
 						//we are adding normally
 						else if (tagName !== '')
-						{			
+						{
 							//fieldID is named earlier in this $.ready statement
 							addTag(fieldID, tagName);
 
@@ -666,49 +670,49 @@
 				}
 			});//END $tag_input.tag_autocomplete
 		}
-					
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	remove tag (live for new additions)
 		//--------------------------------------------
-		
+
 		$('.current_tag .ex', $parent).live('click', function(e){
 			var $that 		= $(this),
 				$thatParent	= $that.parent(),
 				tagName 	= $thatParent.attr('data-tag');
-			
+
 			//fieldID is named earlier in this $.ready statement
 			removeTag(fieldID, tagName);
-			
+
 			$thatParent.remove();
-			
+
 			return preventDefault(e);
 		});
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	add suggestions (live for new additions)
 		//--------------------------------------------
-		
+
 		$('.suggest_tag', $parent).live('click', function(e){
 			var $that 		= $(this),
 				tagName 	= $that.attr('data-tag');
-			
+
 			//fieldID is named earlier in this $.ready statement
 			addTag(fieldID, tagName);
-			
+
 			//done automatically in addTag
 			//$thatParent.remove();
-			
+
 			return preventDefault(e);
 		});
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	add top tag
 		//--------------------------------------------
-		
+
 		$('.top_tag', $parent).click(function(e){
 			var $that 		= $(this),
 				tagName 	= $that.attr('data-tag');
-			
+
 			//fieldID is named earlier in this $.ready statement
 			addTag(fieldID, tagName, function(){
 				//hide plus
@@ -717,7 +721,7 @@
 				//this is now used
 				$that.addClass('used');
 			});
-											
+
 			return preventDefault(e);
 		});
 	}
@@ -725,17 +729,17 @@
 
 	global.solspaceTag.setFieldEvents = setFieldEvents;
 
-	//--------------------------------------------  
+	//--------------------------------------------
 	//	this will function for all field instances
 	//--------------------------------------------
-	
+
 	$(function(){
 		//this has to wait for document ready
 		//so all can be filled before linking
 		ssData 				= global.solspaceTag;
 		ssData['dom'] 		= {};
 		ssData['localIDs']	= {};
-		
+
 		global.solspaceTag.domReadyFired = true;
 
 		//if the tag tab needs to be renamed
@@ -743,12 +747,12 @@
 		{
 			$("#menu_tag a").html(ssData.tabName);
 		}
-		
-		//get each field instance	
+
+		//get each field instance
 		$('div.solspace_tag_group').each(function(){
 			setFieldEvents($(this));
-		});		
-		
+		});
+
 	});	//END document ready
-	
+
 }(jQuery, window));

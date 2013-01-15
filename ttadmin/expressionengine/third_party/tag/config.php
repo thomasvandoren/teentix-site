@@ -1,24 +1,17 @@
 <?php if ( ! defined('EXT')) exit('No direct script access allowed');
 
- /**
- * Solspace - Tag
- *
- * @package		Solspace:Tag
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2012, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/Tag/
- * @version		4.1.1
- * @filesource 	./system/expressionengine/third_party/tag/
- */
-
- /**
+/**
  * Tag - Config
  *
- * NSM Addon Updater Config File
+ * NSM Addon Updater config file.
  *
- * @package 	Solspace:Tag
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/tag/config.php
+ * @package		Solspace:Tag
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/tag
+ * @license		http://www.solspace.com/license_agreement
+ * @version		4.2.1
+ * @filesource	tag/config.php
  */
 
 //since we are 1.x/2.x compatible, we only want this to run in 1.x just in case

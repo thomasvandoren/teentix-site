@@ -1,22 +1,15 @@
 <?php if ( ! defined('EXT') ) exit('No direct script access allowed');
 
- /**
- * Solspace - Tag
- *
- * @package		Solspace:Tag
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2012, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/Tag/
- * @version		4.1.1
- * @filesource 	./system/expressionengine/third_party/tag/
- */
- 
- /**
+/**
  * Tag - Actions
  *
- * @package 	Solspace:Tag
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/tag/act.tag.php
+ * @package		Solspace:Tag
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/tag
+ * @license		http://www.solspace.com/license_agreement
+ * @version		4.2.1
+ * @filesource	tag/act.tag.php
  */
 
 require_once 'addon_builder/addon_builder.php';
@@ -70,7 +63,7 @@ class Tag_actions extends Addon_builder_tag {
 				'class' 	=> $this->class_name, 
 				'method' 	=> $method_name
 			)
-		)->get('actions')->row('action_id'); 
+		)->get('actions')->row('action_id');
 
 		return ee()->functions->fetch_site_index(0, 0) . QUERY_MARKER . 'ACT=' . $action_id;
 	}
@@ -552,6 +545,16 @@ class Tag_actions extends Addon_builder_tag {
 		$sql = "SELECT 	" . implode(", ", $fields) . "
 			    FROM 	exp_tag_tags 
 			    WHERE 	site_id = {$this->clean_site_id} ";
+
+		if (ee()->input->get_post('tag_group_id') AND 
+			is_numeric(ee()->input->get_post('tag_group_id')))
+		{		
+			$sql .= " AND tag_id IN (
+					  	SELECT DISTINCT tag_id
+			 			FROM	exp_tag_entries
+			 			WHERE	tag_group_id = " . ee()->db->escape_str(
+							ee()->input->get_post('tag_group_id')) . ")";
+		}
 			    
 		if (sizeof($existing) > 0)
 		{

@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Tag - Language
+ *
+ * @package		Solspace:Tag
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/tag
+ * @license		http://www.solspace.com/license_agreement
+ * @version		4.2.0
+ * @filesource	tag/language/english/lang.tag.php
+ */
+
 $lang = $L = array(
 
 //----------------------------------------
@@ -492,10 +504,10 @@ an Administrator to control the tags allowed for entires.",
 "tag_harvest_field_subtext" =>
 "If you wish to use the Tag Harvest Tool at any point: any text values in this custom field will be converted into proper Tag module tags upon submission of the Harvest Tool. This respects the Tag Separator preference.",
 
-"preferences_for_site" => 
+"preferences_for_site" =>
 "Preferences For Site",
 
-"preferences_for_" => 
+"preferences_for_" =>
 "Preferences For",
 
 "publish_tab_label" =>
@@ -513,7 +525,7 @@ an Administrator to control the tags allowed for entires.",
 'choose_custom_field' =>
 "Choose Custom Field",
 
-//--------------------------------------------  
+//--------------------------------------------
 //	tag groups
 //--------------------------------------------
 
@@ -523,7 +535,7 @@ an Administrator to control the tags allowed for entires.",
 'view_tags_in_all_groups' =>
 "View Tags In All Groups",
 
-'undefined_tag_group' => 
+'undefined_tag_group' =>
 "Undefined Tag Group",
 
 'tag_groups' =>
@@ -629,10 +641,10 @@ an Administrator to control the tags allowed for entires.",
 "Tag Groups that are currently being used in custom fields are locked until that field is removed from its group.",
 
 'suggest_from' =>
-"Suggest and Top Tags from",
+"Autocomplete, Suggest and Top Tags from",
 
 'suggest_from_subtext' =>
-"Normally, Tag custom fields will only suggest and show top tags from its own group. You can use this setting to suggest and show top tags from all Tag groups.",
+"Normally, Tag custom fields will only display autocomplete results, as well as suggest and show top tags from its own group. You can use this setting to display autocomplete results, as well as suggest and show top tags from all Tag groups.",
 
 'this_group' =>
 "This Group",
@@ -640,10 +652,10 @@ an Administrator to control the tags allowed for entires.",
 'all_groups' =>
 "All Groups",
 
-'top_tag_limit' => 
+'top_tag_limit' =>
 "Top Tags Limit",
 
-'top_tag_limit_subtext' => 
+'top_tag_limit_subtext' =>
 "Limit the amount of Top Tags shown.",
 
 //----------------------------------------
@@ -657,8 +669,8 @@ an Administrator to control the tags allowed for entires.",
 "Harvest tags from pre-existing fields.",
 
 "tag_harvest_instructions" =>
-"You can harvest data from your site either by mapping categories into tags or by turning the 
-contents of a custom weblog field into Tags. In either case, entries will be assigned to the Tags 
+"You can harvest data from your site either by mapping categories into tags or by turning the
+contents of a custom weblog field into Tags. In either case, entries will be assigned to the Tags
 harvested as appropriate.",
 
 "categories" =>
@@ -876,7 +888,7 @@ Only necessary if you previously used the Tag module's Publish tab.",
 "There was a tag parsing error.",
 
 'tag_module_disabled' =>
-"The Tag module is currently disabled.  Please insure it is installed and up to date by going 
+"The Tag module is currently disabled.  Please insure it is installed and up to date by going
 to the module's control panel in the ExpressionEngine Control Panel",
 
 'disable_module_to_disable_extension' =>
@@ -900,9 +912,6 @@ to the module's control panel in the ExpressionEngine Control Panel",
 
 'update_successful' =>
 "Update Successful!",
-
-'user_update_message' =>
-"You have recently uploaded a new version of User, please click here to run the update script.",
 
 "upgrade_message" =>
 "It looks like you have installed a new version of Tag. We recommend that you run the upgrade script",

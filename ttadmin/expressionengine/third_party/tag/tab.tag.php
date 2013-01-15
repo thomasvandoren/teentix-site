@@ -1,24 +1,17 @@
 <?php if ( ! defined('EXT') ) exit('No direct script access allowed');
- 
- /**
- * Solspace - Tag
+
+/**
+ * Tag - Publish Tab
+ *
+ * Handles the adding of Tabs to the Publish Page (legacy).
  *
  * @package		Solspace:Tag
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2012, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/Tag/
- * @version		4.1.1
- * @filesource 	./system/expressionengine/third_party/tag/
- */
- 
- /**
- * Tag Module Class - Tabs!
- *
- * Handles the adding of Tabs to the Publish Page in EE 2.x
- *
- * @package 	Solspace:Tag
- * @author		Solspace Dev Team
- * @filesource 	./system/expressionengine/third_party/tag/tab.tag.php
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/tag
+ * @license		http://www.solspace.com/license_agreement
+ * @version		4.2.1
+ * @filesource	tag/tab.tag.php
  */
 
 require_once 'addon_builder/module_builder.php';

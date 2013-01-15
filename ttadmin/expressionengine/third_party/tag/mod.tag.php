@@ -1,26 +1,17 @@
 <?php if ( ! defined('EXT') ) exit('No direct script access allowed');
- 
- /**
- * Solspace - Tag
+
+/**
+ * Tag - User Side
  *
  * @package		Solspace:Tag
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2012, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/Tag/
- * @version		4.1.1
- * @filesource 	./system/expressionengine/third_party/tag/
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/tag
+ * @license		http://www.solspace.com/license_agreement
+ * @version		4.2.1
+ * @filesource	tag/mod.tag.php
  */
- 
- /**
- * Tag Module Class - User Side
- *
- * The Control Panel master class that handles all of the CP Requests and Displaying
- *
- * @package 	Solspace:Tag
- * @author		Solspace Dev Team
- * @filesource 	./system/expressionengine/third_party/tag/mod.tag.php
- */
- 
+
 require_once 'addon_builder/module_builder.php';
 
 class Tag extends Module_builder_tag
@@ -46,20 +37,20 @@ class Tag extends Module_builder_tag
 	public $type					= 'channel';
 	//field type business
 	public $from_ft					= FALSE;
-	public $tag_group_id			= 1;       
-                        	
+	public $tag_group_id			= 1;
+
 	public $separator_override		= NULL;
 	public $field_id				= 'default';
 
 	public $existing				= array();
 	public $new						= array();
 	public $bad						= FALSE;
-	
+
 	// Pagination variables
-    public $paginate				= FALSE;
-    public $pagination_links		= '';
-    public $page_next				= '';
-    public $page_previous			= '';
+	public $paginate				= FALSE;
+	public $pagination_links		= '';
+	public $page_next				= '';
+	public $page_previous			= '';
 	public $current_page			= 1;
 	public $total_pages				= 1;
 	public $total_rows				=  0;
@@ -69,34 +60,34 @@ class Tag extends Module_builder_tag
 	public $uristr					= '';
 
 
-    /**
-     * contructor
-     *
- 	 * @access	public
+	/**
+	 * contructor
+	 *
+	 * @access	public
 	 * @param	int/string 	channel_id
 	 * @param	int/string 	entry_id
-	 * @param	string 	 	string of tags		
+	 * @param	string 	 	string of tags
 	 * @return  object 	 	instance of itself of course
-     */
+	 */
 
 	public function __construct( $channel_id = '', $entry_id = '', $str = '' )
-	{	
+	{
 		parent::__construct('tag');
-		
+
 		// -------------------------------------
 		//  Module Installed and Up to Date? Extensions enabled?
 		// -------------------------------------
-		
-		if ($this->database_version() == FALSE OR 
-			$this->version_compare($this->database_version(), '<', TAG_VERSION) OR 
+
+		if ($this->database_version() == FALSE OR
+			$this->version_compare($this->database_version(), '<', TAG_VERSION) OR
 			! $this->extensions_enabled())
 		{
 			$this->disabled = TRUE;
-			
+
 			trigger_error(ee()->lang->line('tag_module_disabled'), E_USER_NOTICE);
 		}
-		
-		
+
+
 		$this->type = 'channel';
 
 		//	----------------------------------------
@@ -119,7 +110,7 @@ class Tag extends Module_builder_tag
 			if ( ! isset($this->cache['preferences'][ee()->config->item('site_id')]))
 			{
 				$this->cache['preferences'][ee()->config->item('site_id')] = array();
-				
+
 				foreach($this->data->get_module_preferences() as $name => $value)
 				{
 					$this->{$name} = $value;
@@ -132,17 +123,17 @@ class Tag extends Module_builder_tag
 		$this->site_id				= ee()->config->item('site_id');
 		$this->str					= $str;
 
-		if (ee()->config->item("use_category_name") == 'y' AND 
+		if (ee()->config->item("use_category_name") == 'y' AND
 			ee()->config->item("reserved_category_word") != '')
 		{
 			$this->use_category_names	= ee()->config->item("use_category_name");
 			$this->reserved_cat_segment	= ee()->config->item("reserved_category_word");
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	websafe seperator if any
 		//--------------------------------------------
-		
+
 		$this->websafe_separator	= '+';
 
 		if ( isset(ee()->TMPL) 	  	AND
@@ -151,15 +142,15 @@ class Tag extends Module_builder_tag
 		{
 			$this->websafe_separator	= ee()->TMPL->fetch_param('websafe_separator');
 		}
-		
+
 	}
 	//	END constructor
-	
+
 	// --------------------------------------------------------------------
 
 	/**
 	 *	Sync Tag Fields
-	 *	
+	 *
 	 *	Takes the entry id and insures that the tag custom field is filled in with all
 	 *	of the tags for that entry
 	 *
@@ -169,9 +160,6 @@ class Tag extends Module_builder_tag
 
 	public function sync_tag_fields()
 	{
-		// ACTION! OF DEATH!!
-		if (REQ != 'ACTION') return;
-
 		// -------------------------------------
 		//	have we these tag IDs three?
 		// -------------------------------------
@@ -184,37 +172,7 @@ class Tag extends Module_builder_tag
 			if ($this->is_ajax_request())
 			{
 				return $this->send_ajax_response(array(
-					'success' 	=> 'failure', 
-					'ids' 		=> $entry_id,
-					'message'	=> ee()->lang->line('wrong_value')
-				));
-			}
-			else
-			{
-				return ee()->lang->line('wrong_value');
-			}
-		}
-		
-		// --------------------------------------------
-        //  Find Channel ID, Field ID, and Tag Group ID
-        // --------------------------------------------
-		
-		$query = ee()->db->query("	SELECT ct.channel_id, cf.field_id, cf.field_settings
-									FROM	exp_channels AS c, 
-											exp_channel_titles AS ct,
-											exp_channel_fields AS cf
-									WHERE 	ct.entry_id = '".ee()->db->escape_str($entry_id)."'
-									AND		ct.channel_id = c.channel_id
-									AND		c.field_group = cf.group_id
-									AND		cf.field_type = 'tag'");
-									
-		if ($query->num_rows() == 0)
-		{
-			//this will be called most by ajax probably
-			if ($this->is_ajax_request())
-			{
-				return $this->send_ajax_response(array(
-					'success' 	=> 'failure', 
+					'success' 	=> 'failure',
 					'ids' 		=> $entry_id,
 					'message'	=> ee()->lang->line('wrong_value')
 				));
@@ -226,24 +184,54 @@ class Tag extends Module_builder_tag
 		}
 
 		// --------------------------------------------
-        //  Variables
-        // --------------------------------------------
-        
-        foreach($query->result_array() AS $row)
-        {
+		//  Find Channel ID, Field ID, and Tag Group ID
+		// --------------------------------------------
+
+		$query = ee()->db->query("	SELECT ct.channel_id, cf.field_id, cf.field_settings
+									FROM	exp_channels AS c,
+											exp_channel_titles AS ct,
+											exp_channel_fields AS cf
+									WHERE 	ct.entry_id = '".ee()->db->escape_str($entry_id)."'
+									AND		ct.channel_id = c.channel_id
+									AND		c.field_group = cf.group_id
+									AND		cf.field_type = 'tag'");
+
+		if ($query->num_rows() == 0)
+		{
+			//this will be called most by ajax probably
+			if ($this->is_ajax_request())
+			{
+				return $this->send_ajax_response(array(
+					'success' 	=> 'failure',
+					'ids' 		=> $entry_id,
+					'message'	=> ee()->lang->line('wrong_value')
+				));
+			}
+			else
+			{
+				return ee()->lang->line('wrong_value');
+			}
+		}
+
+		// --------------------------------------------
+		//  Variables
+		// --------------------------------------------
+
+		foreach($query->result_array() AS $row)
+		{
 			$field_id	= $row['field_id'];
 			$settings	= unserialize(base64_decode($row['field_settings']));
 			$tag_group	= ( ! isset($settings['tag_group'])) ? 1 : $settings['tag_group'];
-			
+
 			$all_tags = $this->data->get_entry_tags_by_id($entry_id, array('tag_group_id' => $tag_group));
-							
+
 			$tags	= array();
-			
+
 			foreach ($all_tags as $row)
 			{
-				$tags[] = $row['tag_name']; 
+				$tags[] = $row['tag_name'];
 			}
-			
+
 			if ( ! empty($tags))
 			{
 				ee()->db->query(
@@ -254,7 +242,7 @@ class Tag extends Module_builder_tag
 					);
 			}
 		}
-		
+
 		// -------------------------------------
 		//	Success!
 		// -------------------------------------
@@ -263,7 +251,7 @@ class Tag extends Module_builder_tag
 		if ($this->is_ajax_request())
 		{
 			return $this->send_ajax_response(array(
-				'success' 	=> 'success', 
+				'success' 	=> 'success',
 				'ids' 		=> $entry_id,
 				'message'	=> ee()->lang->line('tag_field_updated')
 			));
@@ -287,9 +275,6 @@ class Tag extends Module_builder_tag
 
 	public function update_tag_count()
 	{
-		//ACT only, dog :p
-		if (REQ != 'ACTION') return;
-
 		// -------------------------------------
 		//	have we these tag IDs three?
 		// -------------------------------------
@@ -302,7 +287,7 @@ class Tag extends Module_builder_tag
 			if ($this->is_ajax_request())
 			{
 				return $this->send_ajax_response(array(
-					'success' 	=> 'failure', 
+					'success' 	=> 'failure',
 					'ids' 		=> $tag_ids,
 					'message'	=> ee()->lang->line('wrong_value')
 				));
@@ -323,7 +308,7 @@ class Tag extends Module_builder_tag
 		if ($this->is_ajax_request())
 		{
 			return $this->send_ajax_response(array(
-				'success' 	=> 'success', 
+				'success' 	=> 'success',
 				'ids' 		=> $tag_ids,
 				'message'	=> ee()->lang->line('tag_count_updated')
 			));
@@ -361,8 +346,8 @@ class Tag extends Module_builder_tag
 		//	Grab entry id
 		//	----------------------------------------
 
-		$type	= ( ! in_array(ee()->TMPL->fetch_param('type'), array('weblog', FALSE), TRUE) ) ? 
-					ee()->TMPL->fetch_param('type') : 
+		$type	= ( ! in_array(ee()->TMPL->fetch_param('type'), array('weblog', FALSE), TRUE) ) ?
+					ee()->TMPL->fetch_param('type') :
 					'channel';
 
 		if ( $this->_entry_id( $type ) === FALSE )
@@ -375,9 +360,9 @@ class Tag extends Module_builder_tag
 		//	Prep data
 		//	----------------------------------------
 
-        $RET				= ( isset( $_POST['RET'] ) !== FALSE ) ? 
-        						ee()->security->xss_clean( $_POST['RET'] ) : 
-        						ee()->functions->fetch_current_uri();
+		$RET				= ( isset( $_POST['RET'] ) !== FALSE ) ?
+								ee()->security->xss_clean( $_POST['RET'] ) :
+								ee()->functions->fetch_current_uri();
 
 		$form_name			= $this->either_or(ee()->TMPL->fetch_param('form_name'), 'tag_form');
 
@@ -394,29 +379,29 @@ class Tag extends Module_builder_tag
 		$data['type']		= $type;
 
 		$data['return']		= $this->either_or(ee()->TMPL->fetch_param('return'), '');
-		
-		$data['tag_group_id'] = $this->_get_tag_group_id();						
+
+		$data['tag_group_id'] = $this->_get_tag_group_id();
 
 		//	----------------------------------------
 		//	Generate form
 		//	----------------------------------------
 
 		$tagdata			= ee()->TMPL->tagdata;
-		
-        $res				= ee()->functions->form_declaration(
+
+		$res				= ee()->functions->form_declaration(
 			array(
 				'hidden_fields'	=> $data,
 				'action'		=> $RET,
 				'id'			=> $this->either_or(
-					ee()->TMPL->fetch_param('form_id'), 
+					ee()->TMPL->fetch_param('form_id'),
 					$form_name
 				),
 				'name'			=> $form_name
 			)
 		);
-			
+
 		//tag widget?
-		if (APP_VER >= 2.0 AND stristr($tagdata, LD . 'tag_widget' . RD))
+		if (stristr($tagdata, LD . 'tag_widget' . RD))
 		{
 			$ss_cache	=& $this->EE->sessions->cache['solspace'];
 
@@ -428,7 +413,7 @@ class Tag extends Module_builder_tag
 
 			$widget_data['entry_id'] 		= $this->entry_id;
 			$widget_data['field_name'] 		= 'tags';
-			$widget_data['tag_group_id']	= $data['tag_group_id'];	
+			$widget_data['tag_group_id']	= $data['tag_group_id'];
 			$widget_data['input_only']		= TRUE;
 
 			// -------------------------------------
@@ -445,16 +430,16 @@ class Tag extends Module_builder_tag
 
 			$widget_data['field_id'] = 'solspace_tag_entry_' . $ss_cache['form_widget_count'];
 
-			
+
 			// --------------------------------------------
 			//	css and JS loaded yet?
-	        // --------------------------------------------
-							
-			$ac_js		= $this->data->tag_field_autocomplete_js();						
-			$tag_css 	= $this->data->tag_field_css();						
-			$tag_js		= $this->data->tag_field_js();	
+			// --------------------------------------------
+
+			$ac_js		= $this->data->tag_field_autocomplete_js();
+			$tag_css 	= $this->data->tag_field_css();
+			$tag_js		= $this->data->tag_field_js();
 			$front_css 	= $this->data->tag_front_css();
-			
+
 			//css
 			if ( ! isset($ss_cache['css']['tag']['field']))
 			{
@@ -478,22 +463,22 @@ class Tag extends Module_builder_tag
 			}
 
 			$tagdata 						= str_replace (
-				LD . 'tag_widget' . RD, 
-				$this->field_type_widget($widget_data), 
+				LD . 'tag_widget' . RD,
+				$this->field_type_widget($widget_data),
 				$tagdata
 			);
 		}
 
-        $res		.= stripslashes($tagdata) . "</form>";
+		$res		.= stripslashes($tagdata) . "</form>";
 
 		return $res;
 	}
 	//	END form
 
 
-    //	----------------------------------------
-    //	Insert tags
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Insert tags
+	//	----------------------------------------
 
 	public function insert_tags()
 	{
@@ -505,57 +490,57 @@ class Tag extends Module_builder_tag
 
 		if ( $this->preference('enable_tag_form') == 'n' )
 		{
-            return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
+			return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
 		}
 
-        // ----------------------------------------
-        //  Is the user banned?
-        // ----------------------------------------
+		// ----------------------------------------
+		//  Is the user banned?
+		// ----------------------------------------
 
-        if (ee()->session->userdata['is_banned'] === TRUE)
-        {
-            return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
-        }
+		if (ee()->session->userdata['is_banned'] === TRUE)
+		{
+			return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
+		}
 
-        // ----------------------------------------
-        //  Is the IP address and User Agent required?
-        // ----------------------------------------
+		// ----------------------------------------
+		//  Is the IP address and User Agent required?
+		// ----------------------------------------
 
-        if (ee()->config->item('require_ip_for_posting') == 'y')
-        {
-        	if (ee()->input->ip_address() == '0.0.0.0' OR ee()->session->userdata['user_agent'] == "")
-        	{
-            	return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
-        	}
-        }
+		if (ee()->config->item('require_ip_for_posting') == 'y')
+		{
+			if (ee()->input->ip_address() == '0.0.0.0' OR ee()->session->userdata['user_agent'] == "")
+			{
+				return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
+			}
+		}
 
-        // ----------------------------------------
+		// ----------------------------------------
 		//  Is the nation of the user banend?
 		// ----------------------------------------
 
 		ee()->session->nation_ban_check();
 
-        // ----------------------------------------
-        //  Blacklist/Whitelist Check
-        // ----------------------------------------
+		// ----------------------------------------
+		//  Blacklist/Whitelist Check
+		// ----------------------------------------
 
-        if ( ee()->blacklist->blacklisted == 'y' AND ee()->blacklist->whitelisted == 'n' )
-        {
-        	return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
-        }
+		if ( ee()->blacklist->blacklisted == 'y' AND ee()->blacklist->whitelisted == 'n' )
+		{
+			return ee()->output->show_user_error('general', array(ee()->lang->line('not_authorized')));
+		}
 
 		//	----------------------------------------
 		//	Entry id
 		//	----------------------------------------
 
-		if ( ee()->input->get_post('entry_id') !== FALSE AND 
+		if ( ee()->input->get_post('entry_id') !== FALSE AND
 			 ctype_digit( ee()->input->get_post('entry_id') ) === TRUE )
 		{
 			$this->entry_id = ee()->input->get_post('entry_id');
 		}
 		else
 		{
-            return ee()->output->show_user_error('general', array(ee()->lang->line('missing_entry_id')));
+			return ee()->output->show_user_error('general', array(ee()->lang->line('missing_entry_id')));
 		}
 
 		//	----------------------------------------
@@ -568,17 +553,17 @@ class Tag extends Module_builder_tag
 		}
 		else
 		{
-            return ee()->output->show_user_error('general', array(ee()->lang->line('no_tags_submitted')));
+			return ee()->output->show_user_error('general', array(ee()->lang->line('no_tags_submitted')));
 		}
 
-        //	----------------------------------------
-        //	Check Form Hash
-        //	----------------------------------------
+		//	----------------------------------------
+		//	Check Form Hash
+		//	----------------------------------------
 
 		if ( ! $this->check_secure_forms())
 		{
 			return ee()->output->show_user_error(
-				'general', 
+				'general',
 				array(
 					ee()->lang->line('not_authorized')
 				)
@@ -591,16 +576,16 @@ class Tag extends Module_builder_tag
 
 		if ( ee()->input->get_post('type') == 'gallery' )
 		{
-			$query	= ee()->db->query( 
-				"SELECT gallery_id 
-				 FROM 	exp_gallery_entries 
-				 WHERE 	entry_id = '" . ee()->db->escape_str($this->entry_id) . "'" 
+			$query	= ee()->db->query(
+				"SELECT gallery_id
+				 FROM 	exp_gallery_entries
+				 WHERE 	entry_id = '" . ee()->db->escape_str($this->entry_id) . "'"
 			);
 
 			if ( $query->num_rows() == 0 )
 			{
 				return ee()->output->show_user_error(
-					'general', 
+					'general',
 					array(
 						ee()->lang->line('gallery_entry_not_found')
 					)
@@ -619,7 +604,7 @@ class Tag extends Module_builder_tag
 		if (ee()->input->get_post('from_widget') == 1 OR
 			ee()->input->get_post('from_fieldtype'))
 		{
-			$this->from_ft = TRUE;		
+			$this->from_ft = TRUE;
 		}
 
 		//	----------------------------------------
@@ -628,16 +613,16 @@ class Tag extends Module_builder_tag
 
 		if ( $this->parse( FALSE ) === FALSE )
 		{
-            return ee()->output->show_user_error('general', array(ee()->lang->line('error_tag_parsing')));
+			return ee()->output->show_user_error('general', array(ee()->lang->line('error_tag_parsing')));
 		}
 
 		//	----------------------------------------
 		//	Return
 		//	----------------------------------------
 
-		$return	= ( ee()->input->get_post('return') !== FALSE AND 
-					ee()->input->get_post('return') != '' ) ? 
-						ee()->input->get_post('return') : 
+		$return	= ( ee()->input->get_post('return') !== FALSE AND
+					ee()->input->get_post('return') != '' ) ?
+						ee()->input->get_post('return') :
 						ee()->input->get_post('RET');
 
 		if ( preg_match( "/".LD."\s*path=(.*?)".RD."/", $return, $match ) > 0 )
@@ -657,9 +642,9 @@ class Tag extends Module_builder_tag
 	/**	END insert tags */
 
 
-    //	----------------------------------------
-    //	Tag name
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Tag name
+	//	----------------------------------------
 
 	public function tag_name()
 	{
@@ -694,44 +679,44 @@ class Tag extends Module_builder_tag
 		{
 			$this->tag	= ee()->TMPL->tagdata;
 		}
-		
+
 		// --------------------------------------------
-        //  Pull Tag from DB if Tag ID
-        // --------------------------------------------
-        
-        if ($this->tag_id != '')
-        {
-        	$query = ee()->db->query(
-				"SELECT t.tag_name 
+		//  Pull Tag from DB if Tag ID
+		// --------------------------------------------
+
+		if ($this->tag_id != '')
+		{
+			$query = ee()->db->query(
+				"SELECT t.tag_name
 				 FROM 	exp_tag_tags t
-				 WHERE 	t.site_id 
+				 WHERE 	t.site_id
 				 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
 				 AND 	t.tag_id = '".ee()->db->escape_str($this->tag_id)."'"
 			);
-					   			 
+
 			if ($query->num_rows() > 0)
 			{
 				$this->tag = $query->row('tag_name');
 			}
-        }
-        
-		//--------------------------------------------  
+		}
+
+		//--------------------------------------------
 		//	tag seperator
 		//--------------------------------------------
 
-		if ( ee()->TMPL->fetch_param('tag_separator') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('tag_separator') !== FALSE AND
 			 ee()->TMPL->fetch_param('tag_separator') != '' )
 		{
 			$this->tag = str_replace( ee()->TMPL->fetch_param('tag_separator'), ',', $this->tag);
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	websafe separator
 		//--------------------------------------------
 
-        $websafe_separator	= '+';
+		$websafe_separator	= '+';
 
-		if ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND
 			 ee()->TMPL->fetch_param('websafe_separator') != '' )
 		{
 			$websafe_separator	= ee()->TMPL->fetch_param('websafe_separator');
@@ -751,10 +736,10 @@ class Tag extends Module_builder_tag
 			switch(ee()->TMPL->fetch_param('case'))
 			{
 				case 'upper' :
-					$tags[$key] = strtoupper($tag);
+					$tags[$key] = $this->_strtoupper($tag);
 				break;
 				case 'lower' :
-					$tags[$key] = strtolower($tag);
+					$tags[$key] = $this->_strtolower($tag);
 				break;
 				case 'sentence' :
 					$tags[$key] = ucfirst($tag);
@@ -780,9 +765,9 @@ class Tag extends Module_builder_tag
 	/**	END tag name */
 
 
-    //	----------------------------------------
-    //	Tags
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Tags
+	//	----------------------------------------
 
 	public function tags()
 	{
@@ -796,7 +781,7 @@ class Tag extends Module_builder_tag
 		{
 			$type = ee()->TMPL->fetch_param('type');
 		}
-		
+
 		if ($type == 'weblog')
 		{
 			$type = 'channel';
@@ -809,7 +794,7 @@ class Tag extends Module_builder_tag
 		$websafe_separator	= '+';
 
 		if ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND
-		 	 ee()->TMPL->fetch_param('websafe_separator') != '' )
+			 ee()->TMPL->fetch_param('websafe_separator') != '' )
 		{
 			$websafe_separator	= ee()->TMPL->fetch_param('websafe_separator');
 		}
@@ -817,17 +802,17 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 		//	Entry id
 		//	----------------------------------------
-		
-		if ( ctype_digit( ee()->TMPL->fetch_param('entry_id') ))
+
+		if ( ee()->TMPL->fetch_param('entry_id') )
 		{
 			$this->entry_id = ee()->TMPL->fetch_param('entry_id');
 		}
-		elseif ( $this->_entry_id( $type ) === FALSE ) 
+		elseif ( $this->_entry_id( $type ) === FALSE )
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
+
 		// -------------------------------------
 		//	tag groups?
 		// -------------------------------------
@@ -839,25 +824,29 @@ class Tag extends Module_builder_tag
 		//	Start SQL
 		//	----------------------------------------
 
-		$sql	= "SELECT		t.tag_name, 
-								t.tag_id, t.tag_name AS tag, 
-								t.gallery_entries, 
-								t.channel_entries, 
-								t.total_entries, 
+		// Allow searching on multiple entries
+		$entry_ids = explode('|', $this->entry_id);
+
+		$sql	= "SELECT		t.tag_name,
+								t.tag_id, t.tag_name AS tag,
+								t.gallery_entries,
+								t.channel_entries,
+								t.total_entries,
 								{$tag_group_sql_insert}
 								t.clicks
 				   FROM 		exp_tag_tags t
-				   LEFT JOIN 	exp_tag_entries e 
+				   LEFT JOIN 	exp_tag_entries e
 				   ON 			t.tag_id = e.tag_id
-				   WHERE 		t.site_id 
+				   WHERE 		t.site_id
 				   IN 			('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
-				   AND 			e.entry_id = '".ee()->db->escape_str($this->entry_id)."'";
+				   AND 			e.entry_id
+				   IN 			('".implode("','", $entry_ids)."')";
 
 		//	----------------------------------------
 		//	Exclude?
 		//	----------------------------------------
 
-		if ( ee()->TMPL->fetch_param('exclude') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('exclude') !== FALSE AND
 			 ee()->TMPL->fetch_param('exclude') != '' )
 		{
 			$ids	= $this->_exclude( ee()->TMPL->fetch_param('exclude') );
@@ -867,15 +856,15 @@ class Tag extends Module_builder_tag
 				$sql	.= " AND t.tag_id NOT IN ('".implode( "','", ee()->db->escape_str($ids) )."')";
 			}
 		}
-		
+
 		// --------------------------------------------
-        //  Bad Tags
-        // --------------------------------------------
-        
-        if (count($this->bad()) > 0)
-        {
-        	$sql .= " AND t.tag_name NOT IN ('".implode( "','", ee()->db->escape_str($this->bad()) )."')";
-        }
+		//  Bad Tags
+		// --------------------------------------------
+
+		if (count($this->bad()) > 0)
+		{
+			$sql .= " AND t.tag_name NOT IN ('".implode( "','", ee()->db->escape_str($this->bad()) )."')";
+		}
 
 		//	----------------------------------------
 		//	Tag type
@@ -890,7 +879,7 @@ class Tag extends Module_builder_tag
 			$sql	.= " AND e.type = 'channel'";
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	tag group
 		//--------------------------------------------
 
@@ -901,19 +890,19 @@ class Tag extends Module_builder_tag
 		else if (ee()->TMPL->fetch_param('tag_group_name'))
 		{
 			$group_ids 		= array();
-			
+
 			$group_names 	= preg_split('/\|/', ee()->TMPL->fetch_param('tag_group_name'), -1, PREG_SPLIT_NO_EMPTY);
-			
+
 			foreach ($group_names as $group_name)
 			{
 				$group_id = $this->data->get_tag_group_id_by_name($group_name);
-				
+
 				if (is_numeric($group_id))
 				{
 					$group_ids[] = $group_id;
 				}
 			}
-			
+
 			//if they pass bad names, return no results because
 			//we want it to do the same thing that it will on bad tag_group_ids
 			if (empty($group_ids))
@@ -921,13 +910,13 @@ class Tag extends Module_builder_tag
 				return $this->no_results();
 			}
 		}
-		
+
 		if (isset($group_ids) AND $group_ids)
 		{
 			$sql	.= " AND e.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	group by
 		//--------------------------------------------
 
@@ -937,16 +926,16 @@ class Tag extends Module_builder_tag
 		//	Order
 		//	----------------------------------------
 
-		if ( in_array( 
-				ee()->TMPL->fetch_param('orderby'), 
-				array( 
-					'clicks', 
-					'edit_date', 
-					'entry_date', 
-					'gallery_entries', 
-					'total_entries', 
-					'channel_entries' 
-				) 
+		if ( in_array(
+				ee()->TMPL->fetch_param('orderby'),
+				array(
+					'clicks',
+					'edit_date',
+					'entry_date',
+					'gallery_entries',
+					'total_entries',
+					'channel_entries'
+				)
 			))
 		{
 			$sql	.= " ORDER BY t.".ee()->TMPL->fetch_param('orderby');
@@ -970,7 +959,7 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 		//	Query
 		//	----------------------------------------
-				
+
 		$query	= ee()->db->query( $sql );
 
 		//	----------------------------------------
@@ -982,22 +971,22 @@ class Tag extends Module_builder_tag
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
+
 		//	----------------------------------------
 		//	Parse
 		//	----------------------------------------
-		
+
 		$qs	= (ee()->config->item('force_query_string') == 'y') ? '' : '?';
 
 		$r	= '';
-		
+
 		$subscribe_links = (stristr(ee()->TMPL->tagdata, 'subscribe_link'.RD)) ? TRUE : FALSE;
 		$total_results	 = count($query->result_array());
 
 		foreach ( $query->result_array() as $count => $row )
 		{
 			$tagdata	= ee()->TMPL->tagdata;
-			
+
 			$row['entry_id']			= $this->entry_id;
 			$row['count']				= $count + 1;
 			$row['tag_count']			= $row['count'];
@@ -1017,11 +1006,11 @@ class Tag extends Module_builder_tag
 
 			$cond		= $row;
 			$tagdata	= ee()->functions->prep_conditionals( $tagdata, $cond );
-			
+
 			// --------------------------------------------
 			//  Subscribe/Unsubscribe Links
 			// --------------------------------------------
-			
+
 			if ($subscribe_links === TRUE)
 			{
 				if (ee()->session->userdata['member_id'] == 0)
@@ -1034,11 +1023,11 @@ class Tag extends Module_builder_tag
 					$tagdata = str_replace(LD.'unsubscribe_link'.RD, ee()->functions->fetch_site_index(0, 0).$qs.'ACT='.ee()->functions->fetch_action_id('Tag', 'unsubscribe').'&amp;tag_id='.$row['tag_id'], $tagdata);
 				}
 			}
-			
+
 			//	----------------------------------------
 			//	Parse singles
 			//	----------------------------------------
-			
+
 			foreach ( $row as $key => $val )
 			{
 				$tagdata	= ee()->TMPL->swap_var_single( $key, $val, $tagdata );
@@ -1050,7 +1039,7 @@ class Tag extends Module_builder_tag
 		$backspace	= ( ctype_digit( ee()->TMPL->fetch_param('backspace') ) === TRUE ) ? ee()->TMPL->fetch_param('backspace'): 0;
 
 		$r			= ( $backspace > 0 ) ? substr( $r, 0, - $backspace ): $r;
-		
+
 		$this->actions()->db_charset_switch('default');
 
 		return $r;
@@ -1059,12 +1048,12 @@ class Tag extends Module_builder_tag
 	/**	END tags */
 
 
-    //	----------------------------------------
-    //	Tags from field
-    //	----------------------------------------
-    //	This function helps create a list of
-    //	tags from the contents of a field.
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Tags from field
+	//	----------------------------------------
+	//	This function helps create a list of
+	//	tags from the contents of a field.
+	//	----------------------------------------
 
 	public function tags_from_field()
 	{
@@ -1097,10 +1086,10 @@ class Tag extends Module_builder_tag
 			$block			= $match['1'];
 			ee()->TMPL->tagdata	= str_replace( $match['0'], '', ee()->TMPL->tagdata );
 
-			$separator = ( ee()->TMPL->fetch_param('delimiter') ) ? 
-							ee()->TMPL->fetch_param('delimiter') : 
+			$separator = ( ee()->TMPL->fetch_param('delimiter') ) ?
+							ee()->TMPL->fetch_param('delimiter') :
 							$this->preference('separator');
-			
+
 			if ($separator == 'newline')
 			{
 				$tags	= preg_split( "/\n|\r/", trim( ee()->TMPL->tagdata ), -1, PREG_SPLIT_NO_EMPTY );
@@ -1109,12 +1098,12 @@ class Tag extends Module_builder_tag
 			{
 				//get delim based on name. first from get_post or fallbacks
 				$delim 	= $this->data->get_tag_seperator($separator);
-				
-				$tags	= preg_split( 
-					"/" . preg_quote($delim, "/") ."|\n|\r/", 
-					trim( ee()->TMPL->tagdata ), 
-					-1, 
-					PREG_SPLIT_NO_EMPTY 
+
+				$tags	= preg_split(
+					"/" . preg_quote($delim, "/") ."|\n|\r/",
+					trim( ee()->TMPL->tagdata ),
+					-1,
+					PREG_SPLIT_NO_EMPTY
 				);
 			}
 		}
@@ -1145,19 +1134,19 @@ class Tag extends Module_builder_tag
 	}
 
 	/**	END tags from field */
-	
+
 	//	----------------------------------------
 	//	 Has Entry Been Tagged by This Member Already?
 	//	----------------------------------------
-	
+
 	public function tagged( )
 	{
 		$saved		= FALSE;
-		
+
 		if (ee()->TMPL->fetch_param('type') == 'gallery')
 		{
 			$type = 'gallery';
-			
+
 			if ( $this->_entry_id( 'gallery' ) === FALSE )
 			{
 				$this->actions()->db_charset_switch('default');
@@ -1167,25 +1156,25 @@ class Tag extends Module_builder_tag
 		else
 		{
 			$type = 'channel';
-			
+
 			if ( $this->_entry_id( 'channel' ) === FALSE )
 			{
 				$this->actions()->db_charset_switch('default');
 				return $this->_no_results('tag');
 			}
 		}
-		
+
 
 		if ( ee()->session->userdata['member_id'] != 0 )
 		{
-			$sql	= "SELECT 	COUNT(DISTINCT tag_id) AS count 
-					   FROM 	exp_tag_entries 
-					   WHERE 	site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."') 
-					   AND 		type = '{$type}' 
-					   AND 		entry_id = '".ee()->db->escape_str( $this->entry_id )."' 
+			$sql	= "SELECT 	COUNT(DISTINCT tag_id) AS count
+					   FROM 	exp_tag_entries
+					   WHERE 	site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
+					   AND 		type = '{$type}'
+					   AND 		entry_id = '".ee()->db->escape_str( $this->entry_id )."'
 					   AND 		author_id = '".ee()->db->escape_str( ee()->session->userdata['member_id'] )."'";
-			
-			//--------------------------------------------  
+
+			//--------------------------------------------
 			//	tag group
 			//--------------------------------------------
 
@@ -1220,30 +1209,30 @@ class Tag extends Module_builder_tag
 			if (isset($group_ids) AND $group_ids)
 			{
 				$sql	.= " AND tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
-			}			
-			
-			//--------------------------------------------  
+			}
+
+			//--------------------------------------------
 			//	query
 			//--------------------------------------------
-					   
+
 			$query = ee()->db->query( $sql );
-							
+
 			if ($query->row('count') > 0)
 			{
 				$saved	= TRUE;
 			}
 		}
-		
+
 		$tagdata			= ee()->TMPL->tagdata;
-		
+
 		$cond['tagged']		= ( $saved )   ? TRUE: FALSE;
 		$cond['not_tagged']	= ( ! $saved ) ? TRUE: FALSE;
-		
+
 		$this->actions()->db_charset_switch('default');
-		
+
 		return $this->return_data = ee()->functions->prep_conditionals($tagdata, $cond);
 	}
-	
+
 	/* End tagged() */
 
 
@@ -1263,48 +1252,48 @@ class Tag extends Module_builder_tag
 			return $this->_no_results('tag');
 		}
 
-        // ----------------------------------------
-        //	If the QSTR variable is less than 32 chars, we don't have a valid search hash
-        // ----------------------------------------
+		// ----------------------------------------
+		//	If the QSTR variable is less than 32 chars, we don't have a valid search hash
+		// ----------------------------------------
 
-        if ( strlen(ee()->uri->query_string) < 32 )
-        {
-        	$this->actions()->db_charset_switch('default');
+		if ( strlen(ee()->uri->query_string) < 32 )
+		{
+			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
-        }
+		}
 
-        // ----------------------------------------
-        //	Capture search ID number
-        // ----------------------------------------
+		// ----------------------------------------
+		//	Capture search ID number
+		// ----------------------------------------
 
-        $search_id = substr( ee()->uri->query_string, 0, 32 );
+		$search_id = substr( ee()->uri->query_string, 0, 32 );
 
-        // ----------------------------------------
-        //	Check DB
-        // ----------------------------------------
+		// ----------------------------------------
+		//	Check DB
+		// ----------------------------------------
 
-        $query	= ee()->db->query( 
-			"SELECT keywords 
-			 FROM 	exp_search 
-			 WHERE 	search_id = '".ee()->db->escape_str( $search_id )."'" 
+		$query	= ee()->db->query(
+			"SELECT keywords
+			 FROM 	exp_search
+			 WHERE 	search_id = '".ee()->db->escape_str( $search_id )."'"
 		);
 
-        if ( $query->num_rows() == 0 )
-        {
-        	$this->actions()->db_charset_switch('default');
-        	return $this->_no_results('tag');
-        }
-        else
-        {
-        	$keywords	= $query->row('keywords');
-        }
+		if ( $query->num_rows() == 0 )
+		{
+			$this->actions()->db_charset_switch('default');
+			return $this->_no_results('tag');
+		}
+		else
+		{
+			$keywords	= $query->row('keywords');
+		}
 
-        // ----------------------------------------
-        //	Turn keywords into an array
-        // ----------------------------------------
+		// ----------------------------------------
+		//	Turn keywords into an array
+		// ----------------------------------------
 
-        $exclude	= array();
-        $terms		= array();
+		$exclude	= array();
+		$terms		= array();
 
 		if ( preg_match_all( "/\-*\"(.*?)\"/", $keywords, $matches ) )
 		{
@@ -1362,7 +1351,7 @@ class Tag extends Module_builder_tag
 					LEFT JOIN 		exp_tag_tags AS t
 					ON 				e.tag_id = t.tag_id
 					WHERE";
-					
+
 		$sql	.= " t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
 
 		$sql	.= " AND e.type = 'channel'";
@@ -1378,12 +1367,12 @@ class Tag extends Module_builder_tag
 		{
 			if ($this->preference('convert_case') != 'n')
 			{
-				array_walk($exclude, create_function('$value', 'return strtolower($value);'));		
+				array_walk($exclude, create_function('$value', 'return strtolower($value);'));
 			}
-		
-			$exclude_q	= ee()->db->query( 
-				$sql ." AND BINARY t.tag_name 
-				       IN ('".implode( "','", ee()->db->escape_str($exclude) )."')" 
+
+			$exclude_q	= ee()->db->query(
+				$sql ." AND BINARY t.tag_name
+					   IN ('".implode( "','", ee()->db->escape_str($exclude) )."')"
 			);
 
 			$exclude	= array();
@@ -1397,10 +1386,10 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 		//	What kind of search?
 		//	----------------------------------------
-		
+
 		if ($this->preference('convert_case') != 'n')
 		{
-			array_walk($keywords, create_function('$value', 'return strtolower($value);'));		
+			array_walk($keywords, create_function('$value', 'return strtolower($value);'));
 		}
 
 		if ( $where == 'any' OR $where == 'all' )
@@ -1416,13 +1405,13 @@ class Tag extends Module_builder_tag
 		//	Are we ranking?
 		//	----------------------------------------
 
-		if ( ee()->TMPL->fetch_param( 'tag_rank' ) != FALSE AND 
-			 in_array( ee()->TMPL->fetch_param( 'tag_rank' ), array( 
-				'clicks', 
-				'gallery_entries', 
-				'total_entries', 
-				'channel_entries' 
-				) 
+		if ( ee()->TMPL->fetch_param( 'tag_rank' ) != FALSE AND
+			 in_array( ee()->TMPL->fetch_param( 'tag_rank' ), array(
+				'clicks',
+				'gallery_entries',
+				'total_entries',
+				'channel_entries'
+				)
 			 )
 		)
 		{
@@ -1516,7 +1505,7 @@ class Tag extends Module_builder_tag
 			return $this->_no_results('tag');
 		}
 
-        return $tagdata;
+		return $tagdata;
 	}
 
 	/**	END search */
@@ -1556,7 +1545,7 @@ class Tag extends Module_builder_tag
 			$match = array_pop($matches);
 			$this->tag = $match[1];
 		}
-		
+
 		if ( $this->tag == '' &&
 			 $this->tag_id == '' &&
 			 ee()->TMPL->fetch_param('tag_group_id') === FALSE &&
@@ -1570,22 +1559,22 @@ class Tag extends Module_builder_tag
 		//	Remove reserved characters
 		//	----------------------------------------
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	tag seperator
 		//--------------------------------------------
 
-		if ( ee()->TMPL->fetch_param('tag_separator') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('tag_separator') !== FALSE AND
 			 ee()->TMPL->fetch_param('tag_separator') != '' )
 		{
 			$this->tag = str_replace( ee()->TMPL->fetch_param('tag_separator'), ',', $this->tag);
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	websafe separator
 		//--------------------------------------------
 
-		$websafe_separator = ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND 
-							   ee()->TMPL->fetch_param('websafe_separator') != '' ) ? 
+		$websafe_separator = ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND
+							   ee()->TMPL->fetch_param('websafe_separator') != '' ) ?
 								ee()->TMPL->fetch_param('websafe_separator') : '+';
 
 		if ($this->tag_id == '')
@@ -1594,7 +1583,7 @@ class Tag extends Module_builder_tag
 			$this->tag	= str_replace( "%20", " ", $this->tag );
 			$this->tag	= $this->_clean_str( $this->tag );
 		}
-		
+
 		//	----------------------------------------
 		//	Are we ranking?
 		//	----------------------------------------
@@ -1614,14 +1603,14 @@ class Tag extends Module_builder_tag
 
 			$sql		= "SELECT DISTINCT	(e.entry_id)
 						   FROM 			exp_tag_entries AS e
-						   LEFT JOIN 		exp_tag_tags AS t 
+						   LEFT JOIN 		exp_tag_tags AS t
 						   ON 				e.tag_id = t.tag_id ";
 
 			//	----------------------------------------
 			//	Are we checking for category?
 			//	----------------------------------------
 
-			if ( ee()->TMPL->fetch_param('category') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('category') !== FALSE AND
 				 ee()->TMPL->fetch_param('category') != '' )
 			{
 				//	----------------------------------------
@@ -1638,10 +1627,10 @@ class Tag extends Module_builder_tag
 				}
 				else
 				{
-					$cat_q	= ee()->db->query( 
-						"SELECT cat_id 
+					$cat_q	= ee()->db->query(
+						"SELECT cat_id
 						 FROM 	exp_categories
-						 WHERE  site_id 
+						 WHERE  site_id
 						 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
 						 AND 	cat_url_title = '".
 									ee()->db->escape_str( ee()->TMPL->fetch_param('category') )."'" );
@@ -1668,12 +1657,12 @@ class Tag extends Module_builder_tag
 			//	----------------------------------------
 			//	Do we have a Category id?
 			//	----------------------------------------
-        	//  We use LEFT JOIN when there is a 'not' so that we get
-        	//  entries that are not assigned to a category.
-        	// --------------------------------
+			//  We use LEFT JOIN when there is a 'not' so that we get
+			//  entries that are not assigned to a category.
+			// --------------------------------
 
-        	if ($cat_id != '')
-        	{
+			if ($cat_id != '')
+			{
 				if (substr($cat_id, 0, 3) == 'not' AND $this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 				{
 					$sql .= "LEFT JOIN exp_category_posts AS cp ON e.entry_id = cp.entry_id ";
@@ -1691,34 +1680,34 @@ class Tag extends Module_builder_tag
 			$sql		.= " WHERE";
 
 			$sql		.= " t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-			
+
 			if ($this->tag_id != '')
 			{
 				$sql .= ee()->functions->sql_andor_string( $this->tag_id, ' t.tag_id');
 			}
 			elseif($this->tag != '')
-			{	
+			{
 				if ($this->preference('convert_case') != 'n')
 				{
-					$this->tag = strtolower($this->tag);	
+					$this->tag = strtolower($this->tag);
 				}
-					
+
 				if (substr($this->tag, 0, 4) == 'not ' AND
-				 	$this->check_yes(ee()->TMPL->fetch_param('exclusive')))
+					$this->check_yes(ee()->TMPL->fetch_param('exclusive')))
 				{
-					$sql .= " AND 		e.entry_id 
+					$sql .= " AND 		e.entry_id
 							  NOT IN 	(
-								SELECT DISTINCT entry_id 
-								FROM 			exp_tag_entries AS e, 
+								SELECT DISTINCT entry_id
+								FROM 			exp_tag_entries AS e,
 												exp_tag_tags AS t
 								WHERE 			e.tag_id = t.tag_id ".
-								ee()->functions->sql_andor_string( 
-									substr($this->tag, 4), 
+								ee()->functions->sql_andor_string(
+									substr($this->tag, 4),
 									'BINARY t.tag_name'
 								) .
 							")";
 				}
-				
+
 				$sql		.= ee()->functions->sql_andor_string( $this->tag,' BINARY t.tag_name');
 			}
 
@@ -1730,7 +1719,7 @@ class Tag extends Module_builder_tag
 
 			if ($cat_id != '')
 			{
-				if (substr($cat_id, 0, 3) == 'not' AND 
+				if (substr($cat_id, 0, 3) == 'not' AND
 					$this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 				{
 					$sql .= ee()->functions->sql_andor_string($cat_id, 'cp.cat_id', '', TRUE)." ";
@@ -1741,7 +1730,7 @@ class Tag extends Module_builder_tag
 				}
 			}
 
-			//--------------------------------------------  
+			//--------------------------------------------
 			//	tag group
 			//--------------------------------------------
 
@@ -1777,7 +1766,7 @@ class Tag extends Module_builder_tag
 			{
 				$sql	.= " AND e.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
 			}
-			
+
 			//	----------------------------------------
 			//	Are we ranking?
 			//	----------------------------------------
@@ -1815,22 +1804,22 @@ class Tag extends Module_builder_tag
 		else
 		{
 			if ($this->tag_id == '')
-			{		
+			{
 				$tags	= preg_split( "/[,|\|]/", $this->tag );
 
 				$tags	= array_unique( $tags );
 			}
-			
+
 			$sql	= "SELECT DISTINCT	(e.entry_id), t.tag_id
 					   FROM 			exp_tag_entries e
-					   LEFT JOIN 		exp_tag_tags t 
+					   LEFT JOIN 		exp_tag_tags t
 					   ON 				t.tag_id = e.tag_id ";
 
 			//	----------------------------------------
 			//	Are we checking for a category?
 			//	----------------------------------------
 
-			if ( ee()->TMPL->fetch_param('category') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('category') !== FALSE AND
 				 ee()->TMPL->fetch_param('category') != '' )
 			{
 				//	----------------------------------------
@@ -1847,12 +1836,12 @@ class Tag extends Module_builder_tag
 				}
 				else
 				{
-					$cat_q	= ee()->db->query( 
-						"SELECT cat_id 
+					$cat_q	= ee()->db->query(
+						"SELECT cat_id
 						 FROM 	exp_categories
-						 WHERE 	site_id 
+						 WHERE 	site_id
 						 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
-						 AND 	cat_url_title = '" . ee()->db->escape_str( ee()->TMPL->fetch_param('category') )."'" 
+						 AND 	cat_url_title = '" . ee()->db->escape_str( ee()->TMPL->fetch_param('category') )."'"
 					);
 
 					if ( $cat_q->num_rows() > 0 )
@@ -1877,13 +1866,13 @@ class Tag extends Module_builder_tag
 			//	----------------------------------------
 			//	Do we have a Category id?
 			//	----------------------------------------
-        	//  We use LEFT JOIN when there is a 'not' so that we get
-        	//  entries that are not assigned to a category.
-        	// --------------------------------
+			//  We use LEFT JOIN when there is a 'not' so that we get
+			//  entries that are not assigned to a category.
+			// --------------------------------
 
-        	if ($cat_id != '')
-        	{
-				if (substr($cat_id, 0, 3) == 'not' AND 
+			if ($cat_id != '')
+			{
+				if (substr($cat_id, 0, 3) == 'not' AND
 					$this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 				{
 					$sql .= "LEFT JOIN exp_category_posts AS cp ON e.entry_id = cp.entry_id ";
@@ -1897,7 +1886,7 @@ class Tag extends Module_builder_tag
 			$sql	.= " WHERE";
 
 			$sql	.= " t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-			
+
 			if ($this->tag_id != '')
 			{
 				$sql	.= " AND t.tag_id IN ('".implode( "','", ee()->db->escape_str(explode('|', $this->tag_id)))."')";
@@ -1906,26 +1895,26 @@ class Tag extends Module_builder_tag
 			{
 				if ($this->preference('convert_case') != 'n')
 				{
-					array_walk($tags, create_function('$value', 'return strtolower($value);'));		
+					array_walk($tags, create_function('$value', 'return strtolower($value);'));
 				}
-			
+
 				if (count($tags) == 1)
 				{
 					$sql	.= " AND BINARY t.tag_name IN ('".implode( "','", ee()->db->escape_str($tags))."')";
 				}
 				else
 				{
-					$tsql = "SELECT 	te.entry_id, t.tag_name 
+					$tsql = "SELECT 	te.entry_id, t.tag_name
 							 FROM 		exp_tag_entries AS te
-							 LEFT JOIN 	exp_tag_tags AS t 
+							 LEFT JOIN 	exp_tag_tags AS t
 							 ON 		t.tag_id = te.tag_id
-							 WHERE 		BINARY t.tag_name 
+							 WHERE 		BINARY t.tag_name
 							 IN 		('".implode( "','", ee()->db->escape_str($tags))."')
-							 AND 		te.site_id 
+							 AND 		te.site_id
 							 IN 		('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
 							 AND 		te.type = 'channel'";
-					
-					//--------------------------------------------  
+
+					//--------------------------------------------
 					//	tag group
 					//--------------------------------------------
 
@@ -1960,40 +1949,40 @@ class Tag extends Module_builder_tag
 					if (isset($group_ids) AND $group_ids)
 					{
 						$tsql	.= " AND te.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
-					}							 
+					}
 					$tquery = ee()->db->query($tsql);
-					
+
 					if ($tquery->num_rows() == 0)
 					{
 						$this->actions()->db_charset_switch('default');
 						return $this->_no_results('tag');
 					}
-					
+
 					$entry_array = array();
-					
+
 					foreach($tquery->result_array() as $row)
 					{
 						$entry_array[$row['tag_name']][] = $row['entry_id'];
 					}
-					
+
 					if (count($entry_array) != count($tags))
 					{
 						$this->actions()->db_charset_switch('default');
 						return $this->_no_results('tag');
 					}
-				
+
 					$chosen = call_user_func_array('array_intersect', $entry_array);
-					
+
 					if (count($chosen) == 0)
 					{
 						$this->actions()->db_charset_switch('default');
 						return $this->_no_results('tag');
 					}
-					
+
 					$sql .= "AND e.entry_id IN ('".implode("','", $chosen)."') ";
 				}
 			}
-			
+
 			$sql	.= " AND e.type = 'channel'";
 
 			// ----------------------------------------------
@@ -2012,7 +2001,7 @@ class Tag extends Module_builder_tag
 				}
 			}
 
-			//--------------------------------------------  
+			//--------------------------------------------
 			//	tag group
 			//--------------------------------------------
 
@@ -2048,12 +2037,12 @@ class Tag extends Module_builder_tag
 			{
 				$sql	.= " AND e.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
 			}
-			
+
 			/*else
 			{
 				$sql	.= " GROUP BY e.tag_id ";
 			}*/
-			
+
 			//	----------------------------------------
 			//	Are we ranking?
 			//	----------------------------------------
@@ -2098,20 +2087,20 @@ class Tag extends Module_builder_tag
 		}
 
 		// ----------------------------------------------
-        //  Only Entries with Pages
-        // ----------------------------------------------
+		//  Only Entries with Pages
+		// ----------------------------------------------
 
-		if ( ee()->TMPL->fetch_param('show_pages') !== FALSE AND 
-			 in_array( ee()->TMPL->fetch_param('show_pages'), array('only', 'no') ) AND 
+		if ( ee()->TMPL->fetch_param('show_pages') !== FALSE AND
+			 in_array( ee()->TMPL->fetch_param('show_pages'), array('only', 'no') ) AND
 			 ( $pages = ee()->config->item('site_pages') ) !== FALSE)
-		{			
+		{
 			//is this version 2?
-			if (  ! array_key_exists('templates', $pages) AND 
+			if (  ! array_key_exists('templates', $pages) AND
 				  array_key_exists(ee()->config->item('site_id'), $pages) )
 			{
 				$pages = $pages[ee()->config->item('site_id')];
 			}
-			
+
 			if ( ee()->TMPL->fetch_param('show_pages') == 'only' )
 			{
 				$this->entry_id	= implode( "|", array_intersect( explode( "|", $this->entry_id ), array_flip( $pages['templates'] ) ) );
@@ -2132,7 +2121,7 @@ class Tag extends Module_builder_tag
 			return $this->_no_results('tag');
 		}
 
-        return $tagdata;
+		return $tagdata;
 	}
 
 	/**	END entries */
@@ -2155,36 +2144,36 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 
 		if ( $this->entry_id == '' ) return FALSE;
-		
+
 		// --------------------------------------------
-        //  Issue with Apostrophes in URI and Pagination
-        //	- Both EE, AOB, and AB Pagination use create_url(), which removes the apostrophe
-        //	- Needs to happen before build_sql_query()
-        // --------------------------------------------
-        
-        $marker	= (ee()->TMPL->fetch_param('marker')) ? trim(str_replace(SLASH, '/', ee()->TMPL->fetch_param('marker')), '/') : 'tag';
-			
+		//  Issue with Apostrophes in URI and Pagination
+		//	- Both EE, AOB, and AB Pagination use create_url(), which removes the apostrophe
+		//	- Needs to happen before build_sql_query()
+		// --------------------------------------------
+
+		$marker	= (ee()->TMPL->fetch_param('marker')) ? trim(str_replace(SLASH, '/', ee()->TMPL->fetch_param('marker')), '/') : 'tag';
+
 		if(preg_match_all("/".preg_quote($marker, '/')."\/(.*?)(\/|$)/", ee()->uri->uri_string, $matches, PREG_SET_ORDER))
 		{
 			$match = array_pop($matches);
-			
-			ee()->uri->uri_string = str_replace($match[1], str_replace("'", '_PROTECTED_APOSTROPHE_',  $match[1]), ee()->uri->uri_string);	
+
+			ee()->uri->uri_string = str_replace($match[1], str_replace("'", '_PROTECTED_APOSTROPHE_',  $match[1]), ee()->uri->uri_string);
 			$_SERVER['REQUEST_URI'] = str_replace($match[1], str_replace("'", '_PROTECTED_APOSTROPHE_',  $match[1]), $_SERVER['REQUEST_URI']);
 		}
 
 		//	----------------------------------------
 		//	Invoke Channel class
 		//	----------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			if ( ! class_exists('Weblog') )
 			{
 				require PATH_MOD.'/weblog/mod.weblog'.EXT;
 			}
-	
+
 			$this->actions()->db_charset_switch('default');
-	
+
 			$channel = new Weblog;
 		}
 		else
@@ -2193,30 +2182,30 @@ class Tag extends Module_builder_tag
 			{
 				require PATH_MOD.'/channel/mod.channel'.EXT;
 			}
-	
+
 			$channel = new Channel;
 		}
-		
+
 		// --------------------------------------------
-        //  Invoke Pagination for EE 2.4 and Above
-        // --------------------------------------------
+		//  Invoke Pagination for EE 2.4 and Above
+		// --------------------------------------------
 
 		if (APP_VER >= '2.4.0')
 		{
 			ee()->load->library('pagination');
 			$channel->pagination = new Pagination_object('Channel');
-			
+
 			// Used by pagination to determine whether we're coming from the cache
 			$channel->pagination->dynamic_sql = FALSE;
 		}
-		
+
 		//	----------------------------------------
 		//	Pass params
 		//	----------------------------------------
-		
-		if (ee()->TMPL->fetch_param($this->sc->channel.'_entry_id') !== FALSE AND 
+
+		if (ee()->TMPL->fetch_param($this->sc->channel.'_entry_id') !== FALSE AND
 			ee()->TMPL->fetch_param($this->sc->channel.'_entry_id') != ''
-			AND ctype_digit(str_replace(array("not ", "|"), '', 
+			AND ctype_digit(str_replace(array("not ", "|"), '',
 				ee()->TMPL->fetch_param($this->sc->channel.'_entry_id'))) === TRUE
 		   )
 		{
@@ -2227,21 +2216,23 @@ class Tag extends Module_builder_tag
 			}
 			else
 			{
-				
+
 				$this->entry_id = implode('|', array_intersect(explode('|', $this->entry_id), explode('|', ee()->TMPL->fetch_param($this->sc->channel.'_entry_id'))));
 			}
 		}
 
 		ee()->TMPL->tagparams['entry_id']	= $this->entry_id;
 
-        ee()->TMPL->tagparams['inclusive']	= '';
+		ee()->TMPL->tagparams['url_title']	= '';
+
+		ee()->TMPL->tagparams['inclusive']	= '';
 
 		ee()->TMPL->tagparams['show_pages']	= 'all';
 
-        if ( isset( $params['dynamic'] ) AND $params['dynamic'] == "off" )
-        {
+		if ( isset( $params['dynamic'] ) AND $params['dynamic'] == "off" )
+		{
 			ee()->TMPL->tagparams['dynamic']	= 'off';
-        }
+		}
 
 		//	----------------------------------------
 		//	Pre-process related data
@@ -2259,8 +2250,8 @@ class Tag extends Module_builder_tag
 		ee()->TMPL->tagdata		= ee()->TMPL->assign_relationship_data( ee()->TMPL->tagdata );
 
 		ee()->TMPL->var_single	= array_merge( ee()->TMPL->var_single, ee()->TMPL->related_markers );
-		
-		
+
+
 
 		//	----------------------------------------
 		//	Execute needed methods
@@ -2277,23 +2268,23 @@ class Tag extends Module_builder_tag
 				$channel->fetch_custom_channel_fields();
 			}
 		}
-		
+
 		if ($channel->enable['member_data'] == TRUE)
 		{
-        	$channel->fetch_custom_member_fields();
+			$channel->fetch_custom_member_fields();
 		}
-		
+
 		// --------------------------------------------
-        //  Pagination Tags Parsed Out
-        // --------------------------------------------
-	
+		//  Pagination Tags Parsed Out
+		// --------------------------------------------
+
 		if ($channel->enable['pagination'] == TRUE)
-		{		
+		{
 			ee()->TMPL->tagdata = $this->pagination_prefix_replace(
-				'tag', 
+				'tag',
 				ee()->TMPL->tagdata
 			);
-		
+
 			if (APP_VER >= '2.4.0')
 			{
 				$channel->pagination->get_template();
@@ -2307,9 +2298,9 @@ class Tag extends Module_builder_tag
 				// // Done in build_sql_query();
 				$channel->create_pagination();
 			}
-			
+
 			ee()->TMPL->tagdata = $this->pagination_prefix_replace(
-				'tag', 
+				'tag',
 				ee()->TMPL->tagdata,
 				TRUE
 			);
@@ -2318,7 +2309,7 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 		//	Grab entry data
 		//	----------------------------------------
-		
+
 		// Since they no longer give us $this->pager_sql in EE 2.4, I will just
 		// insure it is stored  and pull it right back out to use again.
 		if (APP_VER >= '2.4.0')
@@ -2326,24 +2317,24 @@ class Tag extends Module_builder_tag
 			ee()->db->save_queries = TRUE;
 		}
 
-        $channel->build_sql_query();
-        
-        // Stop protecting our apostrophes
-        ee()->uri->uri_string = str_replace('_PROTECTED_APOSTROPHE_', "'", ee()->uri->uri_string);	
+		$channel->build_sql_query();
+
+		// Stop protecting our apostrophes
+		ee()->uri->uri_string = str_replace('_PROTECTED_APOSTROPHE_', "'", ee()->uri->uri_string);
 		$_SERVER['REQUEST_URI'] = str_replace('_PROTECTED_APOSTROPHE_', "'", $_SERVER['REQUEST_URI']);
-        
-        if ($channel->sql == '')
-        {
-        	$this->actions()->db_charset_switch('default');
-        	return $this->return_data = $this->_no_results('tag');
-        }
-        
-        // --------------------------------------------
-        //  Transfer Pagination Variables Over to Channel object
-        //	- Has to go after the building of the query as EE 2.4 does its Pagination work in there
-        // --------------------------------------------
-        
-        if (APP_VER >= '2.4.0')
+
+		if ($channel->sql == '')
+		{
+			$this->actions()->db_charset_switch('default');
+			return $this->return_data = $this->_no_results('tag');
+		}
+
+		// --------------------------------------------
+		//  Transfer Pagination Variables Over to Channel object
+		//	- Has to go after the building of the query as EE 2.4 does its Pagination work in there
+		// --------------------------------------------
+
+		if (APP_VER >= '2.4.0')
 		{
 			$transfer = array(	'paginate'		=> 'paginate',
 								'total_pages' 	=> 'total_pages',
@@ -2356,62 +2347,62 @@ class Tag extends Module_builder_tag
 								'per_page'		=> 'per_page',
 								'per_page'		=> 'p_limit',
 								'offset'		=> 'p_page');
-								
+
 			foreach($transfer as $from => $to)
 			{
 				$channel->$to = $channel->pagination->$from;
 			}
 		}
 
-         // --------------------------------------------
-        //  Order By Relevance for the Related Entries Tag
-        // --------------------------------------------
+		 // --------------------------------------------
+		//  Order By Relevance for the Related Entries Tag
+		// --------------------------------------------
 
-        if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND 
-        	isset(ee()->TMPL->tagparts[1]) AND 
-        	ee()->TMPL->tagparts[1] == 'related_entries')
-        {
-        	$offset = ( 
-				! ee()->TMPL->fetch_param('offset') OR 
-				! is_numeric(ee()->TMPL->fetch_param('offset'))) ? 
-					'0' : 
+		if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND
+			isset(ee()->TMPL->tagparts[1]) AND
+			ee()->TMPL->tagparts[1] == 'related_entries')
+		{
+			$offset = (
+				! ee()->TMPL->fetch_param('offset') OR
+				! is_numeric(ee()->TMPL->fetch_param('offset'))) ?
+					'0' :
 					ee()->TMPL->fetch_param('offset');
-			
+
 			if ($channel->paginate == TRUE)
 			{
 				// --------------------------------------------
 				//  EE 2.4 removed $this->pager from the Channel class.
 				//	To find it, we do some clever searching.
 				// --------------------------------------------
-				
+
 				if (APP_VER >= '2.4.0')
 				{
 					$num = sizeof(ee()->db->queries) - 1;
-						
+
 					while($num > 0)
 					{
 						$test_sql = ee()->db->queries[$num];
-						
+
 						if ( substr(trim($test_sql), 0, strlen('SELECT t.entry_id FROM')) == 'SELECT t.entry_id FROM')
 						{
 							$channel->pager_sql = $test_sql;
 							break;
 						}
-						
+
 						$num--;
 					}
-					
+
 					if (ee()->config->item('show_profiler') != 'y' && DEBUG != 1)
 					{
 						ee()->db->save_queries	= FALSE;
 						ee()->db->queries 		= array();
 					}
 				}
-			
+
 			// --------------------------------------------
 			//  Redo Our Pagination
 			// --------------------------------------------
-			
+
 			if ( ! empty($channel->pager_sql))
 			{
 				// In EE 2.4.0 we find the pager_sql in the query log.
@@ -2424,14 +2415,14 @@ class Tag extends Module_builder_tag
 						$channel->pager_sql .= 'ORDER BY'.$matches[1];
 					}
 				}
-				
+
 				// Create our ORDER BY clauses
-				
+
 				$orderby_clause = ' ORDER BY FIELD(t.entry_id, ' .  str_replace('|', ',', $this->entry_id). ') ';
-				
+
 				if (stristr($channel->pager_sql, 'ORDER BY'))
 				{
-					$channel->pager_sql = preg_replace("/ORDER BY(.*?)(,|LIMIT|$)/s", 
+					$channel->pager_sql = preg_replace("/ORDER BY(.*?)(,|LIMIT|$)/s",
 													   $orderby_clause.',\1\2',
 													   $channel->pager_sql);
 				}
@@ -2439,22 +2430,22 @@ class Tag extends Module_builder_tag
 				{
 					$channel->pager_sql .= $orderby_clause;
 				}
-				
+
 				// In EE 2.4.0 we find the pager_sql in the query log.
 				// Previous to that we actually got it from $channel
 				// However, it was missing the LIMIT clause, so we add it back in
 				if (APP_VER < '2.4.0')
 				{
-					$offset = ( ! ee()->TMPL->fetch_param('offset') OR 
-								! is_numeric(ee()->TMPL->fetch_param('offset'))) ? 
+					$offset = ( ! ee()->TMPL->fetch_param('offset') OR
+								! is_numeric(ee()->TMPL->fetch_param('offset'))) ?
 									'0' : ee()->TMPL->fetch_param('offset');
-	 
-					$channel->pager_sql .= ($channel->p_page == '') ? 
-						" LIMIT " . $offset . ', ' . $channel->p_limit : 
+
+					$channel->pager_sql .= ($channel->p_page == '') ?
+						" LIMIT " . $offset . ', ' . $channel->p_limit :
 						" LIMIT " . $channel->p_page . ', ' . $channel->p_limit;
-				
+
 				}
-				
+
 				$pquery = ee()->db->query($channel->pager_sql);
 
 				$entries = array();
@@ -2468,26 +2459,31 @@ class Tag extends Module_builder_tag
 
 				$channel->sql = preg_replace(
 					"/t\.entry_id\s+IN\s+\([^\)]+\)/is",
-        			"t.entry_id IN (".implode(',', $entries).")",
-        			$channel->sql
+					"t.entry_id IN (".implode(',', $entries).")",
+					$channel->sql
+				);
+
+				$channel->sql = preg_replace("/ORDER BY(.*?)(,|LIMIT|$)/s",
+					$orderby_clause.',\1\2',
+					$channel->sql
 				);
 
 				unset($pquery);
 				unset($entries);
 			}
-        }
-    	}
+		}
+		}
 
 
-        $channel->query = ee()->db->query($channel->sql);
+		$channel->query = ee()->db->query($channel->sql);
 
-        if ($channel->query->num_rows() == 0)
-        {
-            return FALSE;
-        }
-        
-        if (APP_VER < 2.0)
-		{			
+		if ($channel->query->num_rows() == 0)
+		{
+			return FALSE;
+		}
+
+		if (APP_VER < 2.0)
+		{
 			$channel->query->result	= $channel->query->result_array();
 		}
 
@@ -2536,45 +2532,45 @@ class Tag extends Module_builder_tag
 			{
 				$channel->query->result_array = array_values($new);
 			}
-			
+
 			//	Clear some memory
 			unset( $new );
 			unset( $entries );
 		}
 
-        // --------------------------------------------
-        //  Typography
-        // --------------------------------------------
-        
-        if (APP_VER < 2.0)
-        {
-        	if ( ! class_exists('Typography'))
+		// --------------------------------------------
+		//  Typography
+		// --------------------------------------------
+
+		if (APP_VER < 2.0)
+		{
+			if ( ! class_exists('Typography'))
 			{
 				require PATH_CORE.'core.typography'.EXT;
 			}
-					
+
 			$channel->TYPE = new Typography;
 			$channel->TYPE->convert_curly = FALSE;
-        }
-        else
-        {
+		}
+		else
+		{
 			ee()->load->library('typography');
 			ee()->typography->initialize();
 			ee()->typography->convert_curly = FALSE;
 		}
-		
+
 		if ($channel->enable['categories'] == TRUE)
 		{
 			$channel->fetch_categories();
 		}
 
-        // --------------------------------------------
-        //  Last Bit of Relevance Code
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Last Bit of Relevance Code
+		// --------------------------------------------
 
-        if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND isset(ee()->TMPL->tagparts[1]) AND ee()->TMPL->tagparts[1] == 'related_entries')
-        {
-        	foreach ( $channel->query->result_array() as $key => $row )
+		if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND isset(ee()->TMPL->tagparts[1]) AND ee()->TMPL->tagparts[1] == 'related_entries')
+		{
+			foreach ( $channel->query->result_array() as $key => $row )
 			{
 				if (APP_VER < 2.0)
 				{
@@ -2589,12 +2585,12 @@ class Tag extends Module_builder_tag
 					$channel->query->result_array[$key]['tag_relevance_percent']	= round(($this->tag_relevance[$row['entry_id']] / $this->max_relevance) * 100);
 				}
 			}
-        }
+		}
 
 		//	----------------------------------------
 		//	Parse and return entry data
 		//	----------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			$channel->parse_weblog_entries();
@@ -2603,7 +2599,7 @@ class Tag extends Module_builder_tag
 		{
 			$channel->parse_channel_entries();
 		}
-		
+
 		if ($channel->enable['pagination'] == TRUE)
 		{
 			if (APP_VER >= '2.4.0')
@@ -2615,7 +2611,7 @@ class Tag extends Module_builder_tag
 				$channel->add_pagination_data();
 			}
 		}
-		
+
 		//	----------------------------------------
 		//	Count tag
 		//	----------------------------------------
@@ -2641,9 +2637,9 @@ class Tag extends Module_builder_tag
 			$channel->return_data	= str_replace( $match['1'], "", $channel->return_data );
 		}
 
-        $tagdata = str_replace('_PROTECTED_APOSTROPHE_', "'", $channel->return_data);
+		$tagdata = str_replace('_PROTECTED_APOSTROPHE_', "'", $channel->return_data);
 
-        return $tagdata;
+		return $tagdata;
 	}
 
 	/**	END sub entries */
@@ -2706,22 +2702,22 @@ class Tag extends Module_builder_tag
 		//	Remove reserved characters
 		//	----------------------------------------
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	tag seperator
 		//--------------------------------------------
 
-		if ( ee()->TMPL->fetch_param('tag_separator') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('tag_separator') !== FALSE AND
 			 ee()->TMPL->fetch_param('tag_separator') != '' )
 		{
 			$this->tag = str_replace( ee()->TMPL->fetch_param('tag_separator'), ',', $this->tag);
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	websafe separator
 		//--------------------------------------------
 
-		$websafe_separator		= ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND 
-									ee()->TMPL->fetch_param('websafe_separator') != '' ) ? 
+		$websafe_separator		= ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND
+									ee()->TMPL->fetch_param('websafe_separator') != '' ) ?
 										ee()->TMPL->fetch_param('websafe_separator'): '+';
 
 		if ($this->tag_id == '')
@@ -2731,7 +2727,7 @@ class Tag extends Module_builder_tag
 
 			$this->tag	= $this->_clean_str( $this->tag );
 		}
-		
+
 		//	----------------------------------------
 		//	Inclusive tags?
 		//	----------------------------------------
@@ -2743,7 +2739,7 @@ class Tag extends Module_builder_tag
 			$sql	= "SELECT e.entry_id FROM exp_tag_entries AS e LEFT JOIN exp_tag_tags AS t ON e.tag_id = t.tag_id WHERE";
 
 			$sql	.= " t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-			
+
 			if ($this->tag_id != '')
 			{
 				$sql	.= ee()->functions->sql_andor_string( $this->tag_id, 't.tag_id');
@@ -2752,12 +2748,12 @@ class Tag extends Module_builder_tag
 			{
 				if ($this->preference('convert_case') != 'n')
 				{
-					$this->tag = strtolower($this->tag);		
+					$this->tag = strtolower($this->tag);
 				}
-			
+
 				$sql	.= ee()->functions->sql_andor_string( $this->tag, 'BINARY t.tag_name');
 			}
-			
+
 			$sql	.= " AND e.type = 'gallery'";
 
 			//	----------------------------------------
@@ -2793,11 +2789,11 @@ class Tag extends Module_builder_tag
 
 				$tags	= array_unique( $tags );
 			}
-			
+
 			$sql	= "SELECT e.entry_id, t.tag_id FROM exp_tag_entries e LEFT JOIN exp_tag_tags t ON t.tag_id = e.tag_id WHERE";
 
 			$sql	.= " t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-			
+
 			if ($this->tag_id != '')
 			{
 				$sql	.= " AND t.tag_id IN ('".implode( "','", ee()->db->escape_str(explode('|', $this->tag_id)))."')";
@@ -2806,12 +2802,12 @@ class Tag extends Module_builder_tag
 			{
 				if ($this->preference('convert_case') != 'n')
 				{
-					array_walk($tags, create_function('$value', 'return strtolower($value);'));		
+					array_walk($tags, create_function('$value', 'return strtolower($value);'));
 				}
 
 				$sql	.= " AND BINARY t.tag_name IN ('".implode( "','", ee()->db->escape_str($tags) )."')";
 			}
-			
+
 			$sql	.= " AND e.type = 'gallery'";
 
 			$query	= ee()->db->query( $sql );
@@ -2863,7 +2859,7 @@ class Tag extends Module_builder_tag
 			return $this->_no_results('tag');
 		}
 
-        return $tagdata;
+		return $tagdata;
 	}
 
 	/**	END gallery entries */
@@ -2888,13 +2884,13 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 
 		if ( class_exists('Gallery') === FALSE )
-        {
-        	require PATH_MOD.'/gallery/mod.gallery'.EXT;
-        }
+		{
+			require PATH_MOD.'/gallery/mod.gallery'.EXT;
+		}
 
-        $this->actions()->db_charset_switch('default');
+		$this->actions()->db_charset_switch('default');
 
-        $GAL = new Gallery;
+		$GAL = new Gallery;
 
 		//	----------------------------------------
 		//	Pass params
@@ -2902,10 +2898,10 @@ class Tag extends Module_builder_tag
 
 		ee()->TMPL->tagparams['entry_id']	= $this->entry_id;
 
-        if ( isset( $params['dynamic'] ) AND $params['dynamic'] == "off" )
-        {
+		if ( isset( $params['dynamic'] ) AND $params['dynamic'] == "off" )
+		{
 			$GAL->dynamic = FALSE;
-        }
+		}
 
 		//	----------------------------------------
 		//	Pass params
@@ -2935,23 +2931,23 @@ class Tag extends Module_builder_tag
 		}
 
 		// --------------------------------------------
-        //  Order By Relevance for the Related Entries Tag
-        // --------------------------------------------
+		//  Order By Relevance for the Related Entries Tag
+		// --------------------------------------------
 
-        if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND isset(ee()->TMPL->tagparts[1]) AND ee()->TMPL->tagparts[1] == 'related_gallery_entries')
-        {
-        	$GAL->sql = preg_replace("/ORDER BY.+?(LIMIT|$)/is",
-        								'ORDER BY FIELD(e.entry_id, '.str_replace('|', ',', $this->entry_id).'), e.entry_date desc, e.entry_id desc \1',
-        								$GAL->sql);
-        }
+		if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND isset(ee()->TMPL->tagparts[1]) AND ee()->TMPL->tagparts[1] == 'related_gallery_entries')
+		{
+			$GAL->sql = preg_replace("/ORDER BY.+?(LIMIT|$)/is",
+										'ORDER BY FIELD(e.entry_id, '.str_replace('|', ',', $this->entry_id).'), e.entry_date desc, e.entry_id desc \1',
+										$GAL->sql);
+		}
 
 
 		$GAL->query = ee()->db->query($GAL->sql);
 
-        if ($GAL->query->num_rows() == 0)
-        {
+		if ($GAL->query->num_rows() == 0)
+		{
 			return FALSE;
-        }
+		}
 
 		//we need to set the results object else some built in items wont work
 		$GAL->query->result = $GAL->query->result_array();
@@ -2962,25 +2958,25 @@ class Tag extends Module_builder_tag
 		}
 
 		// --------------------------------------------
-        //  Last Bit of Relevance Code
-        // --------------------------------------------
+		//  Last Bit of Relevance Code
+		// --------------------------------------------
 
-        if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND isset(ee()->TMPL->tagparts[1]) AND ee()->TMPL->tagparts[1] == 'related_gallery_entries')
-        {
-        	foreach ( $GAL->query->result_array() as $key => $row )
+		if (ee()->TMPL->fetch_param('orderby') == 'relevance' AND isset(ee()->TMPL->tagparts[1]) AND ee()->TMPL->tagparts[1] == 'related_gallery_entries')
+		{
+			foreach ( $GAL->query->result_array() as $key => $row )
 			{
 				$GAL->query->result[$key]['max_relevance']		 = $this->max_relevance;
 				$GAL->query->result[$key]['tag_relevance']		 = $this->tag_relevance[$row['entry_id']];
 				$GAL->query->result[$key]['tag_relevance_percent'] = round(($this->tag_relevance[$row['entry_id']] / $this->max_relevance) * 100);
 			}
-        }
+		}
 
 		// --------------------------------------------
-        //  Typography
-        // --------------------------------------------
-		
+		//  Typography
+		// --------------------------------------------
+
 		ee()->load->library('typography');
-		
+
 		if (APP_VER >= 2.0)
 		{
 			ee()->typography->initialize();
@@ -3027,29 +3023,29 @@ class Tag extends Module_builder_tag
 		//	Entry id?
 		//	----------------------------------------
 
-		if ( $this->_entry_id() === FALSE ) 
+		if ( $this->_entry_id() === FALSE )
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	related_entries hack for fake pagination
 		//	if orderby relevance is used in ee1, it
 		//	shows the items out of order unless
 		//	you have some form of pagination
 		//--------------------------------------------
-		
-		if (/*APP_VER < 2.0 AND*/ 
-			ee()->TMPL->fetch_param('orderby') == 'relevance' AND 
+
+		if (/*APP_VER < 2.0 AND*/
+			ee()->TMPL->fetch_param('orderby') == 'relevance' AND
 			! stristr(ee()->TMPL->tagdata, LD . 'paginate' . RD) AND
 			! stristr(ee()->TMPL->tagdata, LD . 'tag_paginate' . RD))
 		{
 			ee()->TMPL->tagdata .= '{paginate}{if entry_id == "999999999"}{pagination_links}{' .
 									T_SLASH . 'if}{' . T_SLASH . 'paginate}';
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	tag group
 		//--------------------------------------------
 
@@ -3080,7 +3076,7 @@ class Tag extends Module_builder_tag
 				return $this->no_results();
 			}
 		}
-					
+
 		//	----------------------------------------
 		//	Get tag ids for entry
 		//	----------------------------------------
@@ -3091,48 +3087,48 @@ class Tag extends Module_builder_tag
 		{
 			$sql .= ", COUNT(DISTINCT te1.tag_id) AS tag_relevance";
 		}
-		
+
 		if (count(ee()->TMPL->site_ids) == 1)
 		{
 			$sql .= " FROM 			exp_tag_entries AS te2
-					  INNER JOIN 	exp_tag_entries te1 
+					  INNER JOIN 	exp_tag_entries te1
 					  ON 			te1.tag_id = te2.tag_id
-					  WHERE 		te1.type = 'channel' 
+					  WHERE 		te1.type = 'channel'
 					  AND 			te2.type = 'channel'
 					  AND			te2.entry_id = '".ee()->db->escape_str($this->entry_id)."'
-					  AND			te1.entry_id != '".ee()->db->escape_str($this->entry_id)."'";	
+					  AND			te1.entry_id != '".ee()->db->escape_str($this->entry_id)."'";
 		}
 		else
 		{
 			// So much work, just to get it to work across multiple Sites.
-			
+
 			$sql .= " FROM 			exp_tag_entries AS te2
-					  INNER JOIN 	exp_tag_tags tt2 
+					  INNER JOIN 	exp_tag_tags tt2
 					  ON 			tt2.tag_id = te2.tag_id
-					  INNER JOIN 	exp_tag_tags tt1 
+					  INNER JOIN 	exp_tag_tags tt1
 					  ON 			tt1.tag_name = tt2.tag_name
-					  INNER JOIN 	exp_tag_entries te1 
+					  INNER JOIN 	exp_tag_entries te1
 					  ON 			te1.tag_id = tt1.tag_id
-					  WHERE 		te1.type = 'channel' 
+					  WHERE 		te1.type = 'channel'
 					  AND 			te2.type = 'channel'
 					  AND 			te2.entry_id = '".ee()->db->escape_str($this->entry_id)."'
 					  AND 			te1.entry_id != '".ee()->db->escape_str($this->entry_id)."'
-					  AND 			te1.site_id 
+					  AND 			te1.site_id
 					  IN 			('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
-					  AND 			te2.site_id 
-					  IN 			('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";				
+					  AND 			te2.site_id
+					  IN 			('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	tag group
 		//--------------------------------------------
-		
+
 		if (isset($group_ids) AND $group_ids)
 		{
 			$sql	.= " AND te1.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
-			$sql	.= " AND te2.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";			
+			$sql	.= " AND te2.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
 		}
-					
+
 		//	----------------------------------------
 		//	Exclude?
 		//	----------------------------------------
@@ -3150,22 +3146,22 @@ class Tag extends Module_builder_tag
 		//----------------------------------------
 		//	Rank limit
 		//----------------------------------------
-		//	We can pull entries by tag rank. 
-		//	Users can indicate their ranking method 
+		//	We can pull entries by tag rank.
+		//	Users can indicate their ranking method
 		//	and pull by clicks, entries or both.
 		//----------------------------------------
 
 		if ( ctype_digit( ee()->TMPL->fetch_param('rank_limit') ) === TRUE )
 		{
 			$rank		= array();
-			
+
 			if (count(ee()->TMPL->site_ids) == 1)
 			{
 				$sql_rank	= " SELECT 		tt1.tag_id, ( tt1.total_entries + tt1.clicks ) AS sum
 								FROM 		exp_tag_entries AS te2
-								INNER JOIN 	exp_tag_tags tt1 
+								INNER JOIN 	exp_tag_tags tt1
 								ON 			tt1.tag_id = te2.tag_id
-								WHERE 		tt1.site_id 
+								WHERE 		tt1.site_id
 								IN 			('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
 								AND 		te2.type = 'channel'
 								AND 		te2.entry_id != '".ee()->db->escape_str($this->entry_id)."'";
@@ -3174,17 +3170,17 @@ class Tag extends Module_builder_tag
 			{
 				$sql_rank	= " SELECT 		tt1.tag_id, ( tt1.total_entries + tt1.clicks ) AS sum
 								FROM 		exp_tag_entries AS te2
-								INNER JOIN 	exp_tag_tags tt2 
+								INNER JOIN 	exp_tag_tags tt2
 								ON 			tt2.tag_id = te2.tag_id
-								INNER JOIN 	exp_tag_tags tt1 
+								INNER JOIN 	exp_tag_tags tt1
 								ON 			tt1.tag_name = tt2.tag_name
-								WHERE 		tt1.site_id 
+								WHERE 		tt1.site_id
 								IN 			('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
 								AND 		te2.type = 'channel'
 								AND 		te2.entry_id != '".ee()->db->escape_str($this->entry_id)."'";
 			}
 
-			//--------------------------------------------  
+			//--------------------------------------------
 			//	tag group
 			//--------------------------------------------
 
@@ -3205,7 +3201,7 @@ class Tag extends Module_builder_tag
 			{
 				$query	= ee()->db->query( $sql );
 			}
-						
+
 			if ( $query->num_rows() == 0 )
 			{
 				$this->actions()->db_charset_switch('default');
@@ -3310,10 +3306,10 @@ class Tag extends Module_builder_tag
 		if (ee()->TMPL->fetch_param('orderby') == 'relevance')
 		{
 
-			$msql =	"SELECT COUNT(DISTINCT tag_id) AS count 
-				 	 FROM 	exp_tag_entries
-				  	 WHERE 	type 		= 'channel' 
-				 	 AND 	entry_id 	= " . ee()->db->escape_str($this->entry_id);
+			$msql =	"SELECT COUNT(DISTINCT tag_id) AS count
+					 FROM 	exp_tag_entries
+					 WHERE 	type 		= 'channel'
+					 AND 	entry_id 	= " . ee()->db->escape_str($this->entry_id);
 
 			if (isset($group_ids) AND $group_ids)
 			{
@@ -3321,7 +3317,7 @@ class Tag extends Module_builder_tag
 			}
 
 
-			$mquery = ee()->db->query($msql);						
+			$mquery = ee()->db->query($msql);
 
 			$this->max_relevance = $mquery->row('count');
 		}
@@ -3356,7 +3352,7 @@ class Tag extends Module_builder_tag
 			return $this->_no_results('tag');
 		}
 
-        return $tagdata;
+		return $tagdata;
 	}
 
 	/**	END related entries */
@@ -3371,7 +3367,7 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 		//	Entry id?
 		//	----------------------------------------
-		
+
 		if (ee()->TMPL->fetch_param('type') == 'gallery')
 		{
 			$type = 'gallery';
@@ -3384,7 +3380,7 @@ class Tag extends Module_builder_tag
 		else
 		{
 			$type = 'channel';
-			
+
 			if ( $this->_entry_id( 'channel' ) === FALSE )
 			{
 				$this->actions()->db_charset_switch('default');
@@ -3408,7 +3404,7 @@ class Tag extends Module_builder_tag
 				   LEFT JOIN exp_tag_tags tt ON tt.tag_id = te1.tag_id
 				   WHERE te1.type = 'gallery' AND te2.type = '{$type}'
 				   AND te2.entry_id = '".ee()->db->escape_str($this->entry_id)."'";
-				   
+
 		if ($type == 'gallery')
 		{
 			$sql .= " AND te1.entry_id != '".ee()->db->escape_str($this->entry_id)."'";
@@ -3451,7 +3447,7 @@ class Tag extends Module_builder_tag
 			//	----------------------------------------
 			//	Filter to our tags only
 			//	----------------------------------------
-			
+
 			if (ee()->TMPL->fetch_param('orderby') == 'relevance')
 			{
 				$query	= ee()->db->query( $sql." GROUP BY te1.entry_id ORDER BY tag_relevance" );
@@ -3460,7 +3456,7 @@ class Tag extends Module_builder_tag
 			{
 				$query	= ee()->db->query( $sql );
 			}
-			
+
 			if ( $query->num_rows() == 0 )
 			{
 				$this->actions()->db_charset_switch('default');
@@ -3596,7 +3592,7 @@ class Tag extends Module_builder_tag
 			return $this->_no_results('tag');
 		}
 
-        return $tagdata;
+		return $tagdata;
 	}
 
 	/**	END related gallery entries */
@@ -3609,43 +3605,43 @@ class Tag extends Module_builder_tag
 	public function cloud()
 	{
 		$max 					= 1;  // Must be 1, cannot divide by zero!
-                        		
+
 		$rank_by				= (ee()->TMPL->fetch_param('rank_by') == 'clicks') ? 'clicks' : 'entries';
-                        		
-		$groups					= ( ctype_digit( ee()->TMPL->fetch_param('groups') ) === TRUE ) ? 
+
+		$groups					= ( ctype_digit( ee()->TMPL->fetch_param('groups') ) === TRUE ) ?
 									ee()->TMPL->fetch_param('groups') : 5;
-                        		
-		$start					= ( ctype_digit( ee()->TMPL->fetch_param('start') ) === TRUE ) ? 
+
+		$start					= ( ctype_digit( ee()->TMPL->fetch_param('start') ) === TRUE ) ?
 									ee()->TMPL->fetch_param('start') : 10;
-                        		
-		$step					= ( ctype_digit( ee()->TMPL->fetch_param('step') ) === TRUE ) ? 
+
+		$step					= ( ctype_digit( ee()->TMPL->fetch_param('step') ) === TRUE ) ?
 									ee()->TMPL->fetch_param('step') : 2;
-                        		
+
 		$username				= $this->either_or(ee()->TMPL->fetch_param('username'), '');
-                        		
+
 		$author_id				= $this->either_or(ee()->TMPL->fetch_param('author_id'), '');
-                        		
+
 		$show_expired			= $this->either_or(ee()->TMPL->fetch_param('show_expired'), 'no');
-                            	
+
 		$show_future_entries	= $this->either_or(ee()->TMPL->fetch_param('show_future_entries'), 'no');
-                            	
+
 		$start_on				= $this->either_or(ee()->TMPL->fetch_param('start_on'), '');
-                            	
+
 		$status					= $this->either_or(ee()->TMPL->fetch_param('status'), '');
-                            	
+
 		$stop_before			= $this->either_or(ee()->TMPL->fetch_param('stop_before'), '');
-                            	
+
 		$day_limit				= $this->either_or(ee()->TMPL->fetch_param('day_limit'), '');
-                            	
+
 		$websafe_separator		= $this->either_or(ee()->TMPL->fetch_param('websafe_separator'), '+');
 
 
 		// --------------------------------------------
-        //  Fixed Order - Override of tag_id="" parameter
-        // --------------------------------------------
-        
-        // fixed entry id ordering
-		if (($fixed_order = ee()->TMPL->fetch_param('fixed_order')) === FALSE OR 
+		//  Fixed Order - Override of tag_id="" parameter
+		// --------------------------------------------
+
+		// fixed entry id ordering
+		if (($fixed_order = ee()->TMPL->fetch_param('fixed_order')) === FALSE OR
 			 preg_match('/[^0-9\|]/', $fixed_order))
 		{
 			$fixed_order = FALSE;
@@ -3656,9 +3652,9 @@ class Tag extends Module_builder_tag
 			// Other parameters will still affect results. I blame the user for using them if it
 			// does not work they way they want.
 			ee()->TMPL->tagparams['tag_id'] = $fixed_order;
-			
+
 			$fixed_order = preg_split('/\|/', $fixed_order, -1, PREG_SPLIT_NO_EMPTY);
-			
+
 			// A quick and easy way to reverse the order of these entries.  People might like this.
 			if (ee()->TMPL->fetch_param('sort') == 'desc')
 			{
@@ -3679,8 +3675,8 @@ class Tag extends Module_builder_tag
 
 		$entries_prefix	= "g";
 
-		if ( ee()->db->table_exists('exp_gallery_entries') === FALSE OR 
-			 ee()->TMPL->fetch_param('gallery') === FALSE OR 
+		if ( ee()->db->table_exists('exp_gallery_entries') === FALSE OR
+			 ee()->TMPL->fetch_param('gallery') === FALSE OR
 			 ee()->TMPL->fetch_param('gallery') == '')
 		{
 			$entries_prefix	= "wt";
@@ -3689,32 +3685,32 @@ class Tag extends Module_builder_tag
 			//	Begin SQL
 			//	----------------------------------------
 
-			$sql = "SELECT 		t.tag_id, 
-								t.clicks, 
-								t.tag_name, 
+			$sql = "SELECT 		t.tag_id,
+								t.clicks,
+								t.tag_name,
 								t.total_entries,
-								{$tag_group_sql_insert} 
-								t.channel_entries, 
+								{$tag_group_sql_insert}
+								t.channel_entries,
 								t.gallery_entries,
-						   		w.{$this->sc->db->channel_id}, 
-								w.{$this->sc->db->channel_url}, 
-								w.comment_url, 
+								w.{$this->sc->db->channel_id},
+								w.{$this->sc->db->channel_url},
+								w.comment_url,
 								COUNT(e.tag_id) AS count
 					FROM 		exp_tag_tags AS t
-					LEFT JOIN 	exp_tag_entries e 
+					LEFT JOIN 	exp_tag_entries e
 					ON 			t.tag_id = e.tag_id
-					LEFT JOIN 	{$this->sc->db->channels} AS w 
+					LEFT JOIN 	{$this->sc->db->channels} AS w
 					ON 			w.{$this->sc->db->channel_id} = e.channel_id";
 
 			//	----------------------------------------
 			//	Handle date stuff
 			//	----------------------------------------
 
-			if ( 	$start_on != '' OR 
-					$stop_before != '' OR 
-					$day_limit != '' OR 
-					$status != '' OR 
-					$show_expired != '' OR 
+			if ( 	$start_on != '' OR
+					$stop_before != '' OR
+					$day_limit != '' OR
+					$status != '' OR
+					$show_expired != '' OR
 					$show_future_entries != '' )
 			{
 				$sql	.= " LEFT JOIN {$this->sc->db->channel_titles} AS wt ON wt.entry_id = e.entry_id";
@@ -3724,14 +3720,14 @@ class Tag extends Module_builder_tag
 			//	Are we checking category?
 			//	----------------------------------------
 
-			if ( ee()->TMPL->fetch_param('category') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('category') !== FALSE AND
 				 ee()->TMPL->fetch_param('category') != '' )
 			{
 				//	----------------------------------------
 				//	Get the id
 				//	----------------------------------------
 
-				if ( ctype_digit( str_replace( array("not ", "|"), '', 
+				if ( ctype_digit( str_replace( array("not ", "|"), '',
 							ee()->TMPL->fetch_param('category') ) ) === TRUE )
 				{
 					$cat_id	= ee()->TMPL->fetch_param('category');
@@ -3742,12 +3738,12 @@ class Tag extends Module_builder_tag
 				}
 				else
 				{
-					$cat_q	= ee()->db->query( 
-						"SELECT cat_id 
+					$cat_q	= ee()->db->query(
+						"SELECT cat_id
 						 FROM 	exp_categories
-						 WHERE 	site_id 
-						 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')				   
-						 AND 	cat_url_title = '".ee()->db->escape_str( ee()->TMPL->fetch_param('category') )."'" 
+						 WHERE 	site_id
+						 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
+						 AND 	cat_url_title = '".ee()->db->escape_str( ee()->TMPL->fetch_param('category') )."'"
 					);
 
 					if ( $cat_q->num_rows() > 0 )
@@ -3771,19 +3767,19 @@ class Tag extends Module_builder_tag
 				}
 			}
 
-			$sql .= " WHERE t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."') 
+			$sql .= " WHERE t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
 					  AND t.tag_id != '' AND e.type = 'channel'";
 
 			//	----------------------------------------
 			//	No bad tags
 			//	----------------------------------------
-			
+
 			if (count($this->bad()) > 0)
 			{
 				$sql	.= " AND t.tag_name NOT IN ('".implode( "','", ee()->db->escape_str($this->bad()) )."')";
 			}
-			
-			//--------------------------------------------  
+
+			//--------------------------------------------
 			//	tag group
 			//--------------------------------------------
 
@@ -3819,11 +3815,11 @@ class Tag extends Module_builder_tag
 			{
 				$sql	.= " AND e.tag_group_id IN (".implode( ",", ee()->db->escape_str($group_ids) ).")";
 			}
-			
+
 			//	----------------------------------------
 			//	 Narrow Tags via Tag Name
 			//	----------------------------------------
-	
+
 			if ( ee()->TMPL->fetch_param('tag_name') !== FALSE AND ee()->TMPL->fetch_param('tag_name') != '' )
 			{
 				if (substr( ee()->TMPL->fetch_param('tag_name'), 0, 4) == 'not ')
@@ -3845,11 +3841,11 @@ class Tag extends Module_builder_tag
 					}
 				}
 			}
-			
+
 			//	----------------------------------------
 			//	 Narrow Tags via Tag ID
 			//	----------------------------------------
-	
+
 			if ( ee()->TMPL->fetch_param('tag_id') !== FALSE AND ee()->TMPL->fetch_param('tag_id') != '' )
 			{
 				$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('tag_id'), "t.tag_id" );
@@ -3899,12 +3895,12 @@ class Tag extends Module_builder_tag
 				else
 				{
 					$zchannels = array();
-					
+
 					foreach ($query->result_array() as $row)
 					{
 						$zchannels[] = $row[$this->sc->db->channel_id];
 					}
-							
+
 					$sql .= " AND e.channel_id IN ('".implode("','", ee()->db->escape_str($zchannels))."')";
 				}
 			}
@@ -3912,7 +3908,7 @@ class Tag extends Module_builder_tag
 			// ----------------------------------------------
 			//  We only select entries that have not expired
 			// ----------------------------------------------
-			
+
 			$timestamp = (ee()->TMPL->cache_timestamp != '') ? ee()->TMPL->cache_timestamp : ee()->localize->now;
 
 			if ( $show_future_entries != 'yes')
@@ -3931,18 +3927,18 @@ class Tag extends Module_builder_tag
 			//	Begin SQL
 			//	----------------------------------------
 
-			$sql = "SELECT 		t.tag_id, 
-								t.clicks, 
-								t.tag_name, 
+			$sql = "SELECT 		t.tag_id,
+								t.clicks,
+								t.tag_name,
 								t.total_entries,
-								{$tag_group_sql_insert} 
-								t.channel_entries, 
-								t.gallery_entries, 
+								{$tag_group_sql_insert}
+								t.channel_entries,
+								t.gallery_entries,
 								COUNT(e.tag_id) AS count
 					FROM 		exp_tag_tags t
-					LEFT JOIN 	exp_tag_entries e 
+					LEFT JOIN 	exp_tag_entries e
 					ON 			t.tag_id = e.tag_id
-					LEFT JOIN 	exp_gallery_entries g 
+					LEFT JOIN 	exp_gallery_entries g
 					ON 			g.entry_id = e.entry_id";
 
 			//	----------------------------------------
@@ -3958,26 +3954,26 @@ class Tag extends Module_builder_tag
 			//	Where clause
 			//	----------------------------------------
 
-			$sql .= " WHERE t.site_id 
-					  IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."') 
-					  AND 	t.tag_id != '' 
+			$sql .= " WHERE t.site_id
+					  IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
+					  AND 	t.tag_id != ''
 					  AND 	e.type = 'gallery'";
 
 			//	----------------------------------------
 			//	No bad tags
 			//	----------------------------------------
-			
+
 			if (count($this->bad()) > 0)
 			{
-				$sql	.= " AND 	t.tag_name 
+				$sql	.= " AND 	t.tag_name
 							 NOT IN ('".implode( "','", ee()->db->escape_str($this->bad()) )."')";
 			}
-			
+
 			//	----------------------------------------
 			//	Exclude?
 			//	----------------------------------------
 
-			if ( ee()->TMPL->fetch_param('exclude') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('exclude') !== FALSE AND
 				 ee()->TMPL->fetch_param('exclude') != '' )
 			{
 				$ids	= $this->_exclude( ee()->TMPL->fetch_param('exclude') );
@@ -3987,12 +3983,12 @@ class Tag extends Module_builder_tag
 					$sql	.= " AND t.tag_id NOT IN ('".implode( "','", ee()->db->escape_str($ids) )."')";
 				}
 			}
-			
+
 			//	----------------------------------------
 			//	 Narrow Tags via Tag Name
 			//	----------------------------------------
-	
-			if ( ee()->TMPL->fetch_param('tag_name') !== FALSE AND 
+
+			if ( ee()->TMPL->fetch_param('tag_name') !== FALSE AND
 				 ee()->TMPL->fetch_param('tag_name') != '' )
 			{
 				if (substr( ee()->TMPL->fetch_param('tag_name'), 0, 4) == 'not ')
@@ -4014,12 +4010,12 @@ class Tag extends Module_builder_tag
 					}
 				}
 			}
-			
+
 			//	----------------------------------------
 			//	 Narrow Tags via Tag ID
 			//	----------------------------------------
-	
-			if ( ee()->TMPL->fetch_param('tag_id') !== FALSE AND 
+
+			if ( ee()->TMPL->fetch_param('tag_id') !== FALSE AND
 				 ee()->TMPL->fetch_param('tag_id') != '' )
 			{
 				$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('tag_id'), "t.tag_id" );
@@ -4029,7 +4025,7 @@ class Tag extends Module_builder_tag
 			//	Are we checking category?
 			//	----------------------------------------
 
-			if ( ee()->TMPL->fetch_param('category') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('category') !== FALSE AND
 				 ee()->TMPL->fetch_param('category') != '' )
 			{
 				if ( ctype_digit( str_replace( array("not ", "|"), "", ee()->TMPL->fetch_param('category') ) ) === TRUE )
@@ -4046,14 +4042,14 @@ class Tag extends Module_builder_tag
 			//	Filter by gallery
 			//	----------------------------------------
 
-			if ( ee()->TMPL->fetch_param('gallery') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('gallery') !== FALSE AND
 				 ee()->TMPL->fetch_param('gallery') != '' )
 			{
-				$query	= ee()->db->query( 
-					"SELECT gallery_id 
-					 FROM 	exp_galleries 
-					 WHERE 	gallery_short_name = '" . 
-							ee()->db->escape_str( ee()->TMPL->fetch_param('gallery') )."'" 
+				$query	= ee()->db->query(
+					"SELECT gallery_id
+					 FROM 	exp_galleries
+					 WHERE 	gallery_short_name = '" .
+							ee()->db->escape_str( ee()->TMPL->fetch_param('gallery') )."'"
 				);
 
 				if ( $query->num_rows() > 0 )
@@ -4100,8 +4096,8 @@ class Tag extends Module_builder_tag
 		elseif ( $username != '' )
 		{
 			$m_id = ee()->db->query(
-				"SELECT member_id 
-				 FROM 	exp_members 
+				"SELECT member_id
+				 FROM 	exp_members
 				 WHERE 	username='".ee()->db->escape_str( $username )."'"
 			);
 
@@ -4124,14 +4120,14 @@ class Tag extends Module_builder_tag
 		else // OR
 		{
 			//	----------------------------------------
-	        //	Limit query by date range given in tag parameters
-	        //	----------------------------------------
+			//	Limit query by date range given in tag parameters
+			//	----------------------------------------
 
-	        if ( $start_on != '' )
-	            $sql .= " AND ".$entries_prefix.".entry_date >= '".ee()->localize->convert_human_date_to_gmt($start_on)."'";
+			if ( $start_on != '' )
+				$sql .= " AND ".$entries_prefix.".entry_date >= '".ee()->localize->convert_human_date_to_gmt($start_on)."'";
 
-	        if ( $stop_before != '' )
-	            $sql .= " AND ".$entries_prefix.".entry_date < '".ee()->localize->convert_human_date_to_gmt($stop_before)."'";
+			if ( $stop_before != '' )
+				$sql .= " AND ".$entries_prefix.".entry_date < '".ee()->localize->convert_human_date_to_gmt($stop_before)."'";
 		}
 
 		// --------------------------------------
@@ -4139,7 +4135,7 @@ class Tag extends Module_builder_tag
 		// --------------------------------------
 
 		if (ee()->TMPL->fetch_param('most_popular') !== FALSE AND
-		    is_numeric(ee()->TMPL->fetch_param('most_popular')))
+			is_numeric(ee()->TMPL->fetch_param('most_popular')))
 		{
 			if ($rank_by == 'clicks')
 			{
@@ -4172,19 +4168,19 @@ class Tag extends Module_builder_tag
 		// --------------------------------------
 
 		$query = ee()->db->query(preg_replace(
-			"/SELECT(.*?)\s+FROM\s+/is", 
-			'SELECT COUNT(DISTINCT e.tag_id) AS count FROM ', 
+			"/SELECT(.*?)\s+FROM\s+/is",
+			'SELECT COUNT(DISTINCT e.tag_id) AS count FROM ',
 			$sql
 		));
 
-		if ($query->row('count') == 0 AND 
+		if ($query->row('count') == 0 AND
 			 (strpos( ee()->TMPL->tagdata, 'paginate' ) !== FALSE AND
 			  strpos( ee()->TMPL->tagdata, 'tag_paginate' ) !== FALSE))
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->return_data = $this->_no_results('tag');
 		}
-		
+
 		$this->p_limit  	= ( ! ee()->TMPL->fetch_param('limit'))  ? 20 : ee()->TMPL->fetch_param('limit');
 		$this->total_rows 	= $query->row('count');
 		$this->p_page 		= ($this->p_page == '' || ($this->p_limit > 1 AND $this->p_page == 1)) ? 0 : $this->p_page;
@@ -4195,15 +4191,15 @@ class Tag extends Module_builder_tag
 		}
 
 		$prefix = stristr(ee()->TMPL->tagdata, LD . 'tag_paginate' . RD);
-		
+
 		//get pagination info
 		$pagination_data = $this->universal_pagination(array(
 			'sql'					=> preg_replace(
-				"/SELECT(.*?)\s+FROM\s+/is", 
-				'SELECT COUNT(DISTINCT e.tag_id) AS count FROM ', 
+				"/SELECT(.*?)\s+FROM\s+/is",
+				'SELECT COUNT(DISTINCT e.tag_id) AS count FROM ',
 				$sql
-			), 
-			'total_results'			=> $this->total_rows, 
+			),
+			'total_results'			=> $this->total_rows,
 			'tagdata'				=> ee()->TMPL->tagdata,
 			'limit'					=> $this->p_limit,
 			'uri_string'			=> ee()->uri->uri_string,
@@ -4250,22 +4246,22 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 
 		$ord	= " ORDER BY t.tag_name";
-		
+
 		if ($fixed_order !== FALSE)
 		{
 			$ord = ' ORDER BY FIELD(e.tag_id, '.implode(',', $fixed_order).') ';
 		}
-		elseif ( ee()->TMPL->fetch_param('orderby') !== FALSE AND 
+		elseif ( ee()->TMPL->fetch_param('orderby') !== FALSE AND
 				 ee()->TMPL->fetch_param('orderby') != '' )
 		{
-			foreach ( array( 
-					'random' 			=> "rand()", 
-					'clicks'			=> "t.clicks", 
-					'count' 			=> 'count', 
-					'total_entries' 	=> 't.total_entries', 
-					'channel_entries' 	=> 't.channel_entries', 
-					'gallery_entries' 	=> 't.gallery_entries', 
-					'tag_name' 			=> 't.tag_name' 
+			foreach ( array(
+					'random' 			=> "rand()",
+					'clicks'			=> "t.clicks",
+					'count' 			=> 'count',
+					'total_entries' 	=> 't.total_entries',
+					'channel_entries' 	=> 't.channel_entries',
+					'gallery_entries' 	=> 't.gallery_entries',
+					'tag_name' 			=> 't.tag_name'
 				) as $key => $val )
 			{
 				if ( $key == ee()->TMPL->fetch_param('orderby') )
@@ -4281,10 +4277,10 @@ class Tag extends Module_builder_tag
 		//	Set sort
 		//	----------------------------------------
 
-		if (ee()->TMPL->fetch_param('orderby') !== 'random' AND 
+		if (ee()->TMPL->fetch_param('orderby') !== 'random' AND
 			$fixed_order === FALSE)
 		{
-			if ( (ee()->TMPL->fetch_param('sort') !== FALSE AND 
+			if ( (ee()->TMPL->fetch_param('sort') !== FALSE AND
 				 ee()->TMPL->fetch_param('sort') == 'asc')
 				 OR stristr($ord, 'tag_name') )
 			{
@@ -4306,9 +4302,9 @@ class Tag extends Module_builder_tag
 		}
 		else
 		{
-			$sql .= ( ctype_digit( ee()->TMPL->fetch_param('limit') ) === TRUE ) ? 
+			$sql .= ( ctype_digit( ee()->TMPL->fetch_param('limit') ) === TRUE ) ?
 					' LIMIT '.ee()->TMPL->fetch_param('limit') : ' LIMIT 20';
-        }
+		}
 
 		//	----------------------------------------
 		//	Query
@@ -4325,7 +4321,7 @@ class Tag extends Module_builder_tag
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
+
 		//	----------------------------------------
 		//	What's the max?
 		//	----------------------------------------
@@ -4346,7 +4342,7 @@ class Tag extends Module_builder_tag
 					$max	= ( $row['count'] > $max ) ? $row['count']: $max;
 				}
 			}
-        }
+		}
 
 		//	----------------------------------------
 		//	Order alpha
@@ -4363,7 +4359,7 @@ class Tag extends Module_builder_tag
 			$tags[$row['tag_name']]['channel_entries']	= $row['channel_entries'];
 			$tags[$row['tag_name']]['weblog_entries']	= $row['channel_entries'];
 			$tags[$row['tag_name']]['gallery_entries']	= $row['gallery_entries'];
-			
+
 			// -------------------------------------
 			//	tag group total entries?
 			// -------------------------------------
@@ -4379,26 +4375,26 @@ class Tag extends Module_builder_tag
 				}
 			}
 
-			$tags[$row['tag_name']][$this->sc->db->channel_id]	= ( 
-				isset( $row[$this->sc->db->channel_id] ) === TRUE 
+			$tags[$row['tag_name']][$this->sc->db->channel_id]	= (
+				isset( $row[$this->sc->db->channel_id] ) === TRUE
 			) ? $row[$this->sc->db->channel_id]: '';
-			
-			$tags[$row['tag_name']]['gallery_id']				= ( 
-				isset( $row['gallery_id'] ) === TRUE 
+
+			$tags[$row['tag_name']]['gallery_id']				= (
+				isset( $row['gallery_id'] ) === TRUE
 			) ? $row['gallery_id']: '';
-			
-			$tags[$row['tag_name']][$this->sc->db->channel_url]	= ( 
-				isset( $row[$this->sc->db->channel_url] ) === TRUE 
+
+			$tags[$row['tag_name']][$this->sc->db->channel_url]	= (
+				isset( $row[$this->sc->db->channel_url] ) === TRUE
 			) ? rtrim( $row[$this->sc->db->channel_url], "\/" )."/": '';
-			
+
 			$tags[$row['tag_name']]['comment_url']		= (
-				isset( $row[$this->sc->db->channel_url]) === TRUE 
+				isset( $row[$this->sc->db->channel_url]) === TRUE
 			) ?	rtrim( $row['comment_url'], "\/" ) ."/" : '';
-			
-			$tags[$row['tag_name']]['size']				= ceil( (($rank_by == 'clicks') ? 
-															$row['clicks'] : 
+
+			$tags[$row['tag_name']]['size']				= ceil( (($rank_by == 'clicks') ?
+															$row['clicks'] :
 															$row['count']) / ( $max / $groups ) );
-			
+
 			$tags[$row['tag_name']]['step']				= $tags[$row['tag_name']]['size'] * $step + $start;
 		}
 
@@ -4413,11 +4409,11 @@ class Tag extends Module_builder_tag
 
 		$r			= '';
 		$position	= 0;
-				
+
 		$subscribe_links = (stristr(ee()->TMPL->tagdata, 'subscribe_link'.RD)) ? TRUE : FALSE;
-		
+
 		$qs	= (ee()->config->item('force_query_string') == 'y') ? '' : '?';
-		
+
 		$total_results = count($tags);
 
 		foreach ( $tags as $key => $row )
@@ -4481,15 +4477,15 @@ class Tag extends Module_builder_tag
 				foreach ($tag_groups as $id => $short_name)
 				{
 					$tagdata = str_replace(
-						 LD.'total_entries_' . $id.RD, 
-						 $row['total_entries_' . $id], 
-						 $tagdata 
+						 LD.'total_entries_' . $id.RD,
+						 $row['total_entries_' . $id],
+						 $tagdata
 					);
-					
-					$tagdata = str_replace( 
-						LD.'total_entries_' . $short_name.RD, 
-						$row['total_entries_' . $id], 
-						$tagdata 
+
+					$tagdata = str_replace(
+						LD.'total_entries_' . $short_name.RD,
+						$row['total_entries_' . $id],
+						$tagdata
 					);
 				}
 			}
@@ -4505,11 +4501,11 @@ class Tag extends Module_builder_tag
 			$tagdata = str_replace( LD.$this->sc->db->channel_url.RD, $row[$this->sc->db->channel_url], $tagdata );
 			$tagdata = str_replace( LD.'comment_url'.RD, $row['comment_url'], $tagdata );
 			$tagdata = str_replace( LD.'total_results'.RD, $row['total_results'], $tagdata );
-			
+
 			// --------------------------------------------
 			//  Subscribe/Unsubscribe Links
 			// --------------------------------------------
-			
+
 			if ($subscribe_links === TRUE)
 			{
 				if (ee()->session->userdata['member_id'] == 0)
@@ -4539,25 +4535,25 @@ class Tag extends Module_builder_tag
 		$this->return_data	= ( $backspace > 0 ) ? substr( $r, 0, - $backspace ): $r;
 
 		// --------------------------------------------
-        //  Pagination?
-        // --------------------------------------------
+		//  Pagination?
+		// --------------------------------------------
 
-        //legacy support for non prefix
-        if ($prefix)
-        {
+		//legacy support for non prefix
+		if ($prefix)
+		{
 			$this->return_data = $this->parse_pagination(array(
 				'prefix' 	=> 'tag',
 				'tagdata' 	=> $this->return_data
-			));        	
-        }
-        else
-        {
+			));
+		}
+		else
+		{
 			$this->return_data = $this->parse_pagination(array(
 				'tagdata' 	=> $this->return_data
-			));  
-        }
-        
-        $this->actions()->db_charset_switch('default');
+			));
+		}
+
+		$this->actions()->db_charset_switch('default');
 
 		return $this->return_data;
 	}
@@ -4565,12 +4561,12 @@ class Tag extends Module_builder_tag
 	/**	END cloud */
 
 
-    //	----------------------------------------
-    //	Parse
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Parse
+	//	----------------------------------------
 
 	public function parse( $clean = TRUE )
-	{		
+	{
 		if ( $this->entry_id == '' ) return FALSE;
 
 		$str				= '';
@@ -4579,13 +4575,13 @@ class Tag extends Module_builder_tag
 		$data				= array();
 		$existing_entries	= array();
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	separator override?
 		//--------------------------------------------
 
 		//incomming tag_sperator_override
 		if (ee()->input->post('tag_separator_override') AND
-		 	array_key_exists(ee()->input->post('tag_separator_override'), $this->data->delimiters))
+			array_key_exists(ee()->input->post('tag_separator_override'), $this->data->delimiters))
 		{
 			$this->separator_override = ee()->input->post('tag_separator_override');
 		}
@@ -4609,25 +4605,25 @@ class Tag extends Module_builder_tag
 		// 	the new ones submitted, so let's delete the current tags.
 		//	----------------------------------------
 
-		if ( $this->remote === FALSE AND 
+		if ( $this->remote === FALSE AND
 			 $this->batch === FALSE )
 		{
-			//--------------------------------------------  
-			//	Temporary note: removing this check ( remote != 'y' ) 
-			// 	for now so that we can delete remotely entered tags 
+			//--------------------------------------------
+			//	Temporary note: removing this check ( remote != 'y' )
+			// 	for now so that we can delete remotely entered tags
 			//	in the CP if we don't like them.
-			//--------------------------------------------	
-			
-			ee()->db->query( 
-				"DELETE FROM 	exp_tag_entries 
-				 WHERE 			type 			= '" . ee()->db->escape_str($this->type) 		. "' 
+			//--------------------------------------------
+
+			ee()->db->query(
+				"DELETE FROM 	exp_tag_entries
+				 WHERE 			type 			= '" . ee()->db->escape_str($this->type) 		. "'
 				 AND 			entry_id 		= '" . ee()->db->escape_str($this->entry_id) 	. "'
 				 AND			tag_group_id	= '" . ee()->db->escape_str($this->tag_group_id) 	. "'"
 			);
 		}
 
 		//	----------------------------------------
-		// 	In local mode, if we have no tags.  
+		// 	In local mode, if we have no tags.
 		//	Clean orphans and get out.
 		//	----------------------------------------
 
@@ -4644,7 +4640,7 @@ class Tag extends Module_builder_tag
 
 		$tag_ids	= array();
 
-		$sql		= "SELECT 	tag_id, remote 
+		$sql		= "SELECT 	tag_id, remote
 					   FROM 	exp_tag_entries
 					   WHERE	type 	 	= '" . ee()->db->escape_str($this->type) 		. "'
 					   AND 		entry_id 	= '" . ee()->db->escape_str($this->entry_id) 	. "'
@@ -4668,10 +4664,10 @@ class Tag extends Module_builder_tag
 		if ( $this->channel_id == '' )
 		{
 			$query	= ee()->db->query(
-				"SELECT {$this->sc->db->channel_id}, site_id 
+				"SELECT {$this->sc->db->channel_id}, site_id
 				 FROM 	{$this->sc->db->channel_titles}
 				 WHERE 	site_id = '" . ee()->db->escape_str(ee()->config->item('site_id'))."'
-				 AND 	entry_id = '".ee()->db->escape_str($this->entry_id) . "'" 
+				 AND 	entry_id = '".ee()->db->escape_str($this->entry_id) . "'"
 			);
 
 			if ( $query->num_rows() > 0 )
@@ -4684,27 +4680,27 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 		//	Update existing tags
 		//	----------------------------------------
-		// 	We want tags that match the submitted set. 
+		// 	We want tags that match the submitted set.
 		//	We will update their edit dates.
 		//	----------------------------------------
 
 		$str_array = $this->str_arr();
-		
+
 		if ($this->preference('convert_case') != 'n')
 		{
-			array_walk($str_array, create_function('$value', 'return strtolower($value);'));		
+			array_walk($str_array, create_function('$value', 'return strtolower($value);'));
 		}
-		
+
 		$str = $this->array_dbstr($str_array);
 
-		$sql	= "SELECT 	t.tag_id, t.tag_name 
+		$sql	= "SELECT 	t.tag_id, t.tag_name
 				   FROM 	exp_tag_tags AS t
 				   WHERE 	t.site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."'
-				   AND 		BINARY t.tag_name 
+				   AND 		BINARY t.tag_name
 				   IN 		('".$str."')";
-   
+
 		$query	= ee()->db->query( $sql );
-		
+
 		//	----------------------------------------
 		//	For each existing tag found in str...
 		//	----------------------------------------
@@ -4723,12 +4719,12 @@ class Tag extends Module_builder_tag
 			//	Update the existing tag edit date
 			//	----------------------------------------
 
-			ee()->db->query( 
-				ee()->db->update_string( 
-					'exp_tag_tags', 
-					array( 'edit_date' 	=> ee()->localize->now ), 
-					array( 'tag_id' 	=> $row['tag_id'] ) 
-				) 
+			ee()->db->query(
+				ee()->db->update_string(
+					'exp_tag_tags',
+					array( 'edit_date' 	=> ee()->localize->now ),
+					array( 'tag_id' 	=> $row['tag_id'] )
+				)
 			);
 
 			//	----------------------------------------
@@ -4740,8 +4736,8 @@ class Tag extends Module_builder_tag
 				'channel_id'	=> $this->channel_id,
 				'site_id'		=> $this->site_id,
 				'entry_id'		=> $this->entry_id,
-				'author_id'		=> ( $this->author_id == '' ) ? 
-									ee()->session->userdata['member_id'] : 
+				'author_id'		=> ( $this->author_id == '' ) ?
+									ee()->session->userdata['member_id'] :
 									$this->author_id,
 				'ip_address'	=> ee()->input->ip_address(),
 				'remote'		=> ( $this->remote ) ? 'y': 'n',
@@ -4750,7 +4746,7 @@ class Tag extends Module_builder_tag
 			);
 
 			//	----------------------------------------
-			// 	Are we in local mode? Meaning are we NOT 
+			// 	Are we in local mode? Meaning are we NOT
 			//	using the tag form to let users submit tags?
 			//	----------------------------------------
 
@@ -4759,33 +4755,33 @@ class Tag extends Module_builder_tag
 				//	----------------------------------------
 				//	Claim ownership of a remotely entered tag
 				//	----------------------------------------
-				// 	We're in the context of tags from our str 
+				// 	We're in the context of tags from our str
 				//	that already exist. If we're in
-				// 	local mode and this entry already has a 
+				// 	local mode and this entry already has a
 				//	reference to this tag, but the tag was
-				// 	previously entered remotely, we'll change 
+				// 	previously entered remotely, we'll change
 				//	the ownership to the person
 				// 	currently editing.
 				//	----------------------------------------
 
-				if ( isset( $existing_entries[$row['tag_id']] ) AND 
+				if ( isset( $existing_entries[$row['tag_id']] ) AND
 					 $existing_entries[$row['tag_id']] == 'y' )
 				{
-					ee()->db->query( 
-						ee()->db->update_string( 
-							'exp_tag_entries', 
-							$data, 
-							array( 
-								'entry_id' 		=> $this->entry_id, 
+					ee()->db->query(
+						ee()->db->update_string(
+							'exp_tag_entries',
+							$data,
+							array(
+								'entry_id' 		=> $this->entry_id,
 								'tag_id' 		=> $row['tag_id'],
 								'tag_group_id' 	=> $this->tag_group_id
-							) 
-						) 
+							)
+						)
 					);
 				}
 
 				//	----------------------------------------
-				// 	Otherwise, if the entry does not have a 
+				// 	Otherwise, if the entry does not have a
 				//	reference to the tag, make it so.
 				//	----------------------------------------
 
@@ -4799,14 +4795,14 @@ class Tag extends Module_builder_tag
 			// If remote mode and no entry exists
 			// ----------------------------------------
 
-			elseif ( isset( $existing_entries[$row['tag_id']] ) === FALSE AND 
+			elseif ( isset( $existing_entries[$row['tag_id']] ) === FALSE AND
 					 in_array( $row['tag_name'], $this->bad() ) === FALSE )
 			{
 				ee()->db->query(
-					ee()->db->insert_string( 
-						'exp_tag_entries', 
-						$data 
-					) 
+					ee()->db->insert_string(
+						'exp_tag_entries',
+						$data
+					)
 				);
 			}
 		}
@@ -4822,12 +4818,12 @@ class Tag extends Module_builder_tag
 		//	6.	Then we clean-up the DB of orphaned tags.
 		//	----------------------------------------
 
-		$new	= array_unique( 
-			array_diff( 
-				$this->str_arr( TRUE ), 
-				$this->existing, 
-				$this->bad() 
-			) 
+		$new	= array_unique(
+			array_diff(
+				$this->str_arr( TRUE ),
+				$this->existing,
+				$this->bad()
+			)
 		);
 
 		foreach ( $new as $n )
@@ -4836,20 +4832,20 @@ class Tag extends Module_builder_tag
 
 			if ( $n != '' )
 			{
-				$n	= ( $this->preference('convert_case') != 'n' ) ? 
+				$n	= ( $this->preference('convert_case') != 'n' ) ?
 						$this->_strtolower( $n ) : $n;
 
-				ee()->db->query( 
-					ee()->db->insert_string( 
-						'exp_tag_tags', 
-						array( 
+				ee()->db->query(
+					ee()->db->insert_string(
+						'exp_tag_tags',
+						array(
 							'tag_alpha'		=> $this->_first_character($n),
 							'tag_name'		=> $n,
 							'entry_date' 	=> ee()->localize->now,
 							'site_id'		=> ee()->config->item('site_id'),
-							'author_id'		=> ee()->session->userdata['member_id'] 
-						) 
-					) 
+							'author_id'		=> ee()->session->userdata['member_id']
+						)
+					)
 				);
 
 				$data	= array(
@@ -4857,8 +4853,8 @@ class Tag extends Module_builder_tag
 					'site_id'		=> $this->site_id,
 					'channel_id'	=> $this->channel_id,
 					'entry_id'		=> $this->entry_id,
-					'author_id'		=> ( $this->author_id == '' ) ? 
-										ee()->session->userdata['member_id'] : 
+					'author_id'		=> ( $this->author_id == '' ) ?
+										ee()->session->userdata['member_id'] :
 										$this->author_id,
 					'ip_address'	=> ee()->input->ip_address(),
 					'remote'		=> ( $this->remote ) ? 'y': 'n',
@@ -4872,26 +4868,26 @@ class Tag extends Module_builder_tag
 			}
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	fix field data if applicable
 		//--------------------------------------------
 
 		if ($this->from_ft == TRUE AND $this->field_id !== 'default')
-		{						
+		{
 			$final_tags 		= $this->data->get_entry_tags_by_id(
-				$this->entry_id, 
+				$this->entry_id,
 				array(
 					'tag_group_id' => $this->tag_group_id
 				)
 			);
-			
+
 			$final_tag_names	= array();
-			
+
 			foreach ($final_tags as $row)
 			{
-				$final_tag_names[] = $row['tag_name']; 
+				$final_tag_names[] = $row['tag_name'];
 			}
-			
+
 			//if we have any, concat with new line
 			if ( ! empty($final_tag_names))
 			{
@@ -4933,32 +4929,32 @@ class Tag extends Module_builder_tag
 	//	----------------------------------------
 	//	 Member Subscribed to this Tag?
 	//	----------------------------------------
-	
+
 	public function subscribed( )
-	{	
+	{
 		$cond		= array();
-		
+
 		$marker		= ( ee()->TMPL->fetch_param('marker') ) ? ee()->TMPL->fetch_param('marker'): 'tag';
-		
+
 		//	----------------------------------------
 		//	Member ID Required
 		//	----------------------------------------
 
-		if ( 
-				ee()->session->userdata['member_id'] == 0 AND 
+		if (
+				ee()->session->userdata['member_id'] == 0 AND
 				(ee()->TMPL->fetch_param('member_id') == FALSE OR ctype_digit(ee()->TMPL->fetch_param('member_id')) === FALSE)
 		   )
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
+
 		$member_id = (ee()->TMPL->fetch_param('member_id') !== FALSE) ? ee()->TMPL->fetch_param('member_id') : ee()->session->userdata['member_id'];
-		
+
 		// --------------------------------------------
-        //  Tag ID
-        // --------------------------------------------
-				
+		//  Tag ID
+		// --------------------------------------------
+
 		if ( ee()->TMPL->fetch_param('tag_id') !== FALSE AND ctype_digit(ee()->TMPL->fetch_param('tag_id')))
 		{
 			$tag_id = ee()->TMPL->fetch_param('tag_id');
@@ -4969,7 +4965,7 @@ class Tag extends Module_builder_tag
 			{
 				$tag	= ee()->TMPL->fetch_param('tag');
 			}
-	
+
 			elseif ( $key = array_pop(array_keys( ee()->uri->segments, $marker ) ) )
 			{
 				if ( isset( ee()->uri->segments[ $key + 1 ] ) )
@@ -4977,164 +4973,164 @@ class Tag extends Module_builder_tag
 					$tag	= rawurldecode(ee()->uri->segments[ $key + 1 ]);
 				}
 			}
-			
+
 			if ( ! isset($tag))
 			{
 				$this->actions()->db_charset_switch('default');
 				return $this->_no_results('tag');
 			}
-			
+
 			//	----------------------------------------
 			//	Remove reserved characters and Clean
 			//	----------------------------------------
-	
+
 			$websafe_separator		= ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND ee()->TMPL->fetch_param('websafe_separator') != '' ) ? ee()->TMPL->fetch_param('websafe_separator'): '+';
-	
+
 			$tag = str_replace( $websafe_separator, " ", $tag );
 			$tag = str_replace( "%20", " ", $tag );
 			$tag = $this->_clean_str( $tag );
-			
+
 			// --------------------------------------------
 			//  Find Tag ID
 			// --------------------------------------------
-			
+
 			$sql		 = "SELECT tag_id FROM exp_tag_tags AS t ";
-			
+
 			$sql		.= " WHERE t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-			
+
 			if ($this->preference('convert_case') != 'n')
 			{
-				$tag = strtolower($tag);		
+				$tag = strtolower($tag);
 			}
 
 			$sql		.= ee()->functions->sql_andor_string( $tag, 'BINARY  t.tag_name');
-			
+
 			$query = ee()->db->query($sql);
-			
+
 			if ($query->num_rows() == 0)
 			{
 				$this->actions()->db_charset_switch('default');
-				
+
 				$cond['subscribed']		= FALSE;
 				$cond['not_subscribed']	= TRUE;
-				
+
 				return $this->return_data = ee()->functions->prep_conditionals(ee()->TMPL->tagdata, $cond);
 			}
-			
+
 			$tag_id = $query->row('tag_id');
 		}
-		
-		// --------------------------------------------
-        //  Check for Subscriptions
-        // --------------------------------------------
 
-		$sql	= "SELECT COUNT(*) AS count 
-				   FROM exp_tag_subscriptions 
+		// --------------------------------------------
+		//  Check for Subscriptions
+		// --------------------------------------------
+
+		$sql	= "SELECT COUNT(*) AS count
+				   FROM exp_tag_subscriptions
 				   WHERE site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
-				   AND tag_id = '".ee()->db->escape_str( $tag_id )."' 
+				   AND tag_id = '".ee()->db->escape_str( $tag_id )."'
 				   AND member_id = '".ee()->db->escape_str( $member_id )."'";
-		
+
 		$query = ee()->db->query($sql);
-		
+
 		$this->actions()->db_charset_switch('default');
-		
+
 		$cond['subscribed']		= ($query->row('count') > 0)  ? TRUE: FALSE;
 		$cond['not_subscribed']	= ($query->row('count') == 0) ? TRUE: FALSE;
-		
+
 		$tagdata = ee()->functions->prep_conditionals(ee()->TMPL->tagdata, $cond);
-		
+
 		// --------------------------------------------
-        //  Subscribe and Unsubscribe Links
-        // --------------------------------------------
-			
+		//  Subscribe and Unsubscribe Links
+		// --------------------------------------------
+
 		if (stristr(ee()->TMPL->tagdata, 'subscribe_link'.RD))
 		{
 			$tagdata = str_replace(LD.'subscribe_link'.RD,
 									ee()->functions->fetch_site_index(0, 0).QUERY_MARKER.'ACT='.ee()->functions->fetch_action_id('Tag', 'subscribe').'&amp;tag_id='.$tag_id,
 									$tagdata);
-									
+
 			$tagdata = str_replace(LD.'unsubscribe_link'.RD,
 								   ee()->functions->fetch_site_index(0, 0).QUERY_MARKER.'ACT='.ee()->functions->fetch_action_id('Tag', 'unsubscribe').'&amp;tag_id='.$tag_id,
 								   $tagdata);
 		}
-		
+
 		return $this->return_data = $tagdata;
 	}
-	
+
 	/* End tagged() */
-	
-	
+
+
 	//	----------------------------------------
-    //	Subscribe to Tag
-    //	----------------------------------------
+	//	Subscribe to Tag
+	//	----------------------------------------
 
 	public function subscribe( )
-	{	
+	{
 		if (ee()->session->userdata['member_id'] == 0 OR ! isset($_GET['tag_id']))
 		{
 			return FALSE;
 		}
-		
+
 		// --------------------------------------------
-        //  Valid Tag ID?  Fetch Tag Name Too...
-        // --------------------------------------------
-        
-        $query = ee()->db->query("SELECT t.tag_id, t.tag_name
+		//  Valid Tag ID?  Fetch Tag Name Too...
+		// --------------------------------------------
+
+		$query = ee()->db->query("SELECT t.tag_id, t.tag_name
 						   FROM exp_tag_tags AS t
 						   WHERE t.site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."'
 						   AND t.tag_id = '".ee()->db->escape_str($_GET['tag_id'])."'");
-						   
+
 		if ($query->num_rows() == 0)
 		{
 			return FALSE;
 		}
-		
+
 		// --------------------------------------------
-        //  Remove Subscription
-        // --------------------------------------------
-        
-        // Overwrites all other subscriptions
-        
-        ee()->db->query("DELETE FROM exp_tag_subscriptions 
+		//  Remove Subscription
+		// --------------------------------------------
+
+		// Overwrites all other subscriptions
+
+		ee()->db->query("DELETE FROM exp_tag_subscriptions
 					WHERE tag_id = ".$query->row('tag_id')."
 					AND site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."'
 					AND member_id = '".ee()->db->escape_str(ee()->session->userdata['member_id'])."'");
 
-        			
-        // --------------------------------------------
-        //  Add Subscription
-        // --------------------------------------------
-        
-        ee()->db->query(ee()->db->insert_string('exp_tag_subscriptions',
+
+		// --------------------------------------------
+		//  Add Subscription
+		// --------------------------------------------
+
+		ee()->db->query(ee()->db->insert_string('exp_tag_subscriptions',
 									  array('tag_id'	=> $query->row('tag_id'),
 											'site_id'	=> ee()->config->item('site_id'),
 											'member_id'	=> ee()->session->userdata['member_id'])));
-        							  		
+
 		// --------------------------------------------
-        //  Output Successful Subscribe Message
-        // --------------------------------------------
-        
-        if (isset($_GET['return']))
-        {
-        	$return = (isset($_GET['return'])) ? ee()->functions->create_url( $_GET['return']) : ee()->functions->fetch_site_index();
-        
-        	$data = array(	'title' 	=> ee()->lang->line('tag_subscribed'),
+		//  Output Successful Subscribe Message
+		// --------------------------------------------
+
+		if (isset($_GET['return']))
+		{
+			$return = (isset($_GET['return'])) ? ee()->functions->create_url( $_GET['return']) : ee()->functions->fetch_site_index();
+
+			$data = array(	'title' 	=> ee()->lang->line('tag_subscribed'),
 							'heading'	=> ee()->lang->line('thank_you'),
 							'content'	=> str_replace('%tag_name%', $query->row('tag_name'), ee()->lang->line('successful_tag_subscribe')),
 							'link'		=> array($return, ee()->config->item('site_name'))
 						 );
-										
+
 			ee()->output->show_message($data);
 		}
-		
+
 		exit(ee()->lang->line('successful_tag_subscribe'));
 	}
 	/**	END subscribe */
-	
-	
+
+
 	//	----------------------------------------
-    //	UnSubscribe to Tag
-    //	----------------------------------------
+	//	UnSubscribe to Tag
+	//	----------------------------------------
 
 	public function unsubscribe()
 	{
@@ -5142,146 +5138,146 @@ class Tag extends Module_builder_tag
 		{
 			return FALSE;
 		}
-		
+
 		// --------------------------------------------
-        //  Valid Tag ID?  Fetch Tag Name Too...
-        // --------------------------------------------
-        
-        $query = ee()->db->query("SELECT t.tag_id, t.tag_name
+		//  Valid Tag ID?  Fetch Tag Name Too...
+		// --------------------------------------------
+
+		$query = ee()->db->query("SELECT t.tag_id, t.tag_name
 						   FROM exp_tag_tags AS t
 						   WHERE t.site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."'
 						   AND t.tag_id = '".ee()->db->escape_str($_GET['tag_id'])."'");
-				   
+
 		if ($query->num_rows() == 0)
 		{
 			return FALSE;
 		}
-		
-		
+
+
 		// --------------------------------------------
-        //  Remove Subscription
-        // --------------------------------------------
-        
-        ee()->db->query("DELETE FROM exp_tag_subscriptions 
+		//  Remove Subscription
+		// --------------------------------------------
+
+		ee()->db->query("DELETE FROM exp_tag_subscriptions
 					WHERE tag_id = ".$query->row('tag_id')."
 					AND site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."'
 					AND member_id = '".ee()->db->escape_str(ee()->session->userdata['member_id'])."'");
-						
-        // --------------------------------------------
-        //  Output Successful Subscribe Message
-        // --------------------------------------------
-        
-        if (isset($_GET['return']))
-        {
-			
+
+		// --------------------------------------------
+		//  Output Successful Subscribe Message
+		// --------------------------------------------
+
+		if (isset($_GET['return']))
+		{
+
 			$return = (isset($_GET['return'])) ? ee()->functions->create_url( $_GET['return']) : ee()->functions->fetch_site_index();
-			
+
 			$data = array(	'title' 	=> ee()->lang->line('tag_unsubscribed'),
 							'heading'	=> ee()->lang->line('thank_you'),
 							'content'	=> str_replace('%tag_name%', $query->row('tag_name'), ee()->lang->line('successful_tag_unsubscribe')),
 							'link'		=> array($return, ee()->config->item('site_name'))
 						 );
-											
+
 			ee()->output->show_message($data);
 		}
-		
+
 		exit(ee()->lang->line('successful_tag_unsubscribe'));
 	}
 	/**	END subscribe */
-	
-	
-	
+
+
+
 	//	----------------------------------------
-    //	 List of Tags to Which Member is Subscribed
-    //	----------------------------------------
+	//	 List of Tags to Which Member is Subscribed
+	//	----------------------------------------
 
 	public function subscriptions()
-	{	
+	{
 		//	----------------------------------------
 		//	Member ID Required
 		//	----------------------------------------
 
-		if ( 
-				ee()->session->userdata['member_id'] == 0 AND 
-				(ee()->TMPL->fetch_param('member_id') == FALSE OR 
+		if (
+				ee()->session->userdata['member_id'] == 0 AND
+				(ee()->TMPL->fetch_param('member_id') == FALSE OR
 				 ctype_digit(ee()->TMPL->fetch_param('member_id')) === FALSE)
 		   )
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
+
 		// --------------------------------------------
-        //  Check for Subscriptions
-        // --------------------------------------------
-        
-		$member_id = (ee()->TMPL->fetch_param('member_id') !== FALSE) ? 
-						ee()->TMPL->fetch_param('member_id') : 
+		//  Check for Subscriptions
+		// --------------------------------------------
+
+		$member_id = (ee()->TMPL->fetch_param('member_id') !== FALSE) ?
+						ee()->TMPL->fetch_param('member_id') :
 						ee()->session->userdata['member_id'];
-        
-        $sql = "SELECT		t.*, t.tag_name AS tag
+
+		$sql = "SELECT		t.*, t.tag_name AS tag
 				FROM		exp_tag_subscriptions AS ts
 				LEFT JOIN	exp_tag_tags AS t ON ts.tag_id = t.tag_id
 				WHERE		ts.member_id = '".ee()->db->escape_str($member_id)."'
-				AND			ts.site_id IN ('".implode( "','", 
+				AND			ts.site_id IN ('".implode( "','",
 								ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-				
+
 		//	----------------------------------------
 		//	Exclude?
 		//	----------------------------------------
 
-		if ( ee()->TMPL->fetch_param('exclude') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('exclude') !== FALSE AND
 			 ee()->TMPL->fetch_param('exclude') != '' )
 		{
 			$ids	= $this->_exclude( ee()->TMPL->fetch_param('exclude') );
 
 			if ( is_array( $ids ) )
 			{
-				$sql	.= " AND t.tag_id NOT IN ('" . 
+				$sql	.= " AND t.tag_id NOT IN ('" .
 							implode( "','", ee()->db->escape_str($ids) )."')";
 			}
 		}
-				
+
 		// --------------------------------------
 		//  Pagination
 		// --------------------------------------
 
 		$query = ee()->db->query(preg_replace(
-			"/SELECT(.*?)\s+FROM\s+/is", 
-			'SELECT COUNT(DISTINCT t.tag_id) AS count FROM ', 
+			"/SELECT(.*?)\s+FROM\s+/is",
+			'SELECT COUNT(DISTINCT t.tag_id) AS count FROM ',
 			$sql
 		));
 
-		if ($query->row('count') == 0 AND 
+		if ($query->row('count') == 0 AND
 			 (strpos( ee()->TMPL->tagdata, 'paginate' ) !== FALSE AND
 			  strpos( ee()->TMPL->tagdata, 'tag_paginate' ) !== FALSE))
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
-		$this->p_limit  	= ( ! ee()->TMPL->fetch_param('limit'))  ? 
+
+		$this->p_limit  	= ( ! ee()->TMPL->fetch_param('limit'))  ?
 								20 : ee()->TMPL->fetch_param('limit');
 		$this->total_rows 	= $query->row('count');
-		$this->p_page 		= ($this->p_page == '' || 
-								($this->p_limit > 1 AND 
+		$this->p_page 		= ($this->p_page == '' ||
+								($this->p_limit > 1 AND
 								 $this->p_page == 1)) ? 0 : $this->p_page;
 
 		if ($this->p_page > $this->total_rows)
 		{
 			$this->p_page = 0;
-		}		
-		
+		}
+
 		$prefix = stristr(ee()->TMPL->tagdata, LD . 'tag_paginate' . RD);
 
 		//get pagination info
 		$pagination_data = $this->universal_pagination(array(
 			'sql'					=> preg_replace(
-				"/SELECT(.*?)\s+FROM\s+/is", 
-				'SELECT COUNT(DISTINCT t.tag_id) AS count FROM ', 
+				"/SELECT(.*?)\s+FROM\s+/is",
+				'SELECT COUNT(DISTINCT t.tag_id) AS count FROM ',
 				$sql
-			), 
-			'total_results'			=> $this->total_rows, 
+			),
+			'total_results'			=> $this->total_rows,
 			'tagdata'				=> ee()->TMPL->tagdata,
 			'limit'					=> $this->p_limit,
 			'uri_string'			=> ee()->uri->uri_string,
@@ -5295,24 +5291,24 @@ class Tag extends Module_builder_tag
 		{
 			ee()->TMPL->tagdata		= $pagination_data['tagdata'];
 		}
-	
+
 		//	----------------------------------------
 		//	Set order by
 		//	----------------------------------------
 
 		$ord	= " ORDER BY t.tag_name";
-		
-		$possible = array(	
-			'random'							=> "rand()", 
+
+		$possible = array(
+			'random'							=> "rand()",
 			'clicks'							=> "t.clicks",
-			'total_entries'						=> 't.total_entries', 
-			'channel_entries'					=> 't.channel_entries', 
-			'weblog_entries'					=> 't.channel_entries', 
-			'gallery_entries'					=> 't.gallery_entries', 
-			'tag_name'							=> 't.tag_name' 
+			'total_entries'						=> 't.total_entries',
+			'channel_entries'					=> 't.channel_entries',
+			'weblog_entries'					=> 't.channel_entries',
+			'gallery_entries'					=> 't.gallery_entries',
+			'tag_name'							=> 't.tag_name'
 		);
 
-		if ( ee()->TMPL->fetch_param('orderby') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('orderby') !== FALSE AND
 			 ee()->TMPL->fetch_param('orderby') != '' )
 		{
 			foreach ( $possible as $key => $val )
@@ -5333,7 +5329,7 @@ class Tag extends Module_builder_tag
 
 		if (ee()->TMPL->fetch_param('orderby') !== 'random')
 		{
-			if ( ee()->TMPL->fetch_param('sort') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('sort') !== FALSE AND
 				 ee()->TMPL->fetch_param('sort') == 'asc' )
 			{
 				$sql	.= " ASC";
@@ -5354,54 +5350,54 @@ class Tag extends Module_builder_tag
 		}
 		else
 		{
-			$sql .= ( ctype_digit( ee()->TMPL->fetch_param('limit') ) === TRUE ) ? 
+			$sql .= ( ctype_digit( ee()->TMPL->fetch_param('limit') ) === TRUE ) ?
 					' LIMIT '.ee()->TMPL->fetch_param('limit') : ' LIMIT 20';
-        }
+		}
 
 		//	----------------------------------------
 		//	Query
 		//	----------------------------------------
 
 		$query	= ee()->db->query( $sql );
-        					 
-        // --------------------------------------------
-        //  Results?
-        // --------------------------------------------
-        					 
-        if ($query->num_rows() == 0)
+
+		// --------------------------------------------
+		//  Results?
+		// --------------------------------------------
+
+		if ($query->num_rows() == 0)
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
+
 		//	----------------------------------------
 		//	Websafe separator
 		//	----------------------------------------
 
 		$websafe_separator	= '+';
 
-		if ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND
 			 ee()->TMPL->fetch_param('websafe_separator') != '' )
 		{
 			$websafe_separator	= ee()->TMPL->fetch_param('websafe_separator');
 		}
-        
-        // --------------------------------------------
-        //  Build Output
-        // --------------------------------------------
-        
-        $r  = '';
-        
+
+		// --------------------------------------------
+		//  Build Output
+		// --------------------------------------------
+
+		$r  = '';
+
 		$qs	= (ee()->config->item('force_query_string') == 'y') ? '' : '?';
-		
+
 		$subscribe_links = (stristr(ee()->TMPL->tagdata, 'subscribe_link'.RD)) ? TRUE : FALSE;
-		
+
 		$total_results   = count($query->result_array());
 
 		foreach ( $query->result_array() as $count => $row )
 		{
 			$tagdata	= ee()->TMPL->tagdata;
-			
+
 			$row['count']		  	= $count + 1;
 			$row['total_results'] 	= $total_results;
 
@@ -5417,32 +5413,32 @@ class Tag extends Module_builder_tag
 			//	----------------------------------------
 			//	Parse conditionals
 			//	----------------------------------------
-			
+
 			$tagdata	= ee()->functions->prep_conditionals( $tagdata, $row );
-			
+
 			// --------------------------------------------
 			//  Subscribe/Unsubscribe Links
 			// --------------------------------------------
-			
+
 			if ($subscribe_links === TRUE)
 			{
 				$tagdata = str_replace(
-					LD . 'subscribe_link' . RD, 
-					ee()->functions->fetch_site_index(0, 0) . $qs . 
-						'ACT='.ee()->functions->fetch_action_id('Tag', 'subscribe') . 
-						'&amp;tag_id='.$row['tag_id'], 
+					LD . 'subscribe_link' . RD,
+					ee()->functions->fetch_site_index(0, 0) . $qs .
+						'ACT='.ee()->functions->fetch_action_id('Tag', 'subscribe') .
+						'&amp;tag_id='.$row['tag_id'],
 					$tagdata
 				);
-				
+
 				$tagdata = str_replace(
-					LD . 'unsubscribe_link' . RD, 
-					ee()->functions->fetch_site_index(0, 0) . $qs . 
-						'ACT='.ee()->functions->fetch_action_id('Tag', 'unsubscribe') . 
-						'&amp;tag_id='.$row['tag_id'], 
+					LD . 'unsubscribe_link' . RD,
+					ee()->functions->fetch_site_index(0, 0) . $qs .
+						'ACT='.ee()->functions->fetch_action_id('Tag', 'unsubscribe') .
+						'&amp;tag_id='.$row['tag_id'],
 					$tagdata
 				);
 			}
-			
+
 			//	----------------------------------------
 			//	Parse singles
 			//	----------------------------------------
@@ -5455,82 +5451,82 @@ class Tag extends Module_builder_tag
 			$r	.= $tagdata;
 		}
 
-		$backspace	= ( ctype_digit( ee()->TMPL->fetch_param('backspace') ) === TRUE ) ? 
+		$backspace	= ( ctype_digit( ee()->TMPL->fetch_param('backspace') ) === TRUE ) ?
 						ee()->TMPL->fetch_param('backspace'): 0;
 
 		$this->return_data	= ( $backspace > 0 ) ? substr( $r, 0, - $backspace ) : $r;
 
 		// --------------------------------------------
-        //  Pagination?
-        // --------------------------------------------
+		//  Pagination?
+		// --------------------------------------------
 
-        //legacy support for non prefix
-        if ($prefix)
-        {
+		//legacy support for non prefix
+		if ($prefix)
+		{
 			$this->return_data = $this->parse_pagination(array(
 				'prefix' 	=> 'tag',
 				'tagdata' 	=> $this->return_data
-			));        	
-        }
-        else
-        {
+			));
+		}
+		else
+		{
 			$this->return_data = $this->parse_pagination(array(
 				'tagdata' 	=> $this->return_data
-			));  
-        }
-        
-        // --------------------------------------------
-        //  All Done, Switch Character Set and Return
-        // --------------------------------------------
-		
+			));
+		}
+
+		// --------------------------------------------
+		//  All Done, Switch Character Set and Return
+		// --------------------------------------------
+
 		$this->actions()->db_charset_switch('default');
 
 		return $this->return_data;
 	}
 	/** End subscriptions() */
-	
-	
+
+
 	//	----------------------------------------
-    //	 List of Tag with Ranking by Number of Subscriptions
-    //	----------------------------------------
+	//	 List of Tag with Ranking by Number of Subscriptions
+	//	----------------------------------------
 
 	public function subscriptions_rank()
 	{
 		// --------------------------------------------
-        //  Start Building Query
-        // --------------------------------------------
-        
-        $sql = "SELECT		t.*, t.tag_name AS tag, COUNT(ts.tag_id) AS subscription_rank 
+		//  Start Building Query
+		// --------------------------------------------
+
+		$sql = "SELECT		t.*, t.tag_name AS tag, COUNT(ts.tag_id) AS subscription_rank
 				FROM		exp_tag_subscriptions AS ts
 				INNER JOIN	exp_tag_tags AS t ON ts.tag_id = t.tag_id
 				WHERE		ts.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-        
-        // --------------------------------------------
-        //  Member ID?
-        // --------------------------------------------
-        
-        if (ee()->TMPL->fetch_param('member_id') !== FALSE)
-        {
-        	$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('member_id'), ' ts.member_id');
-        }
-        
-        // --------------------------------------------
-        //  Tag ID?
-        // --------------------------------------------
-        
-        if (ee()->TMPL->fetch_param('tag_id') !== FALSE)
-        {
-        	$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('tag_id'), ' ts.tag_id');
-        }
-        
-        // --------------------------------------------
-        //  Tag ID?
-        // --------------------------------------------
-        
-        if (ee()->TMPL->fetch_param('tag') !== FALSE)
-        {
-        	$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('tag'), ' t.tag_name');
-        }
+
+		// --------------------------------------------
+		//  Member ID?
+		// --------------------------------------------
+
+		if (ee()->TMPL->fetch_param('member_id') !== FALSE)
+		{
+			$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('member_id'), ' ts.member_id');
+		}
+
+		// --------------------------------------------
+		//  Tag ID?
+		// --------------------------------------------
+
+		if (ee()->TMPL->fetch_param('tag_id') !== FALSE)
+		{
+			$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('tag_id'), ' ts.tag_id');
+		}
+
+		// --------------------------------------------
+		//  Tag ID?
+		// --------------------------------------------
+
+		if (ee()->TMPL->fetch_param('tag') !== FALSE)
+		{
+			$sql .= ee()->functions->sql_andor_string( ee()->TMPL->fetch_param('tag'), ' t.tag_name');
+		}
 
 		// --------------------------------------
 		//  Pagination checkeroo! - Do Before GROUP BY!
@@ -5538,14 +5534,14 @@ class Tag extends Module_builder_tag
 
 		$query = ee()->db->query(preg_replace("/SELECT(.*?)\s+FROM\s+/is", 'SELECT COUNT(DISTINCT t.tag_id) AS count FROM ', $sql));
 
-		if ($query->row('count') == 0 AND 
+		if ($query->row('count') == 0 AND
 			 (strpos( ee()->TMPL->tagdata, 'paginate' ) !== FALSE AND
 			  strpos( ee()->TMPL->tagdata, 'tag_paginate' ) !== FALSE))
 		{
 			$this->actions()->db_charset_switch('default');
 			return $this->return_data = $this->_no_results('tag');
 		}
-		
+
 		$this->p_limit  	= ( ! ee()->TMPL->fetch_param('limit'))  ? 20 : ee()->TMPL->fetch_param('limit');
 		$this->total_rows 	= $query->row('count');
 		$this->p_page 		= ($this->p_page == '' || ($this->p_limit > 1 AND $this->p_page == 1)) ? 0 : $this->p_page;
@@ -5554,17 +5550,17 @@ class Tag extends Module_builder_tag
 		{
 			$this->p_page = 0;
 		}
-		
+
 		$prefix = stristr(ee()->TMPL->tagdata, LD . 'tag_paginate' . RD);
 
 		//get pagination info
 		$pagination_data = $this->universal_pagination(array(
 			'sql'					=> preg_replace(
-				"/SELECT(.*?)\s+FROM\s+/is", 
-				'SELECT COUNT(DISTINCT t.tag_id) AS count FROM ', 
+				"/SELECT(.*?)\s+FROM\s+/is",
+				'SELECT COUNT(DISTINCT t.tag_id) AS count FROM ',
 				$sql
-			), 
-			'total_results'			=> $this->total_rows, 
+			),
+			'total_results'			=> $this->total_rows,
 			'tagdata'				=> ee()->TMPL->tagdata,
 			'limit'					=> $this->p_limit,
 			'uri_string'			=> ee()->uri->uri_string,
@@ -5578,7 +5574,7 @@ class Tag extends Module_builder_tag
 		{
 			ee()->TMPL->tagdata		= $pagination_data['tagdata'];
 		}
-		
+
 		//	----------------------------------------
 		//	Set group by
 		//	----------------------------------------
@@ -5590,18 +5586,18 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 
 		$ord	= " ORDER BY subscription_rank";
-		
-		$possible = array(	
+
+		$possible = array(
 			'random'							=> "rand()",
 			'total_entries'						=> 't.total_entries',
-			'channel_entries'					=> 't.channel_entries', 
-			'weblog_entries'					=> 't.channel_entries', 
-			'gallery_entries'					=> 't.gallery_entries', 
+			'channel_entries'					=> 't.channel_entries',
+			'weblog_entries'					=> 't.channel_entries',
+			'gallery_entries'					=> 't.gallery_entries',
 			'tag_name'							=> 't.tag_name',
 			'subscription_rank'					=> 'subscription_rank'
 		);
 
-		if ( ee()->TMPL->fetch_param('orderby') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('orderby') !== FALSE AND
 			 ee()->TMPL->fetch_param('orderby') != '' )
 		{
 			foreach ( $possible as $key => $val )
@@ -5623,7 +5619,7 @@ class Tag extends Module_builder_tag
 
 		if (ee()->TMPL->fetch_param('orderby') !== 'random')
 		{
-			if ( ee()->TMPL->fetch_param('sort') !== FALSE AND 
+			if ( ee()->TMPL->fetch_param('sort') !== FALSE AND
 				 ee()->TMPL->fetch_param('sort') == 'asc' )
 			{
 				$sql	.= " ASC";
@@ -5644,9 +5640,9 @@ class Tag extends Module_builder_tag
 		}
 		else
 		{
-			$sql .= ( ctype_digit( ee()->TMPL->fetch_param('limit') ) === TRUE ) ? 
+			$sql .= ( ctype_digit( ee()->TMPL->fetch_param('limit') ) === TRUE ) ?
 						' LIMIT '.ee()->TMPL->fetch_param('limit') : ' LIMIT 20';
-        }
+		}
 
 		//	----------------------------------------
 		//	Query
@@ -5663,35 +5659,35 @@ class Tag extends Module_builder_tag
 			$this->actions()->db_charset_switch('default');
 			return $this->_no_results('tag');
 		}
-		
+
 		//	----------------------------------------
 		//	Websafe separator
 		//	----------------------------------------
 
 		$websafe_separator	= '+';
 
-		if ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND 
+		if ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND
 			 ee()->TMPL->fetch_param('websafe_separator') != '' )
 		{
 			$websafe_separator	= ee()->TMPL->fetch_param('websafe_separator');
 		}
-        
-        // --------------------------------------------
-        //  Build Output
-        // --------------------------------------------
-        
-        $r  = '';
-        
+
+		// --------------------------------------------
+		//  Build Output
+		// --------------------------------------------
+
+		$r  = '';
+
 		$qs	= (ee()->config->item('force_query_string') == 'y') ? '' : '?';
-		
+
 		$subscribe_links = (stristr(ee()->TMPL->tagdata, 'subscribe_link'.RD)) ? TRUE : FALSE;
-		
+
 		$total_results   = count($query->result_array());
 
 		foreach ( $query->result_array() as $count => $row )
 		{
 			$tagdata	= ee()->TMPL->tagdata;
-			
+
 			$row['count']		  	= $count + 1;
 			$row['total_results'] 	= $total_results;
 			$row['absolute_count']	= $this->p_page + $row['count'];
@@ -5706,32 +5702,32 @@ class Tag extends Module_builder_tag
 			//	----------------------------------------
 			//	Parse conditionals
 			//	----------------------------------------
-			
+
 			$tagdata	= ee()->functions->prep_conditionals( $tagdata, $row );
-			
+
 			// --------------------------------------------
 			//  Subscribe/Unsubscribe Links
 			// --------------------------------------------
-			
+
 			if ($subscribe_links === TRUE)
 			{
 				$tagdata = str_replace(
-					LD.'subscribe_link'.RD, 
-					ee()->functions->fetch_site_index(0, 0) . $qs . 
-						'ACT=' . ee()->functions->fetch_action_id('Tag', 'subscribe') . 
-						'&amp;tag_id='.$row['tag_id'], 
+					LD.'subscribe_link'.RD,
+					ee()->functions->fetch_site_index(0, 0) . $qs .
+						'ACT=' . ee()->functions->fetch_action_id('Tag', 'subscribe') .
+						'&amp;tag_id='.$row['tag_id'],
 					$tagdata
 				);
-				
+
 				$tagdata = str_replace(
-					LD.'unsubscribe_link'.RD, 
-					ee()->functions->fetch_site_index(0, 0) . $qs . 
-						'ACT=' . ee()->functions->fetch_action_id('Tag', 'unsubscribe') . 
-						'&amp;tag_id='.$row['tag_id'], 
+					LD.'unsubscribe_link'.RD,
+					ee()->functions->fetch_site_index(0, 0) . $qs .
+						'ACT=' . ee()->functions->fetch_action_id('Tag', 'unsubscribe') .
+						'&amp;tag_id='.$row['tag_id'],
 					$tagdata
 				);
 			}
-			
+
 			//	----------------------------------------
 			//	Parse singles
 			//	----------------------------------------
@@ -5744,42 +5740,42 @@ class Tag extends Module_builder_tag
 			$r	.= $tagdata;
 		}
 
-		$backspace	= ( ctype_digit( ee()->TMPL->fetch_param('backspace') ) === TRUE ) ? 
+		$backspace	= ( ctype_digit( ee()->TMPL->fetch_param('backspace') ) === TRUE ) ?
 						ee()->TMPL->fetch_param('backspace'): 0;
 
 		$this->return_data	= ( $backspace > 0 ) ? substr( $r, 0, - $backspace ): $r;
-		
-		
-		// --------------------------------------------
-        //  Pagination?
-        // --------------------------------------------
 
-        //legacy support for non prefix
-        if ($prefix)
-        {
+
+		// --------------------------------------------
+		//  Pagination?
+		// --------------------------------------------
+
+		//legacy support for non prefix
+		if ($prefix)
+		{
 			$this->return_data = $this->parse_pagination(array(
 				'prefix' 	=> 'tag',
 				'tagdata' 	=> $this->return_data
-			));        	
-        }
-        else
-        {
+			));
+		}
+		else
+		{
 			$this->return_data = $this->parse_pagination(array(
 				'tagdata' 	=> $this->return_data
-			));  
-        }
-        
-        // --------------------------------------------
-        //  All Done, Switch Character Set and Return
-        // --------------------------------------------
-		
+			));
+		}
+
+		// --------------------------------------------
+		//  All Done, Switch Character Set and Return
+		// --------------------------------------------
+
 		$this->actions()->db_charset_switch('default');
 
 		return $this->return_data;
 	}
 	/** End subscriptions_rank() */
-	
-	
+
+
 	//	----------------------------------------
 	//	 Number of Subscriptions to a Tag
 	//	----------------------------------------
@@ -5796,7 +5792,7 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 		//	Tag provided?
 		//	----------------------------------------
-		
+
 		if ( ee()->TMPL->fetch_param('tag_id') !== FALSE AND ctype_digit(ee()->TMPL->fetch_param('tag_id')))
 		{
 			$tag_id = ee()->TMPL->fetch_param('tag_id');
@@ -5807,7 +5803,7 @@ class Tag extends Module_builder_tag
 			{
 				$tag	= ee()->TMPL->fetch_param('tag');
 			}
-	
+
 			elseif ( $key = array_pop(array_keys( ee()->uri->segments, $marker ) ) )
 			{
 				if ( isset( ee()->uri->segments[ $key + 1 ] ) )
@@ -5815,72 +5811,72 @@ class Tag extends Module_builder_tag
 					$tag	= rawurldecode(ee()->uri->segments[ $key + 1 ]);
 				}
 			}
-			
+
 			if ( ! isset($tag))
 			{
 				$this->actions()->db_charset_switch('default');
 				return $this->_no_results('tag');
 			}
-			
+
 			//	----------------------------------------
 			//	Remove reserved characters and Clean
 			//	----------------------------------------
-	
+
 			$websafe_separator		= ( ee()->TMPL->fetch_param('websafe_separator') !== FALSE AND ee()->TMPL->fetch_param('websafe_separator') != '' ) ? ee()->TMPL->fetch_param('websafe_separator'): '+';
-	
+
 			$tag = str_replace( $websafe_separator, " ", $tag );
 			$tag = str_replace( "%20", " ", $tag );
 			$tag = $this->_clean_str( $tag );
-			
+
 			// --------------------------------------------
 			//  Find Tag ID
 			// --------------------------------------------
-			
+
 			$sql		 = "SELECT tag_id FROM exp_tag_tags AS t ";
-			
+
 			$sql		.= " WHERE t.site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-			
+
 			if ($this->preference('convert_case') != 'n')
 			{
-				$tag = strtolower($tag);	
+				$tag = strtolower($tag);
 			}
 
 			$sql		.= ee()->functions->sql_andor_string( $tag, 'BINARY t.tag_name');
-			
+
 			$query = ee()->db->query($sql);
-			
+
 			if ($query->num_rows() == 0)
 			{
 				$this->actions()->db_charset_switch('default');
 				return $this->_no_results('tag');
 			}
-			
+
 			$tag_id = $query->row('tag_id');
 		}
-		
+
 		// --------------------------------------------
-        //  Find Subscriptions
-        // --------------------------------------------
-        
-        $sql = "SELECT COUNT(member_id) AS count 
-        		FROM 	exp_tag_subscriptions
-        		WHERE	tag_id = '".ee()->db->escape_str($tag_id)."' 
-        		AND		site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
-		
+		//  Find Subscriptions
+		// --------------------------------------------
+
+		$sql = "SELECT COUNT(member_id) AS count
+				FROM 	exp_tag_subscriptions
+				WHERE	tag_id = '".ee()->db->escape_str($tag_id)."'
+				AND		site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')";
+
 		$query = ee()->db->query($sql);
-		
+
 		// --------------------------------------------
-        //  Output
-        // --------------------------------------------
-		
+		//  Output
+		// --------------------------------------------
+
 		return $this->return_data = str_replace(LD.'subscriptions_count'.RD, $query->row('count'), ee()->TMPL->tagdata);
 	}
 	/* END subscriptions_count() */
 
 
-    //	----------------------------------------
-    //	Delete
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Delete
+	//	----------------------------------------
 
 	public function delete( $entry_ids, $type = 'channel')
 	{
@@ -5895,12 +5891,12 @@ class Tag extends Module_builder_tag
 		//	Query
 		//	----------------------------------------
 
-        $sql = "SELECT DISTINCT entry_id FROM exp_tag_entries 
-        		WHERE site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."' 
-        		AND type = '".ee()->db->escape_str( $type )."' AND
-        		entry_id IN ('".implode("','", ee()->db->escape_str( $entry_ids ))."')";
+		$sql = "SELECT DISTINCT entry_id FROM exp_tag_entries
+				WHERE site_id = '".ee()->db->escape_str(ee()->config->item('site_id'))."'
+				AND type = '".ee()->db->escape_str( $type )."' AND
+				entry_id IN ('".implode("','", ee()->db->escape_str( $entry_ids ))."')";
 
-        $query = ee()->db->query($sql);
+		$query = ee()->db->query($sql);
 
 		//	----------------------------------------
 		//	Delete entries
@@ -5933,15 +5929,15 @@ class Tag extends Module_builder_tag
 	/**	END delete */
 
 
-    //	----------------------------------------
-    //	Clean tag
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Clean tag
+	//	----------------------------------------
 
-    function _clean_str( $str = '' )
-    {
-    	return $this->actions()->_clean_str($str);
-    }
-    /**	END clean tag */
+	function _clean_str( $str = '' )
+	{
+		return $this->actions()->_clean_str($str);
+	}
+	/**	END clean tag */
 
 
 	//	----------------------------------------
@@ -5954,10 +5950,10 @@ class Tag extends Module_builder_tag
 		//	Remove tags with no entries
 		//	----------------------------------------
 
-		$query	= ee()->db->query( 
+		$query	= ee()->db->query(
 			"SELECT 	t.tag_id, COUNT(e.tag_id) AS count
 			 FROM 		exp_tag_tags t
-			 LEFT JOIN 	exp_tag_entries e 
+			 LEFT JOIN 	exp_tag_entries e
 			 ON 		e.tag_id = t.tag_id
 			 GROUP BY 	e.tag_id DESC" );
 
@@ -6017,6 +6013,25 @@ class Tag extends Module_builder_tag
 
 
 	//	----------------------------------------
+	//	 String to Upper
+	//	----------------------------------------
+
+	public function _strtoupper($str)
+	{
+		if (function_exists('mb_strtoupper'))
+		{
+			return mb_strtoupper($str);
+		}
+		else
+		{
+			return strtoupper( $str );
+		}
+	}
+
+	/**	Make String into Upper Case */
+
+
+	//	----------------------------------------
 	//	Recount
 	//	----------------------------------------
 
@@ -6052,10 +6067,10 @@ class Tag extends Module_builder_tag
 		//	----------------------------------------
 
 		$sql	= "UPDATE exp_tag_tags SET clicks = (clicks + 1) WHERE";
-		
+
 		if ($this->preference('convert_case') != 'n')
 		{
-			array_walk($tags, create_function('$value', 'return strtolower($value);'));		
+			array_walk($tags, create_function('$value', 'return strtolower($value);'));
 		}
 
 		$sql	.= " BINARY tag_name IN ('".implode( "','", ee()->db->escape_str($tags) )."')";
@@ -6078,29 +6093,29 @@ class Tag extends Module_builder_tag
 	public function _exclude ( $str = '' )
 	{
 
-		
+
 		//	----------------------------------------
 		//	Parse string
 		//	----------------------------------------
-		
+
 		if ( $str == '' ) return FALSE;
-		
+
 		$ids	= array();
 		$like	= array();
 		$excludes	= preg_split( "/,|\|/", $str );
-		
+
 		// --------------------------------------------
 		//	Begin query
 		// --------------------------------------------
 
-		$sql = "SELECT tag_id FROM exp_tag_tags 
+		$sql = "SELECT tag_id FROM exp_tag_tags
 				WHERE site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."') ";
-		
+
 		// --------------------------------------------
 		//	Check for token so we know what kind of
 		// search to do. % = token
 		// --------------------------------------------
-		
+
 		foreach ($excludes as $key => $value)
 		{
 			if ( strpos( $value, '%' ) !== FALSE )
@@ -6109,7 +6124,7 @@ class Tag extends Module_builder_tag
 				unset($excludes[$key]);
 			}
 		}
-		
+
 		// --------------------------------------------
 		//	Check for plain Jane tags
 		// --------------------------------------------
@@ -6118,7 +6133,7 @@ class Tag extends Module_builder_tag
 		{
 			$like[] = "tag_name IN ('".implode( "','", ee()->db->escape_str( $excludes ) )."')";
 		}
-		
+
 		// --------------------------------------------
 		//	Tack on LIKE searches
 		// --------------------------------------------
@@ -6127,46 +6142,46 @@ class Tag extends Module_builder_tag
 		{
 			$sql .= "AND (".implode(' OR ', $like).")";
 		}
-		
+
 		// --------------------------------------------
 		//	Run the query
 		// --------------------------------------------
 
 		$query = ee()->db->query($sql);
-		
+
 		foreach ( $query->result_array() as $row )
 		{
 			$ids[]	= $row['tag_id'];
 		}
-		
+
 		return ( count($ids) > 0 ) ? $ids : FALSE;
 	}
 	/**	END exclude */
 
 	//	----------------------------------------
-    //	No results
-    //	----------------------------------------
+	//	No results
+	//	----------------------------------------
 
-    function _no_results ( $str = '' )
-    {
-    	$this->actions()->db_charset_switch('default');
+	function _no_results ( $str = '' )
+	{
+		$this->actions()->db_charset_switch('default');
 
-    	if( $str != '' AND 
-			preg_match( 
+		if( $str != '' AND
+			preg_match(
 				"/" . LD . "if no_" . trim($str, '_') . "_results" . RD .
-				"(.*?)". LD . preg_quote(T_SLASH, '/') . "if" . RD . "/s", 
-				ee()->TMPL->tagdata, 
-				$match 
+				"(.*?)". LD . preg_quote(T_SLASH, '/') . "if" . RD . "/s",
+				ee()->TMPL->tagdata,
+				$match
 			) )
-    	{
-    		return $match['1'];
-    	}
-    	else
-    	{
-    		return $this->no_results();
-    	}
-    }
-    // End no results
+		{
+			return $match['1'];
+		}
+		else
+		{
+			return $this->no_results();
+		}
+	}
+	// End no results
 
 	//	----------------------------------------
 	//	Get bad tags
@@ -6182,7 +6197,7 @@ class Tag extends Module_builder_tag
 		{
 			return $this->bad;
 		}
-		
+
 		$this->bad = array();
 
 		//	----------------------------------------
@@ -6218,22 +6233,22 @@ class Tag extends Module_builder_tag
 	/**	END get bad tags */
 
 
-    //	----------------------------------------
-    //	String to array
-    //	----------------------------------------
+	//	----------------------------------------
+	//	String to array
+	//	----------------------------------------
 
-    function str_arr ( $remove_slashes = FALSE)
-    {	
-    	if ($remove_slashes === TRUE)
-    	{
-    		$this->str = stripslashes($this->str);
-    	}
+	function str_arr ( $remove_slashes = FALSE)
+	{
+		if ($remove_slashes === TRUE)
+		{
+			$this->str = stripslashes($this->str);
+		}
 
-    	$this->str	= ( $this->preference('convert_case') != 'n' ) ? 
+		$this->str	= ( $this->preference('convert_case') != 'n' ) ?
 						$this->_strtolower( $this->str ) : $this->str;
 
-		$separator  = ($this->separator_override != NULL) ? 
-						$this->separator_override : 
+		$separator  = ($this->separator_override != NULL) ?
+						$this->separator_override :
 						$this->preference('separator');
 
 		//TODO convert this to a for loop on the options in the data file
@@ -6242,97 +6257,97 @@ class Tag extends Module_builder_tag
 			case 'comma':
 				$arr = preg_split( "/,|\n|\r/", $this->str, -1, PREG_SPLIT_NO_EMPTY);
 				break;
-				
+
 			case 'semicolon':
 				$arr = preg_split( "/;|\n|\r/", $this->str, -1, PREG_SPLIT_NO_EMPTY);
 				break;
-				
+
 			case 'colon':
 				$arr = preg_split( "/:|\n|\r/", $this->str, -1, PREG_SPLIT_NO_EMPTY);
 				break;
-				
+
 			case 'pipe':
 				$arr = preg_split( "/" . preg_quote('|') . "|\n|\r/", $this->str, -1, PREG_SPLIT_NO_EMPTY);
 				break;
-				
+
 			case 'doublepipe':
 				$arr = preg_split( "/" . preg_quote('||') . "|\n|\r/", $this->str, -1, PREG_SPLIT_NO_EMPTY);
 				break;
-				
+
 			case 'tilde':
 				$arr = preg_split( "/" . preg_quote('~') . "|\n|\r/", $this->str, -1, PREG_SPLIT_NO_EMPTY);
 				break;
-				
-			case 'space':
-	    		$str		= str_replace( "\\", "", $this->str );
-				
-				//remove quotes from ites with spaces inside	
-	    		$quotes		= preg_match_all( '/"([^"]*?)"/s', $str, $match );
 
-	    		$str		= str_replace( $match['0'], "", $str );
+			case 'space':
+				$str		= str_replace( "\\", "", $this->str );
+
+				//remove quotes from ites with spaces inside
+				$quotes		= preg_match_all( '/"([^"]*?)"/s', $str, $match );
+
+				$str		= str_replace( $match['0'], "", $str );
 
 				$arr		= preg_split( "/\s|\n|\r/", $str, -1, PREG_SPLIT_NO_EMPTY);
 
 				$arr		= array_merge( $arr, $match['1'] );
 				break;
-				
+
 			//hard return
 			default:
 				$arr = preg_split( "/\n|\r/", $this->str, -1, PREG_SPLIT_NO_EMPTY);
 				break;
 		}
 
-    	foreach ( $arr as $key => $val )
-    	{
-    		$arr[$key]	= trim($val);
-    	}
+		foreach ( $arr as $key => $val )
+		{
+			$arr[$key]	= trim($val);
+		}
 
 		// Maximum Allowed Tags Check
 		if ( $this->preference('publish_entry_tag_limit') != 0 	AND
-				is_numeric($this->preference('publish_entry_tag_limit')) 		AND 
+				is_numeric($this->preference('publish_entry_tag_limit')) 		AND
 			REQ == 'CP' 														AND
 			count($arr) >= ceil($this->preference('publish_entry_tag_limit'))	)
 		{
 			$arr = array_slice($arr, 0, $this->preference('publish_entry_tag_limit'));
 		}
-    	
-    	return $arr;
-    }
-    //	END string to array
+
+		return $arr;
+	}
+	//	END string to array
 
 
-    //	----------------------------------------
-    //	Array to DB string
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Array to DB string
+	//	----------------------------------------
 
-    function array_dbstr ( $arr )
-    {
-    	return implode( "','", ee()->db->escape_str($arr) );
-    }
+	function array_dbstr ( $arr )
+	{
+		return implode( "','", ee()->db->escape_str($arr) );
+	}
 
-    /**	END array to DB string */
+	/**	END array to DB string */
 
 
-    //	----------------------------------------
-    //	Entry id
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Entry id
+	//	----------------------------------------
 
-    function _entry_id( $type = 'channel' )
-    {
-    	if ($type == 'weblog')
+	function _entry_id( $type = 'channel' )
+	{
+		if ($type == 'weblog')
 		{
 			$type = 'channel';
 		}
-		
+
 		ee()->load->helper('string');
-    
+
 		//	----------------------------------------
 		//	Prep type
 		//	----------------------------------------
-		
+
 		$types = array( 'channel'	=> $this->sc->db->channel_titles,
 						'gallery'	=> 'exp_gallery_entries');
-		
+
 		$type = (isset($types[$type])) ? $types[$type] : $this->sc->db->channel_titles;
 
 		//	----------------------------------------
@@ -6350,6 +6365,19 @@ class Tag extends Module_builder_tag
 		if ( ctype_digit( ee()->TMPL->fetch_param('entry_id') ) === TRUE )
 		{
 			$sql	= str_replace( "%eid", ee()->db->escape_str( ee()->TMPL->fetch_param('entry_id') ), $psql );
+
+			$query	= ee()->db->query( $sql );
+
+			if ( $query->num_rows() > 0 )
+			{
+				$this->entry_id	= $query->row('entry_id');
+
+				return TRUE;
+			}
+		}
+		elseif (ee()->TMPL->fetch_param('url_title') != "")
+		{
+			$sql	= "SELECT entry_id FROM `".$type."` WHERE url_title = '" . ee()->security->xss_clean( ee()->TMPL->fetch_param('url_title') ) . "'";
 
 			$query	= ee()->db->query( $sql );
 
@@ -6489,11 +6517,11 @@ class Tag extends Module_builder_tag
 
 					return TRUE;
 				}
-				
+
 				// --------------------------------------------
 				//  Entry ID Only?
 				// --------------------------------------------
-				
+
 				if ( ctype_digit($qstring))
 				{
 					$this->entry_id = $qstring;
@@ -6519,13 +6547,13 @@ class Tag extends Module_builder_tag
 	 *	@return		null
 	 */
 
-    public function _parse_from_gallery_cp ( $entry_id ) 
-    { 
-    	if (APP_VER >= 2.0) return;
-	    $this->_parse_from_cp( $entry_id, array(), 'gallery' ); 
+	public function _parse_from_gallery_cp ( $entry_id )
+	{
+		if (APP_VER >= 2.0) return;
+		$this->_parse_from_cp( $entry_id, array(), 'gallery' );
 	}
 	//END _parse_from_gallery_cp
-	
+
 
 
 	// --------------------------------------------------------------------
@@ -6540,14 +6568,14 @@ class Tag extends Module_builder_tag
 	 *	@return		null
 	 */
 
-    public function _parse_from_gallery_extended_cp ( $entry_id ) 
-    { 
-    	if (APP_VER >= 2.0) return;
-	    $this->_parse_from_cp( $entry_id, array(), 'gallery' ); 
+	public function _parse_from_gallery_extended_cp ( $entry_id )
+	{
+		if (APP_VER >= 2.0) return;
+		$this->_parse_from_cp( $entry_id, array(), 'gallery' );
 	}
 	//END _parse_from_gallery_extended_cp
 
-	
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -6561,13 +6589,13 @@ class Tag extends Module_builder_tag
 	 *	@return		null
 	 */
 
-    public function _parse_from_cp( $entry_id = '', $tag_data = array(), $type = 'channel' )
-    {
-    	if ($type == 'weblog')
+	public function _parse_from_cp( $entry_id = '', $tag_data = array(), $type = 'channel' )
+	{
+		if ($type == 'weblog')
 		{
 			$type = 'channel';
 		}
-    
+
 		$this->type	= $type;
 
 		//	----------------------------------------
@@ -6586,7 +6614,7 @@ class Tag extends Module_builder_tag
 			{
 				foreach ( $_POST['tag_f'] as $str )
 				{
-					$this->str	.= "\n\r".$str; 
+					$this->str	.= "\n\r".$str;
 					//WHAT? Carriage returns?Thank god most of the time this is a text input - gf
 				}
 			}
@@ -6601,10 +6629,10 @@ class Tag extends Module_builder_tag
 
 			if ( $type == 'channel' )
 			{
-				$query	= ee()->db->query( 
-					"SELECT {$this->sc->db->channel_id}, site_id 
-					 FROM 	{$this->sc->db->channel_titles} 
-					 WHERE 	entry_id = '" . ee()->db->escape_str($entry_id) . "'" 
+				$query	= ee()->db->query(
+					"SELECT {$this->sc->db->channel_id}, site_id
+					 FROM 	{$this->sc->db->channel_titles}
+					 WHERE 	entry_id = '" . ee()->db->escape_str($entry_id) . "'"
 				);
 
 				if ( $query->num_rows() > 0 )
@@ -6616,10 +6644,10 @@ class Tag extends Module_builder_tag
 			}
 			elseif ( $type == 'gallery' AND $entry_id != '' )
 			{
-				$query	= ee()->db->query( 
-					"SELECT gallery_id 
-					 FROM 	exp_gallery_entries 
-					 WHERE 	entry_id = '" . ee()->db->escape_str($entry_id) . "'" 
+				$query	= ee()->db->query(
+					"SELECT gallery_id
+					 FROM 	exp_gallery_entries
+					 WHERE 	entry_id = '" . ee()->db->escape_str($entry_id) . "'"
 				);
 
 				if ( $query->num_rows() == 0 )
@@ -6638,39 +6666,39 @@ class Tag extends Module_builder_tag
 		}
 		else /*if ( $this->type == 'channel' )*/
 		{
-			//--------------------------------------------  
+			//--------------------------------------------
 			//	tag harvest fields are not supposed to work this way
 			//	hid code and exiting
 			//--------------------------------------------
-			
+
 			return;
-/*			
+/*
 			//	----------------------------------------
 			//	Tag field exists?
 			//	----------------------------------------
 
-			$query	= ee()->db->query( 
-				"SELECT t.{$this->sc->db->channel_id} 
+			$query	= ee()->db->query(
+				"SELECT t.{$this->sc->db->channel_id}
 				 FROM 	{$this->sc->db->channel_titles} AS t
-		   		 WHERE 	t.entry_id = '".ee()->db->escape_str($entry_id)."'
-				 LIMIT 	1" 
+				 WHERE 	t.entry_id = '".ee()->db->escape_str($entry_id)."'
+				 LIMIT 	1"
 			);
 
 			if ( $query->num_rows() == 0 ) return;
-			
+
 			$field_id = $this->preference($query->row($this->sc->db->channel_id).'_tag_field');
-			
+
 			if (empty($field_id) OR ! $this->column_exists("field_id_{$field_id}", $this->sc->db->channel_data)) return;
 
 			//	----------------------------------------
 			//	Get the field
 			//	----------------------------------------
 
-			$sub	= ee()->db->query( 
+			$sub	= ee()->db->query(
 				"SELECT {$this->sc->db->channel_id}, site_id, field_id_{$field_id} AS f
 				 FROM 	{$this->sc->db->channel_data}
 				 WHERE 	entry_id = '" . ee()->db->escape_str($entry_id) . "'
-				 LIMIT 	1" 
+				 LIMIT 	1"
 			);
 
 			if ( $sub->num_rows() == 0 ) return;
@@ -6687,53 +6715,53 @@ class Tag extends Module_builder_tag
 		}
 
 		return $this->parse();
-    }
-    //END parse from cp
+	}
+	//END parse from cp
 
 
-    //	----------------------------------------
-    //	Stats
+	//	----------------------------------------
+	//	Stats
 	//	----------------------------------------
 
-    function stats()
-    {
-    	$t_entries = 0;
-    	$p_entries = 0;
-    	$gt_entries = 0;
-    	$pg_entries = 0;
-    	$ranked = array();
+	function stats()
+	{
+		$t_entries = 0;
+		$p_entries = 0;
+		$gt_entries = 0;
+		$pg_entries = 0;
+		$ranked = array();
 
-    	$this->return_data = ee()->TMPL->tagdata;
+		$this->return_data = ee()->TMPL->tagdata;
 
 		//	----------------------------------------
 		//	Query
 		//	----------------------------------------
 
-		$tags = ee()->db->query( 
-			"SELECT COUNT(*) AS count 
-			 FROM 	exp_tag_tags 
-			 WHERE 	site_id 
-			 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')" 
+		$tags = ee()->db->query(
+			"SELECT COUNT(*) AS count
+			 FROM 	exp_tag_tags
+			 WHERE 	site_id
+			 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')"
 		);
 
 		if (stristr ( ee()->TMPL->tagdata, $this->sc->channel.'_entries_tagged'.RD ) !== FALSE)
 		{
-			$t_entries	= ee()->db->query( 
-				"SELECT 	COUNT(DISTINCT tag_id) AS count 
+			$t_entries	= ee()->db->query(
+				"SELECT 	COUNT(DISTINCT tag_id) AS count
 				 FROM 		exp_tag_entries
 				 WHERE 		type = 'channel'
-				 AND 		site_id 
+				 AND 		site_id
 				 IN 		('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
-				 GROUP BY 	entry_id" 
+				 GROUP BY 	entry_id"
 			);
 
 			$t_entries	= ( $t_entries->num_rows() > 0 ) ? $t_entries->num_rows(): 0;
 
-			$entries	= ee()->db->query( 
-				"SELECT COUNT(*) AS count 
-				 FROM 	{$this->sc->db->channel_titles} 
-				 WHERE 	site_id 
-				 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')" 
+			$entries	= ee()->db->query(
+				"SELECT COUNT(*) AS count
+				 FROM 	{$this->sc->db->channel_titles}
+				 WHERE 	site_id
+				 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')"
 			);
 
 			$p_entries	= ( $entries->row('count') != 0 ) ? round( $t_entries / $entries->row('count') * 100, 2): 0;
@@ -6746,7 +6774,7 @@ class Tag extends Module_builder_tag
 		$gt_entries	= 0;
 		$pg_entries	= 0;
 
-		if ( ee()->db->table_exists('exp_gallery_entries') === TRUE AND 
+		if ( ee()->db->table_exists('exp_gallery_entries') === TRUE AND
 			 stristr ( ee()->TMPL->tagdata, 'gallery_entries_tagged'.RD ) !== FALSE)
 		{
 			$gt_entries	= ee()->db->query( "SELECT COUNT(*) AS count FROM exp_tag_entries WHERE type = 'gallery' AND site_id IN ('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."') GROUP BY entry_id" );
@@ -6762,12 +6790,12 @@ class Tag extends Module_builder_tag
 		{
 			foreach($matches[1] as $number)
 			{
-				$top5 = ee()->db->query( 
-					"SELECT t.tag_name 
+				$top5 = ee()->db->query(
+					"SELECT t.tag_name
 					 FROM 	exp_tag_tags t
-					 WHERE 	site_id 
+					 WHERE 	site_id
 					 IN 	('".implode("','", ee()->db->escape_str(ee()->TMPL->site_ids))."')
-					 ORDER 	BY t.total_entries DESC LIMIT ".ceil($number) 
+					 ORDER 	BY t.total_entries DESC LIMIT ".ceil($number)
 				);
 
 				$ranked = array();
@@ -6795,44 +6823,44 @@ class Tag extends Module_builder_tag
 			LD.'percent_gallery_entries_tagged'.RD	=> $pg_entries
 		);
 
-        return $this->return_data = str_replace(array_keys($data), array_values($data), $this->return_data);
-    }
+		return $this->return_data = str_replace(array_keys($data), array_values($data), $this->return_data);
+	}
 
-    /**	END stats */
+	/**	END stats */
 
 
-    //	----------------------------------------
-    //	Chars decode
-    //	----------------------------------------
+	//	----------------------------------------
+	//	Chars decode
+	//	----------------------------------------
 
-    function _chars_decode( $str = '' )
-    {
-    	if ( $str == '' ) return;
+	function _chars_decode( $str = '' )
+	{
+		if ( $str == '' ) return;
 
-    	$str	= str_replace( array( "'", "\"", "&#47;" ), array( "", "", "/" ), $str );
+		$str	= str_replace( array( "'", "\"", "&#47;" ), array( "", "", "/" ), $str );
 
-    	if ( function_exists( 'html_entity_decode' ) === TRUE )
-    	{
-    		$str	= $this->_html_entity_decode_full( $str, ENT_NOQUOTES );
-    	}
+		if ( function_exists( 'html_entity_decode' ) === TRUE )
+		{
+			$str	= $this->_html_entity_decode_full( $str, ENT_NOQUOTES );
+		}
 
-    	$str	= stripslashes( $str );
+		$str	= stripslashes( $str );
 
-    	return $str;
-    }
+		return $str;
+	}
 
 	public function _html_entity_decode_full($string, $quotes = ENT_COMPAT, $charset = 'ISO-8859-1')
 	{
 		return html_entity_decode(
 			preg_replace_callback(
-				'/&([a-zA-Z][a-zA-Z0-9]+);/', 
+				'/&([a-zA-Z][a-zA-Z0-9]+);/',
 				array(
-					$this, 
+					$this,
 					'_convert_entity'
-				), 
+				),
 				$string
-			), 
-			$quotes, 
+			),
+			$quotes,
 			$charset
 		);
 	}
@@ -6928,13 +6956,13 @@ class Tag extends Module_builder_tag
 		);
 
 		if (isset($table[$matches[1]])) return $table[$matches[1]];
-	  	// else
-	  	return $destroy ? '' : $matches[0];
+		// else
+		return $destroy ? '' : $matches[0];
 	}
 
 	/** End chars decode */
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	/**
 	 *	Returns the JavaScript for the Publish Form
@@ -6943,14 +6971,14 @@ class Tag extends Module_builder_tag
 	 *	@return		string
 	 */
 
-    public function tag_js ()
-    {
+	public function tag_js ()
+	{
 		$this->file_view('publish_tab_block.js');
-    }
-    //	END tag_js
+	}
+	//	END tag_js
 
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	/**
 	 *	tag js for the front end (should be 2.x only)
@@ -6959,21 +6987,21 @@ class Tag extends Module_builder_tag
 	 *	@return		string	tag js for the front end
 	 */
 
-    public function field_js()
-    {
-    	if ( isset( $this->EE->sessions->cache['solspace']['scripts']['tag']['field'] ) )
-    	{
-    		return '';
-    	}
-    	
-    	$this->EE->sessions->cache['solspace']['scripts']['tag']['field']	= TRUE;
-    	
+	public function field_js()
+	{
+		if ( isset( $this->EE->sessions->cache['solspace']['scripts']['tag']['field'] ) )
+		{
+			return '';
+		}
+
+		$this->EE->sessions->cache['solspace']['scripts']['tag']['field']	= TRUE;
+
 		return (APP_VER < 2.0) ? '' : $this->data->tag_field_js();
 	}
 	//END field_js
 
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	/**
 	 *	tag autocomplete js for the front end (should be 2.x only)
@@ -6982,21 +7010,21 @@ class Tag extends Module_builder_tag
 	 *	@return		string	tag auto completejs for the front end
 	 */
 
-    public function field_autocomplete_js()
-    {
-    	if ( isset( $this->EE->sessions->cache['solspace']['scripts']['jquery']['tag_autocomplete'] ) )
-    	{
-    		return '';
-    	}
-    	
-    	$this->EE->sessions->cache['solspace']['scripts']['jquery']['tag_autocomplete']	= TRUE;
-        
+	public function field_autocomplete_js()
+	{
+		if ( isset( $this->EE->sessions->cache['solspace']['scripts']['jquery']['tag_autocomplete'] ) )
+		{
+			return '';
+		}
+
+		$this->EE->sessions->cache['solspace']['scripts']['jquery']['tag_autocomplete']	= TRUE;
+
 		return (APP_VER < 2.0) ? '' : $this->data->tag_field_autocomplete_js();
 	}
 	//END field_js
 
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	/**
 	 *	tag css for the front end (should be 2.x only)
@@ -7005,21 +7033,21 @@ class Tag extends Module_builder_tag
 	 *	@return		string	tag css for the front end
 	 */
 
-    public function field_css()
-    {
-    	if ( isset( $this->EE->sessions->cache['solspace']['css']['tag']['field'] ) )
-    	{
-    		return '';
-    	}
-    	
-    	$this->EE->sessions->cache['solspace']['css']['tag']['field']	= TRUE;
-    	
+	public function field_css()
+	{
+		if ( isset( $this->EE->sessions->cache['solspace']['css']['tag']['field'] ) )
+		{
+			return '';
+		}
+
+		$this->EE->sessions->cache['solspace']['css']['tag']['field']	= TRUE;
+
 		return (APP_VER < 2.0) ? '' : $this->data->tag_field_css() . ((REQ == 'PAGE') ? "\n" . $this->data->tag_front_css() : '');
 	}
 	//END field_css
 
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	/**
 	 *	parses and returns form widget
@@ -7028,23 +7056,20 @@ class Tag extends Module_builder_tag
 	 *	@return		string	export to tagdata
 	 */
 
-    public function entry_widget()
-    {
-		//2.x only, no exceptions :p
-		if (APP_VER < 2.0) return '';
-	
+	public function entry_widget()
+	{
 		$data = array();
-	
+
 		//ee 2.x so we can use nice little syntatic sugar
 		$entry_id	= $data['entry_id'] 	= ee()->TMPL->fetch_param('entry_id', 0);
 		$field_name	= $data['field_name'] 	= ee()->TMPL->fetch_param('field_name', 'tag_f');
-	
+
 		$sql = "SELECT field_id, field_name, field_settings
-		 		FROM   {$this->sc->db->channel_fields}";
-	
+				FROM   {$this->sc->db->channel_fields}";
+
 		//are they using the field_id_NUM style?
 		if (stristr($field_name, 'field_id_'))
-		{			
+		{
 			$fn_query = ee()->db->query(
 				$sql . " WHERE field_id = " . ee()->db->escape_str(str_replace('field_id_', '', $field_name))
 			);
@@ -7056,54 +7081,54 @@ class Tag extends Module_builder_tag
 				$sql . " WHERE field_name = '" . ee()->db->escape_str($field_name) . "'"
 			);
 		}
-		
+
 		if ($fn_query->num_rows() > 0)
 		{
 			$data['field_id'] 		= $fn_query->row('field_id');
 			$data['field_name'] 	= $fn_query->row('field_name');
-			
+
 			$settings 				=  unserialize(base64_decode($fn_query->row('field_settings')));
-			
+
 			//allow override from params, or use settings, or default
 			$data['all_open']		= ee()->TMPL->fetch_param(
 				'all_open',
-				(isset($settings['all_open']) ? $settings['all_open'] : 'no' ) 
+				(isset($settings['all_open']) ? $settings['all_open'] : 'no' )
 			);
-									
+
 			$data['suggest_from']	= ee()->TMPL->fetch_param(
 				'suggest_from',
-				(isset($settings['suggest_from']) ? $settings['suggest_from'] : 'group' ) 
+				(isset($settings['suggest_from']) ? $settings['suggest_from'] : 'group' )
 			);
-									
+
 			$data['tag_group_id']	= ee()->TMPL->fetch_param(
 				'tag_group_id',
-				(isset($settings['tag_group']) ? $settings['tag_group'] : 1 ) 
+				(isset($settings['tag_group']) ? $settings['tag_group'] : 1 )
 			);
-			
+
 			$data['top_tag_limit']	= ee()->TMPL->fetch_param(
 				'top_tag_limit',
-				(isset($settings['top_tag_limit']) ? $settings['top_tag_limit'] : 5 ) 
-			);																				
+				(isset($settings['top_tag_limit']) ? $settings['top_tag_limit'] : 5 )
+			);
 		}
-			
+
 		if ( ! $this->check_yes(ee()->TMPL->fetch_param('disable_shortname_harvest')))
 		{
 			$short_names = ee()->db->query(
-				"SELECT GROUP_CONCAT(field_name separator '|') as field_names 
+				"SELECT GROUP_CONCAT(field_name separator '|') as field_names
 				 FROM 	exp_channel_fields "
 			);
-			
+
 			if ($short_names->num_rows() > 0)
 			{
 				$data['suggest_fields'] = $short_names->row('field_names');
 			}
 		}
-			
+
 		return $this->field_type_widget($data);
 	}
-	
 
-    // --------------------------------------------------------------------
+
+	// --------------------------------------------------------------------
 
 	/**
 	 *	parses and returns form widget
@@ -7113,43 +7138,43 @@ class Tag extends Module_builder_tag
 	 *	@return		string
 	 */
 
-    public function field_type_widget($data)
-    {	
-		//--------------------------------------------  
+	public function field_type_widget($data)
+	{
+		//--------------------------------------------
 		//	default data
 		//--------------------------------------------
-	
+
 		$defaults 		= array(
 			'entry_id'			=> ee()->input->get_post('entry_id'),
 			'channel_id'		=> ee()->input->get_post($this->sc->db->channel_id),
-			'field_data' 		=> '',			
-			'field_name'		=> 'default',			
+			'field_data' 		=> '',
+			'field_name'		=> 'default',
 			'field_id'			=> 'solspace_tag_entry',
 			'tag_group_id'		=> 1,
 			'all_open'			=> 'no',
 			'suggest_from'		=> 'group',
 			'top_tag_limit'		=> 5,
 			'suggest_fields' 	=> '',
-			'input_only'		=> FALSE	
+			'input_only'		=> FALSE
 		);
-		
+
 		$data 			= array_merge($defaults, $data);
-		
+
 		//no shenanigans
 		unset($defaults);
-	
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	MORE default data.. :/
 		//--------------------------------------------
-	
+
 		$this->cached_vars['entry_id'] 		= $entry_id 	= (
 			is_numeric($data['entry_id']) AND $data['entry_id'] > 0
 		) ? $data['entry_id'] : 0;
-		
+
 		$this->cached_vars['channel_id'] 	= $channel_id	= (
 			is_numeric($data['channel_id']) AND $data['channel_id'] > 0
 		) ? $data['channel_id']	: 0;
-		
+
 		$this->cached_vars['field_id'] 		= $field_id = $data['field_id'];
 		//removed this check because we need to allow multiple field ids
 		//in situations where they need to be definable
@@ -7162,18 +7187,18 @@ class Tag extends Module_builder_tag
 		) ? trim($data['field_name']) : 'default';
 
 		$autosave		= (ee()->input->get_post('use_autosave') === 'y');
-		
+
 		$this->cached_vars['suggest_fields'] = preg_split(
-			'/' . preg_quote('|', '/') . '/', 
-			$data['suggest_fields'], 
-			-1, 
+			'/' . preg_quote('|', '/') . '/',
+			$data['suggest_fields'],
+			-1,
 			PREG_SPLIT_NO_EMPTY
 		);
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	current tags and autosave stuff
 		//--------------------------------------------
-		
+
 		$current_tag_names 	= trim($data['field_data']);
 		$tags				= array();
 
@@ -7182,17 +7207,17 @@ class Tag extends Module_builder_tag
 		//we strive to always be congruent, but this is just
 		//another failsafe
 		if ( ! $data['input_only'] AND
-		 	$entry_id > 0 AND 
-		 	! $autosave)
-		{			
+			$entry_id > 0 AND
+			! $autosave)
+		{
 			$tags = $this->data->get_entry_tags_by_id(
-				$entry_id, 
+				$entry_id,
 				array(
 					'tag_group_id'		=> $data['tag_group_id'],
 					'entry_type'		=> 'channel',
 				)
 			);
-			
+
 			//no reset unless we get results
 			if ( ! empty($tags))
 			{
@@ -7206,81 +7231,97 @@ class Tag extends Module_builder_tag
 				$current_tag_names = implode("\n", $tag_names);
 			}
 		}
-		
+
 		//should not get here very often. mostly with autosave
-		if ( ! $data['input_only'] AND 
-			empty($tags) AND 
-			$entry_id > 0 AND 
+		if ( ! $data['input_only'] AND
+			empty($tags) AND
+			$entry_id > 0 AND
 			$current_tag_names != ''
 		 )
 		{
 			$tags = $this->data->get_entry_tags_by_tag_name(explode("\n", $current_tag_names));
-		}		
-				
+		}
+
 		//if we have no tags after this, lets remove any erroneous data
 		//again, this should not happen, but another failsafe
 		if ($data['input_only'] OR empty($tags))
 		{
 			$current_tag_names = '';
 		}
-						
+
 		$this->cached_vars['hidden_tag_data'] 		= $current_tag_names;
-		
+
 		$this->cached_vars['current_tags'] 			= array();
 		$this->cached_vars['current_tags_escaped'] 	= array();
-		
+
 		foreach ($tags as $tag)
 		{
 			$this->cached_vars['current_tags'][]			= $tag['tag_name'];
-			$this->cached_vars['current_tags_escaped'][]	= str_replace("'", '&#039;', $tag['tag_name']);		
+			$this->cached_vars['current_tags_escaped'][]	= str_replace("'", '&#039;', $tag['tag_name']);
 		}
-							
 
 		// --------------------------------------------
-        //  Top 5 Tags
-        // --------------------------------------------
-		
+		//  Top 5 Tags
+		// --------------------------------------------
+
 		$this->cached_vars['top_tags'] 			= array();
 		$this->cached_vars['top_tags_escaped'] 	= array();
 
 		if ( ! $data['input_only'])
 		{
 			$top_sql = " SELECT 	t.tag_name, t.total_entries
-						 FROM 		exp_tag_tags t 
-						 WHERE 		site_id = " . 
-						 	ee()->db->escape_str(ee()->config->item('site_id'));
-			
+						 FROM 		exp_tag_tags t
+						 WHERE 		site_id = " .
+							ee()->db->escape_str(ee()->config->item('site_id'));
+
+
+			$top_orderby = "t.total_entries";
+
+			// -------------------------------------
+			//	tag groups?
+			// -------------------------------------
+
 			if ($data['suggest_from'] === 'group')
-			{		
+			{
+				//need to change the top #'s to the group count
+				$tgid_clean = ee()->db->escape_str($data['tag_group_id']);
+				$top_orderby = "t.total_entries_" . $tgid_clean;
+
+				$top_sql = str_replace(
+					't.total_entries',
+					$top_orderby . ' as total_entries',
+					$top_sql
+				);
+
 				$top_sql .= " AND tag_id IN (
 								SELECT DISTINCT tag_id
-				 				FROM	exp_tag_entries
-				 				WHERE	tag_group_id = " . 
-				 					ee()->db->escape_str($data['tag_group_id']) . ")";
-			}			
-						
-			$top_sql .= " ORDER BY 	t.total_entries DESC 
-						 LIMIT 		" . ee()->db->escape_str($data['top_tag_limit']);			
-			
+								FROM	exp_tag_entries
+								WHERE	tag_group_id = " .
+									$tgid_clean . ")";
+			}
+
+
+			$top_sql .= " ORDER BY 	{$top_orderby} DESC
+						 LIMIT 		" . ee()->db->escape_str($data['top_tag_limit']);
+
 			$top	= ee()->db->query($top_sql);
 
 			foreach ( $top->result_array() as $row )
 			{
 				$this->cached_vars['top_tags'][$row['tag_name']] 	= $row['total_entries'];
 				$this->cached_vars['top_tags_escaped'][]			= str_replace("'", '&#039;', $row['tag_name']);
-			}			
+			}
 		}
-		
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	prefs?
 		//--------------------------------------------
 
 		$this->cached_vars['all_open'] 		= $data['all_open'];
 
 		$this->cached_vars['input_only'] 	= $data['input_only'];
-		
+
 		$this->cached_vars['tag_limit'] 	= $this->preference('publish_entry_tag_limit');
-		
+
 		//--------------------------------------
 		//  lang
 		//--------------------------------------
@@ -7290,73 +7331,81 @@ class Tag extends Module_builder_tag
 			'top_tags',
 			'current_tags',
 			'add_tags',
-			'error'	
+			'error'
 		);
-		
+
 		foreach($lvars as $var)
 		{
 			//replacing all spaces with non-breaking just to prevent BS
 			$this->cached_vars['lang_' . $var] = str_replace(' ', NBS, ee()->lang->line($var));
 		}
-		
+
 		$this->cached_vars['lang_tag_limit_reached'] = ee()->lang->line('tag_limit_reached');
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	XIDs for ajax
 		//--------------------------------------------
-		
+
 		$this->cached_vars['fresh_xid'] 		= $this->create_xid();
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	tab name?
 		//--------------------------------------------
-		
+
 		$this->cached_vars['tab_name'] 			= $this->either_or(
-			$this->preference($data['channel_id'].'_publish_tab_label'), 
+			$this->preference($data['channel_id'].'_publish_tab_label'),
 			''
 		);
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	urls
 		//--------------------------------------------
-		
+
 		$qs	= (ee()->config->item('force_query_string') == 'y') ? '' : '?';
-		
+
 		$query = ee()->db->query(
 			"SELECT action_id
 			 FROM	exp_actions
 			 WHERE	class = '" . $this->class_name . "'
 			 AND	method = 'ajax'"
 		);
-		
+
 		if (REQ == 'CP')
 		{
 			$act_base = $this->base;
 		}
 		else
 		{
-			$act_base 	= ee()->functions->fetch_site_index(0, 0) .	$qs . 'ACT=' . $query->row('action_id');
+			$act_base 	= ee()->functions->fetch_site_index(0, 0) .
+							$qs . 'ACT=' . $query->row('action_id');
 		}
-		
-		$this->cached_vars['suggest_tags_url'] 	= $act_base . '&method=tag_suggest&tag_separator=doublepipe';
-		
+
+		$this->cached_vars['suggest_tags_url'] 	= $act_base .
+													'&method=tag_suggest' .
+													'&tag_separator=doublepipe';
+
 		if ($data['suggest_from'] === 'group')
-		{		
-			$this->cached_vars['suggest_tags_url'] .= '&tag_group_id=' . $data['tag_group_id'];
+		{
+			$this->cached_vars['suggest_tags_url'] .= '&tag_group_id=' .
+														$data['tag_group_id'];
 		}
-		
-		$this->cached_vars['autocomplete_url'] 	= $act_base . '&method=tag_autocomplete&tag_separator=doublepipe';
-		
-		//--------------------------------------------  
+
+		$suggest_from = $data['suggest_from'] === 'group' ?
+							'&tag_group_id=' . $data['tag_group_id'] :
+							'';
+
+		$this->cached_vars['autocomplete_url'] 	= $act_base . '&method=tag_autocomplete&tag_separator=doublepipe' . $suggest_from;
+
+		//--------------------------------------------
 		//	parse tags
 		//--------------------------------------------
-	
+
 		return $this->view('field_type.html', NULL, TRUE);
-    }
-    //	END field_type_widget
+	}
+	//	END field_type_widget
 
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	/**
 	 *	Ajax
@@ -7369,28 +7418,28 @@ class Tag extends Module_builder_tag
 	public function ajax()
 	{
 		$method = ee()->input->get_post('method');
-		
+
 		if ( ! $method )
 		{
 			return;
 		}
-		
+
 		if ($method == 'tag_autocomplete')
-		{		
-			//exits with headers	
+		{
+			//exits with headers
 			return $this->actions()->tag_autocomplete(array('tag_name'));
 		}
 
 		if ($method == 'tag_suggest')
-		{		
+		{
 			//does a system exit
 			return $this->actions()->tag_suggest(TRUE);
 		}
-	} 
+	}
 	//ENd ajax
 
 
-    // --------------------------------------------------------------------
+	// --------------------------------------------------------------------
 
 	/**
 	 *	_get_tag_group_id
@@ -7406,13 +7455,13 @@ class Tag extends Module_builder_tag
 		$tag_group_id = FALSE;
 
 		//preference for params and ids over names and get_post
-		if (isset(ee()->TMPL) AND 
-			is_object(ee()->TMPL) AND 
+		if (isset(ee()->TMPL) AND
+			is_object(ee()->TMPL) AND
 			ee()->TMPL->fetch_param('tag_group_id'))
 		{
 			$tag_group_id = ee()->TMPL->fetch_param('tag_group_id');
 		}
-		else if (isset(ee()->TMPL) AND 
+		else if (isset(ee()->TMPL) AND
 				is_object(ee()->TMPL) AND
 				ee()->TMPL->fetch_param('tag_group_name'))
 		{
@@ -7432,9 +7481,9 @@ class Tag extends Module_builder_tag
 		}
 
 		//is it legit, dawg?
-		if ( $tag_group_id !== FALSE AND 
+		if ( $tag_group_id !== FALSE AND
 			(is_numeric($tag_group_id) AND $tag_group_id > 1) OR
-		    is_numeric(str_replace(array('|', '&'), '', $tag_group_id))
+			is_numeric(str_replace(array('|', '&'), '', $tag_group_id))
 		)
 		{
 			$this->tag_group_id = $tag_group_id;
@@ -7444,7 +7493,7 @@ class Tag extends Module_builder_tag
 		return $this->tag_group_id;
 	}
 	//END _get_tag_group_id
-	
+
 	// --------------------------------------------------------------------
 
 	/**
