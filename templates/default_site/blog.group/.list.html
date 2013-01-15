@@ -5,11 +5,19 @@
 
 {embed="inc/.nav"}  
     
-  <div class="row">
+  <div id="main-content" class="row">
     <div id="main" class="eight columns">
       <h1 id="page-name">TeenTix Blog</h1>
+    {exp:channel:category_heading channel="blog"}
+    	<h3 id="page-subhead">Category: {category_name}</h3>
+    {/exp:channel:category_heading}
       
     {exp:channel:entries channel="blog" limit="10" status="not closed"}
+    {if segment_2=="archives"}
+    	{date_heading display="monthly"}                 
+			<h3 id="page-subhead">Archives: {entry_date format="%F %Y"}</h3>
+			{/date_heading}
+		{/if}		
     	<div class="entry">    	
 				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
     		<h3><a href="{url_title_path='blog'}">{title}</a></h3>
@@ -32,8 +40,8 @@
       
     </div>
   	
-  	<div id="sidebar" class="four columns">
-      <p>sidebar</p>
+  	<div id="sidebar" class="three columns">
+      {embed="blog/.sidebar"}
     </div>
   
   </div>
