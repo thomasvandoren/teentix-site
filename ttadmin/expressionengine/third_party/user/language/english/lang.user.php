@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * User - Language
+ *
+ * @package		Solspace:User
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/user
+ * @license		http://www.solspace.com/license_agreement
+ * @version		3.4.0
+ * @filesource	user/language/english/lang.user.php
+ */
+
 $lang = $L = array(
 
 //----------------------------------------
@@ -10,7 +22,7 @@ $lang = $L = array(
 "User",
 
 "user_module_description"		=>
-"Brings EE Template Functionality to EE's Built In Member abilities",
+"Create powerful and flexible member management areas using regular EE templates.",
 
 //----------------------------------------
 //	Language for Content Wrapper

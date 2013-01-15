@@ -1,28 +1,19 @@
-<?php if ( ! defined('EXT') ) exit('No direct script access allowed');
- 
- /**
- * Solspace - User
+<?php
+
+/**
+ * User - Constants
  *
  * @package		Solspace:User
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2012, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/User/
- * @version		3.3.9
- * @filesource 	./system/expressionengine/third_party/user/
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/user
+ * @license		http://www.solspace.com/license_agreement
+ * @version		3.4.0
+ * @filesource	user/constants.user.php
  */
- 
- /**
- * User Module Class - Constants
- *
- * Constants for the User module
- *
- * @package 	Solspace:User
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/user/constants.user.php
- */
- 
+
 if ( ! defined('USER_VERSION'))
 {
-	define('USER_VERSION',	'3.3.9');
-	define('USER_DOCS_URL',	'http://solspace.com/docs/addon/c/User/');
+	define('USER_VERSION',	'3.4.0');
+	define('USER_DOCS_URL',	'http://solspace.com/docs/user/');
 }

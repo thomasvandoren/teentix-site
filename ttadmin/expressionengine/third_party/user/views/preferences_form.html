@@ -1,7 +1,7 @@
 <?php $this->view('header.html');?>
 
 <?php if (APP_VER < '2.2.2'): ?>
-<?php $cp_theme_folder = ee()->config->item('theme_folder_url') . 'cp_themes/' . ee()->config->item('cp_theme') . '/';?> 
+<?php $cp_theme_folder = $this->EE->config->item('theme_folder_url') . 'cp_themes/' . $this->EE->config->item('cp_theme') . '/';?>
 <!-- ee 2.1.x doesn't have these styles and we still support it.. :/ -->
 <style type="text/css">
 	#mainContent h3.accordion, #mainContent table caption {
@@ -33,10 +33,10 @@
 <form  action="<?=$caller->output($base_uri.'&method=update_preferences')?>" method="post">
 	<input type="hidden" name="XID" value="<?=$XID_SECURE_HASH?>" />
 
-	<table class="mainTable padTable" border="0" cellspacing="0" cellpadding="0">			
+	<table class="mainTable padTable" border="0" cellspacing="0" cellpadding="0">
 		<caption><?=$lang_general_preferences?></caption>
 		<tbody>
-			
+
 			<!-- email is username -->
 			<tr class="odd" style="width: 35%;">
 				<td valign="top">
@@ -49,18 +49,18 @@
 				</td>
 				<td valign="top" style="width: 65%;">
 					<label 	for="email_is_username_yes">Yes</label>
-					<input 	type="radio" name="email_is_username" 
-							value="y" id="email_is_username_yes" 
-							<?php if ($emiun) echo 'checked="checked"'; ?> style="width:20px;" /> &nbsp; 
-					
+					<input 	type="radio" name="email_is_username"
+							value="y" id="email_is_username_yes"
+							<?php if ($emiun) echo 'checked="checked"'; ?> style="width:20px;" /> &nbsp;
+
 					<label 	for="email_is_username_no">No</label>
-					<input 	type="radio" name="email_is_username" 
-							value="n" id="email_is_username_no" 
-							<?php if ( ! $emiun) echo 'checked="checked"'; ?> style="width:20px;" /> 
-					
+					<input 	type="radio" name="email_is_username"
+							value="n" id="email_is_username_no"
+							<?php if ( ! $emiun) echo 'checked="checked"'; ?> style="width:20px;" />
+
 				</td>
 			</tr>
-			
+
 			<!-- screen name override -->
 			<tr class="even">
 				<td valign="top">
@@ -72,12 +72,12 @@
 					</div>
 				</td>
 				<td valign="top">
-					<input type="text" dir="ltr" style="width:90%" 
-						   name="screen_name_override" value="<?=$pref_screen_name_override?>" 
+					<input type="text" dir="ltr" style="width:90%"
+						   name="screen_name_override" value="<?=$pref_screen_name_override?>"
 						   size="35" class="input" />
 				</td>
 			</tr>
-			
+
 			<!-- category groups -->
 			<tr class="odd">
 				<td valign="top">
@@ -89,40 +89,40 @@
 					</div>
 				</td>
 				<td valign="top">
-					<select class="select" name="category_groups[]" 
+					<select class="select" name="category_groups[]"
 							multiple="multiple" size="5" style="width:50%; padding:5px;">
-							
-						<?php if (ee()->config->item('multiple_sites_enabled') == 'y') :?>
+
+						<?php if ($this->EE->config->item('multiple_sites_enabled') == 'y') :?>
 							<?php foreach($sites as $site_id => $site_label) :?>
 
 								<optgroup label="<?=$this->output($site_label)?>">
 									<?php foreach ($category_groups AS $group_data): ?>
 										<?php if ($group_data['site_id'] != $site_id) continue;?>
-										
-										<option value="<?=$group_data['group_id']?>" <?php 
+
+										<option value="<?=$group_data['group_id']?>" <?php
 											if ($group_data['selected']) echo 'selected="selected"';?> >
 											<?=$group_data['group_name']?>
 										</option>
 									<?php endforeach;?>
-								</optgroup>	
-						
+								</optgroup>
+
 							<?php endforeach;?>
-						
-							
-							
+
+
+
 						<?php else : ?>
 							<?php foreach ($category_groups AS $group_data): ?>
-								<option value="<?=$group_data['group_id']?>" <?php 
+								<option value="<?=$group_data['group_id']?>" <?php
 									if ($group_data['selected']) echo 'selected="selected"';?> >
 									<?=$group_data['group_name']?>
 								</option>
-							<?php endforeach;?>	
+							<?php endforeach;?>
 						<?php endif;?>
 					</select>
 				</td>
 			</tr>
-			
-			
+
+
 			<tr class="odd">
 				<td valign="top">
 					<label for="key_expiration">
@@ -133,18 +133,18 @@
 					</div>
 				</td>
 				<td valign="top">
-					<input type="text" dir="ltr" style="width:90%" 
-						   name="key_expiration" value="<?=$pref_key_expiration?>" 
+					<input type="text" dir="ltr" style="width:90%"
+						   name="key_expiration" value="<?=$pref_key_expiration?>"
 						   size="35" class="input">
 				</td>
 			</tr>
-			
+
 		</tbody>
 	</table>
 
 	<div class="clear shun"></div>
 
-	<table class="mainTable padTable" border="0" cellspacing="0" cellpadding="0">			
+	<table class="mainTable padTable" border="0" cellspacing="0" cellpadding="0">
 		<caption><?=$lang_email_notifications?></caption>
 		<tbody>
 			<tr class="even">
@@ -152,12 +152,12 @@
 					<label for="welcome_email_subject"><?=$lang_welcome_email_subject?></label>
 				</td>
 				<td valign="top" style="width: 65%;">
-					<input 	type="text" dir="ltr" 
-							style="width:90%" name="welcome_email_subject" 
+					<input 	type="text" dir="ltr"
+							style="width:90%" name="welcome_email_subject"
 							value="<?=$pref_welcome_email_subject?>" size="35" class="input" />
 				</td>
 			</tr>
-			
+
 			<tr class="odd">
 				<td valign="top">
 					<label for="welcome_email_content">
@@ -168,13 +168,13 @@
 					</div>
 				</td>
 				<td valign="top">
-					<textarea dir="ltr" style="width:100%" 
-							  cols="90" rows="15" 
-							  name="welcome_email_content" id="welcome_email_content" 
+					<textarea dir="ltr" style="width:100%"
+							  cols="90" rows="15"
+							  name="welcome_email_content" id="welcome_email_content"
 							  class="textarea"><?=$pref_welcome_email_content?></textarea>
 				</td>
 			</tr>
-			
+
 			<tr class="even">
 				<td valign="top">
 					<label for="member_update_admin_notification_emails">
@@ -182,14 +182,14 @@
 					</label>
 				</td>
 				<td valign="top">
-					<textarea 	dir="ltr" style="width:100%" 
-								cols="90" rows="2" 
-								name="member_update_admin_notification_emails" 
-								id="member_update_admin_notification_emails" 
+					<textarea 	dir="ltr" style="width:100%"
+								cols="90" rows="2"
+								name="member_update_admin_notification_emails"
+								id="member_update_admin_notification_emails"
 								class="textarea"><?=$pref_member_update_admin_notification_emails?></textarea>
 				</td>
 			</tr>
-			
+
 			<tr class="odd">
 				<td valign="top">
 					<label for="member_update_admin_notification_template">
@@ -200,14 +200,14 @@
 					</div>
 				</td>
 				<td valign="top">
-					<textarea 	dir="ltr" style="width:100%" 
-								cols="90" rows="15" 
-								name="member_update_admin_notification_template" 
-								id="member_update_admin_notification_template" 
+					<textarea 	dir="ltr" style="width:100%"
+								cols="90" rows="15"
+								name="member_update_admin_notification_template"
+								id="member_update_admin_notification_template"
 								class="textarea"><?=$pref_member_update_admin_notification_template?></textarea>
 				</td>
 			</tr>
-			
+
 			<tr class="even">
 				<td valign="top">
 					<label for="user_forgot_username_message">
@@ -218,10 +218,10 @@
 					</div>
 				</td>
 				<td valign="top">
-					<textarea 	dir="ltr" style="width:100%" 
-								cols="90" rows="15" 
-								name="user_forgot_username_message" 
-								id="user_forgot_username_message" 
+					<textarea 	dir="ltr" style="width:100%"
+								cols="90" rows="15"
+								name="user_forgot_username_message"
+								id="user_forgot_username_message"
 								class="textarea"><?=$pref_user_forgot_username_message?></textarea>
 				</td>
 			</tr>
@@ -231,25 +231,25 @@
 
 	<!-- multiple authors accordion -->
 	<input type="hidden" name="name" value="user_authors" />
-	
-	<table class="mainTable padTable" 
-		   border='0'  
-		   cellspacing='0' 
+
+	<table class="mainTable padTable"
+		   border='0'
+		   cellspacing='0'
 		   cellpadding='0'>
-		<caption><?=$lang_multiple_authors?></caption> 		   
+		<caption><?=$lang_multiple_authors?></caption>
 		<thead>
 			<tr>
 				<td colspan="2">
 					<span class="notice">
-						<?=ee()->lang->line('user_authors_instructions')?>
+						<?=lang('user_authors_instructions')?>
 					</span>
 				</td>
 			</tr>
 			<tr>
-				<th style="width:35%"><?=ee()->lang->line('channels')?></th>
-				<th style="width:65%"><?=ee()->lang->line('user_authors_publish_tab_label')?></th>
+				<th style="width:35%"><?=lang('channels')?></th>
+				<th style="width:65%"><?=lang('user_authors_publish_tab_label')?></th>
 			</tr>
-		</thead>	
+		</thead>
 		<tbody>
 			<?php foreach($channels as $channel_id => $channel_data) : ?>
 				<?php $style = $caller->cycle('odd', 'even');?>
@@ -258,10 +258,10 @@
 						<div class='default' ><?=$channel_data['site_label']?> :: <?=$channel_data['channel_title']?></div>
 						</td>
 					<td>
-						<input dir='ltr' style='width:30%' type='text' 
-							   name='channel_id[<?=$channel_id?>]' 
-							   id='channel_id<?=$channel_id?>' 
-							   value='<?=$caller->output($channel_data['tab_label'])?>' 
+						<input dir='ltr' style='width:30%' type='text'
+							   name='channel_id[<?=$channel_id?>]'
+							   id='channel_id<?=$channel_id?>'
+							   value='<?=$caller->output($channel_data['tab_label'])?>'
 							   size='' maxlength='' class=''  />
 					</td>
 				</tr>
@@ -270,7 +270,7 @@
 	</table>
 
 	<p>
-		<input type="submit" name="submit" value="<?=ee()->lang->line('update')?>" class="submit"  />
+		<input type="submit" name="submit" value="<?=lang('update')?>" class="submit"  />
 	</p>
 
 </form>
