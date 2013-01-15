@@ -1,30 +1,23 @@
 <?php if ( ! defined('EXT')) exit('No direct script access allowed');
 
- /**
- * Solspace - Calendar
+/**
+ * Calendar - Data Models
  *
  * @package		Solspace:Calendar
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
- * @link		http://www.solspace.com/docs/addon/c/Calendar/
- * @version		1.7.0
- * @filesource 	./system/expressionengine/third_party/calendar/
- */
-
- /**
- * calendar - Data Models
- *
- * @package 	Solspace:Calendar
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/calendar/data.calendar.php
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/calendar
+ * @license		http://www.solspace.com/license_agreement
+ * @version		1.8.1
+ * @filesource	calendar/data.calendar.php
  */
 
 if ( ! class_exists('Addon_builder_data_calendar'))
 {
-	require_once 'addon_builder/data.addon_builder.php';	
+	require_once 'addon_builder/data.addon_builder.php';
 }
 
-class Calendar_data extends Addon_builder_data_calendar 
+class Calendar_data extends Addon_builder_data_calendar
 {
 
 	public $cached 			= array();
@@ -33,23 +26,104 @@ class Calendar_data extends Addon_builder_data_calendar
 	public $blog;
 	public $static_site_id 	= 0;
 	public $date_formats 	= array(
-		"mm/dd/yy" => array( "split" => "/", "format" => "M/D/Y", "cdt_format" => "m/d/Y", "example" => "02/29/2012"	),
-		"m/d/yy"   => array( "split" => "/", "format" => "m/d/Y", "cdt_format" => "n/j/Y", "example" => "2/29/2012"	),
-		"dd/mm/yy" => array( "split" => "/", "format" => "D/M/Y", "cdt_format" => "d/m/Y", "example" => "29/02/2012"	),
-		"d/m/yy"   => array( "split" => "/", "format" => "d/m/Y", "cdt_format" => "j/n/Y", "example" => "29/2/2012"	),
-		"yy/mm/dd" => array( "split" => "/", "format" => "Y/M/D", "cdt_format" => "Y/m/d", "example" => "2012/02/29"	),
-		"yy/m/d"   => array( "split" => "/", "format" => "Y/m/d", "cdt_format" => "Y/n/j", "example" => "2012/2/29"	),
-		"yy/dd/mm" => array( "split" => "/", "format" => "Y/D/M", "cdt_format" => "Y/d/m", "example" => "2012/29/02"	),
-		"yy/d/m"   => array( "split" => "/", "format" => "Y/d/m", "cdt_format" => "Y/j/n", "example" => "2012/29/2"	),
-		"mm-dd-yy" => array( "split" => "-", "format" => "M-D-Y", "cdt_format" => "m-d-Y", "example" => "02-29-2012"	),
-		"m-d-yy"   => array( "split" => "-", "format" => "m-d-Y", "cdt_format" => "n-j-Y", "example" => "2-29-2012"	),
-		"dd-mm-yy" => array( "split" => "-", "format" => "D-M-Y", "cdt_format" => "d-m-Y", "example" => "29-02-2012"	),
-		"d-m-yy"   => array( "split" => "-", "format" => "d-m-Y", "cdt_format" => "j-n-Y", "example" => "29-2-2012"	),
-		"yy-mm-dd" => array( "split" => "-", "format" => "Y-M-D", "cdt_format" => "Y-m-d", "example" => "2012-02-29"	),
-		"yy-m-d"   => array( "split" => "-", "format" => "Y-m-d", "cdt_format" => "Y-n-j", "example" => "2012-2-29"	),
-		"yy-dd-mm" => array( "split" => "-", "format" => "Y-D-M", "cdt_format" => "Y-d-m", "example" => "2012-29-02"	),
-		"yy-d-m"   => array( "split" => "-", "format" => "Y-d-m", "cdt_format" => "Y-j-n", "example" => "2012-29-2"	),
+		"mm/dd/yy"	=> array(
+			"split"			=> "/",
+			"format"		=> "M/D/Y",
+			"cdt_format"	=> "m/d/Y",
+			"example"		=> "02/29/2012"
+		),
+		"m/d/yy"	=> array(
+			"split"			=> "/",
+			"format"		=> "m/d/Y",
+			"cdt_format"	=> "n/j/Y",
+			"example"		=> "2/29/2012"
+		),
+		"dd/mm/yy"	=> array(
+			"split"			=> "/",
+			"format"		=> "D/M/Y",
+			"cdt_format"	=> "d/m/Y",
+			"example"		=> "29/02/2012"
+		),
+		"d/m/yy" 	=> array(
+			"split"			=> "/",
+			"format"		=> "d/m/Y",
+			"cdt_format"	=> "j/n/Y",
+			"example"		=> "29/2/2012"
+		),
+		"yy/mm/dd"	=> array(
+			"split"			=> "/",
+			"format"		=> "Y/M/D",
+			"cdt_format"	=> "Y/m/d",
+			"example"		=> "2012/02/29"
+		),
+		"yy/m/d"	=> array(
+			"split"			=> "/",
+			"format"		=> "Y/m/d",
+			"cdt_format"	=> "Y/n/j",
+			"example"		=> "2012/2/29"
+		),
+		"yy/dd/mm" => array(
+			"split"			=> "/",
+			"format"		=> "Y/D/M",
+			"cdt_format"	=> "Y/d/m",
+			"example" => "2012/29/02"
+		),
+		"yy/d/m"	=> array(
+			"split"			=> "/",
+			"format"		=> "Y/d/m",
+			"cdt_format"	=> "Y/j/n",
+			"example"		=> "2012/29/2"
+		),
+		"mm-dd-yy"	=> array(
+			"split"			=> "-",
+			"format"		=> "M-D-Y",
+			"cdt_format"	=> "m-d-Y",
+			"example"		=> "02-29-2012"
+		),
+		"m-d-yy"	=> array(
+			"split"			=> "-",
+			"format"		=> "m-d-Y",
+			"cdt_format"	=> "n-j-Y",
+			"example"		=> "2-29-2012"
+		),
+		"dd-mm-yy"	=> array(
+			"split"			=> "-",
+			"format"		=> "D-M-Y",
+			"cdt_format"	=> "d-m-Y",
+			"example"		=> "29-02-2012"
+		),
+		"d-m-yy"	=> array(
+			"split"			=> "-",
+			"format"		=> "d-m-Y",
+			"cdt_format"	=> "j-n-Y",
+			"example"		=> "29-2-2012"
+		),
+		"yy-mm-dd"	=> array(
+			"split"			=> "-",
+			"format"		=> "Y-M-D",
+			"cdt_format"	=> "Y-m-d",
+			"example"		=> "2012-02-29"
+		),
+		"yy-m-d"	=> array(
+			"split"			=> "-",
+			"format"		=> "Y-m-d",
+			"cdt_format"	=> "Y-n-j",
+			"example"		=> "2012-2-29"
+		),
+		"yy-dd-mm"	=> array(
+			"split"			=> "-",
+			"format"		=> "Y-D-M",
+			"cdt_format"	=> "Y-d-m",
+			"example"		=> "2012-29-02"
+		),
+		"yy-d-m"	=> array(
+			"split"			=> "-",
+			"format"		=> "Y-d-m",
+			"cdt_format"	=> "Y-j-n",
+			"example"		=> "2012-29-2"
+		),
 	);
+
 
 	// --------------------------------------------------------------------
 
@@ -62,20 +136,20 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function __construct()
 	{
-		parent::Addon_builder_data_calendar();
-		
+		parent::__construct();
+
 		if ( ! defined('CALENDAR_EVENTS_CHANNEL_NAME_DEFAULT'))
 		{
 			require_once 'constants.calendar.php';
 		}
-		
+
 		$this->events_table = 'exp_' . CALENDAR_EVENTS_CHANNEL_NAME_DEFAULT;
 	}
 	/* END __construct() */
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * custom get site id function that cal needs until its fully MSM compat
 	 *
@@ -86,36 +160,36 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function get_site_id ()
 	{
 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
-		
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
+
 		//need this in case we are installing on this channel
 		$site_id = ee()->config->item('site_id');
-		
+
 		//are we using the static ID option?
 		if ($this->static_site_id !== 0)
 		{
 			$site_id = $this->static_site_id;
 		}
 		//are we setting from a template?
-		else if (	isset(ee()->TMPL) AND 
-		  			is_object(ee()->TMPL) AND 
+		else if (	isset(ee()->TMPL) AND
+					is_object(ee()->TMPL) AND
 					! in_array(ee()->TMPL->fetch_param('site_id'), array(0, '0', FALSE, ''), TRUE) AND
 					is_numeric(ee()->TMPL->fetch_param('site_id')) )
 		{
 			$site_id = ee()->TMPL->fetch_param('site_id');
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	This was too expensive to run on page load
 		//--------------------------------------------
 		//check and see if we have prefs, but if we are in install mode, we wont, possibly
 		else if (ee()->db->table_exists('exp_calendar_preferences'))
-		{			
+		{
 			//right now we dont have MSM calendars, so its only going to be installed in one
 			$query = ee()->db->query(
 			   'SELECT 	preferences
@@ -128,28 +202,28 @@ class Calendar_data extends Addon_builder_data_calendar
 			//if we have some prefs, check to see which site the channels are already installed in
 			if ($query->num_rows() > 0)
 			{
-				$data = unserialize($query->row('preferences'));								
+				$data = unserialize($query->row('preferences'));
 			}
 			//if there are no prefs, check default
 			else
 			{
-				if ( ! class_exists('Calendar_updater_base'))
+				if ( ! class_exists('Calendar_upd'))
 				{
-					require_once CALENDAR_PATH . 'upd.calendar.base' . EXT;
+					require_once CALENDAR_PATH . 'upd.calendar' . EXT;
 				}
 
-				$prefs 	= Calendar_updater_base::_default_preferences();
+				$prefs 	= Calendar_upd::_default_preferences();
 
 				$data	= unserialize($prefs);
 			}
-			
+
 			//did either give us something we can work with?
 			if (isset($data['calendar_weblog']) AND is_numeric($data['calendar_weblog']))
 			{
 				$query = ee()->db->query(
 				   "SELECT 	site_id
 					FROM 	{$this->sc->db->channels}
-					WHERE	{$this->sc->db->channel_id} = '" . 
+					WHERE	{$this->sc->db->channel_id} = '" .
 							ee()->db->escape_str($data['calendar_weblog']) . "'"
 				);
 
@@ -159,16 +233,16 @@ class Calendar_data extends Addon_builder_data_calendar
 				}
 			}
 		}
-				
+
 		$this->cached[$cache_name][$cache_hash] = $site_id;
-		
+
 		return $this->cached[$cache_name][$cache_hash];
 	}
 	//END get_site_id
 
 
 	// --------------------------------------------------------------------
-	
+
 	/**
 	 * get member groups
 	 * the member_model in 2.x can do this for us
@@ -176,38 +250,38 @@ class Calendar_data extends Addon_builder_data_calendar
 	 *
 	 * @access 	public
 	 * @param 	bool	force refresh of data?
-	 * @return  array 	key value pair of group id=>title  
+	 * @return  array 	key value pair of group id=>title
 	 */
 
 	public function get_member_groups ($refresh = FALSE)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_hash = $this->_imploder(func_get_args());
 
 		if ($refresh !== TRUE)
 		{
-	 		if (isset($this->cached[$cache_name][$cache_hash]))
-	 		{
-	 			return $this->cached[$cache_name][$cache_hash];
-	 		}
+			if (isset($this->cached[$cache_name][$cache_hash]))
+			{
+				return $this->cached[$cache_name][$cache_hash];
+			}
 		}
 		else
 		{
 			unset($this->cached[$cache_name]);
 		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// -------------------------------------
 		//	get member groups
 		// -------------------------------------
 
 		$m_query = ee()->db->query(
-			"SELECT group_id, group_title 
+			"SELECT group_id, group_title
 			 FROM 	exp_member_groups
 			 WHERE 	group_id != 1
 			 AND 	site_id = " . ee()->db->escape_str($this->get_site_id())
@@ -216,56 +290,56 @@ class Calendar_data extends Addon_builder_data_calendar
 		if ($m_query->num_rows() > 0)
 		{
 			$this->cached[$cache_name][$cache_hash] = $this->prepare_keyed_result(
-				$m_query, 
-				'group_id', 
+				$m_query,
+				'group_id',
 				'group_title'
 			);
-		} 
+		}
 
-		return $this->cached[$cache_name][$cache_hash];					
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	//END get_member_groups
 
-	
+
 	// --------------------------------------------------------------------
 
 	public function get_module_preferences($refresh = FALSE)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_hash = $this->_imploder(func_get_args());
 
 		if ($refresh !== TRUE)
 		{
-	 		if (isset($this->cached[$cache_name][$cache_hash]))
-	 		{
-	 			return $this->cached[$cache_name][$cache_hash];
-	 		}
+			if (isset($this->cached[$cache_name][$cache_hash]))
+			{
+				return $this->cached[$cache_name][$cache_hash];
+			}
 		}
 		else
 		{
 			unset($this->cached[$cache_name]);
 		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
-		if ( ! class_exists('Calendar_updater_base'))
+		if ( ! class_exists('Calendar_upd'))
 		{
-			require_once CALENDAR_PATH . 'upd.calendar.base' . EXT;
+			require_once CALENDAR_PATH . 'upd.calendar' . EXT;
 		}
-		
-		$prefs 	= Calendar_updater_base::_default_preferences();
-		
+
+		$prefs 	= Calendar_upd::_default_preferences();
+
 		$data	= unserialize($prefs);
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	This was too expensive to run on page load
 		//--------------------------------------------
 
@@ -280,7 +354,7 @@ class Calendar_data extends Addon_builder_data_calendar
 			if ($query->num_rows() > 0)
 			{
 				$new_data = unserialize($query->row('preferences'));
-				
+
 				foreach ($new_data as $k => $v)
 				{
 					$data[$k] = $v;
@@ -291,13 +365,13 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
-	/* END module_preferences() */
+	// END module_preferences()
 
 
 	// --------------------------------------------------------------------
@@ -321,7 +395,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		return FALSE;
 	}
 	//END preference
-	
+
 
 	// --------------------------------------------------------------------
 
@@ -336,18 +410,18 @@ class Calendar_data extends Addon_builder_data_calendar
 	{
 		$data = array('preferences' => serialize($data));
 
-		$sql = 'SELECT 	* 
-				FROM 	exp_calendar_preferences 
+		$sql = 'SELECT 	*
+				FROM 	exp_calendar_preferences
 				WHERE 	site_id = '. ee()->db->escape_str($this->get_site_id());
-				
+
 		$query = ee()->db->query($sql);
 
 		if ($query->num_rows() == 1)
 		{
 			ee()->db->query(
 				ee()->db->update_string(
-					'exp_calendar_preferences', 
-					$data, 
+					'exp_calendar_preferences',
+					$data,
 					'site_id = '. ee()->db->escape_str($this->get_site_id())
 				)
 			);
@@ -360,7 +434,8 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->get_module_preferences(TRUE);
 	}
-	/* END update_preferences() */
+	// END update_preferences()
+
 
 	// --------------------------------------------------------------------
 
@@ -373,12 +448,12 @@ class Calendar_data extends Addon_builder_data_calendar
 	{
 		// Fetch the weblog
 		$channel 		= $this->preference('calendar_weblog');
-		
-		$channel 		= ($channel !== FALSE AND is_string($channel)) ? 
+
+		$channel 		= ($channel !== FALSE AND is_string($channel)) ?
 								explode('|', $channel) : array();
 		$channel_data 	= $this->get_channel_basics();
 		$names 			= array();
-	
+
 		foreach ($channel_data as $w)
 		{
 			if (in_array($w['weblog_id'], $channel))
@@ -386,10 +461,11 @@ class Calendar_data extends Addon_builder_data_calendar
 				$names[] = $w['blog_name'];
 			}
 		}
-	
+
 		return implode('|', $names);
 	}
-	/* END calendar_channel_shortname() */
+	// END calendar_channel_shortname()
+
 
 	// --------------------------------------------------------------------
 
@@ -402,11 +478,11 @@ class Calendar_data extends Addon_builder_data_calendar
 	{
 		 // Fetch the weblog
 		$channel 		= $this->preference('event_weblog');
-		$channel 		= ($channel !== FALSE AND is_string($channel)) ? 
-							explode('|', $channel) : array();		
+		$channel 		= ($channel !== FALSE AND is_string($channel)) ?
+							explode('|', $channel) : array();
 		$channel_data 	= $this->get_channel_basics();
 		$names 			= array();
-	
+
 		foreach ($channel_data as $c)
 		{
 			if (in_array($c['weblog_id'], $channel))
@@ -414,7 +490,7 @@ class Calendar_data extends Addon_builder_data_calendar
 				$names[] = $c['blog_name'];
 			}
 		}
-	
+
 		return implode('|', $names);
 	}
 	/* END event_channel_shortname() */
@@ -429,40 +505,40 @@ class Calendar_data extends Addon_builder_data_calendar
 	 */
 
 	public function calendars_exist()
-    {
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+	{
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
-		$sql = 'SELECT 	COUNT(*) AS count 
-				FROM 	exp_calendar_calendars 
+		$sql = 'SELECT 	COUNT(*) AS count
+				FROM 	exp_calendar_calendars
 				WHERE 	site_id = "' . ee()->db->escape_str($this->get_site_id()) .'"';
 
 		$query = ee()->db->query($sql);
 
 		$this->cached[$cache_name][$cache_hash] = ($query->row('count') == 0) ? FALSE : TRUE;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
-    }
-    /* END calendars_exist() */
+		return $this->cached[$cache_name][$cache_hash];
+	}
+	/* END calendars_exist() */
 
 	// --------------------------------------------------------------------
 
@@ -476,42 +552,42 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function channel_is_calendars_channel($channel_id)
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
-		
+		//  Perform the Actual Work
+		// --------------------------------------------
+
 		$blogname_andor = substr(ee()->functions->sql_andor_string(
-								ee()->db->escape_str( $this->calendar_channel_shortname() ), 
+								ee()->db->escape_str( $this->calendar_channel_shortname() ),
 								$this->sc->db->channel_name
 							), 4);
-							
+
 		$sql = "SELECT 	{$this->sc->db->channel_id}
-				FROM 	{$this->sc->db->channels} 
+				FROM 	{$this->sc->db->channels}
 				WHERE 	" . $blogname_andor;
 
 		$query = ee()->db->query($sql);
 
-		$this->cached[$cache_name][$cache_hash] = ($query->num_rows() > 0 AND 
+		$this->cached[$cache_name][$cache_hash] = ($query->num_rows() > 0 AND
 				$query->row($this->sc->db->channel_id) == $channel_id) ? TRUE : FALSE;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END weblog_is_calendar() */
 
@@ -527,38 +603,38 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function channel_is_valid_calendar($calendar_id = '')
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
- 		
- 		if ( $calendar_id == '' ) return array();
+		$this->cached[$cache_name][$cache_hash] = array();
+
+		if ( $calendar_id == '' ) return array();
 
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
-		$sql = 'SELECT 	calendar_id 
-				FROM 	exp_calendar_calendars 
+		$sql = 'SELECT 	calendar_id
+				FROM 	exp_calendar_calendars
 				WHERE 	calendar_id = "' . ee()->db->escape_str($calendar_id) .'"';
 
 		$query = ee()->db->query($sql);
 
 		$this->cached[$cache_name][$cache_hash] = ($query->num_rows() > 0) ? TRUE : FALSE;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END weblog_is_calendar() */
 
@@ -574,25 +650,25 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function channel_is_events_channel($channel_id = 0)
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
-		$sql = "SELECT 	{$this->sc->db->channel_id} 
-				FROM 	{$this->sc->db->channels} 
+		$sql = "SELECT 	{$this->sc->db->channel_id}
+				FROM 	{$this->sc->db->channels}
 				WHERE 	{$this->sc->db->channel_name} = '" . ee()->db->escape_str(CALENDAR_EVENTS_CHANNEL_NAME) . "'";
 
 		$query = ee()->db->query($sql);
@@ -603,16 +679,16 @@ class Calendar_data extends Addon_builder_data_calendar
 		}
 		else
 		{
-			$this->cached[$cache_name][$cache_hash] = ($query->num_rows() > 0 AND 
-													   $query->row($this->sc->db->channel_id) == $channel_id) ? 
+			$this->cached[$cache_name][$cache_hash] = ($query->num_rows() > 0 AND
+													   $query->row($this->sc->db->channel_id) == $channel_id) ?
 														TRUE : FALSE;
 		}
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END weblog_is_calendar() */
 
@@ -627,13 +703,13 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function add_calendar($id, $site_id, $params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$sql = "SELECT 	*
 				FROM	{$this->sc->db->channel_data}
 				WHERE 	entry_id = " . ee()->db->escape_str($id);
-				
+
 		$query = ee()->db->query($sql);
 
 		if ($query->num_rows() == 0)
@@ -645,9 +721,9 @@ class Calendar_data extends Addon_builder_data_calendar
 			'calendar_id' 	=> $id,
 			'site_id' 		=> $site_id
 		);
-		
+
 		$row = $query->row_array();
-			
+
 		foreach ($params as $k => $v)
 		{
 			if (isset($row[$v]))
@@ -677,7 +753,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		$sql = "SELECT 	*
 				FROM 	{$this->sc->db->channel_data}
 				WHERE 	entry_id = " . ee()->db->escape_str($id);
-					
+
 		$query = ee()->db->query($sql);
 
 		if ($query->num_rows() == 0)
@@ -705,8 +781,8 @@ class Calendar_data extends Addon_builder_data_calendar
 		{
 			ee()->db->query(
 				ee()->db->update_string(
-					'exp_calendar_calendars', 
-					$data, 
+					'exp_calendar_calendars',
+					$data,
 					'calendar_id = "'. ee()->db->escape_str($id) . '"'
 				)
 			);
@@ -724,10 +800,10 @@ class Calendar_data extends Addon_builder_data_calendar
 	{
 		ee()->db->query(
 			ee()->db->update_string(
-				$this->sc->db->channel_data, 
+				$this->sc->db->channel_data,
 				array(
 					$tf_field => $this->preference('time_format')
-				), 
+				),
 				'entry_id = '. ee()->db->escape_str($id)
 			)
 		);
@@ -747,14 +823,14 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function delete_calendar($calendar_id)
 	{
 		$clean_cal_id = ee()->db->escape_str($calendar_id);
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	delete event entries
 		//--------------------------------------------
 
 		$events_query = ee()->db->query(
 			"SELECT 		entry_id
-			 FROM 			{$this->events_table} 
+			 FROM 			{$this->events_table}
 			 WHERE 			calendar_id = '$clean_cal_id'"
 		);
 
@@ -762,30 +838,30 @@ class Calendar_data extends Addon_builder_data_calendar
 		if ($events_query->num_rows() > 0)
 		{
 			$ids = array();
-			
+
 			foreach($events_query->result_array() as $row)
 			{
 				$ids[] = $row['entry_id'];
 			}
-			
+
 			//we dont want to delete the parent event on accident here
 			ee()->db->query(
-				"DELETE FROM 	{$this->sc->db->channel_titles} 
-				 WHERE 		 	entry_id 
+				"DELETE FROM 	{$this->sc->db->channel_titles}
+				 WHERE 		 	entry_id
 				 IN 			(" . implode(',', ee()->db->escape_str($ids)) . ")"
 			);
-			
+
 			ee()->db->query(
-				"DELETE FROM 	{$this->sc->db->channel_data} 	 
-				 WHERE 		 	entry_id 
+				"DELETE FROM 	{$this->sc->db->channel_data}
+				 WHERE 		 	entry_id
 				 IN 			(" . implode(',', ee()->db->escape_str($ids)) . ")"
 			);
 		}
 
 		// -------------------------------------
-        //  Delete all cal data from this cal id            
-        // -------------------------------------
-		
+		//  Delete all cal data from this cal id
+		// -------------------------------------
+
 		$delete_from_table = array(
 			'exp_calendar_calendars',
 			$this->events_table,
@@ -794,15 +870,15 @@ class Calendar_data extends Addon_builder_data_calendar
 			'exp_calendar_events_exceptions',
 			'exp_calendar_events_imports'
 		);
-		
+
 		foreach ($delete_from_table as $table)
 		{
 			ee()->db->query(
-				"DELETE FROM 	$table 
+				"DELETE FROM 	$table
 				 WHERE 			calendar_id = '$clean_cal_id'"
 			);
 		}
-		
+
 	}
 	// END delete_calendar()
 
@@ -819,8 +895,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function add_event($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$params['start_time']	= str_pad($params['start_time'], 4, '0', STR_PAD_LEFT);
 		$params['end_time']		= str_pad($params['end_time'], 4, '0', STR_PAD_LEFT);
@@ -843,8 +919,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function update_event($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$entry_id = $params['event_id'];
 		unset($params['event_id']);
@@ -870,8 +946,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function add_imported_event($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		ee()->db->query(ee()->db->insert_string('exp_calendar_events_imports', $params));
 
@@ -891,13 +967,13 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function update_imported_event($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		ee()->db->query(
 			ee()->db->update_string(
-				'exp_calendar_events_imports', 
-				$params, 
+				'exp_calendar_events_imports',
+				$params,
 				'import_id = "'. ee()->db->escape_str($params['import_id']) .'"'
 			)
 		);
@@ -919,8 +995,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function add_rule($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$params['start_time']	= str_pad($params['start_time'], 4, '0', STR_PAD_LEFT);
 		$params['end_time']		= str_pad($params['end_time'], 4, '0', STR_PAD_LEFT);
@@ -944,8 +1020,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function add_occurrence($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$params['start_time']	= str_pad($params['start_time'], 4, '0', STR_PAD_LEFT);
 		$params['end_time']		= str_pad($params['end_time'], 4, '0', STR_PAD_LEFT);
@@ -968,8 +1044,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function add_exception($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		ee()->db->query(ee()->db->insert_string('exp_calendar_events_exceptions', $params));
 
@@ -989,16 +1065,16 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function update_rule($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$params['start_time']	= str_pad($params['start_time'], 4, '0', STR_PAD_LEFT);
 		$params['end_time']		= str_pad($params['end_time'], 4, '0', STR_PAD_LEFT);
 
 		ee()->db->query(
 			ee()->db->update_string(
-				'exp_calendar_events_rules', 
-				$params, 
+				'exp_calendar_events_rules',
+				$params,
 				'rule_id = "'. ee()->db->escape_str($params['rule_id']) .'"'
 			)
 		);
@@ -1020,11 +1096,11 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function delete_rule($rule_id)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_rules 
+			'DELETE FROM 	exp_calendar_events_rules
 			 WHERE 			rule_id = "'. ee()->db->escape_str($rule_id) .'"'
 		);
 
@@ -1044,16 +1120,16 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function update_occurrence($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$params['start_time']	= str_pad($params['start_time'], 4, '0', STR_PAD_LEFT);
 		$params['end_time']		= str_pad($params['end_time'], 4, '0', STR_PAD_LEFT);
 
 		ee()->db->query(
 			ee()->db->update_string(
-				'exp_calendar_events_occurrences', 
-				$params, 
+				'exp_calendar_events_occurrences',
+				$params,
 				'occurrence_id = "'. ee()->db->escape_str($params['occurrence_id']) .'"'
 			)
 		);
@@ -1074,13 +1150,13 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function update_exception($params)
 	{
 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		ee()->db->query(
 			ee()->db->update_string(
-				'exp_calendar_events_exceptions', 
-				$params, 
+				'exp_calendar_events_exceptions',
+				$params,
 				'exception_id = "' . ee()->db->escape_str($params['exception_id']) .'"'
 			)
 		);
@@ -1132,7 +1208,7 @@ class Calendar_data extends Addon_builder_data_calendar
 						LIMIT 		1";
 
 			$query = ee()->db->query($sql);
-			
+
 			if ($query->num_rows() > 0)
 			{
 				$last_date = $query->row('end_date');
@@ -1150,7 +1226,7 @@ class Calendar_data extends Addon_builder_data_calendar
 						WHERE 	event_id = " . ee()->db->escape_str($event_id);
 
 			$query = ee()->db->query($sql);
-			
+
 			if ($query->num_rows() > 0)
 			{
 				$last_date = $query->row('end_date');
@@ -1163,10 +1239,10 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		ee()->db->query(
 			ee()->db->update_string(
-				$this->events_table, 
+				$this->events_table,
 				array(
 					'last_date' => ($last_date === FALSE) ? 0 : $last_date
-				), 
+				),
 				"entry_id = ". ee()->db->escape_str($event_id)
 			)
 		);
@@ -1189,7 +1265,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		// -------------------------------------
 
 		ee()->db->query(
-			"DELETE FROM 	{$this->events_table} 
+			"DELETE FROM 	{$this->events_table}
 			 WHERE 			entry_id = '". ee()->db->escape_str($entry_id) . "'"
 		);
 
@@ -1198,7 +1274,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		// -------------------------------------
 
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_rules 
+			'DELETE FROM 	exp_calendar_events_rules
 			 WHERE 			event_id = "'. ee()->db->escape_str($entry_id) .'"'
 		);
 
@@ -1207,13 +1283,13 @@ class Calendar_data extends Addon_builder_data_calendar
 		// -------------------------------------
 
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_occurrences 
+			'DELETE FROM 	exp_calendar_events_occurrences
 			 WHERE 			event_id = "'. ee()->db->escape_str($entry_id) .'"'
 		);
-		
+
 		ee()->db->query(
-			'UPDATE 		exp_calendar_events_occurrences 
-			 SET 			entry_id = event_id 
+			'UPDATE 		exp_calendar_events_occurrences
+			 SET 			entry_id = event_id
 			 WHERE 			entry_id = "'. ee()->db->escape_str($entry_id) .'"'
 		);
 
@@ -1222,7 +1298,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		// -------------------------------------
 
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_exceptions 
+			'DELETE FROM 	exp_calendar_events_exceptions
 			 WHERE 			event_id = "'. ee()->db->escape_str($entry_id) .'"'
 		);
 
@@ -1231,7 +1307,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		// -------------------------------------
 
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_imports 
+			'DELETE FROM 	exp_calendar_events_imports
 			 WHERE 			event_id = "'. ee()->db->escape_str($entry_id) .'"'
 		);
 	}
@@ -1251,18 +1327,18 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function fetch_occurrences_by_event_id($event_id, $range_start = array(), $range_end = array())
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// -------------------------------------
 		//  Prep the > and < strings
@@ -1272,25 +1348,25 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		if (! empty($range_start))
 		{
-			$start_str = ' AND start_date >= ' . ee()->db->escape_str($range_start['year']) . 
-												 ee()->db->escape_str($range_start['month']) . 
+			$start_str = ' AND start_date >= ' . ee()->db->escape_str($range_start['year']) .
+												 ee()->db->escape_str($range_start['month']) .
 												 ee()->db->escape_str($range_start['day']);
 		}
 
 		if (! empty($range_end))
 		{
-			$end_str = ' AND end_date <= ' . ee()->db->escape_str($range_end['year']) . 
-											 ee()->db->escape_str($range_end['month']) . 
+			$end_str = ' AND end_date <= ' . ee()->db->escape_str($range_end['year']) .
+											 ee()->db->escape_str($range_end['month']) .
 											 ee()->db->escape_str($range_end['day']);
 		}
 
 		// --------------------------------------------
-        //  Go Fetch
-        // --------------------------------------------
+		//  Go Fetch
+		// --------------------------------------------
 
 		$sql = '	SELECT 	*
 					FROM 	exp_calendar_events_occurrences
-					WHERE 	event_id 
+					WHERE 	event_id
 					IN 		(' . ee()->db->escape_str(str_replace('|', ', ', $event_id)) .')'
 					. $start_str
 					. $end_str;
@@ -1306,11 +1382,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $result;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_occurrences_by_event_id() */
 
@@ -1329,18 +1405,18 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function fetch_rules_by_event_id($event_id, $range_start = array(), $range_end = array())
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// -------------------------------------
 		//  Prep the > and < strings
@@ -1350,25 +1426,25 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		if (! empty($range_start))
 		{
-			$start_str = ' AND start_date >= ' . ee()->db->escape_str($range_start['year']) . 
-												 ee()->db->escape_str($range_start['month']) . 
+			$start_str = ' AND start_date >= ' . ee()->db->escape_str($range_start['year']) .
+												 ee()->db->escape_str($range_start['month']) .
 												 ee()->db->escape_str($range_start['day']);
 		}
 
 		if (! empty($range_end))
 		{
-			$end_str = ' AND end_date <= ' . ee()->db->escape_str($range_end['year']) . 
-											 ee()->db->escape_str($range_end['month']) . 
+			$end_str = ' AND end_date <= ' . ee()->db->escape_str($range_end['year']) .
+											 ee()->db->escape_str($range_end['month']) .
 											 ee()->db->escape_str($range_end['day']);
 		}
 
 		// --------------------------------------------
-        //  Go Fetch
-        // --------------------------------------------
+		//  Go Fetch
+		// --------------------------------------------
 
 		$sql = '	SELECT 	*
 					FROM 	exp_calendar_events_rules
-					WHERE 	event_id 
+					WHERE 	event_id
 					IN 		(' . ee()->db->escape_str(str_replace('|', ', ', $event_id)) .')'
 					. $start_str
 					. $end_str;
@@ -1390,11 +1466,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $result;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_rules_by_event_id() */
 
@@ -1411,18 +1487,18 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function fetch_full_event_data($entry_id = 0, $url_title = '')
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// -------------------------------------
 		//  Construct the query
@@ -1430,7 +1506,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql = "SELECT 		wt.*, ce.*
 				FROM		{$this->sc->db->channle_titles} AS wt
-				LEFT JOIN 	{$this->events_table} AS ce 
+				LEFT JOIN 	{$this->events_table} AS ce
 				ON 			wt.entry_id = ce.entry_id
 				WHERE ";
 
@@ -1496,11 +1572,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_full_event_data() */
 
@@ -1521,18 +1597,18 @@ class Calendar_data extends Addon_builder_data_calendar
 		//		event to the calendars, because of permissions.
 
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// -------------------------------------
 		//  Construct the query
@@ -1540,27 +1616,27 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql = "SELECT 		cc.calendar_id, wt.title
 				FROM 		exp_calendar_calendars cc
-				LEFT JOIN 	{$this->sc->db->channel_titles} wt 
+				LEFT JOIN 	{$this->sc->db->channel_titles} wt
 				ON 			cc.calendar_id = wt.entry_id
 				WHERE 		wt.status != 'closed'
-				ORDER BY 	wt.title 
+				ORDER BY 	wt.title
 				ASC ";
-				
+
 		$query = ee()->db->query($sql);
-		
+
 		if ($query->num_rows() > 0)
 		{
 			$this->cached[$cache_name][$cache_hash] = $this->prepare_keyed_result(
-				$query, 
+				$query,
 				'calendar_id'
-			); 
+			);
 		}
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_calendar_list() */
 
@@ -1570,18 +1646,18 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function get_calendars_by_site_id($site_id)
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// -------------------------------------
 		//  Construct the query
@@ -1596,7 +1672,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql = '	SELECT 	calendar_id
 					FROM 	exp_calendar_calendars
-					WHERE 	site_id 
+					WHERE 	site_id
 					IN 		('. ee()->db->escape_str($site_id) .')
 					AND 	ics_url != ""';
 
@@ -1609,11 +1685,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_calendars_by_site_id() */
 
@@ -1622,18 +1698,18 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function get_calendars_needing_update($ids, $minutes, $status = 'open')
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// -------------------------------------
 		//  Construct the query
@@ -1645,11 +1721,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql = "SELECT 		cc.calendar_id
 				FROM 		exp_calendar_calendars AS cc
-				LEFT JOIN 	{$this->sc->db->channel_titles} AS wt 
+				LEFT JOIN 	{$this->sc->db->channel_titles} AS wt
 				ON 			cc.calendar_id = wt.entry_id
-				WHERE 		cc.calendar_id 
+				WHERE 		cc.calendar_id
 				IN 			('" . ee()->db->escape_str($ids) . "')
-				AND 		wt.status 
+				AND 		wt.status
 				IN 			($statuses)
 				AND 		cc.ics_url != ''
 				AND 		(NOW() - DATE_SUB(NOW(), INTERVAL " . ee()->db->escape_str($minutes) . " MINUTE)) > 0 ";
@@ -1663,11 +1739,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_calendars_needing_update() */
 
@@ -1695,40 +1771,40 @@ class Calendar_data extends Addon_builder_data_calendar
 	 */
 
 	public function event_exists($id)
-    {
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+	{
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
-		$sql = "SELECT 	entry_id 
-				FROM 	{$this->events_table} 
+		$sql = "SELECT 	entry_id
+				FROM 	{$this->events_table}
 				WHERE 	entry_id = '" . ee()->db->escape_str($id) . "'";
 
 		$query = ee()->db->query($sql);
 
 		$this->cached[$cache_name][$cache_hash] = ($query->num_rows() == 0) ? FALSE : $query->row('entry_id');
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
-    }
-    /* END event_exists() */
+		return $this->cached[$cache_name][$cache_hash];
+	}
+	/* END event_exists() */
 
 	// --------------------------------------------------------------------
 
@@ -1741,38 +1817,38 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_event_data_for_view($id)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
-		$sql = "SELECT 	entry_id, 
-						event_id, 
-						calendar_id, 
-						start_date, 
-						end_date, 
-						all_day, 
-						start_time, 
-						end_time, 
-						recurs 
-			 	FROM 	{$this->events_table} 
-			 	WHERE 	entry_id = '" . ee()->db->escape_str($id) . "'";
-		
+		$sql = "SELECT 	entry_id,
+						event_id,
+						calendar_id,
+						start_date,
+						end_date,
+						all_day,
+						start_time,
+						end_time,
+						recurs
+				FROM 	{$this->events_table}
+				WHERE 	entry_id = '" . ee()->db->escape_str($id) . "'";
+
 		$query = ee()->db->query($sql);
 
 		if ($query->num_rows() > 0)
@@ -1781,29 +1857,29 @@ class Calendar_data extends Addon_builder_data_calendar
 
 			if ($data['recurs'] == 'y')
 			{
-				$rsql = 'SELECT 	rule_id, 
-									rule_type, 
-									start_date, 
-									all_day, 
-									start_time, 
-									end_date, 
+				$rsql = 'SELECT 	rule_id,
+									rule_type,
+									start_date,
+									all_day,
+									start_time,
+									end_date,
 									end_time,
-									repeat_years, 
-									repeat_months, 
-									repeat_days, 
-									repeat_weeks, 
+									repeat_years,
+									repeat_months,
+									repeat_days,
+									repeat_weeks,
 									days_of_week,
-									relative_dow, 
-									days_of_month, 
-									months_of_year, 
-									stop_by, 
+									relative_dow,
+									days_of_month,
+									months_of_year,
+									stop_by,
 									stop_after
 						FROM 		exp_calendar_events_rules
 						WHERE 		entry_id = ' . ee()->db->escape_str($id) . '
 						ORDER BY 	rule_type ASC, rule_id ASC, start_date ASC';
 
 				$rquery = ee()->db->query($rsql);
-				
+
 				foreach ($rquery->result_array() as $row)
 				{
 					$data['rules'][$row['rule_id']] = $row;
@@ -1815,12 +1891,12 @@ class Calendar_data extends Addon_builder_data_calendar
 						 ORDER BY 	start_date ASC, start_time ASC, end_time ASC';
 
 				$oquery = ee()->db->query($osql);
-				
+
 				foreach ($oquery->result_array() as $row)
 				{
 					$start_time = $row['start_time']; //($row['all_day'] == 'y') ? '0000' : $row['start_time'];
 					$end_time 	= $row['end_time'];   //($row['all_day'] == 'y') ? '2400' : $row['end_time'];
-					
+
 					$data['occurrences'][$start_time][$end_time][] = $row;
 				}
 
@@ -1830,7 +1906,7 @@ class Calendar_data extends Addon_builder_data_calendar
 						 ORDER BY 	start_date ASC';
 
 				$equery = ee()->db->query($esql);
-				
+
 				foreach ($equery->result_array() as $row)
 				{
 					$data['exceptions'][] = $row;
@@ -1840,11 +1916,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_event_data_for_view() */
 
@@ -1859,23 +1935,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_occurrences_by_event($id)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -1890,11 +1966,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_occurrences_by_event() */
 
@@ -1909,23 +1985,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_exceptions_by_event($id)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -1942,11 +2018,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_exceptions_by_event() */
 
@@ -1962,8 +2038,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function remove_rule($id)
 	{
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_rules 
-			 WHERE 			rule_id = '. ee()->db->escape_str($id) . ' 
+			'DELETE FROM 	exp_calendar_events_rules
+			 WHERE 			rule_id = '. ee()->db->escape_str($id) . '
 			 LIMIT 			1'
 		);
 	}
@@ -1981,8 +2057,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function remove_occurrence($id)
 	{
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_occurrences 
-			 WHERE 			occurrence_id = '. ee()->db->escape_str($id) . ' 
+			'DELETE FROM 	exp_calendar_events_occurrences
+			 WHERE 			occurrence_id = '. ee()->db->escape_str($id) . '
 			 LIMIT 			1'
 		);
 	}
@@ -2000,8 +2076,8 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function remove_exception($id)
 	{
 		ee()->db->query(
-			'DELETE FROM 	exp_calendar_events_exceptions 
-			 WHERE 			exception_id = '. ee()->db->escape_str($id) . ' 
+			'DELETE FROM 	exp_calendar_events_exceptions
+			 WHERE 			exception_id = '. ee()->db->escape_str($id) . '
 			 LIMIT 			1'
 		);
 	}
@@ -2021,7 +2097,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		$not_sql  = (! empty($not)) ? ' AND rule_id NOT IN ('. ee()->db->escape_str(implode(', ', $not)) .')' : '';
 
 		ee()->db->query(
-			'DELETE FROM exp_calendar_events_rules 
+			'DELETE FROM exp_calendar_events_rules
 			 WHERE 		 event_id = '. ee()->db->escape_str($id) . $not_sql
 		);
 	}
@@ -2045,7 +2121,7 @@ class Calendar_data extends Addon_builder_data_calendar
 			 FROM 	exp_calendar_events_occurrences
 			 WHERE  event_id = " . ee()->db->escape_str($id)
 		);
-		
+
 		//need to remove all associated event_ids unless its the master event
 		if ($query->num_rows() > 0)
 		{
@@ -2054,25 +2130,25 @@ class Calendar_data extends Addon_builder_data_calendar
 			{
 				$ids[] = $row['entry_id'];
 			}
-			
+
 			//we dont want to delete the parent event on accident here
 			ee()->db->query(
-				"DELETE FROM 	{$this->sc->db->channel_titles} 
-				 WHERE 		 	entry_id 
+				"DELETE FROM 	{$this->sc->db->channel_titles}
+				 WHERE 		 	entry_id
 				 IN 			(" . implode(',', $ids) . ")
-				 AND			entry_id != " . ee()->db->escape_str($id) 
+				 AND			entry_id != " . ee()->db->escape_str($id)
 			);
-			
+
 			ee()->db->query(
-				"DELETE FROM 	{$this->sc->db->channel_data} 	 
-				 WHERE 		 	entry_id 
+				"DELETE FROM 	{$this->sc->db->channel_data}
+				 WHERE 		 	entry_id
 				 IN 			(" . implode(',', $ids) . ")
-				 AND			entry_id != " . ee()->db->escape_str($id) 
+				 AND			entry_id != " . ee()->db->escape_str($id)
 			);
 		}
 
 		ee()->db->query(
-			'DELETE FROM exp_calendar_events_occurrences 
+			'DELETE FROM exp_calendar_events_occurrences
 			 WHERE 		 event_id = '. ee()->db->escape_str($id)
 		);
 	}
@@ -2107,23 +2183,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_calendars_basics($site_id, $calendar_id = '', $not = FALSE)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$sql = '/* Calendar Module fetch_calendars_data */ ';
 
@@ -2155,11 +2231,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $query->result_array();
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_calendars_basics() */
 
@@ -2177,29 +2253,29 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_calendars_with_events_in_date_range($min = '', $max = '', $calendars = array(), $status = '')
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 		$calendar_string	= implode(', ', $calendars);
 		$status_string		= str_replace('|', "', ", $status);
 		$status_not			= '';
-		
+
 		if (strtolower(substr($status_string, 0, 4)) == 'not ')
 		{
 			$status_not		= 'NOT';
@@ -2229,7 +2305,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 			if ($min != '' AND $max != '')
 			{
-				$wheres[] = "((end_date >= {$min} AND start_date <= {$max}) OR 
+				$wheres[] = "((end_date >= {$min} AND start_date <= {$max}) OR
 							  (end_date = '' AND start_date >= $min AND start_date <= $max))\n";
 			}
 			elseif ($min != '')
@@ -2247,7 +2323,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 			$sql .= "SELECT 	ce.calendar_id
 					 FROM 		{$this->events_table} ce
-					 LEFT JOIN 	{$this->sc->db->channel_titles} AS ct 
+					 LEFT JOIN 	{$this->sc->db->channel_titles} AS ct
 					 ON 		ce.entry_id = ct.entry_id ";
 
 			$sql .= $where;
@@ -2258,7 +2334,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 			$sql .= "SELECT 	ceo.calendar_id
 					 FROM 		exp_calendar_events_occurrences ceo
-					 LEFT JOIN 	{$this->sc->db->channel_titles} AS ct 
+					 LEFT JOIN 	{$this->sc->db->channel_titles} AS ct
 					 ON 		ceo.entry_id = ct.entry_id ";
 
 			$sql .= $where;
@@ -2297,11 +2373,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_calendars_with_events_in_date_range() */
 
@@ -2319,23 +2395,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_calendars_with_events_in_date_range_by_rule($min = '', $max = '', $calendars = array(), $status_string = '')
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 		$calendar_string	= implode(', ', $calendars);
@@ -2354,7 +2430,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql .= "SELECT 	cer.*
 				 FROM 		exp_calendar_events_rules cer
-				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt 
+				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt
 				 ON 		cer.entry_id = wt.entry_id ";
 
 		$wheres = array();
@@ -2371,7 +2447,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		if ($min != '' AND $max != '')
 		{
-			$wheres[] = "((end_date >= {$min} AND start_date <= {$max}) OR 
+			$wheres[] = "((end_date >= {$min} AND start_date <= {$max}) OR
 						  (end_date = '' AND start_date >= $min AND start_date <= $max))\n";
 		}
 		elseif ($min != '')
@@ -2467,7 +2543,7 @@ class Calendar_data extends Addon_builder_data_calendar
 						require_once CALENDAR_PATH.'calendar.event'.EXT;
 					}
 
-					$data = array(	
+					$data = array(
 						'rules'	=> array('add' => array($row), 'sub' => array()),
 						'start_date' => $min,
 						'end_date' => $max,
@@ -2498,11 +2574,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $new_calendars;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_calendars_with_events_in_date_range_by_rule() */
 
@@ -2519,29 +2595,29 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_calendar_id_from_name($name = '', $site_id = 0, $not = FALSE)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
-        
-        if ( $name == '' ) return array();
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
+
+		if ( $name == '' ) return array();
 
 		$not 		= ($not === TRUE) ? 'NOT' : '';
 		$name_str 	= str_replace('|', "', '", ee()->db->escape_str($name));
-		
+
 		if ($site_id == 0)
 		{
 			$site_id = $this->get_site_id();
@@ -2550,7 +2626,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		$sql = "SELECT 	entry_id
 				FROM 	{$this->sc->db->channel_titles}
 				WHERE 	site_id = " . ee()->db->escape_str($site_id) . "
-				AND 	url_title  
+				AND 	url_title
 				$not IN ('$name_str')";
 
 		$query = ee()->db->query($sql);
@@ -2563,11 +2639,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $ids;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_calendar_id_from_name() */
 
@@ -2583,23 +2659,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_event_entry_id_by_channel_entry_id($entry_id)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$sql = "SELECT 	ce.entry_id
 				FROM 	{$this->events_table} ce
@@ -2620,11 +2696,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $id;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_event_entry_id_by_channel_entry_id() */
 
@@ -2640,23 +2716,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_calendar_id_by_event_entry_id($entry_id)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$ids = array();
 
@@ -2673,7 +2749,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		{
 			$sql = "SELECT 	ce.calendar_id, ce.entry_id
 					FROM 	{$this->events_table} ce
-					WHERE 	ce.entry_id 
+					WHERE 	ce.entry_id
 					IN 		(" . ee()->db->escape_str($entry_id) .')';
 
 			$query = ee()->db->query($sql);
@@ -2686,11 +2762,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $ids;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_calendar_id_by_event_entry_id() */
 
@@ -2707,23 +2783,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_event_id_from_name($name, $site_id = 0)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$name_str = str_replace('|', '", "', $name);
 		if ($site_id == 0)
@@ -2734,13 +2810,13 @@ class Calendar_data extends Addon_builder_data_calendar
 		$sql = "SELECT 	wt.entry_id
 				FROM 	{$this->sc->db->titles} AS wt
 				WHERE 	site_id = " . ee()->db->escape_str($site_id) . "
-				AND 	url_title 
+				AND 	url_title
 				IN 		('" . ee()->db->escape_str($name_str) . "')";
 
 		$query = ee()->db->query($sql);
 
 		$ids = array();
-		
+
 		foreach ($query->result_array() as $row)
 		{
 			$ids[$row['entry_id']] = $row['entry_id'];
@@ -2748,11 +2824,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $ids;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_event_id_from_name() */
 
@@ -2768,27 +2844,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_event_ids($params, $category = FALSE)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
-
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		$this->cached[$cache_name][$cache_hash] = array();
 
 		// --------------------------------------------
-        //  Bail out early if there are no events in the specified calendar(s)
-        // --------------------------------------------
+		//  Bail out early if there are no events in the specified calendar(s)
+		// --------------------------------------------
 
 		if ($params->value('calendar_id') === NULL)
 		{
@@ -2802,44 +2874,69 @@ class Calendar_data extends Addon_builder_data_calendar
 		$status_not			= '';
 		$calendar_not		= '';
 		$event_not			= '';
-		
+
 		if (strtolower(substr($status_string, 0, 4)) == 'not ')
 		{
 			$status_not			= 'NOT';
 			$status_string		= substr($status_string, 4);
 		}
-		
+
 		if (strtolower(substr($calendar_string, 0, 4)) == 'not ')
 		{
 			$calendar_not		= 'NOT';
 			$calendar_string	= substr($calendar_string, 4);
 		}
-		
+
 		if (strtolower(substr($event_string, 0, 4)) == 'not ')
 		{
 			$event_not			= 'NOT';
 			$event_string		= substr($event_string, 4);
 		}
-		
-		$start_time			= $params->value('date_range_start', 'hour') . $params->value('date_range_start', 'minute');
-		$end_time			= $params->value('date_range_end', 'hour') . $params->value('date_range_end', 'minute');
-		$dmin				= ($params->value('date_range_start') !== FALSE) ? 
+
+		// -------------------------------------
+		//	check for validity
+		// -------------------------------------
+
+		$calendar_check		= preg_split('/,\s+/s', $calendar_string, -1, PREG_SPLIT_NO_EMPTY);
+		$calendar_check		= array_filter($calendar_check, array($this, 'is_positive_intlike'));
+		$calendar_string	= implode(', ', $calendar_check);
+
+		$event_check		= preg_split('/,\s+/s', $event_string, -1, PREG_SPLIT_NO_EMPTY);
+		$event_check		= array_filter($event_check, array($this, 'is_positive_intlike'));
+		$event_string		= implode(', ', $event_check);
+
+		// -------------------------------------
+		//	range times
+		// -------------------------------------
+
+		$start_time			= $params->value('date_range_start', 'hour') .
+								$params->value('date_range_start', 'minute');
+
+		$end_time			= $params->value('date_range_end', 'hour') .
+								$params->value('date_range_end', 'minute');
+
+		$dmin				= ($params->value('date_range_start') !== FALSE) ?
 									$params->value('date_range_start', 'ymd') : '';
-		$dmax				= ($params->value('date_range_end') !== FALSE) ? 
-		 							$params->value('date_range_end', 'ymd') : '';
-		$dtmin				= ($params->value('date_range_start') !== FALSE AND 
-							   $start_time > 0 AND 
-							   $start_time < 2400) ? 
+
+		$dmax				= ($params->value('date_range_end') !== FALSE) ?
+									$params->value('date_range_end', 'ymd') : '';
+
+		$dtmin				= ($params->value('date_range_start') !== FALSE AND
+							   $start_time > 0 AND
+							   $start_time < 2400) ?
 									$dmin.$start_time : '';
-		$dtmax				= ($params->value('date_range_end') !== FALSE AND 
-		 					   $end_time > 0 AND 
-		 					   $end_time < 2400) ? 
-									$dmax.$params->value('date_range_end', 'hour') . 
-									$params->value('date_range_end', 'minute') : 
+
+		$dtmax				= ($params->value('date_range_end') !== FALSE AND
+							   $end_time > 0 AND
+							   $end_time < 2400) ?
+									$dmax.$params->value('date_range_end', 'hour') .
+									$params->value('date_range_end', 'minute') :
 									'';
-		$tmin				= ($params->value('time_range_start') !== FALSE) ? 
+
+		$tmin				= ($params->value('time_range_start') !== FALSE) ?
 									$params->value('time_range_start', 'time') : '0000';
-		$tmax				= ($params->value('time_range_end') !== FALSE) ? 
+
+		$tmax				= ($params->value('time_range_end') !== FALSE) ?
 									$params->value('time_range_end', 'time') : '2400';
 
 		$dmin				= ee()->db->escape_str($dmin);
@@ -2848,7 +2945,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		$dtmax				= ee()->db->escape_str($dtmax);
 		$tmin				= ee()->db->escape_str($tmin);
 		$tmax				= ee()->db->escape_str($tmax);
-		
+
 		/*
 		//	----------------------------------------
 		//	Are we checking for category?
@@ -2871,22 +2968,22 @@ class Calendar_data extends Addon_builder_data_calendar
 				$cat_id	= $match['1'];
 			}
 			else
-			{			
+			{
 				$categories = preg_split(
-					"/" . preg_quote('|') . "/", 
-					str_replace(array('not ', 'NOT ', '&'), array('', '', '|'), $category), 
-					-1, 
+					"/" . preg_quote('|') . "/",
+					str_replace(array('not ', 'NOT ', '&'), array('', '', '|'), $category),
+					-1,
 					PREG_SPLIT_NO_EMPTY
-				);				
-				
-				$cat_q	= ee()->db->query( 
-					"SELECT cat_id, cat_url_title 
+				);
+
+				$cat_q	= ee()->db->query(
+					"SELECT cat_id, cat_url_title
 					 FROM 	exp_categories
-					 WHERE 	site_id 
+					 WHERE 	site_id
 					 IN 	(" . str_replace('|', ',' , $params->value('site_id') ) . ")
-					 AND	cat_url_title 
+					 AND	cat_url_title
 					 IN  	('" . implode("','" , ee()->db->escape_str( $categories )) . "')
-					 ORDER BY LENGTH (cat_url_title)" 
+					 ORDER BY LENGTH (cat_url_title)"
 				);
 
 				if ( $cat_q->num_rows() > 0 )
@@ -2915,7 +3012,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		if (FALSE AND $cat_id != '')
 		{
 			$cat_sql = ' ';
-			
+
 			//inclusive AND
 			if (stristr('&', $cat_id))
 			{
@@ -2930,11 +3027,11 @@ class Calendar_data extends Addon_builder_data_calendar
 				}
 
 				$categories = preg_split(
-					"/" . preg_quote('&') . "/", 
-					$cat_id, 
-					-1, 
+					"/" . preg_quote('&') . "/",
+					$cat_id,
+					-1,
 					PREG_SPLIT_NO_EMPTY
-				);	
+				);
 
 				$cat_sql .= '(';
 
@@ -2943,10 +3040,10 @@ class Calendar_data extends Addon_builder_data_calendar
 					$cat_sql .= 'cp.cat_id';
 				}
 
-				if ($cat_not == 'NOT' AND 
+				if ($cat_not == 'NOT' AND
 					$this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 				{
-						
+
 					$cat_sql .= " ";
 				}
 				else
@@ -2959,7 +3056,7 @@ class Calendar_data extends Addon_builder_data_calendar
 			//or string
 			else
 			{
-				if (substr($cat_id, 0, 3) == 'not' AND 
+				if (substr($cat_id, 0, 3) == 'not' AND
 					$this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 				{
 					$cat_sql = ee()->functions->sql_andor_string($cat_id, 'cp.cat_id', '', TRUE)." ";
@@ -2967,15 +3064,15 @@ class Calendar_data extends Addon_builder_data_calendar
 				else
 				{
 					$cat_sql = ee()->functions->sql_andor_string($cat_id, 'cp.cat_id')." ";
-				}				
+				}
 			}
-			
+
 			$wheres[] = (substr($cat_sql, 0, 3) == 'AND') ? substr($cat_sql, 3) : $cat_sql;
 		}
 		*/
 
 		if ($calendar_string != '')
-		{	
+		{
 			$wheres[] = "calendar_id {$calendar_not} IN (". ee()->db->escape_str($calendar_string) .")\n";
 		}
 
@@ -2995,20 +3092,20 @@ class Calendar_data extends Addon_builder_data_calendar
 			{
 				$wheres[] = "(
 								(
-								 CONCAT(end_date, LPAD(end_time, 4, '0')) >= {$dtmin} AND 
+								 CONCAT(end_date, LPAD(end_time, 4, '0')) >= {$dtmin} AND
 								 CONCAT(start_date, LPAD(start_time, 4, '0')) <= {$dtmax}
-								) 
+								)
 								OR
 								(
-								 CONCAT(last_date, LPAD(end_time, 4, '0')) >= {$dtmin} AND 
+								 CONCAT(last_date, LPAD(end_time, 4, '0')) >= {$dtmin} AND
 								 CONCAT(start_date, LPAD(start_time, 4, '0')) <= {$dtmax}
-								) 
+								)
 								OR
 								(
-									CONCAT(last_date, LPAD(end_time, 4, '0')) = '' AND 
-									CONCAT(start_date, LPAD(start_time, 4, '0')) >= {$dtmin} AND 
+									CONCAT(last_date, LPAD(end_time, 4, '0')) = '' AND
+									CONCAT(start_date, LPAD(start_time, 4, '0')) >= {$dtmin} AND
 									CONCAT(start_date, LPAD(start_time, 4, '0')) <= {$dtmax}
-								) 
+								)
 								OR
 								(
 									recurs = 'y' AND CONCAT(start_date, LPAD(start_time, 4, '0')) <= {$dtmax} AND
@@ -3023,13 +3120,13 @@ class Calendar_data extends Addon_builder_data_calendar
 								(CONCAT(end_date, LPAD(end_time, 4, '0')) >= {$dtmin} AND start_date <= {$dmax}) OR
 								(CONCAT(last_date, LPAD(end_time, 4, '0')) >= {$dtmin} AND start_date <= {$dmax}) OR
 								(
-									CONCAT(last_date, LPAD(end_time, 4, '0')) = '' AND 
-								 	CONCAT(start_date, LPAD(start_time, 4, '0')) >= $dtmin AND 
-								 	start_date <= $dmax
-								) 
+									CONCAT(last_date, LPAD(end_time, 4, '0')) = '' AND
+									CONCAT(start_date, LPAD(start_time, 4, '0')) >= $dtmin AND
+									start_date <= $dmax
+								)
 								OR
 								(
-									recurs = 'y' AND 
+									recurs = 'y' AND
 									start_date <= $dmax AND
 									(
 										last_date = '' OR
@@ -3045,7 +3142,7 @@ class Calendar_data extends Addon_builder_data_calendar
 								(last_date >= {$dmin} AND CONCAT(start_date, LPAD(start_time, 4, '0')) <= {$dtmax}) OR
 								(last_date = '' AND start_date >= $dmin AND CONCAT(start_date, LPAD(start_time, 4, '0')) <= $dtmax) OR
 								(
-									recurs = 'y' AND 
+									recurs = 'y' AND
 									CONCAT(start_date, LPAD(start_time, 4, '0')) <= $dtmax AND
 									(
 										last_date = '' OR
@@ -3061,7 +3158,7 @@ class Calendar_data extends Addon_builder_data_calendar
 								(last_date >= {$dmin} AND start_date <= {$dmax}) OR
 								(last_date = '' AND start_date >= $dmin AND start_date <= $dmax) OR
 								(
-									recurs = 'y' AND 
+									recurs = 'y' AND
 									start_date <= $dmax AND
 									(
 										last_date = '' OR
@@ -3076,8 +3173,8 @@ class Calendar_data extends Addon_builder_data_calendar
 			if ($dtmin != '')
 			{
 				$wheres[] = "(
-								CONCAT(last_date, '2400') >= {$dtmin} OR 
-								CONCAT(end_date, LPAD(end_time, 4, '0')) >= {$dtmin} OR 
+								CONCAT(last_date, '2400') >= {$dtmin} OR
+								CONCAT(end_date, LPAD(end_time, 4, '0')) >= {$dtmin} OR
 								CONCAT(start_date, LPAD(start_time, 4, '0')) >= {$dtmin}
 							)\n";
 			}
@@ -3117,7 +3214,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql .= "SELECT 	ce.entry_id, ce.entry_id AS event_id
 				 FROM 		{$this->events_table} AS ce
-				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt 
+				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt
 				 ON 		ce.entry_id = wt.entry_id ";
 
 		//	----------------------------------------
@@ -3129,7 +3226,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		/*
 		if ($cat_id != '')
 		{
-			if (substr($cat_id, 0, 3) == 'not' AND 
+			if (substr($cat_id, 0, 3) == 'not' AND
 				$this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 			{
 				$sql .= "LEFT JOIN exp_category_posts AS cp ON wt.entry_id = cp.entry_id ";
@@ -3139,19 +3236,19 @@ class Calendar_data extends Addon_builder_data_calendar
 				$sql .= "INNER JOIN exp_category_posts AS cp ON wt.entry_id = cp.entry_id ";
 			}
 		}*/
-		
+
 		$sql .= $where;
 
 		$sql .= "UNION\n";
 
 		$sql .= "SELECT 	ceo.entry_id, ceo.event_id
 				 FROM 		exp_calendar_events_occurrences AS ceo
-				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt 
+				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt
 				 ON 		ceo.entry_id = wt.entry_id ";
 
 		/*if ($cat_id != '')
 		{
-			if (substr($cat_id, 0, 3) == 'not' AND 
+			if (substr($cat_id, 0, 3) == 'not' AND
 				$this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 			{
 				$sql .= "LEFT JOIN exp_category_posts AS cp ON wt.entry_id = cp.entry_id ";
@@ -3171,8 +3268,8 @@ class Calendar_data extends Addon_builder_data_calendar
 		/*if ($cat_id != '')
 		{
 			$cat_sql = '';
-			
-			if (substr($cat_id, 0, 3) == 'not' AND 
+
+			if (substr($cat_id, 0, 3) == 'not' AND
 				$this->check_no(ee()->TMPL->fetch_param('uncategorized_entries')) === FALSE)
 			{
 				$cat_sql = ee()->functions->sql_andor_string($cat_id, 'cp.cat_id', '', TRUE)." ";
@@ -3181,10 +3278,10 @@ class Calendar_data extends Addon_builder_data_calendar
 			{
 				$cat_sql = ee()->functions->sql_andor_string($cat_id, 'cp.cat_id')." ";
 			}
-			
+
 			$wheres[] = (substr($cat_sql, 0, 3) == 'AND') ? substr($cat_sql, 3) : $cat_sql;
 		}*/
-		
+
 		if ($calendar_string != '')
 		{
 			$wheres[] = "calendar_id {$calendar_not} IN (". ee()->db->escape_str($calendar_string) .")\n";
@@ -3203,7 +3300,7 @@ class Calendar_data extends Addon_builder_data_calendar
 		if ($dmin != '' AND $dmax != '')
 		{
 			$wheres[] = "(
-							(end_date >= {$dmin} AND start_date <= {$dmax}) OR 
+							(end_date >= {$dmin} AND start_date <= {$dmax}) OR
 							(end_date = '' AND start_date >= $dmin AND start_date <= $dmax)
 						)\n";
 		}
@@ -3249,11 +3346,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $ids;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_event_ids() */
 
@@ -3268,29 +3365,29 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_occurrence_entry_ids($ids)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$sql = "/* fetch_occurrence_entry_ids() */\n";
 
 		$sql .= "	SELECT 	ceo.event_id, ceo.occurrence_id, ceo.entry_id
 					FROM 	exp_calendar_events_occurrences ceo
-					WHERE 	event_id 
+					WHERE 	event_id
 					IN 		(". implode(', ', $ids) .")";
 
 		$occurrence_ids = array();
@@ -3302,11 +3399,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $occurrence_ids;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_occurrence_entry_ids() */
 
@@ -3321,23 +3418,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_all_event_data($ids)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -3365,11 +3462,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_all_event_data() */
 
@@ -3385,23 +3482,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_event_data($id_string)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -3409,9 +3506,9 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql .= "	SELECT 		*
 					FROM 		{$this->events_table}
-					WHERE 		entry_id 
+					WHERE 		entry_id
 					IN 			(" . ee()->db->escape_str($id_string) . ")
-					ORDER BY 	start_date ASC, 
+					ORDER BY 	start_date ASC,
 								end_date ASC";
 
 		$query = ee()->db->query($sql);
@@ -3426,11 +3523,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_event_data() */
 
@@ -3446,23 +3543,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_event_occurrences($id_string)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -3470,7 +3567,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql .= "SELECT *
 				 FROM 	exp_calendar_events_occurrences
-				 WHERE 	event_id 
+				 WHERE 	event_id
 				 IN 	(" . ee()->db->escape_str($id_string) . ")";
 
 		$query = ee()->db->query($sql);
@@ -3481,18 +3578,18 @@ class Calendar_data extends Addon_builder_data_calendar
 			{
 				$start 	= ($row['all_day'] == 'y') ? '0000' : str_pad($row['start_time'], 4, '0', STR_PAD_LEFT);
 				$end 	= ($row['all_day'] == 'y') ? '2400' : str_pad($row['end_time'], 4, '0', STR_PAD_LEFT);
-				
+
 				$data[$row['event_id']][$row['start_date']][$start . $end] = $row;
 			}
 		}
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_event_occurrences() */
 
@@ -3508,23 +3605,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_event_exceptions($id_string)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -3532,7 +3629,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql .= "SELECT *
 				 FROM 	exp_calendar_events_exceptions
-				 WHERE 	event_id 
+				 WHERE 	event_id
 				 IN 	(" . ee()->db->escape_str($id_string) . ")";
 
 		$query = ee()->db->query($sql);
@@ -3547,11 +3644,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_event_exceptions() */
 
@@ -3567,23 +3664,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_event_rules($id_string)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -3591,7 +3688,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql .= "SELECT *
 				 FROM 	exp_calendar_events_rules
-				 WHERE 	entry_id 
+				 WHERE 	entry_id
 				 IN 	(" . ee()->db->escape_str($id_string) . ")";
 
 		$query = ee()->db->query($sql);
@@ -3607,11 +3704,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* ENd fetch_event_rules() */
 
@@ -3627,23 +3724,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_calendar_data_by_id($ids)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data 		= array();
 
@@ -3653,23 +3750,23 @@ class Calendar_data extends Addon_builder_data_calendar
 		{
 			$sql = "/* fetch_calendar_data_by_id() */\n";
 
-			$sql .= "SELECT 	ct.title 		AS calendar_title, 
-								ct.url_title 	AS calendar_url_title, 
+			$sql .= "SELECT 	ct.title 		AS calendar_title,
+								ct.url_title 	AS calendar_url_title,
 								ct.entry_id 	AS calendar_id,
 								ct.status		AS calendar_status,
-								ct.author_id	AS calendar_author_id, 
-							 	(CASE 
-									WHEN m.screen_name = '' 
-									THEN m.username 
-									ELSE m.screen_name 
-								END) as calendar_author, 
+								ct.author_id	AS calendar_author_id,
+								(CASE
+									WHEN m.screen_name = ''
+									THEN m.username
+									ELSE m.screen_name
+								END) as calendar_author,
 								cc.*
 					 FROM 		{$this->sc->db->channel_titles} AS ct
-					 LEFT JOIN 	exp_calendar_calendars AS cc 
-					 ON 		ct.entry_id = cc.calendar_id 
+					 LEFT JOIN 	exp_calendar_calendars AS cc
+					 ON 		ct.entry_id = cc.calendar_id
 					 LEFT JOIN 	exp_members as m
 					 ON 		ct.author_id = m.member_id
-					 WHERE 		ct.entry_id 
+					 WHERE 		ct.entry_id
 					 IN 		(" . ee()->db->escape_str($id_string) . ")";
 
 			$query = ee()->db->query($sql);
@@ -3685,11 +3782,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_calendar_data_by_id() */
 
@@ -3716,17 +3813,17 @@ class Calendar_data extends Addon_builder_data_calendar
 			{
 				require_once CALENDAR_PATH.'calendar.parameters'.EXT;
 			}
-	
+
 			// This little $param is not actually used by the Calendar_parameters class. But it's nice documentation anyway. We'll delete some time after 2010 10 13. mitchell@solspace.com.
-			$param = array(	
+			$param = array(
 				'name' 		=> 'first_day_of_week',
 				'required' 	=> FALSE,
 				'type' 		=> 'text',
 				'default' 	=> $dow
 			);
-			
+
 			$P = new Calendar_parameters($param);
-			
+
 			if ( ( $new = $P->fetch_value($param['name']) ) !== FALSE )
 			{
 				$dow = $new;
@@ -3748,55 +3845,55 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function calendar_basics()
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Get event counts
-        // --------------------------------------------
-        
-        $events	= array();
+		// --------------------------------------------
+		//  Get event counts
+		// --------------------------------------------
+
+		$events	= array();
 
 		$sql	= "/* calendar_basics() get event counts */\n";
-		
+
 		$sql	= "SELECT		calendar_id,
 								COUNT(*) AS count
 					FROM		{$this->events_table}
 					GROUP BY	calendar_id";
 
 		$query	= ee()->db->query( $sql );
-		
+
 		foreach ( $query->result_array() as $row )
 		{
 			$events[$row['calendar_id']] 	= $row['count'];
 		}
 
- 		// --------------------------------------------
-        //  Get calendar data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Get calendar data
+		// --------------------------------------------
 
 		$data = array();
 
 		$sql = "/* calendar_basics() get calendars */\n";
 
-		$sql .= "SELECT 	wt.title AS calendar_name, 
-							wt.{$this->sc->db->channel_id} AS weblog_id, 
-							wt.status, 
-							wt.author_id, 
+		$sql .= "SELECT 	wt.title AS calendar_name,
+							wt.{$this->sc->db->channel_id} AS weblog_id,
+							wt.status,
+							wt.author_id,
 							cc.*
 				 FROM 		exp_calendar_calendars cc
-				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt 
+				 LEFT JOIN 	{$this->sc->db->channel_titles} AS wt
 				 ON 		cc.calendar_id = wt.entry_id
 				 GROUP BY 	cc.calendar_id
 				 ORDER BY 	wt.title ASC";
@@ -3814,15 +3911,15 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END calendar_basics() */
-	
-	
+
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -3833,59 +3930,59 @@ class Calendar_data extends Addon_builder_data_calendar
 	 */
 
 	public function format_input_date($date)
-	{		
+	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
-		
-		//--------------------------------------------  
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
+
+		//--------------------------------------------
 		//	get formatting info and split input
 		//--------------------------------------------
-		
+
 		$format 			= $this->date_formats[$this->preference('date_format')];
-		
+
 		//need an array
 		$date_data 			= explode($format['split'], $date);
-		
+
 		//need to get the proper order for this format type
 		//turns M/d/Y into array('m', 'd', 'y') so we can properly get date info
 		//from the above split
 		$format_style 		= explode($format['split'], strtolower($format['format']));
-		
+
 		//set ymd from order of format style
 		$date_output 		= array(
 			'day'	=> str_pad($date_data[array_search('d', $format_style)], 2, '0', STR_PAD_LEFT),
 			'month'	=> str_pad($date_data[array_search('m', $format_style)], 2, '0', STR_PAD_LEFT),
 			'year'	=> $date_data[array_search('y', $format_style)],
 		);
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	extra data
 		//--------------------------------------------
-		
-		$date_output['y']	= $date_output['year'];	
+
+		$date_output['y']	= $date_output['year'];
 		$date_output['m']	= $date_output['month'];
-		$date_output['d']	= $date_output['day'];  	
+		$date_output['d']	= $date_output['day'];
 		$date_output['ymd'] = $date_output['y'] . $date_output['m'] . $date_output['d'];
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	cache and return
 		//--------------------------------------------
-		
+
 		$this->cached[$cache_name][$cache_hash] = $date_output;
-		
+
 		return $this->cached[$cache_name][$cache_hash];
-	}	
+	}
 	// END  format_input_date
-		
-		
+
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -3897,34 +3994,34 @@ class Calendar_data extends Addon_builder_data_calendar
 	public function event_basics($count_only = FALSE, $params = array())
 	{
 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
-		$select = ($count_only === TRUE) ? 
-					'COUNT(*) AS count' : 
-					"wt.title AS event_name, 
+		$select = ($count_only === TRUE) ?
+					'COUNT(*) AS count' :
+					"wt.title AS event_name,
 					 wt.{$this->sc->db->channel_id} AS weblog_id,
-					 wt.{$this->sc->db->channel_id} AS channel_id, 
-					 wt.status, 
-					 ce.entry_id AS event_id, 
-					 ce.calendar_id, 
-					 ce.recurs, 
-					 ce.start_date, 
-					 ce.last_date, 
+					 wt.{$this->sc->db->channel_id} AS channel_id,
+					 wt.status,
+					 ce.entry_id AS event_id,
+					 ce.calendar_id,
+					 ce.recurs,
+					 ce.start_date,
+					 ce.last_date,
 					 wt2.title AS calendar_name,
 					 wt2.{$this->sc->db->channel_id} AS calendar_weblog_id,
 					 wt2.{$this->sc->db->channel_id} AS calendar_channel_id";
@@ -3935,12 +4032,12 @@ class Calendar_data extends Addon_builder_data_calendar
 		{
 			$wheres[] = 'ce.calendar_id = ' . ee()->db->escape_str(ee()->input->get_post('calendar'));
 		}
-		
+
 		if (ee()->input->get_post('status'))
 		{
 			$wheres[] = 'wt.status = "' . ee()->db->escape_str(ee()->input->get_post('status')) . '"';
 		}
-		
+
 		if (isset($params['recurs']))
 		{
 			$wheres[] = 'ce.recurs = "' . ee()->db->escape_str($params['recurs']) . '"';
@@ -3949,23 +4046,23 @@ class Calendar_data extends Addon_builder_data_calendar
 		{
 			$wheres[] = 'ce.recurs = "' . ee()->db->escape_str(ee()->input->get_post('recurs')) . '"';
 		}
-		
+
 		if (ee()->input->get_post('date'))
 		{
 			$formatted_date = $this->format_input_date(ee()->input->get_post('date'));
 			$date 			= $formatted_date['ymd'];
-			
+
 			if (ee()->input->get_post('date_direction'))
 			{
-				$dirs 		= array(	
+				$dirs 		= array(
 					'greater'	=> '>=',
 					'less'		=> '<=',
 					'equal'		=> '='
 				);
-				
-				$dir 		= (array_key_exists(ee()->input->get_post('date_direction'), $dirs)) ? 
+
+				$dir 		= (array_key_exists(ee()->input->get_post('date_direction'), $dirs)) ?
 									$dirs[ee()->input->get_post('date_direction')] : '=';
-				
+
 				$wheres[] 	= 'ce.start_date ' . ee()->db->escape_str($dir) . ' ' . ee()->db->escape_str($date);
 			}
 			else
@@ -3974,9 +4071,9 @@ class Calendar_data extends Addon_builder_data_calendar
 			}
 		}
 
-		$orderby = (ee()->input->get_post('orderby')) ? 
+		$orderby = (ee()->input->get_post('orderby')) ?
 					ee()->db->escape_str(ee()->input->get_post('orderby')) : 'wt.title';
-		
+
 		if ($orderby == 'title')
 		{
 			$orderby = 'wt.title';
@@ -3989,12 +4086,12 @@ class Calendar_data extends Addon_builder_data_calendar
 		{
 			$orderby = 'wt.status';
 		}
-		
-		$sort 		= (ee()->input->get_post('sort')) ? 
+
+		$sort 		= (ee()->input->get_post('sort')) ?
 						ee()->db->escape_str(ee()->input->get_post('sort')) 	: 'ASC';
-		$offset 	= (ee()->input->get_post('offset')) ? 
+		$offset 	= (ee()->input->get_post('offset')) ?
 						ee()->db->escape_str(ee()->input->get_post('offset')) 	: 0;
-		$limit 		= (is_numeric(ee()->input->get_post('limit'))) ? 
+		$limit 		= (is_numeric(ee()->input->get_post('limit'))) ?
 						ee()->db->escape_str(ee()->input->get_post('limit')) 	: FALSE;
 
 		$data 		= array();
@@ -4003,9 +4100,9 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql 		= "SELECT 		$select
 					   FROM 		{$this->events_table} ce
-					   LEFT JOIN 	{$this->sc->db->channel_titles} AS wt 
+					   LEFT JOIN 	{$this->sc->db->channel_titles} AS wt
 					   ON 			ce.entry_id = wt.entry_id
-					   LEFT JOIN 	{$this->sc->db->channel_titles} AS wt2 
+					   LEFT JOIN 	{$this->sc->db->channel_titles} AS wt2
 					   ON 			ce.calendar_id = wt2.entry_id ";
 
 		if ( ! empty($wheres) )
@@ -4030,27 +4127,27 @@ class Calendar_data extends Addon_builder_data_calendar
 		{
 			foreach ($query->result_array() as $row)
 			{
-				$row['first_date'] 	= 	substr($row['start_date'], 0, 4) . '-' . 
-									 	substr($row['start_date'], 4, 2) . '-' . 
-									 	substr($row['start_date'], 6, 2);
-				
-				$row['last_date'] 	= ($row['last_date'] > 0) ? 
-										substr($row['last_date'], 0, 4) . '-' . 
-										substr($row['last_date'], 4, 2) . '-' . 
-										substr($row['last_date'], 6, 2) : 
+				$row['first_date'] 	= 	substr($row['start_date'], 0, 4) . '-' .
+										substr($row['start_date'], 4, 2) . '-' .
+										substr($row['start_date'], 6, 2);
+
+				$row['last_date'] 	= ($row['last_date'] > 0) ?
+										substr($row['last_date'], 0, 4) . '-' .
+										substr($row['last_date'], 4, 2) . '-' .
+										substr($row['last_date'], 6, 2) :
 										'--';
-				
+
 				$data[$row['event_id']] = $row;
 			}
 		}
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END event_basics() */
 
@@ -4065,23 +4162,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_tz_offset_field_id()
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$sql = ""; //"/* get_tz_offset_field_id() */\n";
 
@@ -4095,11 +4192,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = ($query->num_rows() == 1) ? $query->row('field_id') : 0;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_tz_offset_field_id() */
 
@@ -4114,23 +4211,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_time_format_field_id()
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		//$sql = "/* get_time_format_field_id() */\n";
 
@@ -4144,11 +4241,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = ($query->num_rows() == 1) ? $query->row('field_id') : 0;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_time_format_field_id() */
 
@@ -4163,22 +4260,22 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_field_id($field_name)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
+		$cache_name = __FUNCTION__;
 
- 		if (isset($this->cached[$cache_name][$field_name]))
- 		{
- 			return $this->cached[$cache_name][$field_name];
- 		}
+		if (isset($this->cached[$cache_name][$field_name]))
+		{
+			return $this->cached[$cache_name][$field_name];
+		}
 
- 		$this->cached[$cache_name][$field_name] = '';
+		$this->cached[$cache_name][$field_name] = '';
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		//$sql = "/* get_field_id() */\n";
 
@@ -4193,11 +4290,11 @@ class Calendar_data extends Addon_builder_data_calendar
 			$this->cached[$cache_name][$row['field_name']] = $row['field_id'];
 		}
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return (isset($this->cached[$cache_name][$field_name])) ? $this->cached[$cache_name][$field_name] : FALSE;
+		return (isset($this->cached[$cache_name][$field_name])) ? $this->cached[$cache_name][$field_name] : FALSE;
 	}
 	/* END get_field_id() */
 
@@ -4211,23 +4308,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_ics_url_field_id()
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		//$sql = "/* get_ics_url_field_id() */\n";
 
@@ -4241,11 +4338,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = ($query->num_rows() == 1) ? $query->row('field_id') : 0;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_ics_url_field_id() */
 
@@ -4261,23 +4358,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_imported_events($calendar_id)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -4296,11 +4393,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END get_imported_events() */
 
@@ -4309,23 +4406,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_status_list()
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$data = array();
 
@@ -4345,11 +4442,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 
 
@@ -4357,23 +4454,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_occurrence_channel_data($ids = array())
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$ids 	= implode(', ', $ids);
 
@@ -4381,7 +4478,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql 	= "SELECT 	wt.*
 				   FROM 	{$this->sc->db->channel_titles} AS wt
-				   WHERE 	entry_id 
+				   WHERE 	entry_id
 				   IN 		(" . ee()->db->escape_str($ids) . ")";
 
 		$query 	= ee()->db->query($sql);
@@ -4395,11 +4492,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_occurrence_channel_data() */
 
@@ -4407,23 +4504,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_entry_details_by_entry_id($ids)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$ids = implode(', ', $ids);
 		$data = array();
@@ -4432,9 +4529,9 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql = "SELECT 		ce.event_id, wt.*
 				FROM 		{$this->events_table} AS ce
-				LEFT JOIN 	{$this->sc->db->channel_titles} AS wt 
+				LEFT JOIN 	{$this->sc->db->channel_titles} AS wt
 				ON 			ce.entry_id = wt.entry_id
-				WHERE 		ce.entry_id 
+				WHERE 		ce.entry_id
 				IN 			(" . ee()->db->escape_str($ids) . ")";
 
 		$query = ee()->db->query($sql);
@@ -4446,11 +4543,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_entry_details_by_entry_id() */
 
@@ -4459,23 +4556,23 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function fetch_entry_id_by_occurrence_id($ids)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$ids = str_replace('|', ', ', $ids);
 		$data = array();
@@ -4484,7 +4581,7 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$sql = 'SELECT 	ceo.entry_id
 				FROM 	exp_calendar_events_occurrences ceo
-				WHERE 	ceo.occurrence_id 
+				WHERE 	ceo.occurrence_id
 				IN 		(' . ee()->db->escape_str($ids) . ')';
 
 		$query = ee()->db->query($sql);
@@ -4496,39 +4593,39 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $data;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_entry_id_by_occurrence_id() */
 
 	// --------------------------------------------------------------------
 
-	public function fetch_occurrence_data_by_entry_id(  $entry_id, 
-														$start_date = NULL, 
-														$end_date = NULL, 
-														$start_time = NULL, 
+	public function fetch_occurrence_data_by_entry_id(  $entry_id,
+														$start_date = NULL,
+														$end_date = NULL,
+														$start_time = NULL,
 														$end_time = NULL)
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
 		$sql = '	SELECT 	ceo.*
 					FROM 	exp_calendar_events_occurrences ceo
@@ -4536,13 +4633,13 @@ class Calendar_data extends Addon_builder_data_calendar
 					';
 		if ($start_date AND $end_date)
 		{
-			$sql .= 'AND ceo.start_date = "'. ee()->db->escape_str($start_date) . '" 
+			$sql .= 'AND ceo.start_date = "'. ee()->db->escape_str($start_date) . '"
 					 AND ceo.end_date = "'. ee()->db->escape_str($end_date) .'" ';
 		}
 
 		if ($start_time AND $end_time)
 		{
-			$sql .= 'AND ceo.start_time = "'. ee()->db->escape_str($start_time) .'" 
+			$sql .= 'AND ceo.start_time = "'. ee()->db->escape_str($start_time) .'"
 					 AND ceo.end_time = "'. ee()->db->escape_str($end_time) .'"';
 		}
 
@@ -4550,11 +4647,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $query->row_array();
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_occurrence_data_by_entry_id() */
 
@@ -4563,26 +4660,26 @@ class Calendar_data extends Addon_builder_data_calendar
 
 	public function get_channel_basics()
 	{
- 		// --------------------------------------------
-        //  Prep Cache, Return if Set
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Prep Cache, Return if Set
+		// --------------------------------------------
 
- 		$cache_name = __FUNCTION__;
- 		$cache_hash = $this->_imploder(func_get_args());
+		$cache_name = __FUNCTION__;
+		$cache_hash = $this->_imploder(func_get_args());
 
- 		if (isset($this->cached[$cache_name][$cache_hash]))
- 		{
- 			return $this->cached[$cache_name][$cache_hash];
- 		}
+		if (isset($this->cached[$cache_name][$cache_hash]))
+		{
+			return $this->cached[$cache_name][$cache_hash];
+		}
 
- 		$this->cached[$cache_name][$cache_hash] = array();
+		$this->cached[$cache_name][$cache_hash] = array();
 
- 		// --------------------------------------------
-        //  Perform the Actual Work
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Perform the Actual Work
+		// --------------------------------------------
 
-		$sql = "SELECT 		w.{$this->sc->db->channel_id} 		AS weblog_id, 
-							w.{$this->sc->db->channel_name} 	AS blog_name, 
+		$sql = "SELECT 		w.{$this->sc->db->channel_id} 		AS weblog_id,
+							w.{$this->sc->db->channel_name} 	AS blog_name,
 							w.{$this->sc->db->channel_title} 	AS blog_title
 				FROM 		{$this->sc->db->channels}			AS w
 				WHERE 		site_id = '" . ee()->db->escape_str($this->get_site_id()) . "'
@@ -4598,11 +4695,11 @@ class Calendar_data extends Addon_builder_data_calendar
 
 		$this->cached[$cache_name][$cache_hash] = $channels;
 
- 		// --------------------------------------------
-        //  Return Data
-        // --------------------------------------------
+		// --------------------------------------------
+		//  Return Data
+		// --------------------------------------------
 
- 		return $this->cached[$cache_name][$cache_hash];
+		return $this->cached[$cache_name][$cache_hash];
 	}
 	/* END fetch_occurrence_data_by_entry_id() */
 

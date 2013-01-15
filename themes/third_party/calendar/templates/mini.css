@@ -82,7 +82,7 @@
 #mc_events {
 	width: 191px;
 	margin: 0 auto;
-	background: url(/themes/solspace_themes/calendar/img/mc_down_arrow.png) 80px 0 no-repeat;
+	background: url(/themes/third_party/calendar/img/mc_down_arrow.png) 80px 0 no-repeat;
 	padding-top: 4px;
 	line-height: 1.5;
 }

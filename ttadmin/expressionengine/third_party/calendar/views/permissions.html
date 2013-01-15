@@ -3,8 +3,8 @@
 		 margin-bottom:			10px;
 	}
 
-	/* IE needs this? WHY? 
-	Defaults in everything else but all version of IE. 
+	/* IE needs this? WHY?
+	Defaults in everything else but all version of IE.
 	Even freaking ie9 is centering by default.*/
 	#calendar_permissions_holder table th {
 		 text-align:			left;
@@ -24,7 +24,7 @@
 	#calendar_permissions_holder .group_all_section,
 	#calendar_permissions_holder .group_deny_all_section {
 		float:			left;
-		width:			135px; 
+		width:			135px;
 		margin:			5px 5px 0 0;
 
 	}
@@ -51,13 +51,13 @@
 	table#allow_all_table.mainTable {
 		width:		49.5%;
 		float:		left;
-	}	
+	}
 
-	
+
 	table#deny_all_table.mainTable {
 		width:		49.5%;
 		float:		right;
-	}	
+	}
 
 	table#deny_all_table.mainTable td,
 	table#allow_all_table.mainTable td {
@@ -82,8 +82,8 @@
 <!--[if IE 7]><div class="ie7"  id="calendar_permissions_holder"><![endif]-->
 <!--[if IE 8]><div class="ie8"  id="calendar_permissions_holder"><![endif]-->
 <!--[if IE 9]><div class="ie9"  id="calendar_permissions_holder"><![endif]-->
-<!--[if (gt IE 9)|!(IE)]><!--> 
-<div id="calendar_permissions_holder">	
+<!--[if (gt IE 9)|!(IE)]><!-->
+<div id="calendar_permissions_holder">
 <!--<![endif]-->
 
 <form method="post" action="<?=$form_url?>" autocomplete="off" id="calendar_permissions_form">
@@ -95,8 +95,8 @@
 	 	<label for="permissions_enabled"><?=$lang_permissions_enabled?></label>
 	</p>
 	<div id="permissions_content" <?php
-			if ( ! $permissions_enabled):?>class="hidden"<?php endif;?>>	
-		<h4 id="permissions_instructions"><?=$lang_calendar_permissions_desc?></h4>			
+			if ( ! $permissions_enabled):?>class="hidden"<?php endif;?>>
+		<h4 id="permissions_instructions"><?=$lang_calendar_permissions_desc?></h4>
 		<p id="disallowed_behavior">
 			<label><?=$lang_disallowed_behavior_for_edit_page?>:</label>&nbsp;&nbsp;
 			<input type="radio" value="none" name="filter_on" id="filter_on_none"<?php
@@ -124,35 +124,35 @@
 						<div class="group_all_section<?php if (in_array($group_id, $groups_denied_all)):?>
 								hidden
 							<?php endif;?>" data-group-id="<?=$group_id?>">
-							<input 
-								type="hidden" 
-								name="allowed_all_group_<?=$group_id?>" 
+							<input
+								type="hidden"
+								name="allowed_all_group_<?=$group_id?>"
 								value="n"
 								/>
-							<input 
-								type="checkbox" 
+							<input
+								type="checkbox"
 								id="allowed_all_group_<?=$group_id?>"
-								name="allowed_all_group_<?=$group_id?>" 
+								name="allowed_all_group_<?=$group_id?>"
 								value="y"
 							<?php if (in_array($group_id, $groups_allowed_all)):?>
 								checked="checked"
 							<?php endif;?>
 								/>
-							<label 
-								for="allowed_all_group_<?=$group_id?>" 
+							<label
+								for="allowed_all_group_<?=$group_id?>"
 								class="group_name"><?=$group_name?></label>
 						</div>
 					<?php endforeach;?>
-						
+
 					</td>
-				</tr>		
+				</tr>
 			</tbody>
 		</table>
 
 		<table id="deny_all_table" class="mainTable padTable" cellspacing="0" cellpadding="0" border="0">
 			<thead>
 				<tr>
-					<th>				
+					<th>
 						<span class="header_subtext">
 							(<?=$lang_deny_takes_precedence?>)
 						</span>
@@ -167,33 +167,33 @@
 						<div class="group_deny_all_section<?php if (in_array($group_id, $groups_allowed_all)):?>
 								hidden
 							<?php endif;?>" data-group-id="<?=$group_id?>">
-							<input 
-								type="hidden" 
-								name="denied_all_group_<?=$group_id?>" 
+							<input
+								type="hidden"
+								name="denied_all_group_<?=$group_id?>"
 								value="n"
 								/>
-							<input 
-								type="checkbox" 
+							<input
+								type="checkbox"
 								id="denied_all_group_<?=$group_id?>"
-								name="denied_all_group_<?=$group_id?>" 
+								name="denied_all_group_<?=$group_id?>"
 								value="y"
 							<?php if (in_array($group_id, $groups_denied_all)):?>
 								checked="checked"
 							<?php endif;?>
 								/>
-							<label 
+							<label
 								for="denied_all_group_<?=$group_id?>"
 								class="group_name"><?=$group_name?></label>
-							
+
 						</div>
 					<?php endforeach;?>
 					</td>
-				</tr>		
+				</tr>
 			</tbody>
 		</table>
 
 		<div class="clear"></div>
-		
+
 		<table class="mainTable padTable" cellspacing="0" cellpadding="0" border="0">
 			<thead>
 				<tr>
@@ -206,62 +206,62 @@
 				<tr class="<?=$this->cycle('odd', 'even')?>">
 					<td><label><?=$permission_data['title']?></label></td>
 					<td>
-						<input 
-							type="hidden" 
-							name="cal_<?=$calendar_id?>_allow_all" 
+						<input
+							type="hidden"
+							name="cal_<?=$calendar_id?>_allow_all"
 							value="n"
 							/>
-						<input 
+						<input
 							class="calendar_allow_all"
 							type="checkbox"
-							id="cal_<?=$calendar_id?>_allow_all" 
-							name="cal_<?=$calendar_id?>_allow_all" 
+							id="cal_<?=$calendar_id?>_allow_all"
+							name="cal_<?=$calendar_id?>_allow_all"
 							value="y"
 						<?php if ($permission_data['permissions']['allow_all']):?>
 							checked="checked"
 						<?php endif;?>
 							/>
 						<label
-							for="cal_<?=$calendar_id?>_allow_all" 
+							for="cal_<?=$calendar_id?>_allow_all"
 							class="group_name"><?=$lang_allow_all?></label>
-						
+
 						<div class="group_box<?php if ($permission_data['permissions']['allow_all']):?>
 							hidden
 						<?php endif;?>">
 						<?php foreach($member_groups as $group_id => $group_name):?>
-							<div class="group_section<?php 
+							<div class="group_section<?php
 								if (in_array($group_id, array_merge($groups_allowed_all, $groups_denied_all))):
-									?> hidden<?php 
+									?> hidden<?php
 								endif;?>" data-group-id="<?=$group_id?>">
-								<input 
-									type="hidden" 
-									name="cal_<?=$calendar_id?>_group_<?=$group_id?>" 
+								<input
+									type="hidden"
+									name="cal_<?=$calendar_id?>_group_<?=$group_id?>"
 									value="n"
 									/>
-								<input 
-									type="checkbox" 
-									id="cal_<?=$calendar_id?>_group_<?=$group_id?>" 
-									name="cal_<?=$calendar_id?>_group_<?=$group_id?>" 
+								<input
+									type="checkbox"
+									id="cal_<?=$calendar_id?>_group_<?=$group_id?>"
+									name="cal_<?=$calendar_id?>_group_<?=$group_id?>"
 									value="y"
 								<?php if ($permission_data['permissions'][$group_id]):?>
 									checked="checked"
 								<?php endif;?>
 									/>
-								<label 
-									for="cal_<?=$calendar_id?>_group_<?=$group_id?>" 
+								<label
+									for="cal_<?=$calendar_id?>_group_<?=$group_id?>"
 									class="group_name"><?=$group_name?></label>
-							</div>	
+							</div>
 						<?php endforeach;?>
 						</div>
 					</td>
-				</tr>		
+				</tr>
 			<?php endforeach;?>
 			</tbody>
 		</table>
 	</div>
-	<div style="float:right;">
+	<p>
 		<input type="submit" value="<?=$lang_save_permissions?>" class="submit" />
-	</div>
+	</p>
 </form>
 
 </div>
@@ -269,17 +269,17 @@
 	(function(global, $){
 		$(function(){
 			//auto hide and unhide groups if Allow All Full Access is shown
-			$('.group_all_section input[type="checkbox"], ' + 
+			$('.group_all_section input[type="checkbox"], ' +
 			  '.group_deny_all_section input[type="checkbox"]').each(function(){
 				var $that 		= $(this),
 					$parent 	= $that.parent(),
 					group_id	= $parent.attr('data-group-id'),
 					is_allow  	= $parent.hasClass('group_all_section'),
 					$target		= $(
-						'.group_section[data-group-id="' + group_id + '"], ' + 
-						'.group_' + (is_allow ? 'deny_' : '') + 
+						'.group_section[data-group-id="' + group_id + '"], ' +
+						'.group_' + (is_allow ? 'deny_' : '') +
 							'all_section[data-group-id="' + group_id + '"]'
-					);				
+					);
 
 				$that.click(function(){
 					if ($that.is(':checked'))
@@ -291,7 +291,7 @@
 						$target.removeClass('hidden');
 					}
 				});
-			});	
+			});
 			//end $('.group_all_section input[type="checkbox"]
 
 			//hide checkboxes if a calendar

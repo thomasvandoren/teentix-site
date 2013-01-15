@@ -1,49 +1,32 @@
 <?php if ( ! defined('EXT')) exit('No direct script access allowed');
 
- /**
- * Solspace - Calendar
- *
- * @package		Solspace:Calendar
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
- * @link		http://www.solspace.com/docs/addon/c/Calendar/
- * @version		1.7.0
- * @filesource 	./system/expressionengine/third_party/calendar/
- */
-
- /**
+/**
  * Calendar - Constants
  *
- * Central location for various values we need throughout the module
+ * Central location for various values we need throughout the module.
  *
- * @package 	Solspace:Calendar
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/calendar/constants.calendar.php
+ * @package		Solspace:Calendar
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/calendar
+ * @license		http://www.solspace.com/license_agreement
+ * @version		1.8.1
+ * @filesource	calendar/constants.calendar.php
  */
 
 if ( ! defined('CALENDAR_VERSION'))
 {
-	$path = (APP_VER < 2.0) ? PATH.'modules/' : PATH_THIRD;
+	$path = rtrim(realpath(dirname(__FILE__)), '/') . '/';
 
-	define('CALENDAR_VERSION',	'1.7.0');
-	define('CALENDAR_DOCS_URL',	'http://www.solspace.com/docs/addon/c/Calendar');
+	define('CALENDAR_VERSION',	'1.8.1');
+	define('CALENDAR_DOCS_URL',	'http://www.solspace.com/docs/calendar');
 
 	// -------------------------------------
 	// Paths to enlightenment
 	// -------------------------------------
 
-	define('CALENDAR_PATH', $path.'calendar/');
-	define('CALENDAR_PATH_ASSETS', $path.'calendar/assets/');
-	define('CALENDAR_PATH_THEMES', PATH_THEMES . ((APP_VER < 2.0) ? '' : 'third_party/') . 'calendar/');
-	
-	//this stupid thing errors out during upgrade
-	define(
-		'CALENDAR_URL_THEMES', 
-		((APP_VER < 2.0) ? 
-			$GLOBALS['PREFS']->ini('theme_folder_url', 1) : 
-			get_instance()->config->item('theme_folder_url') . 'third_party/'
-		) . 'calendar/'
-	);
+	define('CALENDAR_PATH', $path);
+	define('CALENDAR_PATH_ASSETS', $path.'assets/');
 
 	// -------------------------------------
 	// Default weblogs and fields

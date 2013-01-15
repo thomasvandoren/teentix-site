@@ -1,35 +1,29 @@
 <?php if ( ! defined('EXT')) exit('No direct script access allowed');
 
- /**
- * Solspace - Calendar
- *
- * @package		Solspace:Calendar
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
- * @link		http://www.solspace.com/docs/addon/c/Calendar/
- * @version		1.7.0
- * @filesource 	./system/expressionengine/third_party/calendar/
- */
-
- /**
+/**
  * Calendar - Actions
  *
- * Handles All Form Submissions and Action Requests Used on both User and CP areas of EE
+ * Handles all form submissions and action requests used on both User and CP areas of EE.
  *
- * @package	 Solspace:Calendar
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/calendar/act.calendar.php
+ * @package		Solspace:Calendar
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/calendar
+ * @license		http://www.solspace.com/license_agreement
+ * @version		1.8.1
+ * @filesource	calendar/act.calendar.php
  */
 
 if ( ! class_exists('Addon_builder_calendar'))
 {
-	require_once 'addon_builder/addon_builder.php';	
+	require_once 'addon_builder/addon_builder.php';
 }
 
-class Calendar_actions extends Addon_builder_calendar {
+class Calendar_actions extends Addon_builder_calendar
+{
 
 	public $default_calendar_weblog_name	= 'calendar_calendars';
-	public $default_event_weblog_name	 	= 'calendar_events';
+	public $default_event_weblog_name		= 'calendar_events';
 
 	// --------------------------------------------------------------------
 
@@ -40,29 +34,29 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	null
 	 */
 
-	public function __construct()
-	{						
+	public function __construct ()
+	{
 		parent::Addon_builder_calendar('calendar');
-				
+
 		// -------------------------------------
 		//	Module Installed and What Version?
 		// -------------------------------------
 
-		if ($this->database_version() == FALSE OR 
-		    $this->version_compare($this->database_version(), '<', CALENDAR_VERSION))
+		if ($this->database_version() == FALSE OR
+			$this->version_compare($this->database_version(), '<', CALENDAR_VERSION))
 		{
 			return;
 		}
-		
+
 		if ( ! defined('CALENDAR_EVENTS_CHANNEL_NAME_DEFAULT'))
 		{
 			require_once 'constants.calendar.php';
 		}
-		
-		$this->default_event_weblog_name 	= CALENDAR_EVENTS_CHANNEL_NAME_DEFAULT;
+
+		$this->default_event_weblog_name	= CALENDAR_EVENTS_CHANNEL_NAME_DEFAULT;
 		$this->default_calendar_weblog_name = CALENDAR_CALENDARS_CHANNEL_NAME_DEFAULT;
 	}
-	/* END */
+	//END __construct
 
 
 	// --------------------------------------------------------------------
@@ -75,8 +69,8 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	Calendar_datetime object
 	 */
 
-	public function parse_text_date($value, $CDT, $end = FALSE)
-	{				
+	public function parse_text_date ($value, $CDT, $end = FALSE)
+	{
 		// -------------------------------------
 		//	Parseable formats:
 		//	today, tomorrow, yesterday
@@ -102,7 +96,7 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		if ($end === TRUE)
 		{
-			$time = array(	
+			$time = array(
 				'hour'		=> '24',
 				'minute'	=> '00',
 				'time'		=> '2400'
@@ -110,7 +104,7 @@ class Calendar_actions extends Addon_builder_calendar {
 		}
 		else
 		{
-			$time = array(	
+			$time = array(
 				'hour'		=> '00',
 				'minute'	=> '00',
 				'time'		=> '0000'
@@ -121,12 +115,12 @@ class Calendar_actions extends Addon_builder_calendar {
 		{
 			$t_value	= array_pop(explode(' @ ', $value));
 			$time_temp	= self::parse_text_time($t_value);
-			
+
 			if ($time_temp != $time)
 			{
 				$time = $time_temp;
 			}
-			
+
 			$value	= str_replace(' @ '.$t_value, '', $value);
 		}
 
@@ -138,8 +132,8 @@ class Calendar_actions extends Addon_builder_calendar {
 		//	today, tomorrow, yesterday
 		// -------------------------------------
 
-		$words = array( 
-			'today'	 	=> 0,
+		$words = array(
+			'today'		=> 0,
 			'tomorrow'	=> 1,
 			'yesterday' => -1
 		);
@@ -156,7 +150,7 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		foreach ($words as $word => $days)
 		{
-			if ($value == strtolower(ee()->lang->line($word)))
+			if ($value == strtolower(lang($word)))
 			{
 				$CDT->add_day($days);
 				return $CDT->datetime_array();
@@ -166,53 +160,53 @@ class Calendar_actions extends Addon_builder_calendar {
 		// -------------------------------------
 		//	+5 days/weeks/months/years begin/end
 		//	we are going this with english AND
-		// 	the lang file so people can use day/dia
+		//	the lang file so people can use day/dia
 		// -------------------------------------
 
 		$words	= array(
-			preg_quote(ee()->lang->line('day'), '#'),
-			preg_quote(ee()->lang->line('week'), '#'),
-			preg_quote(ee()->lang->line('month'), '#'),
-			preg_quote(ee()->lang->line('year'), '#'),
+			preg_quote(lang('day'), '#'),
+			preg_quote(lang('week'), '#'),
+			preg_quote(lang('month'), '#'),
+			preg_quote(lang('year'), '#'),
 			'day',
 			'week',
 			'month',
 			'year'
 		);
-		
+
 		$ago	= array(
-			preg_quote(ee()->lang->line('ago'), '#'), 
+			preg_quote(lang('ago'), '#'),
 			'ago'
 		);
-		
-		$adjust = array(	
-			preg_quote(ee()->lang->line('begin'), '#'),
-			preg_quote(ee()->lang->line('end'), '#'),
+
+		$adjust = array(
+			preg_quote(lang('begin'), '#'),
+			preg_quote(lang('end'), '#'),
 			'begin',
 			'end'
 		);
 
-		if (preg_match('#([-+])?(\d+) ('. implode('|', $words). ')s?( (?:'. implode('|', $ago ) .'))?' . 
-					  				 '(?: ('. implode('|', $adjust). '))?#', $value, $match))
+		if (preg_match('#([-+])?(\d+) ('. implode('|', $words). ')s?( (?:'. implode('|', $ago ) .'))?' .
+									 '(?: ('. implode('|', $adjust). '))?#', $value, $match))
 		{
-			//match 0 = whole string 	(-1 month ago begin)
-			//match 1 = plus or minus 	(_-_1 month ago begin)
-			//match 2 = number 			(-_1_ month ago begin)
-			//match 3 = words 			(-1 _month_ ago begin)
-			//match 4 = ago 			(-1 month _ago_ begin)
-			//match 5 = adjust 			(-1 month ago _begin_)			
+			//match 0 = whole string	(-1 month ago begin)
+			//match 1 = plus or minus	(_-_1 month ago begin)
+			//match 2 = number			(-_1_ month ago begin)
+			//match 3 = words			(-1 _month_ ago begin)
+			//match 4 = ago			(-1 month _ago_ begin)
+			//match 5 = adjust			(-1 month ago _begin_)
 
-			$sign = ($match[1] == '-' OR 
-					 (isset($match[4]) AND 
-					  ($match[4] == ' ' . $ago[0] OR 
+			$sign = ($match[1] == '-' OR
+					 (isset($match[4]) AND
+					  ($match[4] == ' ' . $ago[0] OR
 					   $match[4] == ' ' . $ago[1]))) ? '-' : '';
-			
-			if (strpos($match[3], ee()->lang->line('day')) !== FALSE OR
+
+			if (strpos($match[3], lang('day')) !== FALSE OR
 				strpos($match[3], 'day') !== FALSE)
 			{
 				$CDT->add_day($sign.$match[2]);
 			}
-			elseif (strpos($match[3], ee()->lang->line('week')) !== FALSE OR
+			elseif (strpos($match[3], lang('week')) !== FALSE OR
 					strpos($match[3], 'week') !== FALSE)
 			{
 				if ($match[2] > 0)
@@ -221,12 +215,12 @@ class Calendar_actions extends Addon_builder_calendar {
 					$CDT->add_day($sign.$match[2]);
 				}
 			}
-			elseif (strpos($match[3], ee()->lang->line('month')) !== FALSE OR
+			elseif (strpos($match[3], lang('month')) !== FALSE OR
 					strpos($match[3], 'month') !== FALSE)
 			{
 				$CDT->add_month($sign.$match[2]);
 			}
-			elseif (strpos($match[3], ee()->lang->line('year')) !== FALSE OR
+			elseif (strpos($match[3], lang('year')) !== FALSE OR
 					strpos($match[3], 'year') !== FALSE)
 			{
 				$CDT->add_year($sign.$match[2]);
@@ -238,46 +232,46 @@ class Calendar_actions extends Addon_builder_calendar {
 
 			if (isset($match[5]) AND in_array($match[5], $adjust))
 			{
-				if ($match[5] == ee()->lang->line('begin') OR
+				if ($match[5] == lang('begin') OR
 					$match[5] == 'begin')
 				{
-					if (strpos($match[3], ee()->lang->line('week')) !== FALSE OR
+					if (strpos($match[3], lang('week')) !== FALSE OR
 						strpos($match[3], 'week') !== FALSE)
 					{
 						if ($CDT->day_of_week != $CDT->first_day_of_week)
 						{
-							$offset = ($CDT->day_of_week > $CDT->first_day_of_week) ? 
-											$CDT->day_of_week - $CDT->first_day_of_week : 
+							$offset = ($CDT->day_of_week > $CDT->first_day_of_week) ?
+											$CDT->day_of_week - $CDT->first_day_of_week :
 											7 + $CDT->day_of_week - $CDT->first_day_of_week;
-							
+
 							$CDT->add_day(-$offset);
 						}
 					}
-					elseif (strpos($match[3], ee()->lang->line('month')) !== FALSE OR
+					elseif (strpos($match[3], lang('month')) !== FALSE OR
 							strpos($match[3], 'month') !== FALSE)
 					{
 						$CDT->change_date($CDT->year, $CDT->month, 1);
 					}
 				}
-				elseif ($match[5] == ee()->lang->line('end') OR
+				elseif ($match[5] == lang('end') OR
 						$match[5] == 'end')
 				{
-					if (strpos($match[3], ee()->lang->line('week')) !== FALSE OR
+					if (strpos($match[3], lang('week')) !== FALSE OR
 						strpos($match[3], 'week') !== FALSE)
 					{
-						$last_dow = ($CDT->first_day_of_week == 0) ? 
+						$last_dow = ($CDT->first_day_of_week == 0) ?
 							6 : $CDT->first_day_of_week - 1;
-						
+
 						if ($CDT->day_of_week != $last_dow)
 						{
-							$offset = ($CDT->day_of_week < $last_dow) ? 
-											$last_dow - $CDT->day_of_week : 
+							$offset = ($CDT->day_of_week < $last_dow) ?
+											$last_dow - $CDT->day_of_week :
 											7 + $last_dow - $CDT->day_of_week;
-							
+
 							$CDT->add_day($offset);
 						}
 					}
-					elseif (strpos($match[3], ee()->lang->line('month')) !== FALSE OR
+					elseif (strpos($match[3], lang('month')) !== FALSE OR
 							strpos($match[3], 'month') !== FALSE)
 					{
 						$CDT->change_date($CDT->year, $CDT->month, $CDT->days_in_month());
@@ -299,8 +293,8 @@ class Calendar_actions extends Addon_builder_calendar {
 			if ($CDT->is_valid_ymd($value))
 			{
 				$CDT->change_date(
-					substr($value, 0, $length-4), 
-					substr($value, -4, 2), 
+					substr($value, 0, $length-4),
+					substr($value, -4, 2),
 					substr($value, -2, 2)
 				);
 
@@ -314,50 +308,50 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		if (strpos($value, '-') !== FALSE)
 		{
-			if (stripos($value, 'year') !== FALSE 						OR 
-				stripos($value, 'month') !== FALSE 						OR 
-				stripos($value, 'day') !== FALSE 						OR 
-				stripos($value, ee()->lang->line('year')) !== FALSE 	OR 
-				stripos($value, ee()->lang->line('month')) !== FALSE 	OR 
-				stripos($value, ee()->lang->line('day')) !== FALSE)
+			if (stripos($value, 'year') !== FALSE			OR
+				stripos($value, 'month') !== FALSE			OR
+				stripos($value, 'day') !== FALSE			OR
+				stripos($value, lang('year')) !== FALSE		OR
+				stripos($value, lang('month')) !== FALSE	OR
+				stripos($value, lang('day')) !== FALSE)
 			{
 				$value	= strtolower($value);
 				$value	= str_replace(
 					array(
-						'year', 
-						'month', 
-						'day', 
-						strtolower(ee()->lang->line('year')), 
-						strtolower(ee()->lang->line('month')), 
-						strtolower(ee()->lang->line('day'))
-					), 
+						'year',
+						'month',
+						'day',
+						strtolower(lang('year')),
+						strtolower(lang('month')),
+						strtolower(lang('day'))
+					),
 					array(
-						date('Y', ee()->localize->now), 
-						date('m', ee()->localize->now), 
-						date('d', ee()->localize->now), 
-						date('Y', ee()->localize->now), 
-						date('m', ee()->localize->now), 
+						date('Y', ee()->localize->now),
+						date('m', ee()->localize->now),
+						date('d', ee()->localize->now),
+						date('Y', ee()->localize->now),
+						date('m', ee()->localize->now),
 						date('d', ee()->localize->now)
-					), 
+					),
 					$value
 				);
 			}
 
-			if (stripos($value, 'last') !== FALSE OR 
-				stripos($value, ee()->lang->line('last')) !== FALSE)
+			if (stripos($value, 'last') !== FALSE OR
+				stripos($value, lang('last')) !== FALSE)
 			{
 				list($year, $month) = explode('-', $value);
-				if (self::is_integer($year) === TRUE AND 
+				if (self::is_integer($year) === TRUE AND
 					self::is_integer($month) === TRUE)
 				{
 					$value = str_replace(
 						array(
-							'last', 
-							strtolower(ee()->lang->line('last'))
-						), 
-						$CDT->days_in_month($month, $year), 
+							'last',
+							strtolower(lang('last'))
+						),
+						$CDT->days_in_month($month, $year),
 						strtolower($value)
-					);		
+					);
 				}
 			}
 
@@ -366,8 +360,8 @@ class Calendar_actions extends Addon_builder_calendar {
 				$value	= str_replace('-', '', $value);
 				$length = strlen($value);
 				$CDT->change_date(
-					substr($value, 0, $length-4), 
-					substr($value, -4, 2), 
+					substr($value, 0, $length-4),
+					substr($value, -4, 2),
 					substr($value, -2, 2)
 				);
 
@@ -376,7 +370,7 @@ class Calendar_actions extends Addon_builder_calendar {
 
 			$parts = explode('-', $value);
 
-			if (count($parts) == 3 AND 
+			if (count($parts) == 3 AND
 				$CDT->is_valid_ymd($parts[2].$parts[0].$parts[1]))
 			{
 				$CDT->change_date($parts[2], $parts[0], $parts[1]);
@@ -402,7 +396,7 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		return FALSE;
 	}
-	/* END parse_text_date() */
+	//END parse_text_date()
 
 
 	// --------------------------------------------------------------------
@@ -414,11 +408,12 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	bool
 	 */
 
-	public function is_integer($value)
+	public function is_integer ($value)
 	{
 		return 1 === preg_match('/^[+-]?[0-9]+$/', $value);
 	}
-	/* END is_integer() */
+	//END is_integer()
+
 
 	// --------------------------------------------------------------------
 
@@ -431,7 +426,7 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	bool
 	 */
 
-	public function is_in_range($value, $min = FALSE, $max = FALSE)
+	public function is_in_range ($value, $min = FALSE, $max = FALSE)
 	{
 		if ($min !== FALSE)
 		{
@@ -451,7 +446,8 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		return TRUE;
 	}
-	/* END is_in_range() */
+	//END is_in_range()
+
 
 	// --------------------------------------------------------------------
 
@@ -464,7 +460,7 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	bool
 	 */
 
-	public function is_allowed_value($value, $allowed, $case_sensitive = FALSE)
+	public function is_allowed_value ($value, $allowed, $case_sensitive = FALSE)
 	{
 		if (! $allowed)
 		{
@@ -472,10 +468,11 @@ class Calendar_actions extends Addon_builder_calendar {
 		}
 
 		return ($case_sensitive === TRUE) ?
-				 in_array($value, $allowed) : 
+				 in_array($value, $allowed) :
 				 in_array(strtolower($value), array_map('strtolower', $allowed));
 	}
-	/* END is_allowed_value() */
+	//END is_allowed_value()
+
 
 	// --------------------------------------------------------------------
 
@@ -486,7 +483,7 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	array
 	 */
 
-	public function parse_text_time($value)
+	public function parse_text_time ($value)
 	{
 		// -------------------------------------
 		//	Parseable formats:
@@ -496,7 +493,7 @@ class Calendar_actions extends Addon_builder_calendar {
 		//	 8:00 am/pm
 		// -------------------------------------
 
-		$time = array(	
+		$time = array(
 			'hour'		=> '00',
 			'minute'	=> '00',
 			'time'		=> '0000'
@@ -513,10 +510,10 @@ class Calendar_actions extends Addon_builder_calendar {
 		//	now
 		// -------------------------------------
 
-		if ($value == ee()->lang->line('now') OR $value == 'now')
-		{			
+		if ($value == lang('now') OR $value == 'now')
+		{
 			$time['time'] = date('Hi', ee()->localize->now);
-											
+
 			if ($time['time'] > 0)
 			{
 				$time['hour'] = str_pad(floor($time['time']/100), 2, '0', STR_PAD_LEFT);
@@ -534,13 +531,13 @@ class Calendar_actions extends Addon_builder_calendar {
 		//	noon, midnight
 		// -------------------------------------
 
-		$words = array( 
-			ee()->lang->line('noon')		=> 1200,
-			ee()->lang->line('midnight')	=> 0000,
-			'noon'							=> 1200,
-			'midnight'						=> 0000
+		$words = array(
+			lang('noon')		=> 1200,
+			lang('midnight')	=> 0000,
+			'noon'				=> 1200,
+			'midnight'			=> 0000
 		);
-		
+
 		foreach ($words as $word => $val)
 		{
 			if ($value == $word)
@@ -577,10 +574,10 @@ class Calendar_actions extends Addon_builder_calendar {
 		// -------------------------------------
 
 		$ampm_string = implode('|', array(
-			ee()->lang->line('am'),
-			ee()->lang->line('am_dot'),
-			ee()->lang->line('pm'),
-			ee()->lang->line('pm_dot'),
+			lang('am'),
+			lang('am_dot'),
+			lang('pm'),
+			lang('pm_dot'),
 			'am',
 			'a.m.',
 			'pm',
@@ -589,10 +586,21 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		if (preg_match('#(\d{1,2})[:\.](\d{1,2})(?: ('.$ampm_string.'))#', $value, $match))
 		{
-			if (isset($match[3]) AND strpos($match[3], 'p') !== FALSE)
+			if (isset($match[3]))
 			{
-				$match[1] = ($match[1] == 12) ? 0 : $match[1] + 12;
+				//add 12 if pm and not 12.
+				//12 pm is 12:00
+				if (strpos($match[3], 'p') !== FALSE)
+				{
+					$match[1] = ($match[1] == 12) ? 12 : $match[1] + 12;
+				}
+				//12 am === 00:00
+				else
+				{
+					$match[1] = ($match[1] == 12) ? 0 : $match[1];
+				}
 			}
+
 			$time['hour'] = str_pad($match[1], 2, '0', STR_PAD_LEFT);
 			$time['minute'] = $match[2];
 			$time['time'] = $time['hour'] . $time['minute'];
@@ -602,8 +610,8 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		return $time;
 	}
-
 	// End parse_text_time()
+
 
 	// --------------------------------------------------------------------
 
@@ -615,7 +623,7 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return  null
 	 */
 
-	public function update_preferences($message='')
+	public function update_preferences ($message='')
 	{
 		$data = $this->data->get_module_preferences();
 
@@ -667,14 +675,14 @@ class Calendar_actions extends Addon_builder_calendar {
 		// -------------------------------------
 		// Calendar weblog(s)
 		// -------------------------------------
-		
-		//$data['calendar_weblog'] 	= $this->data->preference('calendar_weblog');
+
+		//$data['calendar_weblog']	= $this->data->preference('calendar_weblog');
 
 		// -------------------------------------
 		// Event weblog(s)
 		// -------------------------------------
 
-		//$data['event_weblog'] 		= $this->data->preference('event_weblog');
+		//$data['event_weblog']		= $this->data->preference('event_weblog');
 
 		// -------------------------------------
 		// Update
@@ -683,12 +691,12 @@ class Calendar_actions extends Addon_builder_calendar {
 		$this->data->update_preferences($data);
 		return TRUE;
 	}
-	/* END update_preferences() */
+	//END update_preferences()
 
 
 	// --------------------------------------------------------------------
 
-	public function import_ics_data($calendar_id)
+	public function import_ics_data ($calendar_id)
 	{
 		// -------------------------------------
 		//	Get some basic info to use later
@@ -696,7 +704,7 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		$cbasics	= $this->data->calendar_basics();
 		$cbasics	= $cbasics[$calendar_id];
-		$urls	 	= $cbasics['ics_url'];
+		$urls		= $cbasics['ics_url'];
 
 		if ($urls == '')
 		{
@@ -704,12 +712,20 @@ class Calendar_actions extends Addon_builder_calendar {
 		}
 
 		$tz_offset	= ($cbasics['tz_offset'] != '') ? $cbasics['tz_offset'] : '0000';
-		
+
+		/*
+
+		This shouldn't be happening because DST is only something that
+		would need to be applied when generating the users current local time.
+		If an event were at 7pm EST or EDT, it would still be at 7pm either way.
+		I hate DST.
+
 		if ($tz_offset != '0000' AND ee()->config->item('daylight_savings') == 'y')
 		{
 			$tz_offset += 100;
 		}
-		
+		 */
+
 		$channel_id	= $this->data->channel_is_events_channel();
 		$author_id	= $cbasics['author_id'];
 
@@ -750,25 +766,25 @@ class Calendar_actions extends Addon_builder_calendar {
 		// -------------------------------------
 		//	Load Publish
 		// -------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
-			//need to set DSP if not present			
+			//need to set DSP if not present
 			if ( ! isset($GLOBALS['DSP']) OR ! is_object($GLOBALS['DSP']))
 			{
-				if ( ! class_exists('Display')) 
+				if ( ! class_exists('Display'))
 				{
-					require_once PATH_CP . 'cp.display' . EXT;				
+					require_once PATH_CP . 'cp.display' . EXT;
 				}
 
-	            $GLOBALS['DSP'] = new Display();  
+				$GLOBALS['DSP'] = new Display();
 			}
-			
+
 			if ( ! class_exists('Publish'))
 			{
 				require_once PATH_CP.'cp.publish'.EXT;
 			}
-			
+
 			$PB = new Publish();
 			$PB->assign_cat_parent = (
 				ee()->config->item('auto_assign_cat_parents') == 'n'
@@ -777,20 +793,20 @@ class Calendar_actions extends Addon_builder_calendar {
 		else
 		{
 			ee()->load->library('api');
-			
+
 			ee()->api->instantiate(array(
-				'channel_entries', 
-				'channel_categories', 
+				'channel_entries',
+				'channel_categories',
 				'channel_fields'
 			));
-			
+
 			ee()->api_channel_entries->assign_cat_parent = (
 				ee()->config->item('auto_assign_cat_parents') == 'n'
 			) ? FALSE : TRUE;
 		}
-		
-		
-		
+
+
+
 		// -------------------------------------
 		//	Tell our extensions that we're running the icalendar import
 		// -------------------------------------
@@ -828,16 +844,16 @@ class Calendar_actions extends Addon_builder_calendar {
 				//	Times
 				// -------------------------------------
 
-				$hour	 	= (isset($event->dtstart['value']['hour'])) ? 
+				$hour		= (isset($event->dtstart['value']['hour'])) ?
 									$event->dtstart['value']['hour'] : 00;
-									
-				$minute	 	= (isset($event->dtstart['value']['min'])) ? 
+
+				$minute		= (isset($event->dtstart['value']['min'])) ?
 									$event->dtstart['value']['min'] : 00;
-									
-				$end_hour 	= (isset($event->dtend['value']['hour'])) ? 
+
+				$end_hour	= (isset($event->dtend['value']['hour'])) ?
 									$event->dtend['value']['hour'] : $hour;
-									
-				$end_minute = (isset($event->dtend['value']['min'])) ? 
+
+				$end_minute = (isset($event->dtend['value']['min'])) ?
 									$event->dtend['value']['min'] : $minute;
 
 				// -------------------------------------
@@ -846,10 +862,10 @@ class Calendar_actions extends Addon_builder_calendar {
 
 				if (isset($event->lastmodified['value']))
 				{
-					$lm_date  = $event->lastmodified['value']['year'] 	. 
-								$event->lastmodified['value']['month'] 	. 
-								$event->lastmodified['value']['day'] 	. 
-								$event->lastmodified['value']['hour'] 	. 
+					$lm_date  = $event->lastmodified['value']['year']	.
+								$event->lastmodified['value']['month']	.
+								$event->lastmodified['value']['day']	.
+								$event->lastmodified['value']['hour']	.
 								$event->lastmodified['value']['min'];
 				}
 				elseif (isset($event->dtstamp['value']))
@@ -876,7 +892,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				if (isset($imported[$event->uid['value']]))
 				{
 					// -------------------------------------
-					//	Has the event been updated? No reason 
+					//	Has the event been updated? No reason
 					//	to do any work if it's the same old stuff.
 					// -------------------------------------
 
@@ -901,20 +917,20 @@ class Calendar_actions extends Addon_builder_calendar {
 				// -------------------------------------
 
 				$CDT->change_datetime(
-					$event->dtstart['value']['year'], 
-					$event->dtstart['value']['month'], 
-					$event->dtstart['value']['day'], 
-					$hour, 
+					$event->dtstart['value']['year'],
+					$event->dtstart['value']['month'],
+					$event->dtstart['value']['day'],
+					$hour,
 					$minute
 				);
-				
+
 				if (isset($event->dtend['value']))
 				{
 					$CDT_end->change_datetime(
-						$event->dtend['value']['year'], 
-						$event->dtend['value']['month'], 
-						$event->dtend['value']['day'], 
-						$end_hour, 
+						$event->dtend['value']['year'],
+						$event->dtend['value']['month'],
+						$event->dtend['value']['day'],
+						$end_hour,
 						$end_minute
 					);
 				}
@@ -928,7 +944,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				//	Adjust to the correct timezone for thie calendar
 				// -------------------------------------
 
-				if ( ! isset($event->dtstart['params']['TZID']) OR 
+				if ( ! isset($event->dtstart['params']['TZID']) OR
 					 $event->dtstart['params']['TZID'] == '')
 				{
 					if (isset($event->dtstart['value']['hour']))
@@ -946,14 +962,19 @@ class Calendar_actions extends Addon_builder_calendar {
 				//	Variableification
 				// -------------------------------------
 
-				$title		= (isset($event->summary['value'])) ? $event->summary['value'] : 'No Title';
+				$title		= (isset($event->summary['value'])) ? $event->summary['value'] : lang('no_title');
 				$summary	= (isset($event->description) AND is_array($event->description) AND
-				 			    isset($event->description[0]['value'])) ? 
+								isset($event->description[0]['value'])) ?
 									$event->description[0]['value'] : '';
-				$location 	= (isset($event->location['value'])) ? $event->location['value'] : '';
+				$location	= (isset($event->location['value'])) ? $event->location['value'] : '';
 				$rules		= $this->ical_rule_to_calendar_rule($event->rrule);
 				$exceptions = array('date' => array());
-				
+
+				if (mb_strlen($title) > 100)
+				{
+					$title = substr($title, 0, 100);
+				}
+
 				if (is_array($event->exdate) AND ! empty($event->exdate))
 				{
 					$exceptions = $this->ical_exdate_to_calendar_exception($event->exdate);
@@ -971,41 +992,40 @@ class Calendar_actions extends Addon_builder_calendar {
 				//	Set up $_POST
 				// -------------------------------------
 
-				$_POST = $post_data = array( 
-					'site_id'		 			=> $this->data->get_site_id(),
-					'author_id'		 			=> $author_id,
+				$_POST = $post_data = array(
+					'site_id'					=> $this->data->get_site_id(),
+					'author_id'					=> $author_id,
 					'entry_id'					=> $entry_id,
-					'weblog_id'		 			=> $channel_id,
-					'channel_id'	 			=> $channel_id,
+					'weblog_id'					=> $channel_id,
+					'channel_id'				=> $channel_id,
 					'status'					=> 'open',
 													//subtracting 2 days here
 													//because people are seeing things post in the future? :/
 					'entry_date'				=> date('Y-m-d H:i a', (ee()->localize->now - ((3600 * 24) * 2))),
-					'title'			 			=> $title,
-					'calendar_id'	 			=> $calendar_id,
-					'field_id_' . $this->data->get_field_id('event_dates_and_options')	=> $calendar_id,
-					'field_id_' . $this->data->get_field_id('event_summary')	=> $summary,
-					'field_id_' . $this->data->get_field_id('event_location')	=> $location,
-					'rule_id'		 			=> array(),
+					'title'						=> $title,
+					'calendar_id'				=> $calendar_id,
+					'field_id_' . $this->data->get_field_id(CALENDAR_EVENTS_FIELD_PREFIX . 'summary')	=> $summary,
+					'field_id_' . $this->data->get_field_id(CALENDAR_EVENTS_FIELD_PREFIX . 'location')	=> $location,
+					'rule_id'					=> array(),
 					'start_date'				=> array($CDT->ymd),
 					'start_time'				=> array($CDT->hour.$CDT->minute),
 					'end_date'					=> array($CDT_end->ymd),
 					'end_time'					=> array($CDT_end->hour.$CDT_end->minute),
-					'all_day'		 			=> (! isset($event->dtstart['value']['hour'])) ? 'y' : 'n',
-					'rule_type'		 			=> $rules['rule_type'],
+					'all_day'					=> (! isset($event->dtstart['value']['hour'])) ? 'y' : 'n',
+					'rule_type'					=> $rules['rule_type'],
 					'repeat_years'				=> $rules['repeat_years'],
-					'repeat_months'	 			=> $rules['repeat_months'],
+					'repeat_months'				=> $rules['repeat_months'],
 					'repeat_weeks'				=> $rules['repeat_weeks'],
-					'repeat_days'	 			=> $rules['repeat_days'],
+					'repeat_days'				=> $rules['repeat_days'],
 					'days_of_week'				=> $rules['days_of_week'],
 					'relative_dow'				=> $rules['relative_dow'],
-					'days_of_month'	 			=> $rules['days_of_month'],
+					'days_of_month'				=> $rules['days_of_month'],
 					'months_of_year'			=> $rules['months_of_year'],
 					'end_by'					=> $rules['end_by'],
-					'end_after'		 			=> $rules['end_after'],
-					'occurrences'	 			=> $exceptions,
+					'end_after'					=> $rules['end_after'],
+					'occurrences'				=> $exceptions,
 					'expiration_date'			=> '',
-					'comment_expiration_date' 	=> '',
+					'comment_expiration_date'	=> '',
 					'allow_comments'			=> 'n'
 				);
 
@@ -1017,21 +1037,26 @@ class Calendar_actions extends Addon_builder_calendar {
 				{
 					$PB->submit_new_entry(FALSE); //<- LOOK HOW EASY IT USED TO BE >:|
 				}
-				else 
+				else
 				{
+					//EE 1.x doesn't have this field
+					$opt_field = 'field_id_' . $this->data->get_field_id(CALENDAR_EVENTS_FIELD_PREFIX . 'dates_and_options');
+					$_POST[$opt_field]	= $calendar_id;
+					$post_data[$opt_field]	= $calendar_id;
+
 					//this worked pre EE 2.1.3, then stopped working? *sigh*
-					//now we have to do all of this mess manually for field 
+					//now we have to do all of this mess manually for field
 					//settings before inserting new entries via the API
 					//ee()->api_channel_fields->fetch_custom_channel_fields();
-					
-					//--------------------------------------------  
+
+					//--------------------------------------------
 					//	Check for custom field group
 					//--------------------------------------------
 
 					$fg_query = ee()->db->query(
-						"SELECT field_group 
-						 FROM 	exp_channels 
-						 WHERE 	channel_id = '" . ee()->db->escape_str($channel_id) . "'"
+						"SELECT field_group
+						 FROM	exp_channels
+						 WHERE	channel_id = '" . ee()->db->escape_str($channel_id) . "'"
 					);
 
 					if ($fg_query->num_rows() > 0)
@@ -1047,14 +1072,14 @@ class Calendar_actions extends Addon_builder_calendar {
 						$field_query = ee()->channel_model->get_channel_fields($field_group);
 
 						$dst_enabled = ee()->session->userdata('daylight_savings');
-						
+
 						foreach ($field_query->result_array() as $row)
 						{
 							$field_data = '';
 							$field_dt = '';
 							$field_fmt	= $row['field_fmt'];
 
-							// Settings that need to be prepped			
+							// Settings that need to be prepped
 							$settings = array(
 								'field_instructions'	=> trim($row['field_instructions']),
 								'field_text_direction'	=> ($row['field_text_direction'] == 'rtl') ? 'rtl' : 'ltr',
@@ -1076,7 +1101,7 @@ class Calendar_actions extends Addon_builder_calendar {
 
 							ee()->api_channel_fields->set_settings($row['field_id'], $settings);
 						}
-					} 
+					}
 
 					//now we can do the new entry
 					ee()->api_channel_entries->submit_new_entry($channel_id, $post_data);
@@ -1086,7 +1111,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				//	Update the imports table
 				// -------------------------------------
 
-				$data = array(	
+				$data = array(
 					'calendar_id'	=> $calendar_id,
 					'event_id'		=> $this->cache['ical_event_id'],
 					'entry_id'		=> $this->cache['ical_entry_id'],
@@ -1101,7 +1126,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				}
 				else
 				{
-					$data['import_id'] = '';
+					//$data['import_id'] = '0';
 					$this->data->add_imported_event($data);
 				}
 			}
@@ -1109,12 +1134,13 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		$this->data->update_ics_updated($calendar_id);
 
-		ee()->extensions->end_script 	= FALSE;
-		ee()->extensions->in_progress 	= ((APP_VER < 2.0) ? 'submit_new_entry_end' : 'entry_submission_end');
+		ee()->extensions->end_script	= FALSE;
+		ee()->extensions->in_progress	= ((APP_VER < 2.0) ? 'submit_new_entry_end' : 'entry_submission_end');
 
 		return TRUE;
 	}
-	/* END import_ics_data() */
+	//END import_ics_data()
+
 
 	// --------------------------------------------------------------------
 
@@ -1125,20 +1151,21 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	array
 	 */
 
-	protected function ical_rule_to_calendar_rule($ical_rule)
+	protected function ical_rule_to_calendar_rule ($ical_rule)
 	{
-		$rule = array(	'rule_type'		 => array('+'),
-						'repeat_years'		=> array(),
-						'repeat_months'	 => array(),
-						'repeat_weeks'		=> array(),
-						'repeat_days'	 => array(),
-						'days_of_week'		=> array(),
-						'relative_dow'		=> array(),
-						'days_of_month'	 => array(),
-						'months_of_year'	=> array(),
-						'end_by'			=> array(),
-						'end_after'		 => array()
-						);
+		$rule = array(
+			'rule_type'			=> array('+'),
+			'repeat_years'		=> array(),
+			'repeat_months'		=> array(),
+			'repeat_weeks'		=> array(),
+			'repeat_days'		=> array(),
+			'days_of_week'		=> array(),
+			'relative_dow'		=> array(),
+			'days_of_month'		=> array(),
+			'months_of_year'	=> array(),
+			'end_by'			=> array(),
+			'end_after'			=> array()
+		);
 
 		if (! is_array($ical_rule))
 		{
@@ -1195,12 +1222,22 @@ class Calendar_actions extends Addon_builder_calendar {
 
 			if (isset($irule['BYDAY']))
 			{
-				$dow = '';
-				$relative_dow = '';
+				$dow			= '';
+				$relative_dow	= '';
+
 				if (isset($irule['BYDAY']['DAY']))
 				{
-					$days = array('SU' => 'U', 'MO' => 'M', 'TU' => 'T', 'WE' => 'W', 'TH' => 'R', 'FR' => 'F', 'SA' => 'S');
-					if (is_array($irule['BYDAY'][0]))
+					$days = array(
+						'SU' => 'U',
+						'MO' => 'M',
+						'TU' => 'T',
+						'WE' => 'W',
+						'TH' => 'R',
+						'FR' => 'F',
+						'SA' => 'S'
+					);
+
+					if (isset($irule['BYDAY'][0]) AND is_array($irule['BYDAY'][0]))
 					{
 						// TODO: This currently only supports a single relative dow
 						if (isset($irule['BYDAY'][0]['DAY'][0]))
@@ -1233,7 +1270,7 @@ class Calendar_actions extends Addon_builder_calendar {
 			if (isset($irule['BYMONTHDAY']))
 			{
 				$dom = '';
-				
+
 				//using single digits instead of 31 numbers? Why? -gf
 				$days = array_flip(array(
 					1,2,3,4,5,6,7,8,9,
@@ -1242,7 +1279,7 @@ class Calendar_actions extends Addon_builder_calendar {
 					'M','N','O','P','Q','R',
 					'S','T','U','V'
 				));
-				
+
 				if (is_array($irule['BYMONTHDAY']))
 				{
 					foreach ($irule['BYMONTHDAY'] as $day)
@@ -1266,7 +1303,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				$moy = '';
 				//using single digits instead of 12 numbers? Why? -gf
 				$months = array(1,2,3,4,5,6,7,8,9,'A','B','C');
-				
+
 				if (is_array($irule['BYMONTH']))
 				{
 					foreach ($irule['BYMONTH'] as $month)
@@ -1287,7 +1324,9 @@ class Calendar_actions extends Addon_builder_calendar {
 
 			if (isset($irule['UNTIL']))
 			{
-				$rule['end_by'][$k] = trim($irule['UNTIL']['year']).trim($irule['UNTIL']['month']).trim($irule['UNTIL']['day']);
+				$rule['end_by'][$k] =	trim($irule['UNTIL']['year']) .
+										trim($irule['UNTIL']['month']) .
+										trim($irule['UNTIL']['day']);
 			}
 
 			// -------------------------------------
@@ -1302,7 +1341,8 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		return $rule;
 	}
-	/* END ical_rule_to_calendar_rule() */
+	//END ical_rule_to_calendar_rule
+
 
 	// --------------------------------------------------------------------
 
@@ -1321,7 +1361,9 @@ class Calendar_actions extends Addon_builder_calendar {
 		{
 			foreach ($item['value'] as $date)
 			{
-				$exceptions['date'][]	 = str_pad($date['year'], 4, '0', STR_PAD_LEFT).str_pad($date['month'], 2, '0', STR_PAD_LEFT).str_pad($date['day'], 2, '0', STR_PAD_LEFT);
+				$exceptions['date'][]	 = str_pad($date['year'], 4, '0', STR_PAD_LEFT) .
+											str_pad($date['month'], 2, '0', STR_PAD_LEFT) .
+											str_pad($date['day'], 2, '0', STR_PAD_LEFT);
 				$exceptions['start_time'][] = '';
 				$exceptions['end_time'][] = '';
 				$exceptions['rule_type'][]	= '-';
@@ -1330,7 +1372,8 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		return (! empty($exceptions)) ? $exceptions : array('date' => array());
 	}
-	/* END ical_exdate_to_calendar_exception() */
+	//END ical_exdate_to_calendar_exception()
+
 
 	// --------------------------------------------------------------------
 
@@ -1340,9 +1383,11 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	string
 	 */
 
-	public function timezone_menu($timezone = FALSE)
+	public function timezone_menu ($timezone = FALSE)
 	{
-		$menu = ee()->localize->timezone_menu(ee()->config->item(ee()->config->item('site_short_name').'_timezone'));
+		$server_timezone = ee()->config->item(ee()->config->item('site_short_name').'_timezone');
+
+		$menu = ee()->localize->timezone_menu($server_timezone);
 
 		preg_match_all('#<option value=\'(.+?)\'(?:.+)?\>\(UTC ?(.*?)\).*?</option>#m', $menu, $matches, PREG_SET_ORDER);
 		foreach ($matches as $match)
@@ -1366,27 +1411,28 @@ class Calendar_actions extends Addon_builder_calendar {
 			$menu = str_replace($match[0], $replace, $menu);
 		}
 
-		if ($timezone === FALSE)
+		if ( ! $timezone and $timezone !== '0000')
 		{
-			$timezone = (isset($this->cached_data['tz_offset'])) ? 
+			$timezone = (isset($this->cached_data['tz_offset'])) ?
 							$this->cached_data['tz_offset'] : $this->data->preference('tz_offset');
 		}
 
 		$selected = $timezone;
 
-		$menu = str_replace("selected='selected'", '', $menu);
-		if ($selected !== FALSE AND substr($selected, 1) != '0000')
+		if ($selected !== FALSE AND $selected !== '' AND substr($selected, 1) != '0000')
 		{
+			$menu = str_replace("selected='selected'", '', $menu);
 			$menu = str_replace("value='{$selected}'", "value='{$selected}' selected='selected'", $menu);
 		}
-		else
+		else if ( ! stristr($menu, 'selected') OR $timezone === '0000')
 		{
 			$menu = str_replace("value='0000'", "value='0000' selected='selected'", $menu);
 		}
 
 		return $menu;
 	}
-	/* END timezone_menu() */
+	//END timezone_menu()
+
 
 	// --------------------------------------------------------------------
 
@@ -1396,30 +1442,30 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	string
 	 */
 
-	public function date_widget($data)
+	public function date_widget ($data)
 	{
-		$view_data 					= array();
+		$view_data					= array();
 		$multiple_day_occurrences	= array();
-		$output 					= '';
+		$output					= '';
 		$event_edit_has_occurrences = FALSE;
 
-		if (( ! empty($data) AND $data['edit_occurrence'] === TRUE) OR 
+		if (( ! empty($data) AND $data['edit_occurrence'] === TRUE) OR
 			(ee()->input->get('event_id') AND ee()->input->get('ymd')))
 		{
 			$occurrence_data = $this->data->fetch_occurrence_data_by_entry_id(
-				ee()->input->get('entry_id'), 
-				ee()->input->get('start_date'), 
-				ee()->input->get('end_date'), 
-				ee()->input->get('start_time'), 
+				ee()->input->get('entry_id'),
+				ee()->input->get('start_date'),
+				ee()->input->get('end_date'),
+				ee()->input->get('start_time'),
 				ee()->input->get('end_time')
 			);
-			
+
 			foreach ($occurrence_data as $k => $v)
 			{
 				$view_data[$k] = $v;
 			}
-			
-			$vars = array(	
+
+			$vars = array(
 				'entry_id',
 				'event_id',
 				'new_occurrence',
@@ -1433,7 +1479,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				'ymd',
 				'all_day'
 			);
-			
+
 			foreach ($vars as $var)
 			{
 				if (! isset($view_data[$var]))
@@ -1442,16 +1488,16 @@ class Calendar_actions extends Addon_builder_calendar {
 				}
 			}
 
-			if ($data['edit_occurrence'] === FALSE AND 
+			if ($data['edit_occurrence'] === FALSE AND
 				ee()->input->get('event_id'))
 			{
 				$view_data['event_id']	= $view_data['entry_id'];
 			}
 
-			if ($view_data['start_time'] == '0000' AND 	
+			if ($view_data['start_time'] == '0000' AND
 				$view_data['end_time'] == '2400')
 			{
-				$view_data['time_range']	= ee()->lang->line('all_day');
+				$view_data['time_range']	= lang('all_day');
 			}
 			else
 			{
@@ -1463,28 +1509,28 @@ class Calendar_actions extends Addon_builder_calendar {
 
 				$CDT->change_time(
 					substr(
-						$view_data['start_time'], 
-						0, 
+						$view_data['start_time'],
+						0,
 						strlen($view_data['start_time']) - 2
-					), 
+					),
 					substr($view_data['start_time'], -2)
 				);
-				
-				$start	= ($this->data->preference('clock_type') == '12') ? 
-							$CDT->format_date_string('h:i a') : 
+
+				$start	= ($this->data->preference('clock_type') == '12') ?
+							$CDT->format_date_string('h:i a') :
 							$CDT->format_date_string('H:i');
-				
+
 				$CDT->change_time(
 					substr(
-						$view_data['end_time'], 
-						0, 
+						$view_data['end_time'],
+						0,
 						strlen($view_data['end_time']) - 2
-					), 
+					),
 					substr($view_data['end_time'], -2)
 				);
-				
-				$end	= ($this->data->preference('clock_type') == '12') ? 
-							$CDT->format_date_string('h:i a') : 
+
+				$end	= ($this->data->preference('clock_type') == '12') ?
+							$CDT->format_date_string('h:i a') :
 							$CDT->format_date_string('H:i');
 
 				$view_data['time_range']	= $start.'&ndash;'.$end;
@@ -1499,9 +1545,9 @@ class Calendar_actions extends Addon_builder_calendar {
 			if (isset($data['entry_id']))
 			{
 				$query = ee()->db->query(
-					"SELECT entry_id, event_id 
-					 FROM 	exp_calendar_events_occurrences 
-					 WHERE 	event_id ='" . ee()->db->escape_str($data['entry_id']) . "'"
+					"SELECT entry_id, event_id
+					 FROM	exp_calendar_events_occurrences
+					 WHERE	event_id ='" . ee()->db->escape_str($data['entry_id']) . "'"
 				);
 
 				//its only true of the occurance is different than its parent
@@ -1516,7 +1562,7 @@ class Calendar_actions extends Addon_builder_calendar {
 					}
 				}
 			}
-			
+
 			if (isset($data['calendar_id']))
 			{
 				$view_data['calendar_id'] = $data['calendar_id'];
@@ -1526,7 +1572,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				$entry_id = $this->data->get_event_entry_id_by_channel_entry_id(ee()->input->get('entry_id'));
 				$view_data['calendar_id'] = $this->data->get_calendar_id_by_event_entry_id($entry_id);
 				$view_data['calendar_id'] = (isset($view_data['calendar_id'][$entry_id])) ?
-				 								$view_data['calendar_id'][$entry_id] : '';
+												$view_data['calendar_id'][$entry_id] : '';
 			}
 
 			$output .= self::calendar_select($view_data);
@@ -1534,106 +1580,106 @@ class Calendar_actions extends Addon_builder_calendar {
 			if ($this->data->calendars_exist() === TRUE)
 			{
 				$count = 0;
-				
-				//--------------------------------------------  
+
+				//--------------------------------------------
 				//	Does this have main rules?
 				//--------------------------------------------
-				
+
 				if ( ! empty($data['rules']))
 				{
 					foreach ($data['rules'] as $id => $rule)
-					{						
+					{
 						$count++;
-						
-						if ($count == 1 AND 
+
+						if ($count == 1 AND
 							$data['start_date'] != $rule['start_date'])
 						{
-							$view_data['rule'] = array( 
-								'rule_id' 			=> '',
-								'rule_type' 		=> '+',
-								'repeat_years' 		=> '',
-								'repeat_months' 	=> '',
-								'repeat_days' 		=> '',
-								'repeat_weeks' 		=> '',
-								'days_of_week' 		=> '',
-								'relative_dow' 		=> '',
-								'days_of_month' 	=> '',
-								'months_of_year' 	=> '',
-								'repeat_dates' 		=> '',
-								'end_by' 			=> '',
-								'end_after' 		=> '',
-								'start_date' 		=> $data['start_date'],
-								'end_date' 			=> $data['end_date'],
-								'start_time' 		=> $data['start_time'],
-								'end_time' 			=> $data['end_time'],
-								'all_day' 			=> $data['all_day'],
-								'recurs' 			=> $data['recurs']
+							$view_data['rule'] = array(
+								'rule_id'			=> '',
+								'rule_type'		=> '+',
+								'repeat_years'		=> '',
+								'repeat_months'	=> '',
+								'repeat_days'		=> '',
+								'repeat_weeks'		=> '',
+								'days_of_week'		=> '',
+								'relative_dow'		=> '',
+								'days_of_month'	=> '',
+								'months_of_year'	=> '',
+								'repeat_dates'		=> '',
+								'end_by'			=> '',
+								'end_after'		=> '',
+								'start_date'		=> $data['start_date'],
+								'end_date'			=> $data['end_date'],
+								'start_time'		=> $data['start_time'],
+								'end_time'			=> $data['end_time'],
+								'all_day'			=> $data['all_day'],
+								'recurs'			=> $data['recurs']
 							);
-							
+
 							$view_data['first']		 = TRUE;
 							$view_data['rule_id']	 = 0;
 							$view_data['rule_number'] = $count;
 							$output .= self::rule($view_data);
 							$count++;
-							
+
 							if (! isset($rule['recurs']))
 							{
 								$rule['recurs'] = '';
 							}
-							
-							$view_data = array( 
+
+							$view_data = array(
 								'start_date'		=> $rule['start_date'],
-								'all_day'	 		=> $rule['all_day'],
+								'all_day'			=> $rule['all_day'],
 								'start_time'		=> (isset($rule['start_time'])) ? $rule['start_time'] : '',
 								'end_date'			=> $rule['end_date'],
 								'end_time'			=>(isset($rule['end_time'])) ? $rule['end_time'] : '',
 								'recurs'			=> $rule['recurs'],
-								'first'		 		=> TRUE,
-								'rule_id'	 		=> 0,
-								'rule_number' 		=> $count,
+								'first'				=> TRUE,
+								'rule_id'			=> 0,
+								'rule_number'		=> $count,
 								'rule'				=> $rule
 							);
-							
+
 							$output .= self::rule($view_data);
 						}
 						else
 						{
-							$view_data = array( 
-								'first'		 	=> ($count == 1) ? TRUE : FALSE,
+							$view_data = array(
+								'first'			=> ($count == 1) ? TRUE : FALSE,
 								'rule_id'		=> $id,
 								'rule_number'	=> $count,
-								'start_date'	=> (isset($rule['start_date'])) ? $rule['start_date'] 	: '',
-								'all_day'	 	=> (isset($rule['all_day'])) 	? $rule['all_day'] 		: '',
-								'start_time'	=> (isset($rule['start_time'])) ? $rule['start_time'] 	: '',
-								'end_date'		=> (isset($rule['end_date'])) 	? $rule['end_date'] 	: '',
-								'end_time'		=> (isset($rule['end_time'])) 	? $rule['end_time'] 	: '',
-								'recurs'		=> (isset($data['recurs'])) 	? $data['recurs'] 		: ''
+								'start_date'	=> (isset($rule['start_date'])) ? $rule['start_date']	: '',
+								'all_day'		=> (isset($rule['all_day']))	? $rule['all_day']		: '',
+								'start_time'	=> (isset($rule['start_time'])) ? $rule['start_time']	: '',
+								'end_date'		=> (isset($rule['end_date']))	? $rule['end_date']	: '',
+								'end_time'		=> (isset($rule['end_time']))	? $rule['end_time']	: '',
+								'recurs'		=> (isset($data['recurs']))	? $data['recurs']		: ''
 							);
-							
+
 							if (! isset($rule['recurs']))
 							{
 								$rule['recurs'] = '';
 							}
-							
+
 							$rule['all_day'] = $rule['all_day'];
 							$view_data['rule'] = $rule;
 							$output .= self::rule($view_data);
 						}
 					}
 				}
-				
-				//--------------------------------------------  
+
+				//--------------------------------------------
 				//	IS this an occurrence set?
 				//--------------------------------------------
-				
-				elseif ((! isset($data['start_date']) OR 
-						 $data['start_date'] == $data['end_date'] 
-						) AND 
-						! empty($data['occurrences']) AND 
+
+				elseif ((! isset($data['start_date']) OR
+						 $data['start_date'] == $data['end_date']
+						) AND
+						! empty($data['occurrences']) AND
 						isset($data['occurrences'][$data['start_time']][$data['end_time']])
 					)
 				{
-					
+
 					$count++;
 
 					$view_data['occurrences']['dates']		= array();
@@ -1642,13 +1688,13 @@ class Calendar_actions extends Addon_builder_calendar {
 					$view_data['start_time']				= $data['start_time'];
 					$view_data['end_date']					= $data['end_date'];
 					$view_data['end_time']					= $data['end_time'];
-					$view_data['all_day']			 		= $data['all_day'];
-					
+					$view_data['all_day']					= $data['all_day'];
+
 					$dates_added = FALSE;
-					
+
 					foreach ($data['occurrences'][$data['start_time']][$data['end_time']] as $item)
 					{
-						
+
 						//if this is a single day item, lets put them all together
 						if ($item['start_date'] == $item['end_date'])
 						{
@@ -1661,121 +1707,121 @@ class Calendar_actions extends Addon_builder_calendar {
 							$multiple_day_occurrences[] = $item;
 						}
 					}
-					
+
 					$view_data['first']						= TRUE;
-					$view_data['rule_number'] 				= $count;
-					
+					$view_data['rule_number']				= $count;
+
 					//we need to make sure any of the items actually got added
 					if ($dates_added)
 					{
 						$output .= self::occurrence($view_data);
-					}	
-					
-					//need to remove this so nothing else hits it				
+					}
+
+					//need to remove this so nothing else hits it
 					unset($data['occurrences'][$data['start_time']][$data['end_time']]);
 				}
-				
-				//--------------------------------------------  
+
+				//--------------------------------------------
 				//	just a rule then?
 				//--------------------------------------------
-				
+
 				else
 				{
 					$count++;
-					$rule = array(	
+					$rule = array(
 						'start_date'	=> (isset($data['start_date'])) ? $data['start_date'] : '',
-						'all_day'	 	=> (isset($data['all_day'])) ? $data['all_day'] : '',
+						'all_day'		=> (isset($data['all_day'])) ? $data['all_day'] : '',
 						'start_time'	=> (isset($data['start_time'])) ? $data['start_time'] : '',
 						'end_date'		=> (isset($data['end_date'])) ? $data['end_date'] : '',
 						'end_time'		=> (isset($data['end_time'])) ? $data['end_time'] : '',
 						'recurs'		=> '', //(isset($data['recurs'])) ? $data['recurs'] : '',
-						'rule'			=> array( 
-							'rule_id' 			=> '',
-							'rule_type' 		=> '',
-							'repeat_years' 		=> '',
-							'repeat_months' 	=> '',
-							'repeat_days' 		=> '',
-							'repeat_weeks' 		=> '',
-							'days_of_week' 		=> '',
-							'relative_dow' 		=> '',
-							'days_of_month' 	=> '',
-							'months_of_year' 	=> '',
+						'rule'			=> array(
+							'rule_id'			=> '',
+							'rule_type'		=> '',
+							'repeat_years'		=> '',
+							'repeat_months'	=> '',
+							'repeat_days'		=> '',
+							'repeat_weeks'		=> '',
+							'days_of_week'		=> '',
+							'relative_dow'		=> '',
+							'days_of_month'	=> '',
+							'months_of_year'	=> '',
 							'repeat_dates'		=> '',
-							'end_by' 			=> '',
-							'end_after' 		=> '',
-							'start_date' 		=> '',
-							'end_date' 			=> '',
-							'start_time' 		=> '',
-							'end_time' 			=> '',
-							'all_day' 			=> '',
-							'recurs' 			=> ''
+							'end_by'			=> '',
+							'end_after'		=> '',
+							'start_date'		=> '',
+							'end_date'			=> '',
+							'start_time'		=> '',
+							'end_time'			=> '',
+							'all_day'			=> '',
+							'recurs'			=> ''
 						)
 					);
-					
+
 					foreach ($rule as $k => $v)
 					{
 						$view_data[$k] = $v;
 					}
-					
+
 					$view_data['first']			= TRUE;
 					$view_data['rule_id']		= 0;
 					$view_data['rule_number']	= $count;
-					$output 					.= self::rule($view_data);
+					$output					.= self::rule($view_data);
 				}
 
-				//--------------------------------------------  
+				//--------------------------------------------
 				//	Do we still have some possible occurrences left?
 				//--------------------------------------------
 
 				if ( ! empty($data['occurrences']))
-				{										
+				{
 					foreach ($data['occurrences'] as $start_time => $a)
 					{
 						foreach ($a as $end_time => $items)
 						{
 							$view_data = array();
-							
+
 							if (count($items) == 1)
 							{
 								$count++;
 								$item = $items[0];
-								$rule = array(	
-									'start_date'	=> (isset($item['start_date'])) ? $item['start_date'] 	: '',
-									'all_day'	 	=> (isset($item['all_day'])) 	? $item['all_day'] 		: '',
-									'start_time'	=> (isset($item['start_time'])) ? $item['start_time'] 	: '',
-									'end_date'		=> (isset($item['end_date'])) 	? $item['end_date']		: '',
-									'end_time'		=> (isset($item['end_time'])) 	? $item['end_time'] 	: '',
-									'recurs'		=> (isset($item['recurs'])) 	? $item['recurs'] 		: '',
-									'rule'			=> array( 
-										'rule_id' 			=> '',
-										'rule_type' 		=> '',
-										'repeat_years' 		=> '',
-										'repeat_months' 	=> '',
-										'repeat_days' 		=> '',
-										'repeat_weeks' 		=> '',
-										'days_of_week' 		=> '',
-										'relative_dow' 		=> '',
-										'days_of_month' 	=> '',
-										'months_of_year' 	=> '',
-										'repeat_dates' 		=> '',
-										'end_by' 			=> '',
-										'end_after' 		=> '',
-										'start_date' 		=> '',
-										'end_date' 			=> '',
-										'start_time' 		=> '',
-										'end_time' 			=> '',
-										'all_day' 			=> '',
-										'recurs' 			=> ''
+								$rule = array(
+									'start_date'	=> (isset($item['start_date'])) ? $item['start_date']	: '',
+									'all_day'		=> (isset($item['all_day']))	? $item['all_day']		: '',
+									'start_time'	=> (isset($item['start_time'])) ? $item['start_time']	: '',
+									'end_date'		=> (isset($item['end_date']))	? $item['end_date']		: '',
+									'end_time'		=> (isset($item['end_time']))	? $item['end_time']	: '',
+									'recurs'		=> (isset($item['recurs']))	? $item['recurs']		: '',
+									'rule'			=> array(
+										'rule_id'			=> '',
+										'rule_type'		=> '',
+										'repeat_years'		=> '',
+										'repeat_months'	=> '',
+										'repeat_days'		=> '',
+										'repeat_weeks'		=> '',
+										'days_of_week'		=> '',
+										'relative_dow'		=> '',
+										'days_of_month'	=> '',
+										'months_of_year'	=> '',
+										'repeat_dates'		=> '',
+										'end_by'			=> '',
+										'end_after'		=> '',
+										'start_date'		=> '',
+										'end_date'			=> '',
+										'start_time'		=> '',
+										'end_time'			=> '',
+										'all_day'			=> '',
+										'recurs'			=> ''
 									)
 								);
-								
+
 								foreach ($rule as $k => $v)
 								{
 									$view_data[$k] = $v;
 								}
-								$view_data['first']		 	= FALSE;
-								$view_data['rule_id']	 	= 0;
-								$view_data['rule_number'] 	= $count;
+								$view_data['first']			= FALSE;
+								$view_data['rule_id']		= 0;
+								$view_data['rule_number']	= $count;
 								$output .= self::rule($view_data);
 							}
 							else
@@ -1783,9 +1829,9 @@ class Calendar_actions extends Addon_builder_calendar {
 								$view_data['occurrences']['dates']	= array();
 								$view_data['start_time']			= $start_time;
 								$view_data['end_time']				= $end_time;
-								
+
 								$dates_added = FALSE;
-								
+
 								foreach ($items as $k => $item)
 								{
 									//if this is a single day item, lets put them all together
@@ -1793,7 +1839,7 @@ class Calendar_actions extends Addon_builder_calendar {
 									{
 										$dates_added = TRUE;
 										$view_data['occurrences']['dates'][]	= $item['start_date'];
-										$view_data['all_day']				 	= $item['all_day'];
+										$view_data['all_day']					= $item['all_day'];
 									}
 									//otherwise it needs its own occurrence
 									else
@@ -1801,15 +1847,15 @@ class Calendar_actions extends Addon_builder_calendar {
 										$multiple_day_occurrences[] = $item;
 									}
 								}
-																								
+
 								//we need to make sure any of the items actually got added
 								if ($dates_added)
 								{
 									$count++;
-									
+
 									$view_data['first']		 = FALSE;
 									$view_data['rule_number'] = $count;
-									
+
 									$output .= self::occurrence($view_data);
 								}
 							}
@@ -1817,54 +1863,54 @@ class Calendar_actions extends Addon_builder_calendar {
 					}
 				}
 
-				//--------------------------------------------  
+				//--------------------------------------------
 				//	do we have multi day occurrences?
 				//--------------------------------------------
-				
-				if ( ! empty($multiple_day_occurrences))	
-				{					
+
+				if ( ! empty($multiple_day_occurrences))
+				{
 					foreach($multiple_day_occurrences as $item)
-					{						
+					{
 						$view_data = array();
 						$count++;
-						$rule = array(	
-							'start_date'	=> (isset($item['start_date'])) ? $item['start_date'] 	: '',
-							'all_day'	 	=> (isset($item['all_day'])) 	? $item['all_day'] 		: '',
-							'start_time'	=> (isset($item['start_time'])) ? $item['start_time'] 	: '',
-							'end_date'		=> (isset($item['end_date'])) 	? $item['end_date']		: '',
-							'end_time'		=> (isset($item['end_time'])) 	? $item['end_time'] 	: '',
-							'recurs'		=> (isset($item['recurs'])) 	? $item['recurs'] 		: '',
-							'rule'			=> array( 
-								'rule_id' 			=> '',
-								'rule_type' 		=> '',
-								'repeat_years' 		=> '',
-								'repeat_months' 	=> '',
-								'repeat_days' 		=> '',
-								'repeat_weeks' 		=> '',
-								'days_of_week' 		=> '',
-								'relative_dow' 		=> '',
-								'days_of_month' 	=> '',
-								'months_of_year' 	=> '',
-								'repeat_dates' 		=> '',
-								'end_by' 			=> '',
-								'end_after' 		=> '',
-								'start_date' 		=> '',
-								'end_date' 			=> '',
-								'start_time' 		=> '',
-								'end_time' 			=> '',
-								'all_day' 			=> '',
-								'recurs' 			=> ''
+						$rule = array(
+							'start_date'	=> (isset($item['start_date'])) ? $item['start_date']	: '',
+							'all_day'		=> (isset($item['all_day']))	? $item['all_day']		: '',
+							'start_time'	=> (isset($item['start_time'])) ? $item['start_time']	: '',
+							'end_date'		=> (isset($item['end_date']))	? $item['end_date']		: '',
+							'end_time'		=> (isset($item['end_time']))	? $item['end_time']	: '',
+							'recurs'		=> (isset($item['recurs']))	? $item['recurs']		: '',
+							'rule'			=> array(
+								'rule_id'			=> '',
+								'rule_type'		=> '',
+								'repeat_years'		=> '',
+								'repeat_months'	=> '',
+								'repeat_days'		=> '',
+								'repeat_weeks'		=> '',
+								'days_of_week'		=> '',
+								'relative_dow'		=> '',
+								'days_of_month'	=> '',
+								'months_of_year'	=> '',
+								'repeat_dates'		=> '',
+								'end_by'			=> '',
+								'end_after'		=> '',
+								'start_date'		=> '',
+								'end_date'			=> '',
+								'start_time'		=> '',
+								'end_time'			=> '',
+								'all_day'			=> '',
+								'recurs'			=> ''
 							)
 						);
-						
+
 						foreach ($rule as $k => $v)
 						{
 							$view_data[$k] = $v;
 						}
-						
-						$view_data['first']		 	= FALSE;
-						$view_data['rule_id']	 	= 0;
-						$view_data['rule_number'] 	= $count;
+
+						$view_data['first']			= FALSE;
+						$view_data['rule_id']		= 0;
+						$view_data['rule_number']	= $count;
 						$output .= self::rule($view_data);
 					}
 				}
@@ -1888,13 +1934,14 @@ class Calendar_actions extends Addon_builder_calendar {
 		$view_data['end_time']		= (isset($view_data['end_time'])) ? str_pad($view_data['end_time'], 4, '0', STR_PAD_LEFT) : '0000';
 
 		return $this->view('calendar_fields.html', array(
-			'event_edit_has_occurrences' 			=> $event_edit_has_occurrences, 
-			'output' 								=> $output,
-			'lang_remove_edited_occurrences'		=> ee()->lang->line('remove_edited_occurrences'),
-			'lang_remove_edited_occurrences_desc'	=> ee()->lang->line('remove_edited_occurrences_desc'),
+			'event_edit_has_occurrences'			=> $event_edit_has_occurrences,
+			'output'								=> $output,
+			'lang_remove_edited_occurrences'		=> lang('remove_edited_occurrences'),
+			'lang_remove_edited_occurrences_desc'	=> lang('remove_edited_occurrences_desc'),
 		), TRUE);
 	}
-	/* END date_widget() */
+	//END date_widget()
+
 
 	// --------------------------------------------------------------------
 
@@ -1905,7 +1952,7 @@ class Calendar_actions extends Addon_builder_calendar {
 	 * @return	string
 	 */
 
-	public function calendar_select($data)
+	public function calendar_select ($data)
 	{
 		$calendar_list = $this->data->get_calendar_list();
 
@@ -1922,7 +1969,7 @@ class Calendar_actions extends Addon_builder_calendar {
 
 			if (ee()->calendar_permissions->enabled())
 			{
-				$calendars_allowed 	= ee()->calendar_permissions->get_allowed_calendars_for_group($group_id);
+				$calendars_allowed	= ee()->calendar_permissions->get_allowed_calendars_for_group($group_id);
 
 				//if they are in the allowed all group, let them through
 				//if they are in the deined all group, lets not do this work
@@ -1943,7 +1990,7 @@ class Calendar_actions extends Addon_builder_calendar {
 				if (empty($calendars_allowed) OR empty($calendar_list))
 				{
 					return $this->EE->output->show_user_error(
-						'general', array($this->EE->lang->line('no_permissions_for_any_calendars'))
+						'general', array(lang('no_permissions_for_any_calendars'))
 					);
 				}
 			}
@@ -1953,7 +2000,8 @@ class Calendar_actions extends Addon_builder_calendar {
 		$data['calendars'] = $calendar_list;
 		return $this->view('publish_form/calendar_select.html', $data, TRUE);
 	}
-	/* END calendar_select() */
+	//END calendar_select()
+
 
 	// --------------------------------------------------------------------
 
@@ -1970,14 +2018,14 @@ class Calendar_actions extends Addon_builder_calendar {
 		$view_data['entry_id']			= $data['entry_id'];
 		$view_data['event_id']			= $data['event_id'];
 		$view_data['is_new']			= ($data['new_occurrence']) ? TRUE : FALSE;
-		$view_data['occurrence_id']	 	= $data['occurrence_id'];
-		$view_data['calendar_id']	 	= $data['calendar_id'];
-		$view_data['site_id']		 	= $data['site_id'];
+		$view_data['occurrence_id']		= $data['occurrence_id'];
+		$view_data['calendar_id']		= $data['calendar_id'];
+		$view_data['site_id']			= $data['site_id'];
 		$view_data['end_date']			= $data['end_date'];
 		$view_data['start_time']		= $data['start_time'];
 		$view_data['end_time']			= $data['end_time'];
 		$view_data['all_day']			= $data['all_day'];
-		$entry_data					 	= $this->data->fetch_entry_details_by_entry_id(array($data['event_id']));
+		$entry_data						= $this->data->fetch_entry_details_by_entry_id(array($data['event_id']));
 
 		$view_data['entry_data']		= $entry_data[$data['event_id']];
 
@@ -1985,14 +2033,15 @@ class Calendar_actions extends Addon_builder_calendar {
 		{
 			require_once CALENDAR_PATH.'calendar.datetime'.EXT;
 		}
-		
-		$view_data['ymd'] 	= (empty($occurrence_data)) ? $data['start_date'] : $occurrence_data['start_date'];
-		$date			 	= Calendar_datetime::ymd_to_array($view_data['ymd']);
+
+		$view_data['ymd']	= (empty($occurrence_data)) ? $data['start_date'] : $occurrence_data['start_date'];
+		$date				= Calendar_datetime::ymd_to_array($view_data['ymd']);
 		$view_data['date']	= $date['year'].'-'.$date['month'].'-'.$date['day'].' '.$data['time_range'];
 
 		return $this->view('publish_form/edit_occurrence.html', $view_data, TRUE);
 	}
-	/* END edit_occurrence() */
+	//END edit_occurrence()
+
 
 	// --------------------------------------------------------------------
 
@@ -2009,8 +2058,8 @@ class Calendar_actions extends Addon_builder_calendar {
 		{
 			$data['start_date'] = date('Ymd', ee()->localize->now);
 			$data['start_time'] = date('Hi', ee()->localize->now);
-			$data['end_date'] 	= $data['start_date'];
-			$data['end_time'] 	= date('Hi', ee()->localize->now);
+			$data['end_date']	= $data['start_date'];
+			$data['end_time']	= date('Hi', ee()->localize->now);
 			$data['all_day']	= 'n';
 		}
 
@@ -2023,26 +2072,26 @@ class Calendar_actions extends Addon_builder_calendar {
 				$rule[$k] = $data[$k];
 			}
 		}
-		
+
 		//rules in the rule table don't have the recursive flag
 		if ($rule['rule_id'] == '0' AND ( ! isset($data['recurs']) OR $data['recurs'] != 'y'))
-		{	
+		{
 			$repeat_type = '';
 		}
 		elseif ($rule['repeat_years'] > 0)
-		{	
+		{
 			$repeat_type = 'yearly';
 		}
 		elseif ($rule['repeat_months'] > 0)
-		{	
+		{
 			$repeat_type = 'monthly';
 		}
 		elseif ($rule['days_of_month'] != '')
-		{	
+		{
 			$repeat_type = 'monthly';
 		}
 		elseif ($rule['relative_dow'] != '')
-		{	
+		{
 			$repeat_type = 'monthly';
 		}
 		elseif ($rule['repeat_weeks'] > 0)
@@ -2050,21 +2099,21 @@ class Calendar_actions extends Addon_builder_calendar {
 			$repeat_type = 'weekly';
 		}
 		elseif ($rule['repeat_days'] > 0)
-		{	
+		{
 			$repeat_type = 'daily';
 		}
 		else
-		{	
+		{
 			$repeat_type = 'select_dates';
 		}
 
-		$start_time 	= ($rule['start_time'] != '') ? $rule['start_time'] : $data['start_time'];
-		$start_ampm 	= 'am';
-		$end_time 		= ($rule['end_time'] != '') ? $rule['end_time'] : $data['end_time'];
+		$start_time	= ($rule['start_time'] != '') ? $rule['start_time'] : $data['start_time'];
+		$start_ampm	= 'am';
+		$end_time		= ($rule['end_time'] != '') ? $rule['end_time'] : $data['end_time'];
 		$end_ampm		= 'am';
-		$time_format 	= ($this->data->preference('clock_type') == '24') ? '24' : '12';
-		$hour 			= '';
-		$minute 		= '';
+		$time_format	= ($this->data->preference('clock_type') == '24') ? '24' : '12';
+		$hour			= '';
+		$minute		= '';
 
 		if ($start_time > 0)
 		{
@@ -2126,28 +2175,29 @@ class Calendar_actions extends Addon_builder_calendar {
 			$end_time = '00:00';
 		}
 
-		$view_data = array( 
+		$view_data = array(
 			'rule'			=> $rule,
-			'repeat_type' 	=> $repeat_type,
-			'all_day'	 	=> $rule['all_day'],
+			'repeat_type'	=> $repeat_type,
+			'all_day'		=> $rule['all_day'],
 			'start_date'	=> $rule['start_date'],
 			'start_time'	=> $start_time,
 			'start_ampm'	=> $start_ampm,
 			'end_date'		=> $rule['end_date'],
 			'end_time'		=> $end_time,
 			'end_ampm'		=> $end_ampm,
-			'time_format' 	=> $time_format,
+			'time_format'	=> $time_format,
 			'hour'			=> $hour,
 			'minute'		=> $minute,
 			'recurs'		=> $rule['recurs'],
-			'rule_number' 	=> $data['rule_number'],
-			'first'		 	=> $data['first'],
-			'rule_id'	 	=> $data['rule_id']
+			'rule_number'	=> $data['rule_number'],
+			'first'			=> $data['first'],
+			'rule_id'		=> $data['rule_id']
 		);
 
 		return $this->view('publish_form/rule.html', $view_data, TRUE);
 	}
-	/* END rule() */
+	//END rule()
+
 
 	// --------------------------------------------------------------------
 
@@ -2167,7 +2217,7 @@ class Calendar_actions extends Addon_builder_calendar {
 		$end_time	 = '';
 		$end_ampm	 = 'am';
 		$time_format	= ($this->data->preference('clock_type') == '24') ? '24' : '12';
-		
+
 		if ($data['start_time'] > 0)
 		{
 			$hour = substr($data['start_time'], 0, strlen($data['start_time']) - 2);
@@ -2232,17 +2282,18 @@ class Calendar_actions extends Addon_builder_calendar {
 		{
 			$data['all_day']	= 'n';
 		}
-		
+
 		$data['time_format']	= $time_format;
-		$data['start_time']	 	= $start_time;
-		$data['start_ampm']	 	= $start_ampm;
-		$data['end_time']	 	= $end_time;
-		$data['end_ampm']	 	= $end_ampm;
+		$data['start_time']		= $start_time;
+		$data['start_ampm']		= $start_ampm;
+		$data['end_time']		= $end_time;
+		$data['end_ampm']		= $end_ampm;
 		$data['dates']			= $dates;
 
 		return $this->view('publish_form/occurrence.html', $data, TRUE);
 	}
-	/* END occurrence() */
+	//END occurrence()
+
 
 	// --------------------------------------------------------------------
 
@@ -2255,35 +2306,39 @@ class Calendar_actions extends Addon_builder_calendar {
 
 	protected function cal_exception($data)
 	{
-		$dates 					= $data['exceptions']['dates'];
+		$dates					= $data['exceptions']['dates'];
 
-		$start_time			 	= '12:00';
-		$start_ampm			 	= 'am';
-		$end_time			 	= '12:00';
-		$end_ampm			 	= 'am';
+		$start_time				= '12:00';
+		$start_ampm				= 'am';
+		$end_time				= '12:00';
+		$end_ampm				= 'am';
 		$data['time_format']	= ($this->data->preference('clock_type') == '24') ? '24' : '12';
 
-		$data['start_time'] 	= $start_time;
-		$data['start_ampm'] 	= $start_ampm;
-		$data['end_time'] 		= $end_time;
-		$data['end_ampm'] 		= $end_ampm;
+		$data['start_time']	= $start_time;
+		$data['start_ampm']	= $start_ampm;
+		$data['end_time']		= $end_time;
+		$data['end_ampm']		= $end_ampm;
 		$data['dates']			= $dates;
 
 		return $this->view('publish_form/exception.html', $data, TRUE);
 	}
-	/* END cal_exception() */
+	//END cal_exception()
+
 
 	// --------------------------------------------------------------------
 
 	/**
 	 * Datepicker Javascript
 	 *
-	 * @param 	bool 	allows the turning off of some options for 2.x
+	 * @param	bool	allows the turning off of some options for 2.x
 	 * @return	string
 	 */
 
-	public function datepicker_js($include_jqui = TRUE)
+	public function datepicker_js ($include_jqui = TRUE)
 	{
+
+		ee()->load->helper('text');
+
 		$output = '';
 
 		$app_ver = substr((string) APP_VER, 0, 1);
@@ -2291,26 +2346,26 @@ class Calendar_actions extends Addon_builder_calendar {
 		$output .= "
 			<script type='text/javascript'>
 				var SSCalendar					= {};
-				SSCalendar.version 				= {$app_ver};
-				SSCalendar.dateFormat 			= 'DATEFORMAT';
+				SSCalendar.version				= {$app_ver};
+				SSCalendar.dateFormat			= 'DATEFORMAT';
 				SSCalendar.firstDay				= FIRSTDAY;
-				SSCalendar.dateFormatSettings 	= {
+				SSCalendar.dateFormatSettings	= {
 					dayNamesMin		: [DAYNAMESMIN],
 					dayNamesShort	: [DAYNAMESSHORT],
 					dayNames		: [DAYNAMESLONG],
 					monthNamesShort	: [MONTHNAMESSHORT],
 					monthNames		: [MONTHNAMESLONG]
 				};
-				SSCalendar.lang 				= {
+				SSCalendar.lang				= {
 					[LANG]
 				};
-				// if there is not a default_entry_title set 
+				// if there is not a default_entry_title set
 				// when you insert entries into exp_channels
 				// it defaults to NULL instead of a blank string
 				// we fixed it in an update, but this is just in case
 				setTimeout(function(){
-					if (typeof EE !== 'undefined' && 
-						typeof EE.publish !== 'undefined' && 
+					if (typeof EE !== 'undefined' &&
+						typeof EE.publish !== 'undefined' &&
 						( typeof EE.publish.default_entry_title !== 'undefined' ||
 						  ! EE.publish.default_entry_title )
 					)
@@ -2321,9 +2376,9 @@ class Calendar_actions extends Addon_builder_calendar {
 			</script>";
 
 		if ($include_jqui AND (REQ == 'PAGE' OR APP_VER < 2.0))
-		{		
-			$output .= "\n<script type='text/javascript' src='" . 
-							CALENDAR_URL_THEMES . 
+		{
+			$output .= "\n<script type='text/javascript' src='" .
+							$this->sc->addon_theme_url .
 							"js/ui.datepicker.js'></script>";
 		}
 		//have to make SURE that we are in 2.x and in the CP before we do this.
@@ -2331,15 +2386,15 @@ class Calendar_actions extends Addon_builder_calendar {
 		{
 			ee()->load->library('javascript');
 			ee()->cp->add_js_script(array('ui' => 'datepicker'));
-		}	
-		
-		$publish_js =  "\n<script type='text/javascript' src='" . 
-							CALENDAR_URL_THEMES . 
+		}
+
+		$publish_js =  "\n<script type='text/javascript' src='" .
+							$this->sc->addon_theme_url .
 							"js/calendar_publish.js'></script>";
 
 		if (APP_VER >= 2.0 AND REQ == 'CP')
 		{
-			ee()->cp->add_to_head($publish_js); 
+			ee()->cp->add_to_head($publish_js);
 		}
 		else
 		{
@@ -2347,31 +2402,31 @@ class Calendar_actions extends Addon_builder_calendar {
 		}
 
 		$daynamesmin = $daynamesshort = $daynameslong = $monthnamesshort = $monthnameslong = array();
-		
+
 		for ($i = 0; $i < 7; $i++)
 		{
-			$daynamesmin[] = ee()->lang->line('day_'.$i.'_2');
-			$daynamesshort[] = ee()->lang->line('day_'.$i.'_3');
-			$daynameslong[] = ee()->lang->line('day_'.$i.'_full');
+			$daynamesmin[]		= ascii_to_entities(lang('day_'.$i.'_2'));
+			$daynamesshort[]	= ascii_to_entities(lang('day_'.$i.'_3'));
+			$daynameslong[]		= ascii_to_entities(lang('day_'.$i.'_full'));
 		}
 
 		for ($i = 1; $i <= 12; $i++)
 		{
-			$monthnamesshort[] = ee()->lang->line('month_'.$i.'_3');
-			$monthnameslong[] = ee()->lang->line('month_'.$i.'_full');
+			$monthnamesshort[]	= ascii_to_entities(lang('month_'.$i.'_3'));
+			$monthnameslong[]	= ascii_to_entities(lang('month_'.$i.'_full'));
 		}
 
-		$find 	= array(
-			'DATEFORMAT', 
-			'DAYNAMESMIN', 
-			'DAYNAMESSHORT', 
-			'DAYNAMESLONG', 
-			'MONTHNAMESSHORT', 
-			'MONTHNAMESLONG', 
+		$find	= array(
+			'DATEFORMAT',
+			'DAYNAMESMIN',
+			'DAYNAMESSHORT',
+			'DAYNAMESLONG',
+			'MONTHNAMESSHORT',
+			'MONTHNAMESLONG',
 			'FIRSTDAY'
 		);
-		
-		$replace = array( 
+
+		$replace = array(
 			$this->data->preference('date_format'),
 			"'".implode("', '", $daynamesmin)."'",
 			"'".implode("', '", $daynamesshort)."'",
@@ -2380,113 +2435,114 @@ class Calendar_actions extends Addon_builder_calendar {
 			"'".implode("', '", $monthnameslong)."'",
 			$this->data->preference('first_day_of_week')
 		);
-		
+
 		$output = str_replace($find, $replace, $output);
 
 		$find = array(
-			'type' 				=> ee()->lang->line('type'),
-			'include' 			=> ee()->lang->line('include'),
-			'exclude' 			=> ee()->lang->line('exclude'),
-			'repeat' 			=> ee()->lang->line('repeat'),
-			'none' 				=> ee()->lang->line('none'),
-			'daily' 			=> ee()->lang->line('daily'),
-			'weekly' 			=> ee()->lang->line('weekly'),
-			'monthly'			=> ee()->lang->line('monthly'),
-			'yearly' 			=> ee()->lang->line('yearly'),
-			'select_dates' 		=> ee()->lang->line('select_dates'),
-			'all_day_event' 	=> ee()->lang->line('all_day_event'),
-			'from' 				=> ee()->lang->line('from'),
-			'to' 				=> ee()->lang->line('to'),
-			'every' 			=> ee()->lang->line('every'),
-			'day_s' 			=> ee()->lang->line('day_s'),
-			'week_s_on' 		=> ee()->lang->line('week_s_on'),
-			'at' 				=> ee()->lang->line('at'),
-			'month_s_by_day_of' => ee()->lang->line('month_s_by_day_of'),
-			'x1st' 				=> ee()->lang->line('1st'),
-			'x2nd' 				=> ee()->lang->line('2nd'),
-			'x3rd' 				=> ee()->lang->line('3rd'),
-			'x4th' 				=> ee()->lang->line('4th'),
-			'x5th' 				=> ee()->lang->line('5th'),
-			'only_on' 			=> ee()->lang->line('only_on'),
-			'year_s' 			=> ee()->lang->line('year_s'),
-			'end' 				=> ee()->lang->line('end'),
-			'never' 			=> ee()->lang->line('never'),
-			'by_date' 			=> ee()->lang->line('by_date'),
-			'after' 			=> ee()->lang->line('after'),
-			'time_s' 			=> ee()->lang->line('time_s'),
-			'am' 				=> ee()->lang->line('AM'),
-			'pm' 				=> ee()->lang->line('PM'),
-			'day_1_3'			=> ee()->lang->line('day_1_3'),
-			'day_2_3'			=> ee()->lang->line('day_2_3'),
-			'day_3_3'			=> ee()->lang->line('day_3_3'),
-			'day_4_3'			=> ee()->lang->line('day_4_3'),
-			'day_5_3'			=> ee()->lang->line('day_5_3'),
-			'day_6_3'			=> ee()->lang->line('day_6_3'),
-			'day_0_3'			=> ee()->lang->line('day_0_3'),
-			'today' 			=> ee()->lang->line('today'),
-			'yesterday' 		=> ee()->lang->line('yesterday'),
-			'tomorrow' 			=> ee()->lang->line('tomorrow'),
-			'day' 				=> ee()->lang->line('day'),
-			'week'				=> ee()->lang->line('week'),
-			'month' 			=> ee()->lang->line('month'),
-			'year' 				=> ee()->lang->line('year'),
-			'ago' 				=> ee()->lang->line('ago'),
-			'begin' 			=> ee()->lang->line('begin'),
-			'last'				=> ee()->lang->line('last')
+			'type'				=> lang('type'),
+			'include'			=> lang('include'),
+			'exclude'			=> lang('exclude'),
+			'repeat'			=> lang('repeat'),
+			'none'				=> lang('none'),
+			'daily'				=> lang('daily'),
+			'weekly'			=> lang('weekly'),
+			'monthly'			=> lang('monthly'),
+			'yearly'			=> lang('yearly'),
+			'select_dates'		=> lang('select_dates'),
+			'all_day_event'		=> lang('all_day_event'),
+			'from'				=> lang('from'),
+			'to'				=> lang('to'),
+			'every'				=> lang('every'),
+			'day_s'				=> lang('day_s'),
+			'week_s_on'			=> lang('week_s_on'),
+			'at'				=> lang('at'),
+			'month_s_by_day_of' => lang('month_s_by_day_of'),
+			'x1st'				=> lang('1st'),
+			'x2nd'				=> lang('2nd'),
+			'x3rd'				=> lang('3rd'),
+			'x4th'				=> lang('4th'),
+			'x5th'				=> lang('5th'),
+			'only_on'			=> lang('only_on'),
+			'year_s'			=> lang('year_s'),
+			'end'				=> lang('end'),
+			'never'				=> lang('never'),
+			'by_date'			=> lang('by_date'),
+			'after'				=> lang('after'),
+			'time_s'			=> lang('time_s'),
+			'am'				=> lang('AM'),
+			'pm'				=> lang('PM'),
+			'day_1_3'			=> lang('day_1_3'),
+			'day_2_3'			=> lang('day_2_3'),
+			'day_3_3'			=> lang('day_3_3'),
+			'day_4_3'			=> lang('day_4_3'),
+			'day_5_3'			=> lang('day_5_3'),
+			'day_6_3'			=> lang('day_6_3'),
+			'day_0_3'			=> lang('day_0_3'),
+			'today'				=> lang('today'),
+			'yesterday'			=> lang('yesterday'),
+			'tomorrow'			=> lang('tomorrow'),
+			'day'				=> lang('day'),
+			'week'				=> lang('week'),
+			'month'				=> lang('month'),
+			'year'				=> lang('year'),
+			'ago'				=> lang('ago'),
+			'begin'				=> lang('begin'),
+			'last'				=> lang('last')
 		);
-		
+
 		$lang = '';
-		
+
 		foreach ($find as $k => $v)
 		{
-			$lang .= "'{$k}': '$v',\n";
+			$lang .= "'{$k}': '" . ascii_to_entities(addslashes($v)) . "',\n";
 		}
 
 		$lang = substr($lang, 0, strlen($lang) - 2)."\n";
-		
+
 		$output = str_replace('[LANG]', $lang, $output);
 
 		return $output;
 	}
-	/* END datepicker_js() */
+	//END datepicker_js()
+
 
 	// --------------------------------------------------------------------
 
 	/**
 	 * Datepicker CSS
 	 *
-	 * @param 	bool 	allows the turning off of some options for 2.x
+	 * @param	bool	allows the turning off of some options for 2.x
 	 * @return	string
 	 */
-	public function datepicker_css($include_jqui = TRUE)
+	public function datepicker_css ($include_jqui = TRUE)
 	{
 		$output = '';
 
 		if ($include_jqui AND (REQ == 'PAGE' OR APP_VER < 2.0))
 		{
-			$output .= "\n<link rel='stylesheet' href='" . 
-							CALENDAR_URL_THEMES . 
-							"css/ui-lightness/jquery-ui.custom.css' " . 
+			$output .= "\n<link rel='stylesheet' href='" .
+							$this->sc->addon_theme_url .
+							"css/ui-lightness/jquery-ui.custom.css' " .
 							"type='text/css' />";
 		}
 
-		$publish_css = "\n<link rel='stylesheet' href='" . 
-							CALENDAR_URL_THEMES . 
+		$publish_css = "\n<link rel='stylesheet' href='" .
+							$this->sc->addon_theme_url .
 							"css/calendar_publish.css' type='text/css' />";
 
 		if (APP_VER < 2.0)
 		{
 			//1.x has its own CSS because poop
 			$output .= str_replace(
-				'calendar_publish.css', 
-				'calendar_publish_1.x.css', 
+				'calendar_publish.css',
+				'calendar_publish_1.x.css',
 				$publish_css
 			);
 		}
 		//2.x CP
 		else if (REQ == 'CP')
 		{
-			//we want to add the css to the head so 
+			//we want to add the css to the head so
 			//it can async load faster
 			ee()->cp->add_to_head($publish_css);
 		}
@@ -2498,7 +2554,8 @@ class Calendar_actions extends Addon_builder_calendar {
 
 		return $output;
 	}
-	/* END datepicker_css() */
+	//END datepicker_css()
+
 
 	// --------------------------------------------------------------------
 
@@ -2507,15 +2564,15 @@ class Calendar_actions extends Addon_builder_calendar {
 	 *
 	 * @return string
 	 */
-	public function calendar_channel_shortname()
+	public function calendar_channel_shortname ()
 	{
 		// Fetch the weblog
-		$channel 		= $this->data->preference('calendar_weblog');		
-		$channel 		= ($channel !== FALSE AND is_string($channel)) ? 
+		$channel		= $this->data->preference('calendar_weblog');
+		$channel		= ($channel !== FALSE AND is_string($channel)) ?
 								explode('|', $channel) : array();
-		$channel_data 	= $this->data->get_channel_basics();
-		$names 			= array();
-	
+		$channel_data	= $this->data->get_channel_basics();
+		$names			= array();
+
 		foreach ($channel_data as $w)
 		{
 			if (in_array($w['weblog_id'], $channel))
@@ -2523,10 +2580,11 @@ class Calendar_actions extends Addon_builder_calendar {
 				$names[] = $w['blog_name'];
 			}
 		}
-	
+
 		return implode('|', $names);
 	}
-	/* END calendar_channel_shortname() */
+	//END calendar_channel_shortname()
+
 
 	// --------------------------------------------------------------------
 
@@ -2535,15 +2593,15 @@ class Calendar_actions extends Addon_builder_calendar {
 	 *
 	 * @return string
 	 */
-	public function event_channel_shortname()
+	public function event_channel_shortname ()
 	{
 		 // Fetch the weblog
-		$channel 		= $this->data->preference('event_weblog');
-		$channel 		= ($channel !== FALSE AND is_string($channel)) ? 
-							explode('|', $channel) : array();		
-		$channel_data 	= $this->data->get_channel_basics();
-		$names 			= array();
-	
+		$channel		= $this->data->preference('event_weblog');
+		$channel		= ($channel !== FALSE AND is_string($channel)) ?
+							explode('|', $channel) : array();
+		$channel_data	= $this->data->get_channel_basics();
+		$names			= array();
+
 		foreach ($channel_data as $c)
 		{
 			if (in_array($c['weblog_id'], $channel))
@@ -2551,14 +2609,13 @@ class Calendar_actions extends Addon_builder_calendar {
 				$names[] = $c['blog_name'];
 			}
 		}
-	
+
 		return implode('|', $names);
 	}
-	/* END event_channel_shortname() */
+	//END event_channel_shortname()
+
 
 	// --------------------------------------------------------------------
 
 }
-/* END Calendar_actions Class */
-
-?>
+//END Calendar_actions Class

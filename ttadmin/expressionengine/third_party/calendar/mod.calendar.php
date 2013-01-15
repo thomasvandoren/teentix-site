@@ -1,44 +1,37 @@
 <?php if ( ! defined('EXT')) exit('No direct script access allowed');
 
- /**
- * Solspace - Calendar
- *
- * @package		Solspace:Calendar
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
- * @link		http://www.solspace.com/docs/addon/c/Calendar/
- * @version		1.7.0
- * @filesource 	./system/expressionengine/third_party/calendar/
- */
-
- /**
+/**
  * Calendar - User Side
  *
- * @package 	Solspace:Calendar
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/calendar/mod.calendar.php
+ * @package		Solspace:Calendar
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/calendar
+ * @license		http://www.solspace.com/license_agreement
+ * @version		1.8.1
+ * @filesource	calendar/mod.calendar.php
  */
 
 if ( ! defined('APP_VER')) define('APP_VER', '2.0'); // EE 2.0's Wizard doesn't like CONSTANTs
 
 if ( ! class_exists('Module_builder_calendar'))
 {
-	require_once 'addon_builder/module_builder.php';	
+	require_once 'addon_builder/module_builder.php';
 }
 
 class Calendar extends Module_builder_calendar
 {
 
 	public $return_data				= '';
-	public $P;                  	
-	public $CDT;                	
+	public $P;
+	public $CDT;
 	public $disabled				= FALSE;
 	public $first_day_of_week		= 0; // Sunday = 0, Saturday = 6
 	public $time_format				= 'H:i';
 	private $parent_method			= '';
 	private $uid_counter			= 0;
-	
-	//--------------------------------------------  
+
+	//--------------------------------------------
 	//	pagination defaults
 	//--------------------------------------------
 
@@ -57,7 +50,7 @@ class Calendar extends Module_builder_calendar
 	public $paginate_data			= '';
 	public $res_page				= '';
 	public $paginate_tagpair_data	= '';
-	
+
 	private $counted				= array(
 		'year' 		=> array(),
 		'month'		=> array(),
@@ -75,20 +68,20 @@ class Calendar extends Module_builder_calendar
 	 */
 
 	public function __construct($updated = FALSE)
-	{		
+	{
 		parent::Module_builder_calendar('calendar');
 
 		// -------------------------------------
 		//  Module Installed and Up to Date?
 		// -------------------------------------
-		
-		if ( $updated === FALSE AND ( $this->database_version() == FALSE OR 
-			$this->version_compare($this->database_version(), '<', CALENDAR_VERSION) OR 
+
+		if ( $updated === FALSE AND ( $this->database_version() == FALSE OR
+			$this->version_compare($this->database_version(), '<', CALENDAR_VERSION) OR
 			! $this->extensions_enabled()))
 		{
 			$this->disabled = TRUE;
-			
-			trigger_error(ee()->lang->line('calendar_module_disabled'), E_USER_NOTICE);
+
+			trigger_error(lang('calendar_module_disabled'), E_USER_NOTICE);
 		}
 
 		// -------------------------------------
@@ -101,7 +94,7 @@ class Calendar extends Module_builder_calendar
 		}
 
 		$this->actions();
-		
+
 		if ( ! defined('CALENDAR_CALENDARS_CHANNEL_NAME'))
 		{
 			define('CALENDAR_CALENDARS_CHANNEL_NAME', $this->actions->calendar_channel_shortname());
@@ -183,16 +176,22 @@ class Calendar extends Module_builder_calendar
 		//  Convert calendar_name to calendar_id
 		// -------------------------------------
 
-		if ($this->P->value('calendar_id') == '' AND $this->P->value('calendar_name') != '')
+		if ($this->P->value('calendar_id') == '' AND
+			$this->P->value('calendar_name') != '')
 		{
-			$ids = $this->data->get_calendar_id_from_name($this->P->value('calendar_name'), NULL, $this->P->params['calendar_name']['details']['not']);
-			
+			$ids = $this->data->get_calendar_id_from_name(
+				$this->P->value('calendar_name'),
+				NULL,
+				$this->P->params['calendar_name']['details']['not']
+			);
+
 			if ( empty( $ids ) )
 			{
-				//ee()->TMPL->log_item('Calendar: No results for calendar name provided, bailing');
+				//ee()->TMPL->log_item('Calendar: No results for
+				//calendar name provided, bailing');
 				return $this->no_results();
 			}
-			
+
 			$this->P->set('calendar_id', implode('|', $ids));
 		}
 
@@ -207,7 +206,11 @@ class Calendar extends Module_builder_calendar
 		//  Fetch the basics
 		// -------------------------------------
 
-		$data = $this->data->fetch_calendars_basics($this->P->value('site_id'), $this->P->value('calendar_id'), $this->P->params['calendar_id']['details']['not']);
+		$data = $this->data->fetch_calendars_basics(
+			$this->P->value('site_id'),
+			$this->P->value('calendar_id'),
+			$this->P->params['calendar_id']['details']['not']
+		);
 
 		// -------------------------------------
 		//  If no data, then give 'em no_results
@@ -223,11 +226,12 @@ class Calendar extends Module_builder_calendar
 		//  Ensure date_range_start <= date_range_end
 		// -------------------------------------
 
-		if ($this->P->value('date_range_start') !== FALSE AND $this->P->value('date_range_end') !== FALSE)
+		if ($this->P->value('date_range_start') !== FALSE AND
+			$this->P->value('date_range_end') !== FALSE)
 		{
 			if ($this->P->value('date_range_start', 'ymd') > $this->P->value('date_range_end', 'ymd'))
 			{
-				$temp = $this->P->params['date_range_start']['value'];	
+				$temp = $this->P->params['date_range_start']['value'];
 				$this->P->set('date_range_start', $this->P->params['date_range_end']['value']);
 				$this->P->set('date_range_end', $temp);
 				unset($temp);
@@ -248,13 +252,24 @@ class Calendar extends Module_builder_calendar
 		//  Date range params? Then we need to do a lot more work.
 		// -------------------------------------
 
-		if ($this->P->value('date_range_start') !== FALSE OR $this->P->value('date_range_end') !== FALSE)
+		if ($this->P->value('date_range_start') !== FALSE OR
+			$this->P->value('date_range_end') !== FALSE)
 		{
 			//ee()->TMPL->log_item('Calendar: Calculating date ranges');
-			$min = ($this->P->value('date_range_start') !== FALSE) ? $this->P->value('date_range_start', 'ymd') : 0;
-			
-			$max = ($this->P->value('date_range_end') !== FALSE) ? $this->P->value('date_range_end', 'ymd') : 0;
-			$calendar_array = $this->data->fetch_calendars_with_events_in_date_range($min, $max, $calendar_array, $this->P->value('status'));
+			$min = ($this->P->value('date_range_start') !== FALSE) ?
+						$this->P->value('date_range_start', 'ymd') :
+						0;
+
+			$max = ($this->P->value('date_range_end') !== FALSE) ?
+				$this->P->value('date_range_end', 'ymd') :
+				0;
+
+			$calendar_array = $this->data->fetch_calendars_with_events_in_date_range(
+				$min,
+				$max,
+				$calendar_array,
+				$this->P->value('status')
+			);
 		}
 
 		// -------------------------------------
@@ -270,14 +285,14 @@ class Calendar extends Module_builder_calendar
 		//	----------------------------------------
 		//	Invoke Channel class
 		//	----------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			if ( ! class_exists('Weblog') )
 			{
 				require PATH_MOD.'/weblog/mod.weblog'.EXT;
 			}
-	
+
 			$channel = new Weblog;
 		}
 		else
@@ -286,22 +301,22 @@ class Calendar extends Module_builder_calendar
 			{
 				require PATH_MOD.'/channel/mod.channel'.EXT;
 			}
-	
+
 			$channel = new Channel;
 		}
 
 		//default is 100 and that could limit events when there are very many to be shown
 		$channel->limit = 500;
-		
+
 		// --------------------------------------------
-        //  Invoke Pagination for EE 2.4 and Above
-        // --------------------------------------------
+		//  Invoke Pagination for EE 2.4 and Above
+		// --------------------------------------------
 
 		if (APP_VER >= '2.4.0')
 		{
 			ee()->load->library('pagination');
 			$channel->pagination = new Pagination_object('Channel');
-			
+
 			// Used by pagination to determine whether we're coming from the cache
 			$channel->pagination->dynamic_sql = FALSE;
 		}
@@ -334,12 +349,12 @@ class Calendar extends Module_builder_calendar
 			$channel->fetch_custom_channel_fields();
 		}
 
-        $channel->fetch_custom_member_fields();
-		
+		$channel->fetch_custom_member_fields();
+
 		// --------------------------------------------
-        //  Pagination Tags Parsed Out
-        // --------------------------------------------
-		
+		//  Pagination Tags Parsed Out
+		// --------------------------------------------
+
 		if (APP_VER >= '2.4.0')
 		{
 			$channel->pagination->get_template();
@@ -360,7 +375,7 @@ class Calendar extends Module_builder_calendar
 		{
 			return $this->no_results();
 		}
-		
+
 		$channel->query = ee()->db->query($channel->sql);
 
 		if ($channel->query->num_rows() == 0)
@@ -368,13 +383,13 @@ class Calendar extends Module_builder_calendar
 //ee()->TMPL->log_item('Calendar: Channel module says no results, bailing');
 			return $this->no_results();
 		}
-		
+
 		$channel->query->result	= $channel->query->result_array();
 
 		// -------------------------------------------
 		// 'calendar_calendars_channel_query' hook.
 		//  - Do something with the channel query
-		
+
 		if (ee()->extensions->active_hook('calendar_calendars_channel_query') === TRUE)
 		{
 			$channel->query = ee()->extensions->call('calendar_calendars_channel_query', $channel->query, $calendar_array);
@@ -389,20 +404,20 @@ class Calendar extends Module_builder_calendar
 
 		//ee()->TMPL->log_item('Calendar: Adding Calendar variables');
 
-		$aliases = array(	
+		$aliases = array(
 			'title'			=> 'calendar_title',
 			'url_title'		=> 'calendar_url_title',
 			'entry_id'		=> 'calendar_id',
-			'author_id'    	=> 'calendar_author_id',
-			'author'    	=> 'calendar_author',
-			'status'    	=> 'calendar_status'
+			'author_id'		=> 'calendar_author_id',
+			'author'		=> 'calendar_author',
+			'status'		=> 'calendar_status'
 		);
 
 		foreach ($channel->query->result as $k => $row)
 		{
-			$channel->query->result[$k]['author'] = ($row['screen_name'] != '') ? 
+			$channel->query->result[$k]['author'] = ($row['screen_name'] != '') ?
 										$row['screen_name'] : $row['username'];
-			
+
 			foreach ($aliases as $old => $new)
 			{
 				$channel->query->result[$k][$new] = $channel->query->result[$k][$old];
@@ -429,14 +444,14 @@ class Calendar extends Module_builder_calendar
 		// --------------------------------------------
 		//  Typography
 		// --------------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			if ( ! class_exists('Typography'))
 			{
 				require PATH_CORE.'core.typography'.EXT;
 			}
-					
+
 			$channel->TYPE = new Typography;
 			$channel->TYPE->convert_curly = FALSE;
 		}
@@ -454,7 +469,7 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		//ee()->TMPL->log_item('Calendar: Parsing, via channel module');
-		
+
 		if (APP_VER < 2.0)
 		{
 			$channel->parse_weblog_entries();
@@ -467,7 +482,7 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 		//  Paginate
 		// -------------------------------------
-		
+
 		if (APP_VER >= '2.4.0')
 		{
 			$channel->return_data = $channel->pagination->render($channel->return_data);
@@ -483,13 +498,13 @@ class Calendar extends Module_builder_calendar
 
 		//ee()->TMPL->log_item('Calendar: Parsing related entries, via Weblog module');
 
-		if (count(ee()->TMPL->related_data) > 0 AND 
+		if (count(ee()->TMPL->related_data) > 0 AND
 			count($channel->related_entries) > 0)
 		{
 			$channel->parse_related_entries();
 		}
 
-		if (count(ee()->TMPL->reverse_related_data) > 0 AND 
+		if (count(ee()->TMPL->reverse_related_data) > 0 AND
 			count($channel->reverse_related_entries) > 0)
 		{
 			$channel->parse_reverse_related_entries();
@@ -527,14 +542,14 @@ class Calendar extends Module_builder_calendar
 
 		//default off.
 		if ( $this->check_yes( ee()->TMPL->fetch_param('dynamic') ) )
-		{			
+		{
 			ee()->TMPL->tagparams['dynamic'] 	= (APP_VER < 2.0 ) ? 'on' : 'yes';
 		}
 		else
 		{
 			ee()->TMPL->tagparams['dynamic'] 	= (APP_VER < 2.0 ) ? 'off' : 'no';
 		}
-		
+
 		// -------------------------------------
 		//	category url titles?
 		// -------------------------------------
@@ -544,15 +559,15 @@ class Calendar extends Module_builder_calendar
 			$this->convert_category_titles();
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	detect special cases
 		//--------------------------------------------
-		
+
 		if ( ! $this->parent_method)
 		{
-			$this->parent_method = 'events';
+			$this->parent_method = __FUNCTION__;
 		}
-	
+
 		// -------------------------------------
 		//  Load 'em up
 		// -------------------------------------
@@ -706,18 +721,18 @@ class Calendar extends Module_builder_calendar
 
 		/*$category = FALSE;
 
-		if (FALSE AND isset(ee()->TMPL) AND 
+		if (FALSE AND isset(ee()->TMPL) AND
 			 is_object(ee()->TMPL) AND
-			 ee()->TMPL->fetch_param('category') !== FALSE AND 
-			 ee()->TMPL->fetch_param('category') != '' 
-		) 
+			 ee()->TMPL->fetch_param('category') !== FALSE AND
+			 ee()->TMPL->fetch_param('category') != ''
+		)
 		{
 			$category = ee()->TMPL->fetch_param('category');
-		
+
 			unset(ee()->TMPL->tagparams['category']);
 		}
 
-		$ids = $this->data->fetch_event_ids($this->P, $category);*/		
+		$ids = $this->data->fetch_event_ids($this->P, $category);*/
 
 		// -------------------------------------
 		//  No events?
@@ -740,11 +755,11 @@ class Calendar extends Module_builder_calendar
 				$ids[$v] = $v;
 			}
 		}
-		
+
 		// -------------------------------------------
 		// 'calendar_events_event_ids' hook.
 		//  - Do something with the event IDs
-		
+
 		if (ee()->extensions->active_hook('calendar_events_event_ids') === TRUE)
 		{
 			$ids = ee()->extensions->call('calendar_events_event_ids', $ids);
@@ -754,28 +769,28 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------------
 
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	remove pagination before we start
 		//--------------------------------------------
-		
+
 		//has tags?
-		if (preg_match( 
-				"/" . LD . "calendar_paginate" . RD . "(.+?)" . 
-					  LD . preg_quote(T_SLASH, '/') . "calendar_paginate" . RD . "/s", 
-				ee()->TMPL->tagdata	, 
+		if (preg_match(
+				"/" . LD . "calendar_paginate" . RD . "(.+?)" .
+					  LD . preg_quote(T_SLASH, '/') . "calendar_paginate" . RD . "/s",
+				ee()->TMPL->tagdata	,
 				$match
 			))
-		{			
+		{
 			$this->paginate_tagpair_data	= $match[0];
 			ee()->TMPL->tagdata				= str_replace( $match[0], '', ee()->TMPL->tagdata );
 		}
 		//prefix comes first
-		else if (preg_match( 
-				"/" . LD . "paginate" . RD . "(.+?)" . LD . preg_quote(T_SLASH, '/') . "paginate" . RD . "/s", 
-				ee()->TMPL->tagdata	, 
+		else if (preg_match(
+				"/" . LD . "paginate" . RD . "(.+?)" . LD . preg_quote(T_SLASH, '/') . "paginate" . RD . "/s",
+				ee()->TMPL->tagdata	,
 				$match
 			))
-		{			
+		{
 			$this->paginate_tagpair_data	= $match[0];
 			ee()->TMPL->tagdata				= str_replace( $match[0], '', ee()->TMPL->tagdata );
 		}
@@ -788,7 +803,7 @@ class Calendar extends Module_builder_calendar
 
 		ee()->TMPL->var_single['entry_id'] = 'entry_id';
 
-		$var_pairs = array(	
+		$var_pairs = array(
 			'occurrences',
 			'exceptions',
 			'rules'
@@ -799,11 +814,11 @@ class Calendar extends Module_builder_calendar
 			if (in_array($name, $var_pairs))
 			{
 				ee()->TMPL->tagdata = str_replace(
-					LD.$name.RD, 
+					LD.$name.RD,
 					LD.$name.' id="'.LD.'entry_id'.RD.'"'.RD,
 					ee()->TMPL->tagdata
 				);
-				
+
 				ee()->TMPL->var_pair[$name]['id'] = '';
 				continue;
 			}
@@ -816,18 +831,18 @@ class Calendar extends Module_builder_calendar
 				}
 
 				$new_name = $name.' id=""';
-				
+
 				ee()->TMPL->tagdata = str_replace(
-					LD.$name.RD, 
-					LD.$name.' id="'.LD.'entry_id'.RD.'"'.RD, 
+					LD.$name.RD,
+					LD.$name.' id="'.LD.'entry_id'.RD.'"'.RD,
 					ee()->TMPL->tagdata
 				);
-				
+
 				ee()->TMPL->var_pair[] 					= ee()->TMPL->var_pair[$name];
 				ee()->TMPL->var_pair[$new_name]['id'] 	= '';
 				// Leave the old name behind so we can pick it up later and use it
 				ee()->TMPL->var_pair[$pair] 			= $name;
-				
+
 				unset(ee()->TMPL->var_pair[$name]);
 			}
 		}
@@ -837,7 +852,7 @@ class Calendar extends Module_builder_calendar
 		//  we will process later.
 		// -------------------------------------
 
-		$var_dates = array(	
+		$var_dates = array(
 			'event_start_date'	=> FALSE,
 			'event_start_time'	=> FALSE,
 			'event_end_date'	=> FALSE,
@@ -862,14 +877,14 @@ class Calendar extends Module_builder_calendar
 		//	----------------------------------------
 		//	Invoke Channel class
 		//	----------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			if ( ! class_exists('Weblog') )
 			{
 				require PATH_MOD.'/weblog/mod.weblog'.EXT;
 			}
-	
+
 			$channel = new Weblog;
 		}
 		else
@@ -878,22 +893,22 @@ class Calendar extends Module_builder_calendar
 			{
 				require PATH_MOD.'/channel/mod.channel'.EXT;
 			}
-	
+
 			$channel = new Channel;
 		}
 
 		//default is 100 and that could limit events when there are very many to be shown
 		$channel->limit = 500;
-		
+
 		// --------------------------------------------
-        //  Invoke Pagination for EE 2.4 and Above
-        // --------------------------------------------
+		//  Invoke Pagination for EE 2.4 and Above
+		// --------------------------------------------
 
 		if (APP_VER >= '2.4.0')
 		{
 			ee()->load->library('pagination');
 			$channel->pagination = new Pagination_object('Channel');
-			
+
 			// Used by pagination to determine whether we're coming from the cache
 			$channel->pagination->dynamic_sql = FALSE;
 		}
@@ -906,9 +921,9 @@ class Calendar extends Module_builder_calendar
 
 		//if we have event names, lets set them for the URL title
 		if ( ! in_array(ee()->TMPL->fetch_param('event_name'), array(FALSE, ''), TRUE))
-		{			
+		{
 			ee()->TMPL->tagparams['url_title'] = ee()->TMPL->fetch_param('event_name');
-		}		
+		}
 
 		ee()->TMPL->tagparams[$this->sc->channel] 	= CALENDAR_EVENTS_CHANNEL_NAME;
 
@@ -931,13 +946,13 @@ class Calendar extends Module_builder_calendar
 		{
 			$channel->fetch_custom_channel_fields();
 		}
-		
-        $channel->fetch_custom_member_fields();
-		
+
+		$channel->fetch_custom_member_fields();
+
 		// --------------------------------------------
-        //  Pagination Tags Parsed Out
-        // --------------------------------------------
-		
+		//  Pagination Tags Parsed Out
+		// --------------------------------------------
+
 		if (APP_VER >= '2.4.0')
 		{
 			$channel->pagination->get_template();
@@ -957,7 +972,7 @@ class Calendar extends Module_builder_calendar
 		{
 			return $this->no_results();
 		}
-		
+
 		$channel->query = ee()->db->query($channel->sql);
 
 		if ($channel->query->num_rows() == 0)
@@ -965,13 +980,13 @@ class Calendar extends Module_builder_calendar
 //ee()->TMPL->log_item('Calendar: Channel module says no results, bailing');
 			return $this->no_results();
 		}
-		
+
 		$channel->query->result	= $channel->query->result_array();
 
 		// -------------------------------------------
 		// 'calendar_events_channel_query' hook.
 		//  - Do something with the channel query
-		
+
 		if (ee()->extensions->active_hook('calendar_events_channel_query') === TRUE)
 		{
 			$channel->query = ee()->extensions->call('calendar_events_channel_query', $channel->query, $ids);
@@ -1012,14 +1027,14 @@ class Calendar extends Module_builder_calendar
 
 		foreach ($event_data as $k => $edata)
 		{
-			$start_ymd	= ($this->P->value('date_range_start') !== FALSE) ? 
+			$start_ymd	= ($this->P->value('date_range_start') !== FALSE) ?
 							$this->P->value('date_range_start', 'ymd') : '';
-			$end_ymd	= ($this->P->value('date_range_end') !== FALSE) ? 
-							$this->P->value('date_range_end', 'ymd') : 
+			$end_ymd	= ($this->P->value('date_range_end') !== FALSE) ?
+							$this->P->value('date_range_end', 'ymd') :
 							$this->P->value('date_range_start', 'ymd');
-							
+
 			$temp		= new Calendar_event($edata, $start_ymd, $end_ymd);
-			
+
 			if (! empty($temp->dates))
 			{
 				$temp->prepare_for_output();
@@ -1034,15 +1049,15 @@ class Calendar extends Module_builder_calendar
 					{
 						foreach ($times as $range => $data)
 						{
-							if ($data['end_date']['ymd'].$data['end_date']['time'] < 
-								$this->P->value('date_range_start', 'ymd') . 
+							if ($data['end_date']['ymd'].$data['end_date']['time'] <
+								$this->P->value('date_range_start', 'ymd') .
 								$this->P->value('date_range_start', 'time'))
-							{								
+							{
 								unset($temp->dates[$ymd][$range]);
 							}
 
-							elseif ($data['date']['ymd'].$data['date']['time'] > 
-									$this->P->value('date_range_end', 'ymd') . 
+							elseif ($data['date']['ymd'].$data['date']['time'] >
+									$this->P->value('date_range_end', 'ymd') .
 									$this->P->value('date_range_end', 'time'))
 							{
 								unset($temp->dates[$ymd][$range]);
@@ -1083,18 +1098,18 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		$calendars = $this->data->fetch_calendar_data_by_id(array_keys($calendars));
-		
+
 		// -------------------------------------
 		//  Prep variable aliases
 		// -------------------------------------
 
-		$variables = array(	
+		$variables = array(
 			'title'			=> 'event_title',
 			'url_title'		=> 'event_url_title',
 			'entry_id'		=> 'event_id',
-			'author_id'    	=> 'event_author_id',
-			'author'    	=> 'event_author',
-			'status'    	=> 'event_status'
+			'author_id'		=> 'event_author_id',
+			'author'		=> 'event_author',
+			'status'		=> 'event_status'
 		);
 
 		// -------------------------------------
@@ -1102,13 +1117,13 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		$calendar_orderby_params = array(
-			'event_title',		
+			'event_title',
 			'event_start_date',
 			'event_start_hour',
 			'event_start_time',
 			'occurrence_start_date'
 		);
-		
+
 		$orders 				= explode('|', $this->P->value('orderby'));
 		$sorts 					= explode('|', $this->P->value('sort'));
 		$calendar_orders 		= array();
@@ -1124,7 +1139,7 @@ class Calendar extends Module_builder_calendar
 			}
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	remove non-existant entry ids first
 		//--------------------------------------------
 
@@ -1136,11 +1151,11 @@ class Calendar extends Module_builder_calendar
 			}
 		}
 
-		//--------------------------------------------  
-		//	calculate offset and event timeframe 
+		//--------------------------------------------
+		//	calculate offset and event timeframe
 		//	total before we parse tags
 		//--------------------------------------------
-		
+
 		$offset = ($this->P->value('event_offset') > 0) ? $this->P->value('event_offset') : 0;
 
 		$this->event_timeframe_total = count($channel->query->result) - $offset;
@@ -1154,12 +1169,12 @@ class Calendar extends Module_builder_calendar
 		foreach ($channel->query->result as $k => $row)
 		{
 
-			$channel->query->result[$k]['author'] = ($row['screen_name'] != '') ? 
-														$row['screen_name'] : 
+			$channel->query->result[$k]['author'] = ($row['screen_name'] != '') ?
+														$row['screen_name'] :
 														$row['username'];
-			
+
 			$channel->query->result[$k]['event_timeframe_total'] = $this->event_timeframe_total;
-			
+
 			$entry_id = $row['entry_id'];
 
 			// -------------------------------------
@@ -1212,7 +1227,7 @@ class Calendar extends Module_builder_calendar
 
 			if (isset($calendar_orders['event_start_date']))
 			{
-				$calendar_order_data['event_start_date'][$k] = 
+				$calendar_order_data['event_start_date'][$k] =
 					$events[$entry_id]->default_data['start_date'] .
 					$events[$entry_id]->default_data['start_time'];
 			}
@@ -1229,7 +1244,7 @@ class Calendar extends Module_builder_calendar
 				$calendar_order_data['occurrence_start_date'][$k] = $date.$time;
 			}
 
-			//--------------------------------------------  
+			//--------------------------------------------
 			//	sort by occurrence start time
 			//--------------------------------------------
 
@@ -1244,8 +1259,8 @@ class Calendar extends Module_builder_calendar
 					$calendar_order_data['event_start_time'][$k] = $events[$entry_id]->default_data['start_time'];
 				}
 			}
-			
-			//--------------------------------------------  
+
+			//--------------------------------------------
 			//	sort by occurrence start hour
 			//--------------------------------------------
 
@@ -1260,8 +1275,8 @@ class Calendar extends Module_builder_calendar
 					$calendar_order_data['event_start_hour'][$k] 	= substr($events[$entry_id]->default_data['start_time'], 0, 2);
 				}
 			}
-			
-			//--------------------------------------------  
+
+			//--------------------------------------------
 			//	sort by event title
 			//--------------------------------------------
 
@@ -1310,7 +1325,7 @@ class Calendar extends Module_builder_calendar
 				foreach ($events[$entry_id]->rules as $event_rule)
 				{
 					if ($event_rule['rule_type'] == '+' AND
-						($event_rule['repeat_years']  != 0 OR 
+						($event_rule['repeat_years']  != 0 OR
 						 $event_rule['repeat_months'] != 0 OR
 						 $event_rule['repeat_days']   != 0 OR
 						 $event_rule['repeat_weeks']  != 0)  AND
@@ -1321,12 +1336,12 @@ class Calendar extends Module_builder_calendar
 						$never_ending = $channel->query->result[$k]['event_never_ends'] = TRUE;
 						break;
 					}
-					
+
 				}
 			}
 
 			/*$never_ending = $channel->query->result[$k]['event_never_ends'] = (
-				$channel->query->result[$k]['event_last_date'] == 0 AND 
+				$channel->query->result[$k]['event_last_date'] == 0 AND
 				$channel->query->result[$k]['event_recurs'] == 'y'
 			);*/
 
@@ -1342,13 +1357,13 @@ class Calendar extends Module_builder_calendar
 					{
 						$key = 'calendar_'.$key;
 					}
-					
+
 					//add in calendar data
 					$channel->query->result[$k][$key] = $val;
-					
+
 					//really?
 					$channel->query->result[$k]['event_'.$key] = $val;
-				}				
+				}
 			}
 
 			// -------------------------------------
@@ -1365,7 +1380,7 @@ class Calendar extends Module_builder_calendar
 				}
 
 				if ($name == 'event_last_date')
-				{					
+				{
 					if ( ! empty($vals))
 					{
 						$this->CDT->change_ymd($channel->query->result[$k]['event_last_date']);
@@ -1373,21 +1388,21 @@ class Calendar extends Module_builder_calendar
 				}
 				elseif ($name == 'event_first_date')
 				{
-					$channel->query->result[$k]['event_first_date']	= $channel->query->result[$k]['event_start_ymd'];	
-									
+					$channel->query->result[$k]['event_first_date']	= $channel->query->result[$k]['event_start_ymd'];
+
 					if ( ! empty($vals))
 					{
 						$this->CDT->change_ymd($channel->query->result[$k]['event_first_date']);
 					}
 				}
-				
+
 				$which	= ($name == 'event_first_date' OR strpos($name, '_start_') !== FALSE) ? 'start' : 'end';
 				$year	= $events[$entry_id]->default_data[$which.'_year'];
 				$month	= $events[$entry_id]->default_data[$which.'_month'];
 				$day	= $events[$entry_id]->default_data[$which.'_day'];
 
-				$time 	= $events[$entry_id]->default_data[$which.'_time'];				
-				
+				$time 	= $events[$entry_id]->default_data[$which.'_time'];
+
 				if ($time == 0)
 				{
 					if ($which == 'start')
@@ -1407,47 +1422,47 @@ class Calendar extends Module_builder_calendar
 					$hour 	= substr($time, 0, strlen($time) - 2);
 				}
 
-				//year month and day are a tad fubar when 
+				//year month and day are a tad fubar when
 				//we are looking at a repeat occurence with an enddate
 				//because the end time is indeed correct, but end date
 				//is expected to be the end of all of the occurrences
 				//however, if this is never ending, thats different
-				
+
 				$end_time_dta 	= $this->CDT->datetime_array();
-				
-				if ( ! $never_ending AND 
+
+				if ( ! $never_ending AND
 					 $name = "event_last_date")
 				{
-					$real_end_date  = ($channel->query->result[$k]['event_last_date'] != 0) ? 
-										$channel->query->result[$k]['event_last_date'] : 			
+					$real_end_date  = ($channel->query->result[$k]['event_last_date'] != 0) ?
+										$channel->query->result[$k]['event_last_date'] :
 										$events[$entry_id]->default_data['end_date']['ymd'];
-					
-					
+
+
 					$end_time_year 	= substr($real_end_date, 0, 4);
 					$end_time_month = substr($real_end_date, 4, 2);
 					$end_time_day 	= substr($real_end_date, 6, 2);
-					
+
 					$this->CDT->change_datetime(
-						$end_time_year, 
-						$end_time_month, 
-						$end_time_day, 
-						$hour, 
+						$end_time_year,
+						$end_time_month,
+						$end_time_day,
+						$hour,
 						$minute
 					);
-					
+
 					$end_time_dta 	= $this->CDT->datetime_array();
 				}
 
 				$this->CDT->change_datetime($year, $month, $day, $hour, $minute);
 
 				foreach ($vals as $key => $format)
-				{		
-					//special treatment on end dates of occurrences if its not infinite			
+				{
+					//special treatment on end dates of occurrences if its not infinite
 					if ( ! $never_ending AND stristr($key, 'event_last_date'))
 					{
 						$channel->query->result[$k][$key] = $this->cdt_format_date_string(
-							$end_time_dta, 
-							$format, 
+							$end_time_dta,
+							$format,
 							'%'
 						);
 					}
@@ -1455,23 +1470,23 @@ class Calendar extends Module_builder_calendar
 					else
 					{
 						$channel->query->result[$k][$key] = $this->cdt_format_date_string(
-							$this->CDT->datetime_array(), 
-							$format, 
+							$this->CDT->datetime_array(),
+							$format,
 							'%'
 						);
 					}
 				}
 
-				
-				/*	
+
+				/*
 				$this->CDT->change_datetime($year, $month, $day, $hour, $minute);
-				
+
 				foreach ($vals as $key => $format)
-				{					
+				{
 
 					$channel->query->result[$k][$key] = $this->cdt_format_date_string(
-						$this->CDT->datetime_array(), 
-						$format, 
+						$this->CDT->datetime_array(),
+						$format,
 						'%'
 					);
 				}
@@ -1498,7 +1513,7 @@ class Calendar extends Module_builder_calendar
 //ee()->TMPL->log_item('Calendar: Weblog query is empty, bailing');
 			return $this->no_results();
 		}
-		
+
 		unset($CDT);
 
 		// -------------------------------------
@@ -1516,12 +1531,12 @@ class Calendar extends Module_builder_calendar
 			{
 				//add order array
 				$args[] =& $calendar_order_data[$k];
-				
+
 				//constant for order type
-				
+
 				//contants cannot be passed by ref because its not a variable
 				$temps[$k] = constant('SORT_'.strtoupper($v));
-				
+
 				$args[] =& $temps[$k];
 			}
 
@@ -1529,15 +1544,15 @@ class Calendar extends Module_builder_calendar
 			$args[] =& $channel->query->result;
 
 			call_user_func_array('array_multisort', $args);
-			
+
 			//cleanup
 			unset($args);
 			unset($temps);
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	pagination for the events tag
-		//--------------------------------------------  		
+		//--------------------------------------------
 		//	any tags using this might have different needs
 		//	so we only want to paginate for original events
 		//	tag usage
@@ -1547,13 +1562,13 @@ class Calendar extends Module_builder_calendar
 
 		//$this->event_timeframe_total = count($channel->query->result);
 
-		if ($this->parent_method === 'events' AND 
+		if ($this->parent_method === 'events' AND
 			$this->P->value('event_limit') > 0 AND
 			$this->event_timeframe_total > $this->P->value('event_limit'))
 		{
 			//get pagination info
 			$pagination_data = $this->universal_pagination(array(
-				'total_results'			=> $this->event_timeframe_total, 
+				'total_results'			=> $this->event_timeframe_total,
 				//had to remove this jazz before so it didn't get iterated over
 				'tagdata'				=> ee()->TMPL->tagdata . $this->paginate_tagpair_data,
 				'limit'					=> $this->P->value('event_limit'),
@@ -1561,11 +1576,26 @@ class Calendar extends Module_builder_calendar
 				'paginate_prefix'		=> 'calendar_'
 			));
 
+			// -------------------------------------------
+			// 'calendar_events_create_pagination' hook.
+			//  - Let devs maniuplate the pagination display
+
+			if (ee()->extensions->active_hook('calendar_events_create_pagination') === TRUE)
+			{
+				$pagination_data = ee()->extensions->call(
+					'calendar_events_create_pagination',
+					$this,
+					$pagination_data
+				);
+			}
+			//
+			// -------------------------------------------
+
 			//if we paginated, sort the data
 			if ($pagination_data['paginate'] === TRUE)
 			{
 				$this->paginate			= $pagination_data['paginate'];
-				$this->page_next		= $pagination_data['page_next']; 
+				$this->page_next		= $pagination_data['page_next'];
 				$this->page_previous	= $pagination_data['page_previous'];
 				$this->p_page			= $pagination_data['pagination_page'];
 				$this->current_page  	= $pagination_data['current_page'];
@@ -1578,7 +1608,7 @@ class Calendar extends Module_builder_calendar
 			}
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	event limiter
 		//--------------------------------------------
 
@@ -1593,17 +1623,24 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 		//  Apply event_limit="" parameter
 		// -------------------------------------
-		
+
 		if ($this->P->value('event_limit'))
-		{						
+		{
 			$channel->query->result	= array_slice(
-				$channel->query->result, 
-				$offset, 
+				$channel->query->result,
+				$offset,
 				$this->P->value('event_limit')
 			);
 		}
+		else if ($offset > 0)
+		{
+			$channel->query->result	= array_slice(
+				$channel->query->result,
+				$offset
+			);
+		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	offset too much? buh bye
 		//--------------------------------------------
 
@@ -1632,14 +1669,14 @@ class Calendar extends Module_builder_calendar
 		// --------------------------------------------
 		//  Typography
 		// --------------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			if ( ! class_exists('Typography'))
 			{
 				require PATH_CORE.'core.typography'.EXT;
 			}
-					
+
 			$channel->TYPE = new Typography;
 			$channel->TYPE->convert_curly = FALSE;
 		}
@@ -1662,7 +1699,7 @@ class Calendar extends Module_builder_calendar
 		ee()->TMPL->tagdata = str_replace('occurrence_count', $occurrence_hash, ee()->TMPL->tagdata);
 
 		//ee()->TMPL->log_item('Calendar: Parsing, via channel module');
-		
+
 		if (APP_VER < 2.0)
 		{
 			$channel->parse_weblog_entries();
@@ -1689,7 +1726,7 @@ class Calendar extends Module_builder_calendar
 				// -------------------------------------
 
 				foreach ($events as $k => $data)
-				{					
+				{
 					// -------------------------------------
 					//  Does this event have this var pair?
 					// -------------------------------------
@@ -1716,7 +1753,7 @@ class Calendar extends Module_builder_calendar
 			}
 		}
 
-		
+
 		// -------------------------------------
 		//  Paginate
 		// -------------------------------------
@@ -1761,8 +1798,8 @@ class Calendar extends Module_builder_calendar
 	public function occurrences()
 	{
 		//used for special cases *sigh*
-		$this->parent_method = 'occurrences';
-		
+		$this->parent_method = __FUNCTION__;
+
 		ee()->TMPL->tagdata = LD.'occurrences'.RD.ee()->TMPL->tagdata.LD.T_SLASH.'occurrences'.RD;
 		ee()->TMPL->var_pair['occurrences'] = FALSE;
 
@@ -1800,118 +1837,138 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		$disable = array(
-			'categories', 
-			'category_fields', 
-			'custom_fields', 
-			'member_data', 
-			'pagination', 
+			'categories',
+			'category_fields',
+			'custom_fields',
+			'member_data',
+			'pagination',
 			'trackbacks'
 		);
 
 		$params = array(
-			array(	'name' => 'category',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'site_id',
-					'required' => FALSE,
-					'type' => 'integer',
-					'min_value' => 1,
-					'multi' => TRUE,
-					'default' => $this->data->get_site_id()
-					),
-			array(	'name' => 'calendar_id',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'calendar_name',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_id',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_name',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'status',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE,
-					'default' => 'open'
-					),
-			array(	'name' => 'date_range_start',
-					'required' => FALSE,
-					'type' => 'date'
-					),
-			array(	'name' => 'date_range_end',
-					'required' => FALSE,
-					'type' => 'date',
-					//'default' => 'today'
-					),
-			array(	'name' => 'show_days',
-					'required' => FALSE,
-					'type' => 'integer',
-					'default' => 1
-					),
-			array(	'name' => 'show_weeks',
-					'required' => FALSE,
-					'type' => 'integer'
-					),
-			array(	'name' => 'show_months',
-					'required' => FALSE,
-					'type' => 'integer'
-					),
-			array(	'name' => 'show_years',
-					'required' => FALSE,
-					'type' => 'integer'
-					),
-			array(	'name' => 'time_range_start',
-					'required' => FALSE,
-					'type' => 'time',
-					'default' => '0000'
-					),
-			array(	'name' => 'time_range_end',
-					'required' => FALSE,
-					'type' => 'time',
-					'default' => '2400'
-					),
-			array(	'name' => 'day_limit',
-					'required' => FALSE,
-					'type' => 'integer',
-					'default' => '10'
-					),
-			array(	'name' => 'event_limit',
-					'required' => FALSE,
-					'type' => 'integer',
-					'default' => '0'
-					),
-			array(	'name' => 'first_day_of_week',
-					'required' => FALSE,
-					'type' => 'integer',
-					'default' => $this->first_day_of_week
-					),
-			array(	'name' => 'pad_short_weeks',
-					'required' => FALSE,
-					'type' => 'bool',
-					'default' => 'yes',
-					'allowed_values' => array('yes', 'no')
-					),
-			array(	'name' => 'enable',
-					'required' => FALSE,
-					'type' => 'string',
-					'default' => '',
-					'multi' => TRUE,
-					'allowed_values' => $disable
-					)
-			);
+			array(
+				'name' => 'category',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'site_id',
+				'required' => FALSE,
+				'type' => 'integer',
+				'min_value' => 1,
+				'multi' => TRUE,
+				'default' => $this->data->get_site_id()
+			),
+			array(
+				'name' => 'calendar_id',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'calendar_name',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'event_id',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'event_name',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'status',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE,
+				'default' => 'open'
+			),
+			array(
+				'name' => 'date_range_start',
+				'required' => FALSE,
+				'type' => 'date'
+			),
+			array(
+				'name' => 'date_range_end',
+				'required' => FALSE,
+				'type' => 'date',
+				//'default' => 'today'
+			),
+			array(
+				'name' => 'show_days',
+				'required' => FALSE,
+				'type' => 'integer',
+				'default' => 1
+				),
+			array(
+				'name' => 'show_weeks',
+				'required' => FALSE,
+				'type' => 'integer'
+			),
+			array(
+				'name' => 'show_months',
+				'required' => FALSE,
+				'type' => 'integer'
+			),
+			array(
+				'name' => 'show_years',
+				'required' => FALSE,
+				'type' => 'integer'
+			),
+			array(
+				'name' => 'time_range_start',
+				'required' => FALSE,
+				'type' => 'time',
+				'default' => '0000'
+			),
+			array(
+				'name' => 'time_range_end',
+				'required' => FALSE,
+				'type' => 'time',
+				'default' => '2359'
+			),
+			array(
+				'name' => 'day_limit',
+				'required' => FALSE,
+				'type' => 'integer',
+				'default' => '10'
+			),
+			array(
+				'name' => 'event_limit',
+				'required' => FALSE,
+				'type' => 'integer',
+				'default' => '0'
+			),
+			array(
+				'name' => 'first_day_of_week',
+				'required' => FALSE,
+				'type' => 'integer',
+				'default' => $this->first_day_of_week
+			),
+			array(
+				'name' => 'pad_short_weeks',
+				'required' => FALSE,
+				'type' => 'bool',
+				'default' => 'yes',
+				'allowed_values' => array('yes', 'no')
+			),
+			array(
+				'name' => 'enable',
+				'required' => FALSE,
+				'type' => 'string',
+				'default' => '',
+				'multi' => TRUE,
+				'allowed_values' => $disable
+			)
+		);
 
 		//ee()->TMPL->log_item('Calendar: Processing parameters');
 
@@ -1927,11 +1984,14 @@ class Calendar extends Module_builder_calendar
 		//  Let's go build us a gosh darn calendar!
 		// -------------------------------------
 
+		$this->parent_method = __FUNCTION__;
+
 		return $this->build_calendar();
 	}
 	/* END cal() */
 
-		// --------------------------------------------------------------------
+
+	// --------------------------------------------------------------------
 
 	/**
 	 * Output a calendar of a day's events
@@ -1952,73 +2012,92 @@ class Calendar extends Module_builder_calendar
 		//  Prep the parameters
 		// -------------------------------------
 
-		$disable = array('categories', 'category_fields', 'custom_fields', 'member_data', 'pagination', 'trackbacks');
+		$disable = array(
+			'categories',
+			'category_fields',
+			'custom_fields',
+			'member_data',
+			'pagination',
+			'trackbacks'
+		);
 
 		$params = array(
-			array(	'name' => 'category',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'site_id',
-					'required' => FALSE,
-					'type' => 'integer',
-					'min_value' => 1,
-					'multi' => TRUE,
-					'default' => $this->data->get_site_id()
-					),
-			array(	'name' => 'calendar_id',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'calendar_name',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_id',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_name',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_limit',
-					'required' => FALSE,
-					'type' => 'integer'
-					),
-			array(	'name' => 'status',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE,
-					'default' => 'open'
-					),
-			array(	'name' => 'date_range_start',
-					'required' => FALSE,
-					'type' => 'date'
-					),
-			array(	'name' => 'time_range_start',
-					'required' => FALSE,
-					'type' => 'time',
-					'default' => '0000'
-					),
-			array(	'name' => 'time_range_end',
-					'required' => FALSE,
-					'type' => 'time',
-					'default' => '2400'
-					),
-			array(	'name' => 'enable',
-					'required' => FALSE,
-					'type' => 'string',
-					'default' => '',
-					'multi' => TRUE,
-					'allowed_values' => $disable
-					)
-			);
+			array(
+				'name'				=> 'category',
+				'required'			=> FALSE,
+				'type'				=> 'string',
+				'multi'				=> TRUE
+			),
+			array(
+				'name'				=> 'site_id',
+				'required'			=> FALSE,
+				'type'				=> 'integer',
+				'min_value'			=> 1,
+				'multi'				=> TRUE,
+				'default'			=> $this->data->get_site_id()
+			),
+			array(
+				'name'				=> 'calendar_id',
+				'required'			=> FALSE,
+				'type'				=> 'string',
+				'multi'				=> TRUE
+			),
+			array(
+				'name'				=> 'calendar_name',
+				'required'			=> FALSE,
+				'type'				=> 'string',
+				'multi'				=> TRUE
+			),
+			array(
+				'name'				=> 'event_id',
+				'required'			=> FALSE,
+				'type'				=> 'string',
+				'multi'				=> TRUE
+			),
+			array(
+				'name'				=> 'event_name',
+				'required'			=> FALSE,
+				'type'				=> 'string',
+				'multi'				=> TRUE
+			),
+			array(
+				'name'				=> 'event_limit',
+				'required'			=> FALSE,
+				'type'				=> 'integer'
+			),
+			array(
+				'name'				=> 'status',
+				'required'			=> FALSE,
+				'type'				=> 'string',
+				'multi'				=> TRUE,
+				'default'			=> 'open'
+			),
+			array(
+				'name'				=> 'date_range_start',
+				'required'			=> FALSE,
+				'type'				=> 'date'
+			),
+			array(
+				'name'				=> 'time_range_start',
+				'required'			=> FALSE,
+				'type'				=> 'time',
+				'default'			=> '0000'
+			),
+			array(
+				'name'				=> 'time_range_end',
+				'required'			=> FALSE,
+				'type'				=> 'time',
+				'default'			=> '2400'
+			),
+			array(
+				'name'				=> 'enable',
+				'required'			=> FALSE,
+				'type'				=> 'string',
+				'default'			=> '',
+				'multi'				=> TRUE,
+				'allowed_values' 	=> $disable
+			)
+		);
 
 		//ee()->TMPL->log_item('Calendar: Processing parameters');
 
@@ -2036,17 +2115,30 @@ class Calendar extends Module_builder_calendar
 		//  Define our tagdata
 		// -------------------------------------
 
-		$find = array(	'EVENTS_PLACEHOLDER',
-						'{/',
-						'{',
-						'}'
-						);
-		$replace = array(	ee()->TMPL->tagdata,
-							LD.T_SLASH,
-							LD,
-							RD
-							);
-		ee()->TMPL->tagdata = str_replace($find, $replace, $this->view('day.html', array(), TRUE, CALENDAR_PATH_THEMES.'templates/day.html'));
+		$find = array(
+			'EVENTS_PLACEHOLDER',
+			'{/',
+			'{',
+			'}'
+		);
+
+		$replace = array(
+			ee()->TMPL->tagdata,
+			LD . T_SLASH,
+			LD,
+			RD
+		);
+
+		ee()->TMPL->tagdata = str_replace(
+			$find,
+			$replace,
+			$this->view(
+				'day.html',
+				array(),
+				TRUE,
+				$this->sc->addon_theme_path . 'templates/day.html'
+			)
+		);
 
 		// -------------------------------------
 		//  Tell TMPL what we're up to
@@ -2071,9 +2163,12 @@ class Calendar extends Module_builder_calendar
 		//  If you build it, they will know what's going on.
 		// -------------------------------------
 
+		$this->parent_method = __FUNCTION__;
+
 		return $this->build_calendar();
 	}
 	/* END day() */
+
 
 	// --------------------------------------------------------------------
 
@@ -2177,7 +2272,7 @@ class Calendar extends Module_builder_calendar
 							LD,
 							RD
 							);
-		ee()->TMPL->tagdata = str_replace($find, $replace, $this->view('day.html', array(), TRUE, CALENDAR_PATH_THEMES.'templates/day.html'));
+		ee()->TMPL->tagdata = str_replace($find, $replace, $this->view('day.html', array(), TRUE, $this->sc->addon_theme_path.'templates/day.html'));
 
 		// -------------------------------------
 		//  Tell TMPL what we're up to
@@ -2201,6 +2296,8 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 		//  If you build it, they will know what's going on.
 		// -------------------------------------
+
+		$this->parent_method = __FUNCTION__;
 
 		return $this->build_calendar();
 	}
@@ -2227,78 +2324,98 @@ class Calendar extends Module_builder_calendar
 		//  Prep the parameters
 		// -------------------------------------
 
-		$disable = array('categories', 'category_fields', 'custom_fields', 'member_data', 'pagination', 'trackbacks');
+		$disable = array(
+			'categories',
+			'category_fields',
+			'custom_fields',
+			'member_data',
+			'pagination',
+			'trackbacks'
+		);
 
 		$params = array(
-			array(	'name' => 'category',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'site_id',
-					'required' => FALSE,
-					'type' => 'integer',
-					'min_value' => 1,
-					'multi' => TRUE,
-					'default' => $this->data->get_site_id()
-					),
-			array(	'name' => 'calendar_id',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'calendar_name',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_id',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_name',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE
-					),
-			array(	'name' => 'event_limit',
-					'required' => FALSE,
-					'type' => 'integer'
-					),
-			array(	'name' => 'status',
-					'required' => FALSE,
-					'type' => 'string',
-					'multi' => TRUE,
-					'default' => 'open'
-					),
-			array(	'name' => 'date_range_start',
-					'required' => FALSE,
-					'type' => 'date'
-					),
-			array(	'name' => 'time_range_start',
-					'required' => FALSE,
-					'type' => 'time',
-					'default' => '0000'
-					),
-			array(	'name' => 'time_range_end',
-					'required' => FALSE,
-					'type' => 'time',
-					'default' => '2400'
-					),
-			array(	'name' => 'enable',
-					'required' => FALSE,
-					'type' => 'string',
-					'default' => '',
-					'multi' => TRUE,
-					'allowed_values' => $disable
-					),
-			array(	'name' => 'first_day_of_week',
-					'required' => FALSE,
-					'type' => 'integer',
-					'default' => $this->first_day_of_week
-					)
-			);
+			array(
+				'name' => 'category',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'site_id',
+				'required' => FALSE,
+				'type' => 'integer',
+				'min_value' => 1,
+				'multi' => TRUE,
+				'default' => $this->data->get_site_id()
+			),
+			array(
+				'name' => 'calendar_id',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'calendar_name',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'event_id',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'event_name',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE
+			),
+			array(
+				'name' => 'event_limit',
+				'required' => FALSE,
+				'type' => 'integer'
+			),
+			array(
+				'name' => 'status',
+				'required' => FALSE,
+				'type' => 'string',
+				'multi' => TRUE,
+				'default' => 'open'
+			),
+			array(
+				'name' => 'date_range_start',
+				'required' => FALSE,
+				'type' => 'date'
+			),
+			array(
+				'name' => 'time_range_start',
+				'required' => FALSE,
+				'type' => 'time',
+				'default' => '0000'
+			),
+			array(
+				'name' => 'time_range_end',
+				'required' => FALSE,
+				'type' => 'time',
+				'default' => '2400'
+			),
+			array(
+				'name' => 'enable',
+				'required' => FALSE,
+				'type' => 'string',
+				'default' => '',
+				'multi' => TRUE,
+				'allowed_values' => $disable
+			),
+			array(
+				'name' => 'first_day_of_week',
+				'required' => FALSE,
+				'type' => 'integer',
+				'default' => $this->first_day_of_week
+			)
+		);
 
 		//ee()->TMPL->log_item('Calendar: Processing parameters');
 
@@ -2316,12 +2433,26 @@ class Calendar extends Module_builder_calendar
 		}
 		else
 		{
-			$this->CDT->change_date($this->P->value('date_range_start', 'year'), $this->P->value('date_range_start', 'month'), $this->P->value('date_range_start', 'day'));
+			$this->CDT->change_date(
+				$this->P->value('date_range_start', 'year'),
+				$this->P->value('date_range_start', 'month'),
+				$this->P->value('date_range_start', 'day')
+			);
 		}
 
-		if ($this->P->value('date_range_start', 'day_of_week') != $this->first_day_of_week)
+		$drs_dow = $this->P->value('date_range_start', 'day_of_week');
+
+		if ($drs_dow != $this->first_day_of_week)
 		{
-			$offset = ($this->P->value('date_range_start', 'day_of_week')  > $this->first_day_of_week) ? $this->P->value('date_range_start', 'day_of_week') - $this->first_day_of_week  : 7 - ($this->first_day_of_week - $this->P->value('date_range_start', 'day_of_week'));
+			if ($drs_dow > $this->first_day_of_week)
+			{
+				$offset = ($drs_dow - $this->first_day_of_week);
+			}
+			else
+			{
+				$offset = (7 - ($this->first_day_of_week - $drs_dow));
+			}
+
 			$this->P->set('date_range_start', $this->CDT->add_day(-$offset));
 		}
 
@@ -2337,17 +2468,30 @@ class Calendar extends Module_builder_calendar
 		//  Define our tagdata
 		// -------------------------------------
 
-		$find = array(	'EVENTS_PLACEHOLDER',
-						'{/',
-						'{',
-						'}'
-						);
-		$replace = array(	ee()->TMPL->tagdata,
-							LD.T_SLASH,
-							LD,
-							RD
-							);
-		ee()->TMPL->tagdata = str_replace($find, $replace, $this->view('week.html', array(), TRUE, CALENDAR_PATH_THEMES.'templates/week.html'));
+		$find = array(
+			'EVENTS_PLACEHOLDER',
+			'{/',
+			'{',
+			'}'
+		);
+
+		$replace = array(
+			ee()->TMPL->tagdata,
+			LD.T_SLASH,
+			LD,
+			RD
+		);
+
+		ee()->TMPL->tagdata = str_replace(
+			$find,
+			$replace,
+			$this->view(
+				'week.html',
+				array(),
+				TRUE,
+				$this->sc->addon_theme_path . 'templates/week.html'
+			)
+		);
 
 		// -------------------------------------
 		//  Tell TMPL what we're up to
@@ -2377,9 +2521,12 @@ class Calendar extends Module_builder_calendar
 		//  If you build it, they will know what's going on.
 		// -------------------------------------
 
+		$this->parent_method = __FUNCTION__;
+
 		return $this->build_calendar();
 	}
-	/* END week() */
+	// END week()
+
 
 	// --------------------------------------------------------------------
 
@@ -2529,7 +2676,7 @@ class Calendar extends Module_builder_calendar
 							LD,
 							RD
 							);
-		ee()->TMPL->tagdata = str_replace($find, $replace, $this->view('month.html', array(), TRUE, CALENDAR_PATH_THEMES.'templates/month.html'));
+		ee()->TMPL->tagdata = str_replace($find, $replace, $this->view('month.html', array(), TRUE, $this->sc->addon_theme_path.'templates/month.html'));
 
 		// -------------------------------------
 		//  Tell TMPL what we're up to
@@ -2568,6 +2715,8 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 		//  If you build it, they will know what's going on.
 		// -------------------------------------
+
+		$this->parent_method = __FUNCTION__;
 
 		return $this->build_calendar();
 	}
@@ -2659,7 +2808,7 @@ class Calendar extends Module_builder_calendar
 					'required' => FALSE,
 					'type' => 'time',
 					'default' => '2400'
-					),					
+					),
 			array(	'name' => 'first_day_of_week',
 					'required' => FALSE,
 					'type' => 'integer',
@@ -2684,8 +2833,8 @@ class Calendar extends Module_builder_calendar
 
 		if ($this->P->value('date_range_start') === FALSE)
 		{
-			if ($this->P->value('start_date_segment') AND 
-				ee()->uri->segment($this->P->value('start_date_segment')) AND 
+			if ($this->P->value('start_date_segment') AND
+				ee()->uri->segment($this->P->value('start_date_segment')) AND
 				strstr(ee()->uri->segment($this->P->value('start_date_segment')), '-'))
 			{
 				list($year, $month) = explode('-', ee()->uri->segment($this->P->value('start_date_segment')));
@@ -2699,8 +2848,8 @@ class Calendar extends Module_builder_calendar
 		elseif ($this->P->value('date_range_start', 'day') > 1)
 		{
 			$this->P->set(
-				'date_range_start', 
-				$this->CDT->change_date($this->P->value('date_range_start', 'year'), 
+				'date_range_start',
+				$this->CDT->change_date($this->P->value('date_range_start', 'year'),
 				$this->P->value('date_range_start', 'month'), 1)
 			);
 		}
@@ -2718,24 +2867,24 @@ class Calendar extends Module_builder_calendar
 		//  Define our tagdata
 		// -------------------------------------
 
-		$find = array(	
+		$find = array(
 			'EVENTS_PLACEHOLDER',
 			'{/',
 			'{',
 			'}'
 		);
-		
-		$replace = array(	
+
+		$replace = array(
 			ee()->TMPL->tagdata,
 			LD.T_SLASH,
 			LD,
 			RD
 		);
-		
+
 		ee()->TMPL->tagdata = str_replace(
-			$find, 
-			$replace, 
-			$this->view('mini.html', array(), TRUE, CALENDAR_PATH_THEMES.'templates/mini.html')
+			$find,
+			$replace,
+			$this->view('mini.html', array(), TRUE, $this->sc->addon_theme_path.'templates/mini.html')
 		);
 
 		// -------------------------------------
@@ -2775,6 +2924,8 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 		//  If you build it, they will know what's going on.
 		// -------------------------------------
+
+		$this->parent_method = __FUNCTION__;
 
 		return $this->build_calendar();
 	}
@@ -2919,14 +3070,14 @@ class Calendar extends Module_builder_calendar
 		//	----------------------------------------
 		//	Invoke Channel class
 		//	----------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			if ( ! class_exists('Weblog') )
 			{
 				require PATH_MOD.'/weblog/mod.weblog'.EXT;
 			}
-	
+
 			$channel = new Weblog;
 		}
 		else
@@ -2935,22 +3086,22 @@ class Calendar extends Module_builder_calendar
 			{
 				require PATH_MOD.'/channel/mod.channel'.EXT;
 			}
-	
+
 			$channel = new Channel;
 		}
 
 		//default is 100 and that could limit events when there are very many to be shown
 		$channel->limit = 500;
-		
+
 		// --------------------------------------------
-        //  Invoke Pagination for EE 2.4 and Above
-        // --------------------------------------------
+		//  Invoke Pagination for EE 2.4 and Above
+		// --------------------------------------------
 
 		if (APP_VER >= '2.4.0')
 		{
 			ee()->load->library('pagination');
 			$channel->pagination = new Pagination_object('Channel');
-			
+
 			// Used by pagination to determine whether we're coming from the cache
 			$channel->pagination->dynamic_sql = FALSE;
 		}
@@ -2981,7 +3132,7 @@ class Calendar extends Module_builder_calendar
 			// -------------------------------------
 			//  Execute needed methods
 			// -------------------------------------
-	
+
 			if (APP_VER < 2.0)
 			{
 				$channel->fetch_custom_weblog_fields();
@@ -2990,13 +3141,13 @@ class Calendar extends Module_builder_calendar
 			{
 				$channel->fetch_custom_channel_fields();
 			}
-		
-	        $channel->fetch_custom_member_fields();
-			
+
+			$channel->fetch_custom_member_fields();
+
 			// --------------------------------------------
 			//  Pagination Tags Parsed Out
 			// --------------------------------------------
-			
+
 			if (APP_VER >= '2.4.0')
 			{
 				$channel->pagination->get_template();
@@ -3016,28 +3167,28 @@ class Calendar extends Module_builder_calendar
 			{
 				return $this->no_results();
 			}
-		
+
 			$channel->query = ee()->db->query($channel->sql);
-	
+
 			if ($channel->query->num_rows() == 0)
 			{
 	//ee()->TMPL->log_item('Calendar: Channel module says no results, bailing');
 				return $this->no_results();
 			}
-			
+
 			$channel->query->result	= $channel->query->result_array();
 
 			// --------------------------------------------
 			//  Typography
 			// --------------------------------------------
-			
+
 			if (APP_VER < 2.0)
 			{
 				if ( ! class_exists('Typography'))
 				{
 					require PATH_CORE.'core.typography'.EXT;
 				}
-						
+
 				$channel->TYPE = new Typography;
 				$channel->TYPE->text_format = 'none';
 				$channel->TYPE->convert_curly = FALSE;
@@ -3049,7 +3200,7 @@ class Calendar extends Module_builder_calendar
 				ee()->typography->text_format = 'none';
 				ee()->typography->convert_curly = FALSE;
 			}
-			
+
 			$no_parse = array('xhtml', 'br', 'none', 'lite');
 
 			// -------------------------------------
@@ -3059,7 +3210,7 @@ class Calendar extends Module_builder_calendar
 			foreach ($channel->query->result as $r => $row)
 			{
 				$channel->query->result[$r]['author'] = ($row['screen_name'] != '') ? $row['screen_name'] : $row['username'];
-				
+
 				foreach ($channel->cfields[$row['site_id']] as $k => $v)
 				{
 					if (in_array($k, $ignore_fields))
@@ -3088,7 +3239,7 @@ class Calendar extends Module_builder_calendar
 			//	We will reassign the $channel->query->result with our
 			//	reordered array of values. Thank you PHP for being so fast with array loops.
 			//	----------------------------------------
-	
+
 			if (APP_VER < 2.0)
 			{
 				$channel->query->result	= $channel->query->result;
@@ -3116,9 +3267,9 @@ class Calendar extends Module_builder_calendar
 			// -------------------------------------
 			//  Parse
 			// -------------------------------------
-	
+
 			//ee()->TMPL->log_item('Calendar: Parsing, via channel module');
-			
+
 			if (APP_VER < 2.0)
 			{
 				$channel->parse_weblog_entries();
@@ -3188,7 +3339,7 @@ class Calendar extends Module_builder_calendar
 			// -------------------------------------
 			//  Add _field_name and _field_format variables
 			// -------------------------------------
-	
+
 			if (APP_VER < 2.0)
 			{
 				$channel->fetch_custom_weblog_fields();
@@ -3197,7 +3348,7 @@ class Calendar extends Module_builder_calendar
 			{
 				$channel->fetch_custom_channel_fields();
 			}
-			
+
 			$fields = array();
 
 			foreach ($channel->cfields[$this->data->get_site_id()] as $k => $v)
@@ -3244,14 +3395,14 @@ class Calendar extends Module_builder_calendar
 		//	----------------------------------------
 		//	Invoke Channel standalone class
 		//	----------------------------------------
-		
+
 		if (APP_VER < 2.0)
 		{
 			if ( ! class_exists('Weblog_standalone'))
 			{
 				require_once PATH_MOD.'weblog/mod.weblog_standalone.php';
 			}
-	
+
 			$WS = new Weblog_standalone();
 			$output = $WS->entry_form($return_form, $captcha);
 		}
@@ -3261,7 +3412,7 @@ class Calendar extends Module_builder_calendar
 			{
 				require_once PATH_MOD.'channel/mod.channel_standalone.php';
 			}
-	
+
 			$CS = new Channel_standalone();
 			$output = $CS->entry_form($return_form, $captcha);
 		}
@@ -3284,13 +3435,13 @@ class Calendar extends Module_builder_calendar
 	public function date_widget($data = array())
 	{
 		$this->actions();
-		
-		$id = ee()->TMPL->fetch_param('event_id'); 
-				
+
+		$id = ee()->TMPL->fetch_param('event_id');
+
 		if ($id AND is_numeric($id) AND $id > 0)
 		{
 			$data = $this->data->fetch_event_data_for_view($id);
-			
+
 			$eoid = $this->data->get_event_entry_id_by_channel_entry_id($id);
 
 			if ($eoid != FALSE AND $eoid != $id)
@@ -3312,18 +3463,18 @@ class Calendar extends Module_builder_calendar
 				$temp = $this->data->get_calendar_id_by_event_entry_id($id);
 				$parent_calendar_id =  (isset($temp[$id]) ? $temp[$id] : 0);
 			}
-			
+
 			if ( $id != 0 AND
 				 $parent_calendar_id > 0 AND
 				 ! $this->EE->calendar_permissions->group_has_permission(
-					$this->EE->session->userdata['group_id'], 
+					$this->EE->session->userdata['group_id'],
 					$parent_calendar_id
 			))
 			{
 				return $this->EE->output->show_user_error(
 					 'general', array($this->EE->lang->line('invalid_calendar_permissions'))
 				);
-			}	
+			}
 		}
 
 
@@ -3368,8 +3519,8 @@ class Calendar extends Module_builder_calendar
 		return $date . '-' . $unique . ($this->num_to_letter(++$this->uid_counter));
 	}
 	//END makeUid
-	
-	
+
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -3382,15 +3533,15 @@ class Calendar extends Module_builder_calendar
 	 * @param	string		end minute
 	 * @return	bool
 	 */
-	
+
 	private function _is_all_day($start_hour, $start_minute, $end_hour, $end_minute)
 	{
-		return ($start_hour == 0 AND $start_minute == 0 AND 
-				(($end_hour == '23' AND $end_minute == '59') OR 
+		return ($start_hour == 0 AND $start_minute == 0 AND
+				(($end_hour == '23' AND $end_minute == '59') OR
 				 ($end_hour == '24' AND $end_minute == 0)));
 	}
 	//END _is_all_day
-	
+
 
 	// --------------------------------------------------------------------
 
@@ -3411,7 +3562,7 @@ class Calendar extends Module_builder_calendar
 		//  Some dummy tagdata we'll hand off to events()
 		// -------------------------------------
 
-		$vars = array(	
+		$vars = array(
 			'event_title'					=> 'title',
 			'event_id'						=> 'id',
 			'event_summary'					=> 'summary',
@@ -3430,7 +3581,7 @@ class Calendar extends Module_builder_calendar
 			'event_calendar_timezone'		=> 'timezone'
 		);
 
-		$rvars = array(	
+		$rvars = array(
 			'rule_type',
 			'rule_start_date',
 			'rule_repeat_years',
@@ -3445,11 +3596,11 @@ class Calendar extends Module_builder_calendar
 			'rule_stop_after'
 		);
 
-		$evars = array(	
+		$evars = array(
 			'exception_start_date format="%Y%m%dT%H%i00"'
 		);
 
-		$ovars = array(	
+		$ovars = array(
 			'occurrence_start_date format="%Y%m%dT%H%i00"',
 			'occurrence_end_date format="%Y%m%dT%H%i00"'
 		);
@@ -3459,11 +3610,11 @@ class Calendar extends Module_builder_calendar
 		ee()->TMPL->tagdata =	implode($s, array(
 			LD . 'event_title' . RD,
 			LD . 'event_id' . RD,
-			LD . 'if event_summary' . RD . 
-				LD . 'event_summary' . RD . 
+			LD . 'if event_summary' . RD .
+				LD . 'event_summary' . RD .
 				LD . '/if' . RD,
-			LD . 'if event_location' . RD . 
-				LD . 'event_location' . RD . 
+			LD . 'if event_location' . RD .
+				LD . 'event_location' . RD .
 				LD . '/if' . RD,
 			LD . 'event_start_date format="%Y"' . RD,
 			LD . 'event_start_date format="%m"' . RD,
@@ -3477,7 +3628,7 @@ class Calendar extends Module_builder_calendar
 			LD . 'event_end_date format="%i"' . RD,
 			LD . 'event_calendar_tz_offset' . RD,
 			LD . 'event_calendar_timezone' . RD,
-			'RULES' . 
+			'RULES' .
 				LD . 'if event_has_rules' . RD .
 				LD . 'rules' . RD .
 				LD . implode(RD . $r . LD, $rvars) . RD . '|' .
@@ -3494,7 +3645,7 @@ class Calendar extends Module_builder_calendar
 				LD . 'exceptions' . RD .
 				LD . implode(RD . $r . LD, $evars) . RD . '|' .
 				LD . T_SLASH . 'exceptions' . RD .
-				LD . '/if' . RD,				
+				LD . '/if' . RD,
 			$e
 		));
 
@@ -3504,7 +3655,7 @@ class Calendar extends Module_builder_calendar
 		ee()->TMPL->var_single 	= $tvars['var_single'];
 		ee()->TMPL->var_pair 	= $tvars['var_pair'];
 		ee()->TMPL->tagdata 	= ee()->functions->prep_conditionals(
-			ee()->TMPL->tagdata, 
+			ee()->TMPL->tagdata,
 			array_keys($vars)
 		);
 
@@ -3534,34 +3685,34 @@ class Calendar extends Module_builder_calendar
 		{
 			require_once CALENDAR_PATH_ASSETS.'icalcreator/iCalcreator.class.php';
 		}
-		
+
 		$ICAL = new vcalendar();
-		
+
 		//we are setting this manually because we need individual ones for each event for this to work
 		//$ICAL->setConfig('unique_id', parse_url(ee()->config->item('site_url'), PHP_URL_HOST));
 		$host = parse_url(ee()->config->item('site_url'), PHP_URL_HOST);
-		
+
 
 		$vars = array_values($vars);
 
 		//ee()->TMPL->log_item('Calendar: Iterating through the events');
-		
+
 		foreach ($events as $key => $event)
 		{
 			if (trim($event) == '') continue;
 
 			$E 				= new vevent();
-	
+
 			$event 			= explode($s, $event);
 			$rules 			= '';
 			$occurrences 	= '';
-			$exceptions 	= '';			
-			
+			$exceptions 	= '';
+
 			foreach ($event as $k => $v)
 			{
 				if (isset($vars[$k]))
 				{
-					//--------------------------------------------  
+					//--------------------------------------------
 					//	Makes the local vars from above, if available:
 					// 	$title, $summary, $location,
 					//  $start_year, $start_month, $start_day,
@@ -3569,7 +3720,7 @@ class Calendar extends Module_builder_calendar
 					//  $end_month, $end_day, $end_hour,
 					// 	$end_minute, $tz_offset, $timezone
 					//--------------------------------------------
-					
+
 					$$vars[$k] = $v;
 				}
 				elseif (substr($v, 0, 5) == 'RULES')
@@ -3591,61 +3742,69 @@ class Calendar extends Module_builder_calendar
 			// -------------------------------------
 
 			if ($key == 0)
-			{	
+			{
 				// -------------------------------------
 				//  Convert calendar_name to calendar_id
 				// -------------------------------------
 
-				if ($this->P->value('calendar_id') == '' AND 
+				if ($this->P->value('calendar_id') == '' AND
 					$this->P->value('calendar_name') != '')
 				{
 					$ids = $this->data->get_calendar_id_from_name(
-						$this->P->value('calendar_name'), 
-						NULL, 
+						$this->P->value('calendar_name'),
+						NULL,
 						$this->P->params['calendar_name']['details']['not']
 					);
 
 					$this->P->set('calendar_id', implode('|', $ids));
 				}
-				
-				//--------------------------------------------  
-				//	lets try to get the timezone from the 
+
+				//--------------------------------------------
+				//	lets try to get the timezone from the
 				//	passed calendar ID if there is one
 				//--------------------------------------------
-				
+
 				$cal_timezone 	= FALSE;
 				$cal_tz_offset 	= FALSE;
-				
+
 				if ($this->P->value('calendar_id') != '')
 				{
 					$sql = "SELECT 	tz_offset, timezone
 							FROM	exp_calendar_calendars
-							WHERE 	calendar_id 
+							WHERE 	calendar_id
 							IN 		(" . ee()->db->escape_str(
-											implode(',', 
-												explode('|', 
+											implode(',',
+												explode('|',
 													$this->P->value('calendar_id')
 												)
 											)
-										) . 
+										) .
 									")
 							LIMIT	1";
-							
+
 					$cal_tz_query = ee()->db->query($sql);
-					
+
 					if ($cal_tz_query->num_rows() > 0)
 					{
 						$cal_timezone 	= $cal_tz_query->row('timezone');
 						$cal_tz_offset 	= $cal_tz_query->row('tz_offset');
-					}		
+					}
 				}
-				
+
 				//last resort, we get it from the current event
-														
+
 				$T = new vtimezone();
 				$T->setProperty('tzid', ($cal_timezone ? $cal_timezone : $timezone));
 				$T->setProperty('tzoffsetfrom', '+0000');
-				$T->setProperty('tzoffsetto', ($cal_tz_offset ? $cal_tz_offset : $tz_offset));
+
+				$tzoffsetto = ($cal_tz_offset ? $cal_tz_offset : $tz_offset);
+
+				if ($tzoffsetto === '0000')
+				{
+					$tzoffsetto = '+0000';
+				}
+
+				$T->setProperty('tzoffsetto', $tzoffsetto);
 				$ICAL->setComponent($T);
 			}
 
@@ -3680,7 +3839,7 @@ class Calendar extends Module_builder_calendar
 			foreach ($exceptions as $k => $exc)
 			{
 				$exc = trim($exc);
-				
+
 				if ($exc == '') continue;
 
 				$exdata[] = $exc;
@@ -3693,12 +3852,12 @@ class Calendar extends Module_builder_calendar
 			$add_rules 	= FALSE;
 			$erules 	= array();
 			$rules 		= explode('|', rtrim($rules, '|'));
-			
+
 			foreach ($rules as $rule)
 			{
 				$temp = explode($r, $rule);
 				$rule = array();
-				
+
 				foreach ($temp as $k => $v)
 				{
 					if ($v != FALSE) $add_rules = TRUE;
@@ -3708,11 +3867,11 @@ class Calendar extends Module_builder_calendar
 				if ($add_rules === TRUE)
 				{
 					$temp = array();
-					
+
 					if ($rule['repeat_years'] > 0)
 					{
 						$temp['FREQ'] = 'YEARLY';
-						
+
 						if ($rule['repeat_years'] > 1)
 						{
 							$temp['INTERVAL'] = $rule['repeat_years'];
@@ -3721,7 +3880,7 @@ class Calendar extends Module_builder_calendar
 					elseif ($rule['repeat_months'] > 0)
 					{
 						$temp['FREQ'] = 'MONTHLY';
-						
+
 						if ($rule['repeat_months'] > 1)
 						{
 							$temp['INTERVAL'] = $rule['repeat_months'];
@@ -3730,7 +3889,7 @@ class Calendar extends Module_builder_calendar
 					elseif ($rule['repeat_weeks'] > 0)
 					{
 						$temp['FREQ'] = 'WEEKLY';
-						
+
 						if ($rule['repeat_weeks'] > 1)
 						{
 							$temp['INTERVAL'] = $rule['repeat_weeks'];
@@ -3739,7 +3898,7 @@ class Calendar extends Module_builder_calendar
 					elseif ($rule['repeat_days'] > 0)
 					{
 						$temp['FREQ'] = 'DAILY';
-						
+
 						if ($rule['repeat_days'] > 1)
 						{
 							$temp['INTERVAL'] = $rule['repeat_days'];
@@ -3770,11 +3929,11 @@ class Calendar extends Module_builder_calendar
 					if ($rule['days_of_month'] > '')
 					{
 						//this flips keys to make 'v' => 30, etc
-						$d = array_flip(array( 
-							1, 2, 3, 4, 5, 6, 7, 8, 9, 
-							'A', 'B', 'C', 'D', 'E', 'F', 
-							'G', 'H', 'I', 'J', 'K', 'L', 
-							'M', 'N', 'O', 'P', 'Q', 'R', 
+						$d = array_flip(array(
+							1, 2, 3, 4, 5, 6, 7, 8, 9,
+							'A', 'B', 'C', 'D', 'E', 'F',
+							'G', 'H', 'I', 'J', 'K', 'L',
+							'M', 'N', 'O', 'P', 'Q', 'R',
 							'S', 'T', 'U', 'V'
 						));
 
@@ -3812,7 +3971,7 @@ class Calendar extends Module_builder_calendar
 							}
 						}
 						else
-						{							
+						{
 							foreach ($dows as $dow)
 							{
 								$temp['BYDAY'][] = $d[array_search($dow, $d_letter)];
@@ -3845,19 +4004,19 @@ class Calendar extends Module_builder_calendar
 			//if this is all day we need to add the dates as params to the dstart and end items
 			if ($this->_is_all_day($start_hour, $start_minute, $end_hour, $end_minute))
 			{
-				$E->setProperty( 
-					"dtstart" , 
-					array( 
-						'year' 	=> $start_year, 
-						'month' => $start_month, 
-						'day'	=> $start_day 
-					), 
-					array( 
-						'VALUE' => 'DATE' 
+				$E->setProperty(
+					"dtstart" ,
+					array(
+						'year' 	=> $start_year,
+						'month' => $start_month,
+						'day'	=> $start_day
+					),
+					array(
+						'VALUE' => 'DATE'
 					)
 				);
-				
-				//--------------------------------------------  
+
+				//--------------------------------------------
 				//	we need CDT so we can add a day
 				//	gcal, and ical are ok with this being the same day
 				//	stupid damned outlook barfs, hence the +1
@@ -3868,24 +4027,24 @@ class Calendar extends Module_builder_calendar
 				{
 					$this->load_calendar_datetime();
 				}
-				
+
 				$this->CDT->change_date(
 					$end_year,
 					$end_month,
 					$end_day
 				);
-				
+
 				$this->CDT->add_day();
-				
-				$E->setProperty( 
-					"dtend" , 
-					array( 
+
+				$E->setProperty(
+					"dtend" ,
+					array(
 						'year' 	=> $this->CDT->year,
 						'month' => $this->CDT->month,
-						'day'	=> $this->CDT->day    
-					), 
-					array( 
-						'VALUE' => 'DATE' 
+						'day'	=> $this->CDT->day
+					),
+					array(
+						'VALUE' => 'DATE'
 					)
 				);
 			}
@@ -3896,7 +4055,7 @@ class Calendar extends Module_builder_calendar
 			}
 
 			$E->setProperty('summary', $title);
-			
+
 			if ( ! empty($erules))
 			{
 				foreach ($erules as $rule)
@@ -3904,24 +4063,24 @@ class Calendar extends Module_builder_calendar
 					$E->setProperty('rrule', $rule);
 				}
 			}
-			
+
 			$extras = array();
 			$edits	= array();
-			
+
 			if ( ! empty($odata))
 			{
 				$query = ee()->db->query(
-					"SELECT * 
+					"SELECT *
 					 FROM	exp_calendar_events_occurrences
 					 WHERE	event_id = " . ee()->db->escape_str($id)
 				);
-				
+
 				foreach ($query->result_array() as $row)
 				{
 					//fix blank times
 					$row['start_time'] 	= ($row['start_time'] == 0) ? '0000' 	: $row['start_time'];
 					$row['end_time'] 	= ($row['end_time'] == 0) ? '2400' 		: $row['end_time'];
-					
+
 					//looks like an edited occurrence
 					//edits without rules arent really edits.
 					if ($row['event_id'] != $row['entry_id'] AND empty($rules))
@@ -3936,59 +4095,59 @@ class Calendar extends Module_builder_calendar
 					}
 				}
 			}
-			
+
 			if ( ! empty($exdata))
 			{
 				$E->setProperty('exdate', $exdata);
 			}
-			
+
 			if ($description != '') $E->setProperty('description', $description);
 			if ($location != '') $E->setProperty('location', $location);
 
 
 			$E->setProperty( "uid", $this->make_uid() . '@' . $host);
 			$ICAL->setComponent($E);
-			
-			//--------------------------------------------  
+
+			//--------------------------------------------
 			//	remove rules for subsequent items
 			//--------------------------------------------
-			
+
 			while( $E->deleteProperty( "RRULE" )) continue;
-			
+
 			//edits must come right after
 			if ( ! empty($edits))
 			{
 				foreach ($edits as $edit)
-				{					
+				{
 					$edit_date = array(
-						"year" 	=> $edit['start_year'], 
-						"month" => $edit['start_month'], 
-						"day" 	=> $edit['start_day'] , 
-						"hour" 	=> substr($edit['start_time'], 0, 2) , 
+						"year" 	=> $edit['start_year'],
+						"month" => $edit['start_month'],
+						"day" 	=> $edit['start_day'] ,
+						"hour" 	=> substr($edit['start_time'], 0, 2) ,
 						"min" 	=> substr($edit['start_time'], 2, 2)
 					);
-					
+
 					//if this is all day we need to add the dates as params to the dstart and end items
 					if ($this->_is_all_day(
-						substr($edit['start_time'], 0, 2), 
-						substr($edit['start_time'], 2, 2), 
+						substr($edit['start_time'], 0, 2),
+						substr($edit['start_time'], 2, 2),
 						substr($edit['end_time'], 0, 2),
 						substr($edit['end_time'], 2, 2)
 					  ))
 					{
-						$E->setProperty( 
-							"dtstart" , 
-							array( 
+						$E->setProperty(
+							"dtstart" ,
+							array(
 								'year' 	=> $edit['start_year'],
-								'month' => $edit['start_month'], 
-								'day'	=> $edit['start_day'] 
-							), 
-							array( 
-								'VALUE' => 'DATE' 
+								'month' => $edit['start_month'],
+								'day'	=> $edit['start_day']
+							),
+							array(
+								'VALUE' => 'DATE'
 							)
 						);
 
-						//--------------------------------------------  
+						//--------------------------------------------
 						//	we need CDT so we can add a day
 						//	gcal, and ical are ok with this being the same day
 						//	stupid damned outlook barfs, hence the +1
@@ -3999,91 +4158,91 @@ class Calendar extends Module_builder_calendar
 						{
 							$this->load_calendar_datetime();
 						}
-						
+
 						$this->CDT->change_date(
 							$edit['end_year'],
 							$edit['end_month'],
 							$edit['end_day']
 						);
-						
+
 						$this->CDT->add_day();
 
-						$E->setProperty( 
-							"dtend" , 
-							array( 
+						$E->setProperty(
+							"dtend" ,
+							array(
 								'year' 	=> $this->CDT->year,
-								'month' => $this->CDT->month, 
+								'month' => $this->CDT->month,
 								'day'	=> $this->CDT->day
-							), 
-							array( 
-								'VALUE' => 'DATE' 
+							),
+							array(
+								'VALUE' => 'DATE'
 							)
 						);
 					}
 					else
 					{
 						$E->setProperty(
-							'dtstart', 
-							$edit_date['year'], 
-							$edit_date['month'], 
-							$edit_date['day'], 
-							$edit_date['hour'], 
-							$edit_date['min'], 
+							'dtstart',
+							$edit_date['year'],
+							$edit_date['month'],
+							$edit_date['day'],
+							$edit_date['hour'],
+							$edit_date['min'],
 							00
 						);
 
 						$E->setProperty(
-							'dtend', 
-							$edit['end_year'], 
-							$edit['end_month'], 
-							$edit['end_day'] , 
+							'dtend',
+							$edit['end_year'],
+							$edit['end_month'],
+							$edit['end_day'] ,
 							substr($edit['end_time'], 0, 2),
-							substr($edit['end_time'], 2, 2),   
+							substr($edit['end_time'], 2, 2),
 							00
 						);
 					}
-										
+
 					$E->setProperty( "RECURRENCE-ID", $edit_date);
 					$E->setProperty( "uid", $this->make_uid() . '@' . $host);
-					
+
 					$ICAL->setComponent($E);
-				}	
-				
+				}
+
 				//cleanup
 				$E->deleteProperty("RECURRENCE-ID");
-				
+
 				$E->setProperty('dtstart', $start_year, $start_month, $start_day, $start_hour, $start_minute, 00);
 				$E->setProperty('dtend', $end_year, $end_month, $end_day, $end_hour, $end_minute, 00);
 			}
-			
+
 			// these random ass add-in dates are non-standard to most cal creation
 			// and need to be treated seperately as lumping don't work, dog
 			if ( ! empty($extras))
 			{
 				foreach ($extras as $extra)
-				{	
-					
+				{
+
 					//if this is all day we need to add the dates as params to the dstart and end items
 					if ($this->_is_all_day(
-						substr($extra['start_time'], 0, 2), 
-						substr($extra['start_time'], 2, 2), 
+						substr($extra['start_time'], 0, 2),
+						substr($extra['start_time'], 2, 2),
 						substr($extra['end_time'], 0, 2),
 						substr($extra['end_time'], 2, 2)
 					  ))
 					{
-						$E->setProperty( 
-							"dtstart" , 
-							array( 
+						$E->setProperty(
+							"dtstart" ,
+							array(
 								'year' 	=> $extra['start_year'],
-								'month' => $extra['start_month'], 
-								'day'	=> $extra['start_day'] 
-							), 
-							array( 
-								'VALUE' => 'DATE' 
+								'month' => $extra['start_month'],
+								'day'	=> $extra['start_day']
+							),
+							array(
+								'VALUE' => 'DATE'
 							)
 						);
 
-						//--------------------------------------------  
+						//--------------------------------------------
 						//	we need CDT so we can add a day
 						//	gcal, and ical are ok with this being the same day
 						//	stupid damned outlook barfs, hence the +1
@@ -4094,54 +4253,54 @@ class Calendar extends Module_builder_calendar
 						{
 							$this->load_calendar_datetime();
 						}
-					
+
 						$this->CDT->change_date(
 							$extra['end_year'],
 							$extra['end_month'],
 							$extra['end_day']
 						);
-					
+
 						$this->CDT->add_day();
 
-						$E->setProperty( 
-							"dtend" , 
-							array( 
+						$E->setProperty(
+							"dtend" ,
+							array(
 								'year' 	=> $this->CDT->year,
 								'month' => $this->CDT->month,
 								'day'	=> $this->CDT->day
-							),             
-							array( 
-								'VALUE' => 'DATE' 
+							),
+							array(
+								'VALUE' => 'DATE'
 							)
 						);
 					}
 					else
-					{														
+					{
 						$E->setProperty(
-							'dtstart', 
-							$extra['start_year'], 
-							$extra['start_month'],               
-							$extra['start_day'] , 
+							'dtstart',
+							$extra['start_year'],
+							$extra['start_month'],
+							$extra['start_day'] ,
 							substr($extra['start_time'], 0, 2),
 							substr($extra['start_time'], 2, 2),
 							00
 						);
-					
+
 						$E->setProperty(
-							'dtend', 
-							$extra['end_year'], 
-							$extra['end_month'], 
-							$extra['end_day'] , 
+							'dtend',
+							$extra['end_year'],
+							$extra['end_month'],
+							$extra['end_day'] ,
 							substr($extra['end_time'], 0, 2),
-							substr($extra['end_time'], 2, 2),   
+							substr($extra['end_time'], 2, 2),
 							00
 						);
 					}
-					
+
 					$E->setProperty( "uid", $this->make_uid() . '@' . $host);
 					$ICAL->setComponent($E);
 				}
-				
+
 				//clean in case we need to add more later
 				$E->setProperty('dtstart', $start_year, $start_month, $start_day, $start_hour, $start_minute, 00);
 				$E->setProperty('dtend', $end_year, $end_month, $end_day, $end_hour, $end_minute, 00);
@@ -4430,21 +4589,24 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		$params = array(
-			array(	'name' => 'date_range_start',
-					'required' => FALSE,
-					'type' => 'date',
-					'default' => 'year-01-01'
-					),
-			array(	'name' => 'date_range_end',
-					'required' => FALSE,
-					'type' => 'date'
-					),
-			array(	'name' => 'limit',
-					'required' => FALSE,
-					'type' => 'integer',
-					'default' => 12
-					)
-			);
+			array(
+				'name'		=> 'date_range_start',
+				'required'	=> FALSE,
+				'type'		=> 'date',
+				'default'	=> 'year-01-01'
+			),
+			array(
+				'name'		=> 'date_range_end',
+				'required'	=> FALSE,
+				'type'		=> 'date'
+			),
+			array(
+				'name'		=> 'limit',
+				'required'	=> FALSE,
+				'type'		=> 'integer',
+				'default'	=> 12
+			)
+		);
 
 //ee()->TMPL->log_item('Calendar: Processing parameters');
 
@@ -4454,9 +4616,14 @@ class Calendar extends Module_builder_calendar
 
 		$this->CDT->change_ymd($this->P->value('date_range_start', 'ymd'));
 		$this->CDT->set_default($this->CDT->datetime_array());
+
 		if ($this->P->value('date_range_end') === FALSE)
 		{
-			$this->P->set('date_range_end', $this->CDT->add_month($this->P->value('limit')));
+			$this->P->set(
+				'date_range_end',
+				$this->CDT->add_month($this->P->value('limit'))
+			);
+
 			$this->CDT->reset();
 		}
 		else
@@ -4464,36 +4631,58 @@ class Calendar extends Module_builder_calendar
 			$this->P->set('limit', 9999);
 		}
 
-		$dir = ($this->P->value('date_range_end', 'ymd') > $this->P->value('date_range_start', 'ymd')) ? 1 : -1;
+		$dir = (
+			$this->P->value('date_range_end', 'ymd') >
+				$this->P->value('date_range_start', 'ymd')
+		) ? 1 : -1;
+
 		$output = '';
 		$count = 0;
 
 //ee()->TMPL->log_item('Calendar: Looping');
 
-		do {
-			$vars['conditional']	= array	(	'is_current_month'		=>	($this->CDT->year == $today['year'] AND $this->CDT->month == $today['month']) ? TRUE : FALSE,
-												'is_not_current_month'	=>	($this->CDT->year == $today['year'] AND $this->CDT->month == $today['month']) ? FALSE : TRUE,
-												'is_current_year'		=>	($this->CDT->year == $today['year']) ? TRUE : FALSE,
-												'is_not_current_year'	=>	($this->CDT->year == $today['year']) ? FALSE : TRUE
-											);
-			$vars['single']	= array(	
+		do
+		{
+			$vars['conditional']	= array(
+				'is_current_month'		=>	(
+					$this->CDT->year == $today['year'] AND
+					$this->CDT->month == $today['month']
+				),
+				'is_not_current_month'	=>	(
+					$this->CDT->year == $today['year'] AND
+					$this->CDT->month == $today['month']
+				) ? FALSE : TRUE,
+				'is_current_year'		=>	(
+					$this->CDT->year == $today['year']
+				) ? TRUE : FALSE,
+				'is_not_current_year'	=>	(
+					$this->CDT->year == $today['year']
+				) ? FALSE : TRUE
+			);
+
+			$vars['single']	= array(
 				'year'	=> $this->CDT->year,
 				'month'	=> $this->CDT->month
 			);
-			
-			$vars['date']	= array(	
+
+			$vars['date']	= array(
 				'month'			=> $this->CDT->datetime_array(),
 				'date'			=> $this->CDT->datetime_array(),
 			);
-			
+
 			$output .= $this->swap_vars($vars, ee()->TMPL->tagdata);
 			$this->CDT->add_month($dir);
 			$count++;
-		} while ($count < $this->P->value('limit') AND $this->CDT->ymd < $this->P->value('date_range_end', 'ymd'));
+		}
+		while (
+			$count < $this->P->value('limit') AND
+			$this->CDT->ymd < $this->P->value('date_range_end', 'ymd')
+		);
 
 		return $output;
 	}
-	/* END month_list() */
+	// END month_list()
+
 
 	// --------------------------------------------------------------------
 
@@ -4517,12 +4706,13 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		$params = array(
-			array(	'name' => 'base_date',
-					'required' => FALSE,
-					'type' => 'date',
-					'default' => 'today @ now'
-					)
-			);
+			array(
+				'name'		=> 'base_date',
+				'required'	=> FALSE,
+				'type'		=> 'date',
+				'default'	=> 'today @ now'
+			)
+		);
 
 		//ee()->TMPL->log_item('Calendar: Processing parameters');
 
@@ -4534,21 +4724,39 @@ class Calendar extends Module_builder_calendar
 
 		if ($this->P->value('base_date') !== FALSE)
 		{
-			$param = array(	'name' => 'output_date',
-							'required' => FALSE,
-							'type' => 'string',
-							'default' => $this->P->value('base_date', 'ymd') . ' @ ' . $this->P->value('base_date', 'time')
-							);
+			$param = array(
+				'name'		=> 'output_date',
+				'required'	=> FALSE,
+				'type'		=> 'string',
+				'default'	=>	$this->P->value('base_date', 'ymd') . ' @ ' .
+								$this->P->value('base_date', 'time')
+			);
+
 			$this->P->add_parameter('output_date', $param);
-			$this->CDT->set_default($this->P->value('base_date'), $this->P->value('base_date'));
+
+			$this->CDT->set_default(
+				$this->P->value('base_date'),
+				$this->P->value('base_date')
+			);
 
 			if ($this->P->value('output_date') !== FALSE)
 			{
 				if (strpos($this->P->value('output_date'), ' @ ') === FALSE)
 				{
-					$this->P->set('output_date', $this->P->value('output_date').' @ '.$this->P->value('base_date', 'time'));
+					$this->P->set(
+						'output_date',
+						$this->P->value('output_date') . ' @ ' .
+						$this->P->value('base_date', 'time')
+					);
 				}
-				$this->P->set('output_date', $this->actions->parse_text_date($this->P->value('output_date'), $this->CDT));
+
+				$this->P->set(
+					'output_date',
+					$this->actions->parse_text_date(
+						$this->P->value('output_date'),
+						$this->CDT
+					)
+				);
 			}
 			else
 			{
@@ -4557,25 +4765,28 @@ class Calendar extends Module_builder_calendar
 		}
 		else
 		{
-			$param = array(	
-				'name' 		=> 'output_date',
-				'required' 	=> FALSE,
-				'type' 		=> 'date',
-				'default' 	=> 'today @ now'
+			$param = array(
+				'name'		=> 'output_date',
+				'required'	=> FALSE,
+				'type'		=> 'date',
+				'default'	=> 'today @ now'
 			);
-			
+
 			$this->P->add_parameter('output_date', $param);
 		}
 
 //ee()->TMPL->log_item('Calendar: Output time');
 
-		$vars	= array('date'	=> array(	'date'		=> $this->P->value('output_date'),
-											'base_date'	=> $this->P->value('base_date')
-											));
+		$vars	= array(
+			'date'	=> array(
+				'date'		=> $this->P->value('output_date'),
+				'base_date'	=> $this->P->value('base_date')
+			)
+		);
 
 		return $this->swap_vars($vars, ee()->TMPL->tagdata);
 	}
-	/** END date() */
+	// END date()
 
 
 	// --------------------------------------------------------------------
@@ -4591,7 +4802,15 @@ class Calendar extends Module_builder_calendar
 	{
 		//ee()->TMPL->log_item('Calendar: Building calendar output');
 
-		$disable	= array('categories', 'category_fields', 'custom_fields', 'member_data', 'pagination', 'trackbacks');
+		$disable	= array(
+			'categories',
+			'category_fields',
+			'custom_fields',
+			'member_data',
+			'pagination',
+			'trackbacks'
+		);
+
 		$this->CDT->reset();
 		$today_ymd	= $this->CDT->ymd;
 
@@ -4602,7 +4821,7 @@ class Calendar extends Module_builder_calendar
 
 		//default off.
 		if ( $this->check_yes( ee()->TMPL->fetch_param('dynamic') ) )
-		{			
+		{
 			ee()->TMPL->tagparams['dynamic'] 	= (APP_VER < 2.0 ) ? 'on' : 'yes';
 		}
 		else
@@ -4630,57 +4849,64 @@ class Calendar extends Module_builder_calendar
 		$hash_week	= 'b657210371b3e2a6f955ef6a404689de'."\n";
 		$hash_month	= 'd03207661c36a3bfd43b9dd239e41676'."\n";
 		$hash_year	= '97a92770ab082652cf662bdacc311dff'."\n";
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	remove pagination before we start
 		//--------------------------------------------
-		
+
 		//has tags?
-		if (preg_match( 
-				"/" . LD . "calendar_paginate" . RD . "(.+?)" . 
-					  LD . preg_quote(T_SLASH, '/') . "calendar_paginate" . RD . "/s", 
-				$tagdata, 
+		if (preg_match(
+				"/" . LD . "calendar_paginate" . RD .
+					"(.+?)" .
+				LD . preg_quote(T_SLASH, '/') . "calendar_paginate" . RD . "/s",
+				$tagdata,
 				$match
 			))
-		{			
+		{
 			$this->paginate_tagpair_data	= $match[0];
 			$tagdata 						= str_replace( $match[0], '', $tagdata );
 		}
 		//prefix comes first
-		else if (preg_match( 
-				"/" . LD . "paginate" . RD . "(.+?)" . LD . preg_quote(T_SLASH, '/') . "paginate" . RD . "/s", 
-				$tagdata, 
+		else if (preg_match(
+				"/" . LD . "paginate" . RD .
+					"(.+?)" .
+				LD . preg_quote(T_SLASH, '/') . "paginate" . RD . "/s",
+				$tagdata,
 				$match
 			))
-		{			
+		{
 			$this->paginate_tagpair_data	= $match[0];
 			$tagdata 						= str_replace( $match[0], '', $tagdata );
 		}
-		
+
 		// -------------------------------------
 		//  Replace days of the week first, cuz they're easy
 		// -------------------------------------
 
+
 		if (isset(ee()->TMPL->var_pair['display_each_day_of_week']))
 		{
 			preg_match(
-				'/' . LD . 'display_each_day_of_week' . RD . '(.*?)' . 
-					LD . preg_quote(T_SLASH, '/') . 'display_each_day_of_week' . RD . '/s', 
-					$tagdata, 
-					$match
+				'/' . LD . 'display_each_day_of_week' . RD .
+					'(.*?)' .
+				LD . preg_quote(T_SLASH, '/') . 'display_each_day_of_week' . RD . '/s',
+				$tagdata,
+				$match
 			);
-			
+
 			if (isset($match[1]))
 			{
 				$dow_output		= '';
 				$vars			= array();
 				$current_dow	= $this->CDT->day_of_week;
-				
+
 				$this->CDT->change_ymd($this->P->value('date_range_start', 'ymd'));
 
 				if ($this->CDT->day_of_week != $this->first_day_of_week)
 				{
-					$this->CDT->add_day($this->first_day_of_week - $this->CDT->day_of_week);
+					$this->CDT->add_day(
+						$this->first_day_of_week - $this->CDT->day_of_week
+					);
 				}
 
 				for ($i = 0; $i < 7; $i++)
@@ -4690,21 +4916,24 @@ class Calendar extends Module_builder_calendar
 						$this->CDT->add_day();
 					}
 
-					$vars['conditional'] = array(	
-						'day_of_week_is_weekend'	=> ($this->CDT->day_of_week == 0 OR 
-														$this->CDT->day_of_week == 6) ? TRUE : FALSE,
-						
-						'day_of_week_is_current'	=> ($this->CDT->day_of_week == $current_dow) ? TRUE : FALSE
+					$vars['conditional'] = array(
+						'day_of_week_is_weekend'	=> (
+							$this->CDT->day_of_week == 0 OR
+							$this->CDT->day_of_week == 6
+						),
+						'day_of_week_is_current'	=> (
+							$this->CDT->day_of_week == $current_dow
+						)
 					);
-					
-					$vars['single'] = array(	
+
+					$vars['single'] = array(
 						'day_of_week'			=> $this->cdt_format_date_string($this->CDT->datetime_array(), 'l'),
 						'day_of_week_one'		=> $this->cdt_format_date_string($this->CDT->datetime_array(), 'b'),
 						'day_of_week_short'		=> $this->cdt_format_date_string($this->CDT->datetime_array(), 'D'),
 						'day_of_week_N'			=> $this->cdt_format_date_string($this->CDT->datetime_array(), 'N'),
 						'day_of_week_number'	=> $this->cdt_format_date_string($this->CDT->datetime_array(), 'w')
 					);
-					
+
 					$dow_output .= $this->swap_vars($vars, $match[1]);
 				}
 				$tagdata = str_replace($match[0], $dow_output, $tagdata);
@@ -4720,11 +4949,11 @@ class Calendar extends Module_builder_calendar
 		if (isset(ee()->TMPL->var_pair['events']))
 		{
 			preg_match(
-				'/'.LD.'events'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'events'.RD.'/s', 
-				$tagdata, 
+				'/'.LD.'events'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'events'.RD.'/s',
+				$tagdata,
 				$match
 			);
-			
+
 			if (isset($match[1]))
 			{
 				$each_event 		= trim($match[1])."\n";
@@ -4737,11 +4966,11 @@ class Calendar extends Module_builder_calendar
 		if (isset(ee()->TMPL->var_pair['display_each_hour']))
 		{
 			preg_match(
-				'/'.LD.'display_each_hour'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_hour'.RD.'/s', 
-				$tagdata, 
+				'/'.LD.'display_each_hour'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_hour'.RD.'/s',
+				$tagdata,
 				$match
 			);
-			
+
 			if (isset($match[1]))
 			{
 				$each_hour 			= trim($match[1])."\n";
@@ -4753,11 +4982,11 @@ class Calendar extends Module_builder_calendar
 		if (isset(ee()->TMPL->var_pair['display_each_day']))
 		{
 			preg_match(
-				'/'.LD.'display_each_day'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_day'.RD.'/s', 
-				$tagdata, 
+				'/'.LD.'display_each_day'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_day'.RD.'/s',
+				$tagdata,
 				$match
 			);
-			
+
 			if (isset($match[1]))
 			{
 				$each_day 			= trim($match[1])."\n";
@@ -4769,11 +4998,11 @@ class Calendar extends Module_builder_calendar
 		if (isset(ee()->TMPL->var_pair['display_each_week']))
 		{
 			preg_match(
-				'/'.LD.'display_each_week'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_week'.RD.'/s', 
-				$tagdata, 
+				'/'.LD.'display_each_week'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_week'.RD.'/s',
+				$tagdata,
 				$match
 			);
-			
+
 			if (isset($match[1]))
 			{
 				$each_week 			= trim($match[1])."\n";
@@ -4785,11 +5014,11 @@ class Calendar extends Module_builder_calendar
 		if (isset(ee()->TMPL->var_pair['display_each_month']))
 		{
 			preg_match(
-				'/'.LD.'display_each_month'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_month'.RD.'/s', 
-				$tagdata, 
+				'/'.LD.'display_each_month'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_month'.RD.'/s',
+				$tagdata,
 				$match
 			);
-			
+
 			if (isset($match[1]))
 			{
 				$each_month 		= trim($match[1])."\n";
@@ -4801,11 +5030,11 @@ class Calendar extends Module_builder_calendar
 		if (isset(ee()->TMPL->var_pair['display_each_year']))
 		{
 			preg_match(
-				'/'.LD.'display_each_year'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_year'.RD.'/s', 
-				$tagdata, 
+				'/'.LD.'display_each_year'.RD.'(.*?)'.LD.preg_quote(T_SLASH, '/').'display_each_year'.RD.'/s',
+				$tagdata,
 				$match
 			);
-			
+
 			if (isset($match[1]))
 			{
 				$each_year 			= trim($match[1])."\n";
@@ -4829,22 +5058,27 @@ class Calendar extends Module_builder_calendar
 		//  Set the default date to the start of our range
 		// -------------------------------------
 
+		$start_blank = (
+			$this->P->value('date_range_start') === FALSE AND
+			$this->P->value('date_range_end') === FALSE
+		);
+
 		$start	= $this->CDT->change_datetime(
-			$this->P->value('date_range_start', 'year'), 
-			$this->P->value('date_range_start', 'month'), 
-			$this->P->value('date_range_start', 'day'), 
-			$this->P->value('date_range_start', 'hour'), 
+			$this->P->value('date_range_start', 'year'),
+			$this->P->value('date_range_start', 'month'),
+			$this->P->value('date_range_start', 'day'),
+			$this->P->value('date_range_start', 'hour'),
 			$this->P->value('date_range_start', 'minute')
 		);
-		
+
 		$end	= $this->CDT->change_datetime(
-			$this->P->value('date_range_end', 'year'), 
-			$this->P->value('date_range_end', 'month'), 
-			$this->P->value('date_range_end', 'day'), 
-			$this->P->value('date_range_end', 'hour'), 
-			$this->P->value('date_range_end', 'minute')
+			$this->P->value('date_range_end', 'year'),
+			$this->P->value('date_range_end', 'month'),
+			$this->P->value('date_range_end', 'day'),
+			($start_blank ? '23' : $this->P->value('date_range_end', 'hour')),
+			($start_blank ? '59' : $this->P->value('date_range_end', 'minute'))
 		);
-		
+
 		$current_period_start	= $start;
 		$current_period_end		= $end;
 
@@ -4861,12 +5095,14 @@ class Calendar extends Module_builder_calendar
 			//  Adjust the start date backward to the first day of the week, if necessary
 			// -------------------------------------
 
+			$old_end = $end;
+
 			if ($start['day_of_week'] != $this->first_day_of_week)
 			{
-				$offset = ($start['day_of_week'] > $this->first_day_of_week) ? 
-					$start['day_of_week'] - $this->first_day_of_week : 
+				$offset = ($start['day_of_week'] > $this->first_day_of_week) ?
+					$start['day_of_week'] - $this->first_day_of_week :
 					7 - ($this->first_day_of_week - $start['day_of_week']);
-				
+
 				$start 	= $this->CDT->add_day(-$offset);
 				$this->CDT->reset();
 			}
@@ -4880,13 +5116,17 @@ class Calendar extends Module_builder_calendar
 			if ($end['day_of_week'] != $last_dow)
 			{
 				$this->CDT->change_ymd($end['ymd']);
-				$offset = ($end['day_of_week'] > $last_dow) ? 
-					7 - ($end['day_of_week'] - $last_dow) : 
+				$offset = ($end['day_of_week'] > $last_dow) ?
+					7 - ($end['day_of_week'] - $last_dow) :
 					$last_dow - $end['day_of_week'];
-				
+
 				$end 	= $this->CDT->add_day($offset);
 				$this->CDT->reset();
 			}
+
+			$end['time']	= $old_end['time'];
+			$end['hour']	= $old_end['hour'];
+			$end['minute']	= $old_end['minute'];
 
 			$this->CDT->set_default($start);
 			$this->P->set('date_range_start', $start);
@@ -4894,7 +5134,7 @@ class Calendar extends Module_builder_calendar
 		}
 
 		//ee()->TMPL->log_item('Calendar: Date range start: '. $this->P->value('date_range_start', 'ymd'));
-		
+
 		//ee()->TMPL->log_item('Calendar: Date range end: '. $this->P->value('date_range_end', 'ymd'));
 
 		// -------------------------------------
@@ -4903,19 +5143,19 @@ class Calendar extends Module_builder_calendar
 
 		/*$category = FALSE;
 
-		if (isset(ee()->TMPL) AND 
+		if (isset(ee()->TMPL) AND
 			 is_object(ee()->TMPL) AND
-			 ee()->TMPL->fetch_param('category') !== FALSE AND 
-			 ee()->TMPL->fetch_param('category') != '' 
-		) 
+			 ee()->TMPL->fetch_param('category') !== FALSE AND
+			 ee()->TMPL->fetch_param('category') != ''
+		)
 		{
 			$category = ee()->TMPL->fetch_param('category');
-		
+
 			unset(ee()->TMPL->tagparams['category']);
 		}*/
 
 		$ids 			= $this->data->fetch_event_ids($this->P /*, $category*/);
-		
+
 		//ee()->TMPL->log_item('Calendar:build_calendar() Fetching events. ' . count( $ids ) . ' events were found.');
 
 		$entry_data 	= array();
@@ -4936,7 +5176,7 @@ class Calendar extends Module_builder_calendar
 				//ee()->TMPL->log_item('Calendar:build_calendar() No results, going home');
 				return $this->no_results();
 			}
-			
+
 			//ee()->TMPL->log_item('Calendar:build_calendar() No results, but staying around for the show');
 		}
 		else
@@ -4958,7 +5198,7 @@ class Calendar extends Module_builder_calendar
 					// -------------------------------------
 
 					$occurrence_ids = $this->data->fetch_occurrence_entry_ids($ids);
-					
+
 					//ee()->TMPL->log_item('Calendar:build_calendar() ' . count( $occurrence_ids ) . ' occurrences were found.');
 
 					// -------------------------------------
@@ -4989,7 +5229,7 @@ class Calendar extends Module_builder_calendar
 					//  we will process later.
 					// -------------------------------------
 
-					$var_dates = array(	
+					$var_dates = array(
 						'event_start_date' 	=> FALSE,
 						'event_start_time' 	=> FALSE,
 						'event_end_date' 	=> FALSE,
@@ -5001,7 +5241,7 @@ class Calendar extends Module_builder_calendar
 						if (($pos = strpos($k, ' format')) !== FALSE)
 						{
 							$name = substr($k, 0, $pos);
-							
+
 							if (array_key_exists($name, $var_dates))
 							{
 								$var_dates[$name][$k] 		= $v;
@@ -5013,14 +5253,14 @@ class Calendar extends Module_builder_calendar
 					//	----------------------------------------
 					//	Invoke Channel class
 					//	----------------------------------------
-					
+
 					if (APP_VER < 2.0)
 					{
 						if ( ! class_exists('Weblog') )
 						{
 							require PATH_MOD.'/weblog/mod.weblog'.EXT;
 						}
-				
+
 						$channel = new Weblog;
 					}
 					else
@@ -5029,22 +5269,22 @@ class Calendar extends Module_builder_calendar
 						{
 							require PATH_MOD.'/channel/mod.channel'.EXT;
 						}
-				
+
 						$channel = new Channel;
 					}
 
 					//default is 100 and that could limit events when there are very many to be shown
 					$channel->limit = 500;
-					
+
 					// --------------------------------------------
 					//  Invoke Pagination for EE 2.4 and Above
 					// --------------------------------------------
-			
+
 					if (APP_VER >= '2.4.0')
 					{
 						ee()->load->library('pagination');
 						$channel->pagination = new Pagination_object('Channel');
-						
+
 						// Used by pagination to determine whether we're coming from the cache
 						$channel->pagination->dynamic_sql = FALSE;
 					}
@@ -5054,7 +5294,7 @@ class Calendar extends Module_builder_calendar
 					// -------------------------------------
 
 					ee()->TMPL->tagparams['entry_id'] = implode('|', array_keys($ids));
-					
+
 					if ($this->P->value('enable') != FALSE)
 					{
 						if (is_array($this->P->value('enable')))
@@ -5091,13 +5331,13 @@ class Calendar extends Module_builder_calendar
 					{
 						$channel->fetch_custom_channel_fields();
 					}
-					
-			        $channel->fetch_custom_member_fields();
-					
+
+					$channel->fetch_custom_member_fields();
+
 					// --------------------------------------------
 					//  Pagination Tags Parsed Out
 					// --------------------------------------------
-					
+
 					if (APP_VER >= '2.4.0')
 					{
 						$channel->pagination->get_template();
@@ -5124,7 +5364,7 @@ class Calendar extends Module_builder_calendar
 
 						break;
 					}
-		
+
 					$channel->query = ee()->db->query($channel->sql);
 
 					if ($channel->query->num_rows == 0)
@@ -5142,7 +5382,7 @@ class Calendar extends Module_builder_calendar
 					{
 						//ee()->TMPL->log_item('Calendar:build_calendar() Channel module found ' . $channel->query->num_rows . ' results.');
 					}
-		
+
 					$channel->query->result	= $channel->query->result_array();
 
 					// -------------------------------------
@@ -5172,15 +5412,15 @@ class Calendar extends Module_builder_calendar
 					}
 
 					$calendars = array();
-					
+
 					foreach ($event_data as $k => $edata)
 					{
 						$temp = new Calendar_event(
-							$edata, 
-							$this->P->params['date_range_start']['value'], 
+							$edata,
+							$this->P->params['date_range_start']['value'],
 							$this->P->params['date_range_end']['value']
 						);
-						
+
 						if ( ! empty($temp->dates))
 						{
 							$temp->prepare_for_output();
@@ -5205,7 +5445,7 @@ class Calendar extends Module_builder_calendar
 						{
 							$entry_data[$id] = $id;
 						}
-						
+
 						//ee()->TMPL->log_item('Calendar:build_calendar() Skipping further channel module processing because $each_event variable was empty string. ' . count( $entry_data ) . ' events were found and logged into the $entry_data array.');
 						break;
 					}
@@ -5233,32 +5473,35 @@ class Calendar extends Module_builder_calendar
 					$blargle = '3138ad2081984be5dea40e593fd61f87';
 					$bleegle = '6f8de301e6e6f2cd80ad99aa3a765b31';
 					//ee()->TMPL->tagdata = $blargle . '[' . LD . "entry_id" . RD . ']' . $each_event . $bleegle;
-					ee()->TMPL->tagdata = $blargle . '[' . LD . "entry_id" . RD . ']' . ee()->TMPL->tagdata . $bleegle;
+					ee()->TMPL->tagdata = $blargle .
+						'[' . LD . "entry_id" . RD . ']' .
+						ee()->TMPL->tagdata .
+						$bleegle;
 
 					// -------------------------------------
 					//  Prep variable aliases
 					// -------------------------------------
 
-					$variables = array(	
+					$variables = array(
 						'title'			=> 'event_title',
 						'url_title'		=> 'event_url_title',
 						'entry_id'		=> 'event_id',
-						'author_id'    	=> 'event_author_id',
-						'author'    	=> 'event_author',
-						'status'    	=> 'event_status'
+						'author_id'		=> 'event_author_id',
+						'author'		=> 'event_author',
+						'status'		=> 'event_status'
 					);
 
 					// --------------------------------------------
 					//  Typography
 					// --------------------------------------------
-					
+
 					if (APP_VER < 2.0)
 					{
 						if ( ! class_exists('Typography'))
 						{
 							require PATH_CORE.'core.typography'.EXT;
 						}
-								
+
 						$channel->TYPE = new Typography;
 						$channel->TYPE->convert_curly = FALSE;
 					}
@@ -5268,7 +5511,7 @@ class Calendar extends Module_builder_calendar
 						ee()->typography->initialize();
 						ee()->typography->convert_curly = FALSE;
 					}
-			
+
 					$channel->fetch_categories();
 
 					// -------------------------------------
@@ -5278,9 +5521,9 @@ class Calendar extends Module_builder_calendar
 					foreach ($channel->query->result as $k => $row)
 					{
 						$entry_id = $row['entry_id'];
-						
+
 						$channel->query->result[$k]['author'] = ($row['screen_name'] != '') ? $row['screen_name'] : $row['username'];
-						
+
 						//ee()->TMPL->log_item('Calendar:build_calendar() We\'re in the channel query result loop. Entry id is ' . $entry_id );
 
 						// -------------------------------------
@@ -5288,7 +5531,7 @@ class Calendar extends Module_builder_calendar
 						// -------------------------------------
 
 						if (! isset($events[$ids[$entry_id]]))
-						{	
+						{
 							unset($channel->query->result[$k]);
 							continue;
 						}
@@ -5344,11 +5587,11 @@ class Calendar extends Module_builder_calendar
 								if (APP_VER < 2.0)
 								{
 									$channel->query->result[$k][$old]	= $channel->TYPE->parse_type(
-										$channel->query->result[$k][$old], 
+										$channel->query->result[$k][$old],
 										array(
-											'text_format' 	=> 'lite', 
-											'html_format' 	=> 'none', 
-											'auto_links' 	=> 'n', 
+											'text_format' 	=> 'lite',
+											'html_format' 	=> 'none',
+											'auto_links' 	=> 'n',
 											'allow_img_url' => 'no'
 										)
 									);
@@ -5356,16 +5599,16 @@ class Calendar extends Module_builder_calendar
 								else
 								{
 									$channel->query->result[$k][$old]	= ee()->typography->parse_type(
-										$channel->query->result[$k][$old], 
+										$channel->query->result[$k][$old],
 										array(
-											'text_format' 	=> 'lite', 
-											'html_format' 	=> 'none', 
-											'auto_links' 	=> 'n', 
+											'text_format' 	=> 'lite',
+											'html_format' 	=> 'none',
+											'auto_links' 	=> 'n',
 											'allow_img_url' => 'no'
 										)
 									);
-								}							
-								
+								}
+
 								$channel->query->result[$k][$new]	= $channel->query->result[$k][$old];
 							}
 							else
@@ -5376,16 +5619,16 @@ class Calendar extends Module_builder_calendar
 
 						// -------------------------------------
 						//  Calendar variables
-						// -------------------------------------						
-						
+						// -------------------------------------
+
 						foreach ($calendars[$events[$entry_id]->default_data['calendar_id']] as $key => $val)
-						{	
-							$channel->query->result[$k][$key] = $val;						
+						{
+							$channel->query->result[$k][$key] = $val;
 							$channel->query->result[$k]['event_'.$key] = $val;
 						}
-							
+
 					}
-					
+
 
 					//	----------------------------------------
 					//	Redeclare
@@ -5393,7 +5636,7 @@ class Calendar extends Module_builder_calendar
 					//	We will reassign the $channel->query->result with our
 					//	reordered array of values. Thank you PHP for being so fast with array loops.
 					//	----------------------------------------
-			
+
 					if (APP_VER < 2.0)
 					{
 						$channel->query->result	= $channel->query->result;
@@ -5409,37 +5652,58 @@ class Calendar extends Module_builder_calendar
 					//  Handle {title} and {event_title} differently
 					// -------------------------------------
 
-					ee()->TMPL->tagdata	= str_replace(LD.'title'.RD, '6c21bdf1bfdab13bc8df8fcfeb2763a6'.LD.'entry_id'.RD, ee()->TMPL->tagdata);
-					ee()->TMPL->tagdata	= str_replace(LD.'event_title'.RD, '6c21bdf1bfdab13bc8df8fcfeb2763a6'.LD.'entry_id'.RD, ee()->TMPL->tagdata);
+					ee()->TMPL->tagdata	= str_replace(
+						LD . 'title' . RD,
+						'6c21bdf1bfdab13bc8df8fcfeb2763a6' . LD . 'entry_id' . RD,
+						ee()->TMPL->tagdata
+					);
+
+					ee()->TMPL->tagdata	= str_replace(
+						LD . 'event_title' . RD,
+						'6c21bdf1bfdab13bc8df8fcfeb2763a6' . LD . 'entry_id' . RD,
+						ee()->TMPL->tagdata
+					);
 
 					// -------------------------------------
 					//  Remove "ignore" prefixes
 					// -------------------------------------
 
-					ee()->TMPL->tagdata = str_replace('calendar_ignore_', '', ee()->TMPL->tagdata);
+					ee()->TMPL->tagdata = str_replace(
+						'calendar_ignore_',
+						'',
+						ee()->TMPL->tagdata
+					);
 
 					// -------------------------------------
 					//  Parse Weblog stuff
 					// -------------------------------------
 
 					//ee()->TMPL->log_item('Calendar: Parsing Weblog stuff');
-		
+
 					if (APP_VER < 2.0)
 					{
 						$channel->parse_weblog_entries();
-						
+
 						foreach ($channel->query->result as $k => $data)
 						{
-							$channel->return_data = str_replace('6c21bdf1bfdab13bc8df8fcfeb2763a6'.$data['entry_id'], $channel->query->result[$k]['title'], $channel->return_data);
+							$channel->return_data = str_replace(
+								'6c21bdf1bfdab13bc8df8fcfeb2763a6' . $data['entry_id'],
+								$channel->query->result[$k]['title'],
+								$channel->return_data
+							);
 						}
 					}
 					else
 					{
 						$channel->parse_channel_entries();
-						
+
 						foreach ($super_temp_fake as $k => $data)
 						{
-							$channel->return_data = str_replace('6c21bdf1bfdab13bc8df8fcfeb2763a6'.$data['entry_id'], $super_temp_fake[$k]['title'], $channel->return_data);
+							$channel->return_data = str_replace(
+								'6c21bdf1bfdab13bc8df8fcfeb2763a6' . $data['entry_id'],
+								$super_temp_fake[$k]['title'],
+								$channel->return_data
+							);
 						}
 					}
 
@@ -5504,9 +5768,9 @@ class Calendar extends Module_builder_calendar
 		}
 		else
 		{
-			$week_counter = ($this->CDT->day_of_week >= $this->first_day_of_week) ? 
-								$this->CDT->day_of_week - $this->first_day_of_week : 
-								7 + $this->CDT->day_of_week - $this->first_day_of_week;				
+			$week_counter = ($this->CDT->day_of_week >= $this->first_day_of_week) ?
+								$this->CDT->day_of_week - $this->first_day_of_week :
+								7 + $this->CDT->day_of_week - $this->first_day_of_week;
 		}
 
 		$output = '';
@@ -5525,22 +5789,29 @@ class Calendar extends Module_builder_calendar
 		//ee()->TMPL->log_item('Calendar: Preparing events');
 
 		foreach ($events as $id => $event)
-		{		
+		{
+			//prevent missing entry data from attempting to display and causing errors
+			if ( ! isset($entry_data[$event->default_data['entry_id']]))
+			{
+				unset($events[$id]);
+				continue;
+			}
+
 			if (empty($event->dates))
 			{
 				continue;
 			}
 
 			foreach ($event->dates as $ymd => $items)
-			{					
+			{
 				foreach ($items as $time => $ddata)
 				{
 					// -------------------------------------
 					//  It was over before it started
 					// -------------------------------------
 
-					if ($ddata['end_date']['ymd'].$ddata['end_date']['time'] < 
-						$this->P->value('date_range_start', 'ymd') . 
+					if ($ddata['end_date']['ymd'].$ddata['end_date']['time'] <
+						$this->P->value('date_range_start', 'ymd') .
 						$this->P->value('date_range_start', 'time'))
 					{
 						continue;
@@ -5549,11 +5820,11 @@ class Calendar extends Module_builder_calendar
 					// -------------------------------------
 					//  ...or the inverse
 					// -------------------------------------
-					
-					if ($ddata['date']['ymd'].$ddata['date']['time'] > 
-						 $this->P->value('date_range_end', 'ymd') . 
+
+					if ($ddata['date']['ymd'].$ddata['date']['time'] >
+						 $this->P->value('date_range_end', 'ymd') .
 						 $this->P->value('time_range_end', 'time'))
-					{ 
+					{
 						continue;
 					}
 
@@ -5589,7 +5860,7 @@ class Calendar extends Module_builder_calendar
 				}
 			}
 
-			
+
 
 			// -------------------------------------
 			//  Aliases
@@ -5605,23 +5876,24 @@ class Calendar extends Module_builder_calendar
 		//  NOTE: apply_event_limit() also sorts the array for us.
 		// -------------------------------------
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	count all events for tag and pagination
 		//--------------------------------------------
 
 		$this->event_timeframe_total = $this->count_event_results($event_array);
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	pagination
 		//--------------------------------------------
-		
+
 		$this->paginate = FALSE;
 
-		if ($this->event_timeframe_total > $this->P->value('event_limit'))
+		if ($this->P->value('event_limit') > 0 AND
+			$this->event_timeframe_total > $this->P->value('event_limit'))
 		{
 			//get pagination info
 			$pagination_data = $this->universal_pagination(array(
-				'total_results'			=> $this->event_timeframe_total, 
+				'total_results'			=> $this->event_timeframe_total,
 				//had to remove this jazz before so it didn't get iterated over
 				'tagdata'				=> $tagdata . $this->paginate_tagpair_data,
 				'limit'					=> $this->P->value('event_limit'),
@@ -5629,11 +5901,26 @@ class Calendar extends Module_builder_calendar
 				'paginate_prefix'		=> 'calendar_'
 			));
 
+			// -------------------------------------------
+			// 'calendar_events_create_pagination' hook.
+			//  - Let devs maniuplate the pagination display
+
+			if (ee()->extensions->active_hook('calendar_build_calendar_create_pagination') === TRUE)
+			{
+				$pagination_data = ee()->extensions->call(
+					'calendar_build_calendar_create_pagination',
+					$this,
+					$pagination_data
+				);
+			}
+			//
+			// -------------------------------------------
+
 			//if we paginated, sort the data
 			if ($pagination_data['paginate'] === TRUE)
 			{
 				$this->paginate			= $pagination_data['paginate'];
-				$this->page_next		= $pagination_data['page_next']; 
+				$this->page_next		= $pagination_data['page_next'];
 				$this->page_previous	= $pagination_data['page_previous'];
 				$this->p_page			= $pagination_data['pagination_page'];
 				$this->current_page  	= $pagination_data['current_page'];
@@ -5646,24 +5933,29 @@ class Calendar extends Module_builder_calendar
 			}
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	event limiter
 		//--------------------------------------------
 
-		$offset = (ee()->TMPL->fetch_param('event_offset') ? ee()->TMPL->fetch_param('event_offset') : 0);
+		$offset = (
+			ee()->TMPL->fetch_param('event_offset') ?
+				ee()->TMPL->fetch_param('event_offset') :
+				0
+		);
+
 		$page 	= (($this->current_page -1) * $this->P->value('event_limit'));
-		
+
 		if ($page > 0)
 		{
 			$offset += $page;
 		}
 
 		$event_array = $this->apply_event_limit(
-			$event_array, 
-			$this->P->value('event_limit'), 
+			$event_array,
+			$this->P->value('event_limit'),
 			$offset
 		);
-						
+
 		// -------------------------------------
 		//  Loopage
 		// -------------------------------------
@@ -5671,48 +5963,54 @@ class Calendar extends Module_builder_calendar
 		//ee()->TMPL->log_item('Calendar: Beginning date loops');
 
 		$week_event_count	= 0;
-
+		$event_count		= 0;
 		$year_tick			= 0;
 		$month_tick			= 0;
-		
+
 		for ($y = $start_year; $y <= $end_year; $y++)
 		{
 			$year_event_count = 0;
-			
+
 			//blank out
 			$this->counted['year'] = array();
-			
+
 			$mx = ($y == $start_year) ? $start_month : 1;
 			$my = ($y == $end_year) ? $end_month : 12;
-			
+
 			$year_ymd_cache = $this->CDT->ymd;
-			
+
 
 			for ($m = $mx; $m <= $my; $m++)
 			{
 				$month_ymd_cache 	= $this->CDT->ymd;
-				
-				
+
+
 				$month_event_count = 0;
-				
+
 				//blank out
 				$this->counted['month'] = array();
-				
-				$dx = ($y == $start_year AND $m == $start_month) ? $start_day : 1;
-				$dy = ($y == $end_year AND $m == $end_month) ? $end_day : $this->CDT->days_in_month($m, $y);
-						
+
+				$dx = ($y == $start_year AND $m == $start_month) ?
+						$start_day :
+						1;
+
+				$dy = ($y == $end_year AND $m == $end_month) ?
+						$end_day :
+						$this->CDT->days_in_month($m, $y);
+
 				for ($d = $dx; $d <= $dy; $d++)
 				{
 					$day_ymd_cache 	= $this->CDT->ymd;
 					$day_tick		= 0;
-					
+
 					$this->CDT->change_date($y, $m, $d);
 					$this->CDT->set_default($this->CDT->date_array());
 
 					$ymd = $this->CDT->ymd;
 
 					// -------------------------------------
-					//  Prepare counts and totals, also altered later in the loop in some cases
+					//  Prepare counts and totals, also
+					//  altered later in the loop in some cases
 					// -------------------------------------
 
 					$day_event_count = 0;
@@ -5722,17 +6020,24 @@ class Calendar extends Module_builder_calendar
 					$this->counted['day'] = array();
 
 					if (! isset($event_array[$ymd])) $event_array[$ymd] = array();
-										
-					$day_event_total	= $this->count_events($ymd, $event_array, $all_day, 'day', $events);
+
+					$day_event_total	= $this->count_events(
+						$ymd,
+						$event_array,
+						$all_day,
+						'day',
+						$events
+					);
 
 					// -------------------------------------
 					//  Start events for the day
 					// -------------------------------------
 
-//ee()->TMPL->log_item('Calendar: Beginning ' . $ymd . count( $event_array[$ymd] ) . ' events for this day.');
+					//ee()->TMPL->log_item('Calendar: Beginning ' . $ymd . count( $event_array[$ymd] ) . ' events for this day.');
 
 					// -------------------------------------
-					//  This looks a little goofy, but it prevents extra years/months
+					//  This looks a little goofy, but it
+					//  prevents extra years/months
 					//  showing up thanks to padded weeks
 					// -------------------------------------
 
@@ -5746,10 +6051,10 @@ class Calendar extends Module_builder_calendar
 					{
 						//blank out
 						$this->counted['week'] = array();
-						
+
 						$w = str_pad($this->CDT->week_number, 2, 0, STR_PAD_LEFT);
 					}
-					
+
 					$week_counter++;
 
 					// -------------------------------------
@@ -5764,10 +6069,14 @@ class Calendar extends Module_builder_calendar
 					//  Yodelers of Mass Destruction
 					// -------------------------------------
 
-					$find = '';
-					$replace = '';
-					$hour_events = array();
-					$last_day = ($y == $end_year AND $m == $end_month AND $d == $end_day) ? TRUE : FALSE;
+					$find			= '';
+					$replace		= '';
+					$hour_events	= array();
+					$last_day		= (
+						$y == $end_year AND
+						$m == $end_month AND
+						$d == $end_day
+					) ? TRUE : FALSE;
 
 					// -------------------------------------
 					//  Remove "all day" stragglers
@@ -5784,8 +6093,8 @@ class Calendar extends Module_builder_calendar
 					// -------------------------------------
 					//  Each event
 					// -------------------------------------
-					// 	$each_event contains the formatting 
-					// 	to use for displaying the contents 
+					// 	$each_event contains the formatting
+					// 	to use for displaying the contents
 					// 	of an event on a given day in the calendar.
 					// -------------------------------------
 
@@ -5799,12 +6108,12 @@ class Calendar extends Module_builder_calendar
 							{
 								$hour_event_count	= 0;
 								$hour_event_total	= count($sh_data);
-								
+
 								if ($start_hour == 'all_day')
 								{
 									$prev_index = 0;
 									$index = 0;
-									
+
 									foreach ($sh_data as $i => $id)
 									{
 										// -------------------------------------
@@ -5813,49 +6122,55 @@ class Calendar extends Module_builder_calendar
 										// -------------------------------------
 
 										$time_key = '00002400';
-										
+
 										if ( ! isset( $events[$id]->dates[$ymd][$time_key]))
 										{
 											$time_key = key($events[$id]->dates[$ymd]);
 										}
-										
+
+										$event_count++;
 										$year_event_count++;
 										$month_event_count++;
 										$week_event_count++;
 										$day_event_count++;
 										$hour_event_count++;
-										
+
 										$vars = $this->get_occurrence_vars($id, $events[$id], $ymd, $time_key);
-										
+
 										$vars['conditional']['event_all_day']	= TRUE;
-										
-										$vars['single']	+= array(	
-											'year_event_count'			=> $this->create_count_hash('year_event_count'), //$year_event_count,
-											'month_event_count'			=> $this->create_count_hash('month_event_count'), //$month_event_count,
-											'week_event_count'			=> $this->create_count_hash('week_event_count'), //$week_event_count,
-											'day_event_count'			=> $this->create_count_hash('day_event_count'), //$day_event_count,
-											'hour_event_count'			=> $this->create_count_hash('hour_event_count'), //$hour_event_count,
+
+										$vars['single']	+= array(
+											'event_count'				=> $this->create_count_hash('event_count'),
+											'year_event_count'			=> $this->create_count_hash('year_event_count'),
+											'month_event_count'			=> $this->create_count_hash('month_event_count'),
+											'week_event_count'			=> $this->create_count_hash('week_event_count'),
+											'day_event_count'			=> $this->create_count_hash('day_event_count'),
+											'hour_event_count'			=> $this->create_count_hash('hour_event_count'),
 											'all_day_event_index_difference' => $index - $prev_index,
 											'all_day_event_index'		=> $index++,
+
 											'event_duration_minutes'	=> (isset($events[$id]->dates[$ymd][$time_key])) ?
 													$events[$id]->dates[$ymd][$time_key]['duration']['minutes'] :
 													$events[$id]->default_data['duration']['minutes'],
+
 											'event_duration_hours'		=> (isset($events[$id]->dates[$ymd][$time_key])) ?
-													$events[$id]->dates[$ymd][$time_key]['duration']['hours'] : 
+													$events[$id]->dates[$ymd][$time_key]['duration']['hours'] :
 													$events[$id]->default_data['duration']['hours'],
+
 											'event_duration_days'		=> (isset($events[$id]->dates[$ymd][$time_key])) ?
-													$events[$id]->dates[$ymd][$time_key]['duration']['days'] : 
+													$events[$id]->dates[$ymd][$time_key]['duration']['days'] :
 													$events[$id]->default_data['duration']['days']
 										);
 
 										//we have to remove conditionals for these items as well
 										//because the dummy hashes screw with them
 										$output_data = $this->remove_post_parse_conditionals(array(
-											'year_event_count'		=> $vars['single']['year_event_count'],	
+											'event_count'	=> $vars['single']['event_count'],
+											'year_event_count'		=> $vars['single']['year_event_count'],
 											'month_event_count' 	=> $vars['single']['month_event_count'],
-											'week_event_count'		=> $vars['single']['week_event_count'],	
+											'week_event_count'		=> $vars['single']['week_event_count'],
 											'day_event_count'		=> $vars['single']['day_event_count'],
-											'hour_event_count'		=> $vars['single']['hour_event_count']	
+											'hour_event_count'		=> $vars['single']['hour_event_count']
 										), $entry_data[$id]);
 
 										// -------------------------------------
@@ -5871,7 +6186,7 @@ class Calendar extends Module_builder_calendar
 										//shortcut
 										$evtk =& $events[$id]->dates[$ymd][$time_key];
 
-										$array = array(	
+										$array = array(
 											'output'					=> $output_data,
 											'vars'						=> $vars,
 											'first_day'					=> $evtk['date']['ymd'],
@@ -5884,9 +6199,9 @@ class Calendar extends Module_builder_calendar
 											'event_duration_hours'		=> $evtk['duration']['hours'],
 											'event_duration_days'		=> $evtk['duration']['days']
 										);
-										
+
 										//unset($event_array[$ymd]['all_day'][$id]);
-										
+
 										$count		= (empty($all_day)) ? 0 : max(array_keys($all_day));
 										$inserted	= FALSE;
 										$prev_index	= $index + 1;
@@ -5947,44 +6262,47 @@ class Calendar extends Module_builder_calendar
 															continue;
 														}
 
+														$event_count++;
 														$year_event_count++;
 														$month_event_count++;
 														$week_event_count++;
 														$day_event_count++;
 														$hour_event_count++;
-														
+
 														$vars = $this->get_occurrence_vars(
-															$id, 
-															$events[$id], 
-															$ymd, 
+															$id,
+															$events[$id],
+															$ymd,
 															$start_hour . $start_minute . $end_hour . $end_minute
 														);
-														
+
 														$vars['single']['event_duration_minutes']	= $events[$id]->dates[$ymd][$time_key]['duration']['minutes'];
 														$vars['single']['event_duration_hours']		= $events[$id]->dates[$ymd][$time_key]['duration']['hours'];
 														$vars['single']['event_duration_days']		= $events[$id]->dates[$ymd][$time_key]['duration']['days'];
-														$vars['single']['year_event_count']			= $this->create_count_hash('year_event_count'); //$year_event_count;
-														$vars['single']['month_event_count']		= $this->create_count_hash('month_event_count'); //$month_event_count;
-														$vars['single']['week_event_count']			= $this->create_count_hash('week_event_count'); //$week_event_count;
-														$vars['single']['day_event_count']			= $this->create_count_hash('day_event_count'); //$day_event_count;
-														$vars['single']['hour_event_count']			= $this->create_count_hash('hour_event_count'); //$$hour_event_count;
+														$vars['single']['event_count']				= $this->create_count_hash('event_count');
+														$vars['single']['year_event_count']			= $this->create_count_hash('year_event_count');
+														$vars['single']['month_event_count']		= $this->create_count_hash('month_event_count');
+														$vars['single']['week_event_count']			= $this->create_count_hash('week_event_count');
+														$vars['single']['day_event_count']			= $this->create_count_hash('day_event_count');
+														$vars['single']['hour_event_count']			= $this->create_count_hash('hour_event_count');
 														$vars['single']['day_event_total']			= $day_event_total;
 														$vars['single']['hour_event_total']			= $hour_event_total;
 														$vars['single']['all_day_event_index']		= 0;
 														$vars['single']['all_day_event_index_difference'] = 0;
-														
+
 														//we have to remove conditionals for these items as well
 														//because the dummy hashes screw with them
 														$output_data = $this->remove_post_parse_conditionals(array(
-															'year_event_count'	=> $vars['single']['year_event_count'],	
-															'month_event_count'	=> $vars['single']['month_event_count'],
-															'week_event_count'	=> $vars['single']['week_event_count'],	
-															'day_event_count'	=> $vars['single']['day_event_count'],
-															'hour_event_count'	=> $vars['single']['hour_event_count']	
+															'event_count'			=> $vars['single']['event_count'],
+															'year_event_count'		=> $vars['single']['year_event_count'],
+															'month_event_count'		=> $vars['single']['month_event_count'],
+															'week_event_count'		=> $vars['single']['week_event_count'],
+															'day_event_count'		=> $vars['single']['day_event_count'],
+															'hour_event_count'		=> $vars['single']['hour_event_count']
 														), $entry_data[$id]);
-																												
+
 														$event_output .= $this->swap_vars($vars, $output_data);
-														
+
 													}
 												}
 											}
@@ -5992,7 +6310,7 @@ class Calendar extends Module_builder_calendar
 									}
 								}
 							}
-							
+
 							//parse day event counts
 							$event_output = $this->parse_count_hashes('hour_event_count', $event_output);
 						}
@@ -6015,10 +6333,10 @@ class Calendar extends Module_builder_calendar
 					{
 						foreach ($event_array[$ymd]['all_day'] as $id)
 						{
-							$time_key			= (! isset( $events[$id]->dates[$ymd]['00002400'])) ? 
-													key($events[$id]->dates[$ymd]) : 
+							$time_key			= (! isset( $events[$id]->dates[$ymd]['00002400'])) ?
+													key($events[$id]->dates[$ymd]) :
 													'00002400';
-							
+
 							$data['end_ymd']	= $events[$id]->dates[$ymd][$time_key]['end_date']['ymd'];
 
 							// -------------------------------------
@@ -6052,7 +6370,7 @@ class Calendar extends Module_builder_calendar
 					{
 						$prev_index = 0;
 						$hour_event_count = 0;
-						
+
 						foreach ($all_day as $all_day_data)
 						{
 							$time_key	= $all_day_data['time'];
@@ -6089,9 +6407,9 @@ class Calendar extends Module_builder_calendar
 							$hour_temp			= '';
 							$hour_count			= 0;
 							$hour_event_count	= 0;
-							$h					= str_pad($i, 2, '0', STR_PAD_LEFT); 
+							$h					= str_pad($i, 2, '0', STR_PAD_LEFT);
 							//$this->cdt_format_date_string($this->CDT->datetime_array(), 'H');
-							$minute				= '00'; 
+							$minute				= '00';
 							//$this->cdt_format_date_string($this->CDT->datetime_array(), 'i');
 
 							if (isset($hour_events[$h]))
@@ -6103,11 +6421,12 @@ class Calendar extends Module_builder_calendar
 										foreach ($eh_data as $end_minute => $event_ids)
 										{
 											$hour_count += count($event_ids);
-											
+
 											foreach ($event_ids as $id)
 											{
 												if (isset($entry_data[$id]))
 												{
+													$event_count++;
 													$year_event_count++;
 													$month_event_count++;
 													$week_event_count++;
@@ -6115,35 +6434,37 @@ class Calendar extends Module_builder_calendar
 													$hour_event_count++;
 
 													$vars = $this->get_occurrence_vars(
-														$id, 
-														$events[$id], 
-														$ymd, 
+														$id,
+														$events[$id],
+														$ymd,
 														$h . $start_minute . $end_hour . $end_minute
 													);
-													
-													$vars['single']['hour_event_count']		= $this->create_count_hash('hour_event_count'); //$hour_event_count;
-													$vars['single']['year_event_count']		= $this->create_count_hash('year_event_count'); //$year_event_count;
-													$vars['single']['month_event_count']	= $this->create_count_hash('month_event_count'); //$month_event_count;
-													$vars['single']['week_event_count']		= $this->create_count_hash('week_event_count'); //$week_event_count;
-													$vars['single']['day_event_count']		= $this->create_count_hash('day_event_count'); //$day_event_count;
-													
+
+													$vars['single']['event_count']			= $this->create_count_hash('event_count');
+													$vars['single']['hour_event_count']		= $this->create_count_hash('hour_event_count');
+													$vars['single']['year_event_count']		= $this->create_count_hash('year_event_count');
+													$vars['single']['month_event_count']	= $this->create_count_hash('month_event_count');
+													$vars['single']['week_event_count']		= $this->create_count_hash('week_event_count');
+													$vars['single']['day_event_count']		= $this->create_count_hash('day_event_count');
+
 													//we have to remove conditionals for these items as well
 													//because the dummy hashes screw with them
 													$output_data = $this->remove_post_parse_conditionals(array(
-														'year_event_count'	=> $vars['single']['year_event_count'],	
-														'month_event_count'	=> $vars['single']['month_event_count'],
-														'week_event_count'	=> $vars['single']['week_event_count'],	
-														'day_event_count'	=> $vars['single']['day_event_count'],
-														'hour_event_count'	=> $vars['single']['hour_event_count']
+														'event_count'			=> $vars['single']['event_count'],
+														'year_event_count'		=> $vars['single']['year_event_count'],
+														'month_event_count'		=> $vars['single']['month_event_count'],
+														'week_event_count'		=> $vars['single']['week_event_count'],
+														'day_event_count'		=> $vars['single']['day_event_count'],
+														'hour_event_count'		=> $vars['single']['hour_event_count']
 													), $entry_data[$id]);
-													
+
 													$hour_temp .= $this->swap_vars($vars, $output_data);
 												}
 											}
 										}
 									}
 								}
-								
+
 								$hour_temp = str_replace($find, $hour_temp, $each_hour);
 							}
 							else
@@ -6154,21 +6475,21 @@ class Calendar extends Module_builder_calendar
 							$vars = array();
 							$total_events = $hour_count;
 							$this->CDT->change_time($i, 0);
-							
-							$vars['date'] = array(		
+
+							$vars['date'] = array(
 								'time'		=> $this->CDT->datetime_array(),
 								'date'		=> $this->CDT->datetime_array()
 							);
-							
-							$vars['single'] = array(	
+
+							$vars['single'] = array(
 								'hour'				=> $h,
 								'minute'			=> $minute,
 								'time'				=> $h.':'.$minute,
 								'hour_event_total' 	=> $total_events
 							);
-							
+
 							$hour_output .= $this->swap_vars($vars, $hour_temp);
-							
+
 							//parse day event counts
 							$hour_output = $this->parse_count_hashes('hour_event_count', $hour_output);
 						}
@@ -6216,37 +6537,37 @@ class Calendar extends Module_builder_calendar
 						//var_dump($this->CDT->ymd . ' DAY 2');
 
 						$vars = array();
-						
-						$vars['conditional'] = array(	
+
+						$vars['conditional'] = array(
 							'day_is_today'			=> ($today_ymd == $ymd) ? TRUE : FALSE,
-							'day_is_weekend'		=> ($this->CDT->day_of_week == 0 OR 
+							'day_is_weekend'		=> ($this->CDT->day_of_week == 0 OR
 														$this->CDT->day_of_week == 6) ? TRUE : FALSE,
-							'day_is_weekday'		=> ($this->CDT->day_of_week == 0 OR 
+							'day_is_weekday'		=> ($this->CDT->day_of_week == 0 OR
 														$this->CDT->day_of_week == 6) ? FALSE : TRUE,
 							'day_in_current_month'	=> ($this->CDT->month == $current_period_start['month']) ? TRUE : FALSE,
-							'day_in_previous_month'	=> ($this->CDT->month < $current_period_start['month'] OR 
+							'day_in_previous_month'	=> ($this->CDT->month < $current_period_start['month'] OR
 														$this->CDT->year < $current_period_start['year']) ? TRUE : FALSE,
-							'day_in_next_month'		=> ($this->CDT->month > $current_period_start['month'] OR 
+							'day_in_next_month'		=> ($this->CDT->month > $current_period_start['month'] OR
 														$this->CDT->year > $current_period_start['year']) ? TRUE : FALSE
 						);
-						
-						$vars['single'] = array(	
+
+						$vars['single'] = array(
 							'day'					=> $d,
 							'prev_day'				=> $prev_CDT['day'],
 							'next_day'				=> $next_CDT['day'],
 							'day_event_total'		=> $day_event_total,
 							'all_day_event_total'	=> $all_day_event_total
 						);
-						
-						$vars['date'] = array(	
+
+						$vars['date'] = array(
 							'day' 		=> $this->CDT->datetime_array(),
 							'date'		=> $this->CDT->datetime_array(),
 							'prev_day' 	=> $prev_CDT,
 							'next_day'	=> $next_CDT
 						);
-												
+
 						$day_output = $this->parse_count_hashes('day_event_count', $this->swap_vars($vars, $day_output));
-						
+
 
 						$find = $hash_day;
 						$replace = $prefix.$day_output.$suffix;
@@ -6259,7 +6580,7 @@ class Calendar extends Module_builder_calendar
 						}
 
 						$this->CDT->reset();
-						
+
 						//var_dump($this->CDT->ymd . ' DAY 3');
 					}
 
@@ -6281,16 +6602,16 @@ class Calendar extends Module_builder_calendar
 							}
 						}
 
-						if ($w != $next_w OR 
-							($each_month != '' AND 
-								(($m != $next_m OR $last_day === TRUE) AND 
-									($ymd >= $current_period_start['ymd'] AND 
-										(	($last_day === TRUE AND $ymd == $current_period_end['ymd']) OR 
-										($ymd != $current_period_end['ymd']))))) OR 
+						if ($w != $next_w OR
+							($each_month != '' AND
+								(($m != $next_m OR $last_day === TRUE) AND
+									($ymd >= $current_period_start['ymd'] AND
+										(	($last_day === TRUE AND $ymd == $current_period_end['ymd']) OR
+										($ymd != $current_period_end['ymd']))))) OR
 							$last_day === TRUE)
 						{
 							//var_dump($this->CDT->ymd . ' WEEK');
-							
+
 							$week_temp .= $replace;
 							$week_output = str_replace($find, $week_temp, $each_week);
 
@@ -6298,16 +6619,16 @@ class Calendar extends Module_builder_calendar
 							//  Prep week variables
 							// -------------------------------------
 
-							$offset = ($this->CDT->day_of_week > $this->first_day_of_week) ? 
-										$this->CDT->day_of_week - $this->first_day_of_week : 
+							$offset = ($this->CDT->day_of_week > $this->first_day_of_week) ?
+										$this->CDT->day_of_week - $this->first_day_of_week :
 										7 - ($this->first_day_of_week - $this->CDT->day_of_week);
-										
+
 							$this->CDT->add_day(-$offset);
 							$this->CDT->set_default($this->CDT->datetime_array());
 							$next_CDT = $this->CDT->add_day(7);
 							$prev_CDT = $this->CDT->add_day(-14);
 							$this->CDT->reset();
-							
+
 							//var_dump($this->CDT->ymd . ' WEEK 2');
 
 							// -------------------------------------
@@ -6320,16 +6641,16 @@ class Calendar extends Module_builder_calendar
 
 							if (strpos($each_week, 'week_event_total') !== FALSE)
 							{
-								$low	= $this->CDT->year . 
-											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) . 
+								$low	= $this->CDT->year .
+											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) .
 											str_pad($this->CDT->day, 2, '0', STR_PAD_LEFT);
-								
+
 								$this->CDT->add_day(6);
-								
-								$high	= $this->CDT->year . 
-											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) . 
+
+								$high	= $this->CDT->year .
+											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) .
 											str_pad($this->CDT->day, 2, '0', STR_PAD_LEFT);
-								
+
 								$this->CDT->reset();
 
 								foreach ($event_array as $k => $v)
@@ -6344,21 +6665,21 @@ class Calendar extends Module_builder_calendar
 							}
 
 							$vars = array();
-							
-							$vars['single'] = array(	
+
+							$vars['single'] = array(
 								'week'				=> $w,
 								'prev_week'			=> $prev_CDT['week_number'],
 								'next_week'			=> $next_CDT['week_number'],
 								'week_event_total' 	=> $week_event_total
 							);
-							
-							$vars['date'] = array(	
+
+							$vars['date'] = array(
 								'week' 		   		=> $this->CDT->datetime_array(),
 								'date' 		   		=> $this->CDT->datetime_array(),
 								'prev_week'    		=> $prev_CDT,
 								'next_week'	   		=> $next_CDT
 							);
-							
+
 							$week_output = $this->parse_count_hashes('week_event_count', $this->swap_vars($vars, $week_output));
 
 							$find = $hash_week;
@@ -6374,9 +6695,9 @@ class Calendar extends Module_builder_calendar
 							$this->CDT->reset();
 							$week_event_count = 0;
 						}
-						elseif ($end['day'] == $d AND 
-								$end['month'] == $m AND 
-								$d == $this->CDT->days_in_month($m, $y) AND 
+						elseif ($end['day'] == $d AND
+								$end['month'] == $m AND
+								$d == $this->CDT->days_in_month($m, $y) AND
 								$this->P->value('pad_short_weeks') === TRUE)
 						{
 							$week_temp .= $replace;
@@ -6399,16 +6720,16 @@ class Calendar extends Module_builder_calendar
 
 							if (strpos($each_week, 'week_event_total') !== FALSE)
 							{
-								$low	= $this->CDT->year . 
-											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) . 
+								$low	= $this->CDT->year .
+											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) .
 											str_pad($this->CDT->day, 2, '0', STR_PAD_LEFT);
-								
-								$this->CDT->add_day(6);    
-								
-								$high	= $this->CDT->year . 
-											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) . 
+
+								$this->CDT->add_day(6);
+
+								$high	= $this->CDT->year .
+											str_pad($this->CDT->month, 2, '0', STR_PAD_LEFT) .
 											str_pad($this->CDT->day, 2, '0', STR_PAD_LEFT);
-								
+
 								$this->CDT->reset();
 
 								foreach ($event_array as $k => $v)
@@ -6423,21 +6744,21 @@ class Calendar extends Module_builder_calendar
 							}
 
 							$vars = array();
-							
-							$vars['single'] = array(	
+
+							$vars['single'] = array(
 								'week'				=> $w,
 								'prev_week'			=> $prev_CDT['week_number'],
 								'next_week'			=> $next_CDT['week_number'],
 								'week_event_total' 	=> $week_event_total
 							);
-							
-							$vars['date'] = array(	
+
+							$vars['date'] = array(
 								'week' 				=> $this->CDT->datetime_array(),
 								'date'				=> $this->CDT->datetime_array(),
 								'prev_week' 		=> $prev_CDT,
 								'next_week'			=> $next_CDT
 							);
-							
+
 							$week_output = $this->parse_count_hashes('week_event_count', $this->swap_vars($vars, $week_output));
 
 							$find 		= $hash_week;
@@ -6479,40 +6800,40 @@ class Calendar extends Module_builder_calendar
 							}
 						}
 
-						if (($m != $next_m OR $last_day === TRUE) AND 
-							(	$ymd >= $current_period_start['ymd'] AND 
-								(	($last_day === TRUE AND $ymd == $current_period_end['ymd']) OR 
+						if (($m != $next_m OR $last_day === TRUE) AND
+							(	$ymd >= $current_period_start['ymd'] AND
+								(	($last_day === TRUE AND $ymd == $current_period_end['ymd']) OR
 									($ymd != $current_period_end['ymd'])
 								)
 							)
 							)
 						{
-							
+
 							$month_temp .= $replace;
 							$month_output = str_replace($find, $month_temp, $each_month);
 
-							//--------------------------------------------  
-							//	reset and add month because 
+							//--------------------------------------------
+							//	reset and add month because
 							//	this gets 'off' some places
 							//--------------------------------------------
 							$this->CDT->set_default($current_period_start);
 							$this->CDT->reset();
-							
+
 							//first month is correct
 							if ($month_tick > 0)
-							{ 
+							{
 								$this->CDT->add_month($month_tick);
 							}
-							
+
 							$month_tick++;
 
 							// -------------------------------------
 							//  Prep month variables
 							// -------------------------------------
-							
+
 							//add a month
 							$next_CDT = $this->CDT->add_month();
-							
+
 							//subtract 2
 							$prev_CDT = $this->CDT->add_month(-2);
 
@@ -6547,21 +6868,25 @@ class Calendar extends Module_builder_calendar
 							}
 
 							//$vars['conditional'] = array( 'day_in_current_month' => TRUE );
-							$vars['single'] = array(	
+							$vars['single'] = array(
 								'month'				=> $m,
 								'prev_month'		=> $prev_CDT['month'],
 								'next_month'		=> $next_CDT['month'],
 								'month_event_total' => $month_event_total
 							);
-							
-							$vars['date'] = array(	
+
+							$vars['date'] = array(
 								'month' 			=> $this->CDT->datetime_array(),
 								'date'				=> $this->CDT->datetime_array(),
 								'prev_month' 		=> $prev_CDT,
 								'next_month'		=> $next_CDT
 							);
-							
-							$month_output 	= $this->parse_count_hashes('month_event_count', $this->swap_vars($vars, $month_output));
+
+							$month_output 	= $this->parse_count_hashes(
+								'month_event_count',
+								$this->swap_vars($vars, $month_output)
+							);
+
 							$replace 		= $month_output;
 
 							$find = $hash_month;
@@ -6588,7 +6913,7 @@ class Calendar extends Module_builder_calendar
 					// -------------------------------------
 
 					if ($each_year != '')
-					{						
+					{
 						if ($all_day_output != '')
 						{
 							$replace = $all_day_output . $replace;
@@ -6600,12 +6925,12 @@ class Calendar extends Module_builder_calendar
 						}
 
 						if ($y != $next_y OR $last_day === TRUE)
-						{						
-							//if ($last_day !== TRUE)	
+						{
+							//if ($last_day !== TRUE)
 							if ($last_day == TRUE)
 							{
 								$year_temp .= $replace;
-								
+
 								$year_output = str_replace($find, $year_temp, $each_year);
 
 								// -------------------------------------
@@ -6636,7 +6961,7 @@ class Calendar extends Module_builder_calendar
 								$this->CDT->set_default($current_period_start);
 								$this->CDT->reset();
 								if ($year_tick > 1)
-								{ 
+								{
 									$this->CDT->add_year($year_tick);
 								}
 								$year_tick++;
@@ -6646,26 +6971,29 @@ class Calendar extends Module_builder_calendar
 								$this->CDT->reset();
 
 								$vars = array();
-								
-								$vars['conditional']		= array(	
-									'year_is_leap_year'	=> $this->CDT->is_leap_year() 
+
+								$vars['conditional']		= array(
+									'year_is_leap_year'	=> $this->CDT->is_leap_year()
 								);
-								
-								$vars['single']				= array(	
+
+								$vars['single']				= array(
 									'year'				=> $y,
 									'prev_year'			=> $prev_CDT['year'],
 									'next_year'			=> $next_CDT['year'],
-									'year_event_total'	=> $year_event_total									
+									'year_event_total'	=> $year_event_total
 								);
-								
-								$vars['date']				= array(	
+
+								$vars['date']				= array(
 									'year' 				=> $this->CDT->datetime_array(),
 									'date'				=> $this->CDT->datetime_array(),
 									'prev_year' 		=> $prev_CDT,
 									'next_year' 		=> $next_CDT
 								);
-								
-								$year_output = $this->parse_count_hashes('year_event_count', $this->swap_vars($vars, $year_output));
+
+								$year_output = $this->parse_count_hashes(
+									'year_event_count',
+									$this->swap_vars($vars, $year_output)
+								);
 
 								$replace = $year_output;
 
@@ -6692,31 +7020,58 @@ class Calendar extends Module_builder_calendar
 							$replace = '';
 						}
 					}
-					
+
 					//parse day event counts
 					//$output = $this->parse_count_hashes('day_event_count', $output);
-					
+
 					//parse week event counts
 					//$output = $this->parse_count_hashes('week_event_count', $output);
 				}
-				
+
 				//parse month event counts
 				//$output = $this->parse_count_hashes('month_event_count', $output);
 			}
-				
+
 			//parse year event count
 			//$output = $this->parse_count_hashes('year_event_count', $output);
 		}
 
+		// -------------------------------------
+		//	running all of these again in case
+		//	the didn't fire. This means we
+		//	are in a straight event loop in
+		//	cal and it's probably errorsome :/
+		// -------------------------------------
+
+		//parse hour event counts
+		$output = $this->parse_count_hashes('hour_event_count', $output);
+
+		//parse day event counts
+		$output = $this->parse_count_hashes('day_event_count', $output);
+
+		//parse week event counts
+		$output = $this->parse_count_hashes('week_event_count', $output);
+
+		//parse month event counts
+		$output = $this->parse_count_hashes('month_event_count', $output);
+
+		//parse year event count
+		$output = $this->parse_count_hashes('year_event_count', $output);
+
+		//parse year event count
+		$output = $this->parse_count_hashes('event_count', $output);
+
+		$output = $this->swap_vars(array('single'=>array('event_total' => $event_count)), $output);
+
 		$hash = 'hash_'.$output_at;
-		
+
 		$tagdata = isset($$hash) ? str_replace($$hash, $output, $tagdata) : $output;
-		
+
 		$tagdata = $this->parse_pagination($tagdata);
 
 		//ee()->TMPL->log_item('Calendar: All done!');
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	this shouldn't ever be needed, but here we are
 		//--------------------------------------------
 
@@ -6744,7 +7099,7 @@ class Calendar extends Module_builder_calendar
 	 */
 
 	public function parse_pagination( $return = '' )
-	{		
+	{
 		// ----------------------------------------
 		//	Capture pagination format
 		// ----------------------------------------
@@ -6752,28 +7107,28 @@ class Calendar extends Module_builder_calendar
 		if ( $this->paginate === FALSE )
 		{
 			$return = preg_replace(
-				"/" . LD . "if calendar_paginate" . RD . ".*?" . LD . "&#47;if" . RD . "/s", 
-				'', 
+				"/" . LD . "if calendar_paginate" . RD . ".*?" . LD . "&#47;if" . RD . "/s",
+				'',
 				$return
 			);
-			
+
 			$return = preg_replace(
-				"/" . LD . "if paginate" . RD . ".*?" . LD . "&#47;if" . RD . "/s", 
-				'', 
+				"/" . LD . "if paginate" . RD . ".*?" . LD . "&#47;if" . RD . "/s",
+				'',
 				$return
 			);
 		}
 		else
-		{			
+		{
 			$return = preg_replace(
-				"/" . LD . "if calendar_paginate" . RD . "(.*?)" . LD . "&#47;if" . RD . "/s", 
-				"\\1", 
+				"/" . LD . "if calendar_paginate" . RD . "(.*?)" . LD . "&#47;if" . RD . "/s",
+				"\\1",
 				$return
 			);
-			
+
 			$return = preg_replace(
-				"/" . LD . "if paginate" . RD . "(.*?)" . LD . "&#47;if" . RD . "/s", 
-				"\\1", 
+				"/" . LD . "if paginate" . RD . "(.*?)" . LD . "&#47;if" . RD . "/s",
+				"\\1",
 				$return
 			);
 
@@ -6804,8 +7159,8 @@ class Calendar extends Module_builder_calendar
 				if ($this->page_previous == '')
 				{
 					 $this->paginate_data = preg_replace(
-						"/" . LD . "if calendar_previous_page" . RD . ".+?" . LD . preg_quote(T_SLASH, '/') . "if" . RD . "/s", 
-						'', 
+						"/" . LD . "if calendar_previous_page" . RD . ".+?" . LD . preg_quote(T_SLASH, '/') . "if" . RD . "/s",
+						'',
 						$this->paginate_data
 					);
 				}
@@ -6822,8 +7177,8 @@ class Calendar extends Module_builder_calendar
 				if ($this->page_previous == '')
 				{
 					 $this->paginate_data = preg_replace(
-						"/" . LD . "if previous_page" . RD . ".+?" . LD . preg_quote(T_SLASH, '/') . "if" . RD . "/s", 
-						'', 
+						"/" . LD . "if previous_page" . RD . ".+?" . LD . preg_quote(T_SLASH, '/') . "if" . RD . "/s",
+						'',
 						$this->paginate_data
 					);
 				}
@@ -6895,7 +7250,7 @@ class Calendar extends Module_builder_calendar
 	}
 
 	// End parse pagination
-	
+
 
 	// --------------------------------------------------------------------
 
@@ -6912,14 +7267,14 @@ class Calendar extends Module_builder_calendar
 	private function create_count_hash($type)
 	{
 		$hash = md5(uniqid());
-		
-		return 	LD . 'count_hash_placeholder type="' . $type . '"' . RD . 
-					$hash . 
+
+		return 	LD . 'count_hash_placeholder type="' . $type . '"' . RD .
+					$hash .
 				LD . T_SLASH . 'count_hash_placeholder' . RD;
 	}
 	//END create_count_hash
-		
-	
+
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -6931,14 +7286,14 @@ class Calendar extends Module_builder_calendar
 	 * @param	string 	$close	- closing delimiter
 	 * @return	string	returns bool TRUE of there are equal sets of openers and closers
 	 */
-	
+
 	private function equal_delimiters($str, $open = LD, $close = RD)
-	{		
+	{
 		return substr_count($str, $open) === substr_count($str, $close);
 	}
 	// END equal_delimiters
-	
-	
+
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -6955,73 +7310,73 @@ class Calendar extends Module_builder_calendar
 	 */
 
 	private function remove_post_parse_conditionals($tags, $tagdata)
-	{		
-		//--------------------------------------------  
+	{
+		//--------------------------------------------
 		//	first find all if openers
 		//--------------------------------------------
-		
+
 		//need a temp to work with
 		$temp 				= $tagdata;
-			
-		$if_openers 		= array();	
-		
+
+		$if_openers 		= array();
+
 		$count = 0;
-				
+
 		while ($temp = stristr($temp, LD . 'if'))
 		{
 			$count++;
-			
+
 			//we first have to find the proper end of the {if} tag
 			$if_tag_pos 	= strpos($temp, RD, 0);
-			$if_tag 		= substr($temp, 0, $if_tag_pos + 1);			
-			
+			$if_tag 		= substr($temp, 0, $if_tag_pos + 1);
+
 			$inner_count = 0;
-			
+
 			//if we dont have an equal number of delimters...
 			while ( ! $this->equal_delimiters($if_tag))
 			{
 				$inner_count++;
-				
+
 				//we keep checking for the next right delmiter in line
 				$if_tag_pos = strpos($temp, RD, $if_tag_pos + 1);
 				$if_tag 	= substr($temp, 0, $if_tag_pos + 1);
-				
+
 				if ($inner_count > 1000) break;
 			}
-			
+
 			$if_openers[] 	= $if_tag;
-			
+
 			//remove from temp so we can move on in the while loop
 			$temp 			= substr($temp, strlen($if_tag));
-			
+
 			if ($count > 1000) break;
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	replace all items from if tags with
 		//--------------------------------------------
-		
+
 		//keep a copy of old ones
 		$original_ifs = $if_openers;
-		
+
 		//replace all tag names as the passed in hash (with pair tags)
 		foreach ($tags as $tag => $hash)
 		{
 			foreach ($if_openers as $key => $value)
 			{
-				//--------------------------------------------  
-				//	this is complicated, but we have 
+				//--------------------------------------------
+				//	this is complicated, but we have
 				//	to make sure no previous
 				//	replacements get double wrapped
 				//--------------------------------------------
-				
+
 				$matches = array();
 				$holders = array();
-				
-				if (preg_match_all( 
-					"/" . LD . 'count_hash_placeholder type="' . $tag . '"' . RD . "(.+?)" . 
-						  LD . preg_quote(T_SLASH, '/') . 'count_hash_placeholder' . RD . "/s", 
-					$if_openers[$key], 
+
+				if (preg_match_all(
+					"/" . LD . 'count_hash_placeholder type="' . $tag . '"' . RD . "(.+?)" .
+						  LD . preg_quote(T_SLASH, '/') . 'count_hash_placeholder' . RD . "/s",
+					$if_openers[$key],
 					$matches
 				))
 				{
@@ -7030,41 +7385,41 @@ class Calendar extends Module_builder_calendar
 						$holder_hash 			= md5($matches[0][$i]);
 						$holders[$holder_hash] 	= $matches[0][$i];
 						$if_openers[$key] 		= str_replace(
-							$matches[0][$i], 
-							$holder_hash, 
+							$matches[0][$i],
+							$holder_hash,
 							$if_openers[$key]
 						);
 					}
 				}
-				
+
 				//fix any remaining
 				$if_openers[$key] = str_replace($tag, $hash, $if_openers[$key]);
-				
+
 				//put any holders back in
 				if ( ! empty($holders))
 				{
 					foreach($holders as $holder_hash => $held_data)
 					{
 						$if_openers[$key] = str_replace(
-							$holder_hash, 
-							$held_data, 
+							$holder_hash,
+							$held_data,
 							$if_openers[$key]
 						);
 					}
 				}
 			}
 		}
-		
+
 		//replace old if blocks with new ones
 		foreach ($original_ifs as $key => $value)
-		{			
+		{
 			$tagdata = str_replace($original_ifs[$key], $if_openers[$key], $tagdata);
 		}
-		
+
 		return $tagdata;
 	}
 	//END remove_post_parse_conditionals
-	
+
 
 	// --------------------------------------------------------------------
 
@@ -7078,24 +7433,24 @@ class Calendar extends Module_builder_calendar
 	 * @param	string	$tagdata	tagdata to be parsed
 	 * @return	string	parsed tagdata
 	 */
-	
+
 	private function parse_count_hashes($type, $tagdata)
 	{
 		$matches 		= array();
 		$current_hash 	= '';
 		$count			= 0;
-		
+
 		//no match, no work
-		if ( ! preg_match_all( 
-			"/" . LD . 'count_hash_placeholder type="' . $type . '"' . RD . "(.+?)" . 
-				  LD . preg_quote(T_SLASH, '/') . 'count_hash_placeholder' . RD . "/s", 
-			$tagdata, 
+		if ( ! preg_match_all(
+			"/" . LD . 'count_hash_placeholder type="' . $type . '"' . RD . "(.+?)" .
+				  LD . preg_quote(T_SLASH, '/') . 'count_hash_placeholder' . RD . "/s",
+			$tagdata,
 			$matches
 		))
 		{
 			return $tagdata;
 		}
-		
+
 		//replace each hash with a sucessive number
 		for ($i = 0, $l = count($matches[0]); $i < $l; $i++)
 		{
@@ -7104,15 +7459,15 @@ class Calendar extends Module_builder_calendar
 			if ($current_hash != $matches[1][$i])
 			{
 				$current_hash = $matches[1][$i];
-				
+
 				$tagdata = str_replace($matches[0][$i], ++$count, $tagdata);
 			}
 		}
-		
+
 		return $tagdata;
 	}
 	//END parse_count_hashes
-	
+
 
 	// --------------------------------------------------------------------
 
@@ -7157,15 +7512,15 @@ class Calendar extends Module_builder_calendar
 						{
 							$new_array[$ymd][$sh][$k]	= $v;
 						}
-						
+
 						$count++;
-						
+
 						if ($limit != 0 AND $count == $limit)
 						{
 							break(3);
 						}
 					}
-					
+
 					continue;
 				}
 				else
@@ -7191,9 +7546,9 @@ class Calendar extends Module_builder_calendar
 									{
 										$new_array[$ymd][$sh][$sm][$eh][$em][$k]	= $v;
 									}
-									
+
 									$count++;
-									
+
 									if ($limit != 0 AND $count == $limit)
 									{
 										break(6);
@@ -7219,7 +7574,7 @@ class Calendar extends Module_builder_calendar
 	 * @param	array	$array		Event array
 	 * @param	int		$limit		Limit
 	 * @param	int		$offset		count offset
-	 * @param	string	$direction	direction to remove from		
+	 * @param	string	$direction	direction to remove from
 	 * @return	array
 	 */
 
@@ -7228,7 +7583,7 @@ class Calendar extends Module_builder_calendar
 		$count 			= 0;
 		$offset_skip	= 0;
 		$return 		= array();
-		
+
 		if (empty($array))
 		{
 			return $return;
@@ -7245,7 +7600,7 @@ class Calendar extends Module_builder_calendar
 		}
 
 		foreach ($array as $key => $value)
-		{			
+		{
 			//if we have sub items in the same day
 			if (is_array($value))
 			{
@@ -7257,7 +7612,7 @@ class Calendar extends Module_builder_calendar
 				{
 					ksort($value);
 				}
-				
+
 				foreach ($value as $sub_key => $sub_item)
 				{
 					if ($offset != 0 AND $offset >= $offset_skip)
@@ -7265,12 +7620,12 @@ class Calendar extends Module_builder_calendar
 						$offset_skip++;
 						continue;
 					}
-					
+
 					$return[$key][$sub_key] = $sub_item;
-					
+
 					//if we have enough, end
 					if (++$count >= $limit)
-					{ 
+					{
 						break(2);
 					}
 				}
@@ -7282,16 +7637,16 @@ class Calendar extends Module_builder_calendar
 					$offset_skip++;
 					continue;
 				}
-				
+
 				$return[$key] = $value;
-				
+
 				if (++$count >= $limit)
-				{ 
-					break; 
+				{
+					break;
 				}
 			}
 		}
-		
+
 		//set back to the correct order because we will reverse later if needed
 		if ($direction == 'prior')
 		{
@@ -7302,14 +7657,14 @@ class Calendar extends Module_builder_calendar
 					ksort($value);
 				}
 			}
-			
+
 			ksort($return);
 		}
-				
+
 		return $return;
 	}
 	// END apply_occurrences_limit
-	
+
 
 	// --------------------------------------------------------------------
 
@@ -7340,7 +7695,7 @@ class Calendar extends Module_builder_calendar
 				if ($sh == 'all_day')
 				{
 					$count += count($sh_data);
-					
+
 					continue;
 				}
 				else
@@ -7374,14 +7729,14 @@ class Calendar extends Module_builder_calendar
 	 */
 
 	protected function count_events($ymd, $event_array, $all_day = array(), $counted_type = 'day', &$event_data = NULL)
-	{				
+	{
 		$arr 			= $event_array[$ymd];
-		
+
 		$count 			= 0;
-		
-		$all_day_count 	= 0;		
-				
-		//adds seperate all day events to the internal ones		
+
+		$all_day_count 	= 0;
+
+		//adds seperate all day events to the internal ones
 		foreach ($all_day as $day_array)
 		{
 			if ($ymd <= $day_array['end_ymd'])
@@ -7423,15 +7778,15 @@ class Calendar extends Module_builder_calendar
 							if (is_array($event_ids))
 							{
 								foreach($event_ids as $event_id)
-								{				
+								{
 									if (is_numeric($event_id))
 									{
-										
+
 										if ($counted_type != 'day' OR
 											! array_key_exists($event_id, $this->counted[$counted_type]))
 										{
 											$count++;
-											$this->counted[$counted_type][$event_id] = $event_id;											
+											$this->counted[$counted_type][$event_id] = $event_id;
 										}
 										//multiple occurrences of the SAME event in the same day that ARENT all day
 										//get counted more than once
@@ -7476,7 +7831,7 @@ class Calendar extends Module_builder_calendar
 		{
 			$vars['single']['event_timeframe_total'] = $this->event_timeframe_total;
 		}
-		
+
 		if (isset($vars['date']))
 		{
 			// -------------------------------------
@@ -7516,9 +7871,14 @@ class Calendar extends Module_builder_calendar
 				}
 			}
 
-			if (! empty($vars['date']) AND strpos($tagdata, ' format=') !== FALSE)
+			if ( ! empty($vars['date']) AND
+				 strpos($tagdata, ' format=') !== FALSE)
 			{
-				preg_match_all('#'.LD.'([a-zA-Z_]+)\s+format\s*=\s*[\'|\"](.*?)[\'|\"]'.RD.'#s', $tagdata, $matches);
+				preg_match_all(
+					'#'.LD.'([a-zA-Z_]+)\s+format\s*=\s*[\'|\"](.*?)[\'|\"]'.RD.'#s',
+					$tagdata,
+					$matches
+				);
 
 				foreach ($matches[0] as $k => $match)
 				{
@@ -7528,7 +7888,7 @@ class Calendar extends Module_builder_calendar
 						//  The date is a YMD
 						// -------------------------------------
 
-						if (! is_array($vars['date'][$matches[1][$k]]))
+						if ( ! is_array($vars['date'][$matches[1][$k]]))
 						{
 							$this->CDT->change_ymd($vars['date'][$matches[1][$k]]);
 						}
@@ -7539,10 +7899,24 @@ class Calendar extends Module_builder_calendar
 
 						else
 						{
-							$this->CDT->change_datetime($vars['date'][$matches[1][$k]]['year'], $vars['date'][$matches[1][$k]]['month'], $vars['date'][$matches[1][$k]]['day'], $vars['date'][$matches[1][$k]]['hour'], $vars['date'][$matches[1][$k]]['minute']);
+							$this->CDT->change_datetime(
+								$vars['date'][$matches[1][$k]]['year'],
+								$vars['date'][$matches[1][$k]]['month'],
+								$vars['date'][$matches[1][$k]]['day'],
+								$vars['date'][$matches[1][$k]]['hour'],
+								$vars['date'][$matches[1][$k]]['minute']
+							);
 						}
 
-						$tagdata = str_replace($match, $this->cdt_format_date_string($this->CDT->datetime_array(), $matches[2][$k], '%'), $tagdata);
+						$tagdata = str_replace(
+							$match,
+							$this->cdt_format_date_string(
+								$this->CDT->datetime_array(),
+								$matches[2][$k],
+								'%'
+							),
+							$tagdata
+						);
 					}
 				}
 			}
@@ -7626,7 +8000,7 @@ class Calendar extends Module_builder_calendar
 								{
 									if (in_array($v, $days))
 									{
-										$out .= str_replace(LD.$key.RD, ee()->lang->line('day_'.array_search($v, $days).'_full'), $tdata);
+										$out .= str_replace(LD.$key.RD, lang('day_'.array_search($v, $days).'_full'), $tdata);
 									}
 								}
 							}
@@ -7660,7 +8034,7 @@ class Calendar extends Module_builder_calendar
 								{
 									if (in_array($v, $months))
 									{
-										$out .= str_replace(LD.$key.RD, ee()->lang->line('month_'.array_search($v, $months).'_full'), $tdata);
+										$out .= str_replace(LD.$key.RD, lang('month_'.array_search($v, $months).'_full'), $tdata);
 									}
 								}
 							}
@@ -7756,7 +8130,7 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		$adjust = ($this->P->value('date_range_start') === FALSE AND $this->P->value('date_range_end') === FALSE) ? FALSE : TRUE;
-		
+
 		$this->set_date_range_parameters($adjust);
 
 		// -------------------------------------
@@ -7764,6 +8138,7 @@ class Calendar extends Module_builder_calendar
 		// -------------------------------------
 
 		$this->P->set( 'pad_short_weeks', $this->check_yes( $this->P->value('pad_short_weeks') ) );
+
 	}
 	/* END process_events_params() */
 
@@ -7811,15 +8186,15 @@ class Calendar extends Module_builder_calendar
 	 */
 
 	protected function set_date_range_parameters($adjust_empty_vals = TRUE)
-	{	
-		if ($this->P->value('date_range_start') !== FALSE AND 
+	{
+		if ($this->P->value('date_range_start') !== FALSE AND
 			$this->P->value('date_range_end') === FALSE)
 		{
 			$this->CDT->change_ymd($this->P->value('date_range_start', 'ymd'));
 
-			if ($this->P->value('show_years') > 0 OR 
-				$this->P->value('show_months') > 0 OR 
-				$this->P->value('show_weeks') > 0 OR 
+			if ($this->P->value('show_years') > 0 OR
+				$this->P->value('show_months') > 0 OR
+				$this->P->value('show_weeks') > 0 OR
 				$this->P->value('show_days') > 0)
 			{
 				$this->P->set('date_range_end', $this->P->params['date_range_start']['value']);
@@ -7833,22 +8208,22 @@ class Calendar extends Module_builder_calendar
 					$this->CDT->add_month(($this->P->value('show_months') - 1), TRUE, 'forward');
 				}
 				else if ($this->P->value('show_weeks') > 0)
-				{		
-					//get the current day of week (1-7)			
+				{
+					//get the current day of week (1-7)
 					$dow		= $this->CDT->get_day_of_week(
-						$this->CDT->year, 
-						$this->CDT->month, 
+						$this->CDT->year,
+						$this->CDT->month,
 						$this->CDT->day
 					) + 1;
-					
+
 					//first day of week
 					$fdow 		= $this->get_first_day_of_week();
-					
+
 					//we need to calculate 2 weeks backwards, counting today (-1) removing the remaining
-					//days of the week, MINUS the first day of the week... 
+					//days of the week, MINUS the first day of the week...
 					//this will give is first day of the week, x weeks forward, counting this week as a full
 					//week regardless of the day
-										
+
 					$this->CDT->add_day(( 7 * $this->P->value('show_weeks') ) - ($dow - $fdow));
 				}
 				else if ($this->P->value('show_days') > 0)
@@ -7856,17 +8231,23 @@ class Calendar extends Module_builder_calendar
 					$this->CDT->add_day($this->P->value('show_days') - 1);
 				}
 
-				$this->P->set('date_range_end', $this->CDT->datetime_array());
+				$end = $this->CDT->datetime_array();
+
+				$end["time"]	= "2359";
+				$end["hour"]	= '23';
+				$end["minute"]	= '59';
+
+				$this->P->set('date_range_end', $end);
 			}
 		}
-		elseif ($this->P->value('date_range_start') === FALSE AND 
+		elseif ($this->P->value('date_range_start') === FALSE AND
 				$this->P->value('date_range_end') !== FALSE)
 		{
 			$this->CDT->change_ymd($this->P->value('date_range_end', 'ymd'));
 
-			if ($this->P->value('show_years') > 0 OR 
-				$this->P->value('show_months') > 0 OR 
-				$this->P->value('show_weeks') > 0 OR 
+			if ($this->P->value('show_years') > 0 OR
+				$this->P->value('show_months') > 0 OR
+				$this->P->value('show_weeks') > 0 OR
 				$this->P->value('show_days') > 0)
 			{
 				if ($this->P->value('show_years') > 0)
@@ -7881,18 +8262,18 @@ class Calendar extends Module_builder_calendar
 				{
 					//get the current day of week (1-7)
 					$dow		= $this->CDT->get_day_of_week(
-						$this->CDT->year, 
-						$this->CDT->month, 
+						$this->CDT->year,
+						$this->CDT->month,
 						$this->CDT->day
 					) + 1;
-					
+
 					//first day of week
 					$fdow 		= $this->get_first_day_of_week();
-					
+
 					//we need to calculate 2 weeks backwards, counting today (+1) removing the remaining
-					//days of the week, MINUS the first day of the week... 
+					//days of the week, MINUS the first day of the week...
 					//this will give is first day of the week, x weeks back, counting this week as a full
-					//week regardless of the day					
+					//week regardless of the day
 					$this->CDT->add_day(( -7 * $this->P->value('show_weeks') ) + 1 + (7 - ($dow - $fdow)));
 				}
 				else if ($this->P->value('show_days') > 0)
@@ -7903,15 +8284,15 @@ class Calendar extends Module_builder_calendar
 				$this->P->set('date_range_start', $this->CDT->datetime_array());
 			}
 		}
-		elseif ($adjust_empty_vals === TRUE AND 
-				$this->P->value('date_range_start') === FALSE AND 
+		elseif ($adjust_empty_vals === TRUE AND
+				$this->P->value('date_range_start') === FALSE AND
 				$this->P->value('date_range_end') === FALSE)
 		{
 			$this->P->set('date_range_start', $this->CDT->datetime_array());
 
-			if ($this->P->value('show_years') > 0 OR 
-				$this->P->value('show_months') > 0 OR 
-				$this->P->value('show_weeks') > 0 OR 
+			if ($this->P->value('show_years') > 0 OR
+				$this->P->value('show_months') > 0 OR
+				$this->P->value('show_weeks') > 0 OR
 				$this->P->value('show_days') > 0)
 			{
 				if ($this->P->value('show_years') > 0)
@@ -7923,22 +8304,22 @@ class Calendar extends Module_builder_calendar
 					$this->CDT->add_month(($this->P->value('show_months') - 1), TRUE, 'forward');
 				}
 				else if ($this->P->value('show_weeks') > 0)
-				{		
-					//get the current day of week (1-7)			
+				{
+					//get the current day of week (1-7)
 					$dow		= $this->CDT->get_day_of_week(
-						$this->CDT->year, 
-						$this->CDT->month, 
+						$this->CDT->year,
+						$this->CDT->month,
 						$this->CDT->day
 					) + 1;
-					
+
 					//first day of week
 					$fdow 		= $this->get_first_day_of_week();
-					
+
 					//we need to calculate 2 weeks backwards, counting today (-1) removing the remaining
-					//days of the week, MINUS the first day of the week... 
+					//days of the week, MINUS the first day of the week...
 					//this will give is first day of the week, x weeks forward, counting this week as a full
 					//week regardless of the day
-										
+
 					$this->CDT->add_day(( 7 * $this->P->value('show_weeks') ) - ($dow - $fdow));
 				}
 				else if ($this->P->value('show_days') > 0)
@@ -7946,11 +8327,25 @@ class Calendar extends Module_builder_calendar
 					$this->CDT->add_day($this->P->value('show_days') - 1);
 				}
 
-				$this->P->set('date_range_end', $this->CDT->datetime_array());
+				$end = $this->CDT->datetime_array();
+
+				$end["time"]	= "2359";
+				$end["hour"]	= '23';
+				$end["minute"]	= '59';
+
+				$this->P->set('date_range_end', $end);
 			}
 			else
 			{
-				$this->P->set('date_range_end', $this->P->value('date_range_start'));
+				$end = $this->P->params['date_range_start']['value'];
+
+				$end["time"]	= "2359";
+				$end["hour"]	= '23';
+				$end["minute"]	= '59';
+
+				$this->P->set('date_range_end', $end);
+
+				//$this->P->set('date_range_end', $this->P->value('date_range_start'));
 			}
 		}
 	}
@@ -8029,27 +8424,27 @@ class Calendar extends Module_builder_calendar
 	protected function get_occurrence_vars($id, $event, $ymd, $time = '00000000')
 	{
 		$vars 								= array();
-		$vars['single'] 					= (isset($event->occurrences[$ymd][$time])) ? 
-												array_merge($event->default_data, $event->occurrences[$ymd][$time]) : 
+		$vars['single'] 					= (isset($event->occurrences[$ymd][$time])) ?
+												array_merge($event->default_data, $event->occurrences[$ymd][$time]) :
 												$event->default_data;
 
 		// -------------------------------------
 		//  Time time tickin'...
 		// -------------------------------------
 
-		$vtime['hour']						= ($vars['single']['start_time'] == 0) ? 
+		$vtime['hour']						= ($vars['single']['start_time'] == 0) ?
 												00 : substr($vars['single']['start_time'], 0, strlen($vars['single']['start_time']) - 2);
-		$vtime['minute']					= ($vars['single']['start_time'] == 0) ? 
+		$vtime['minute']					= ($vars['single']['start_time'] == 0) ?
 												00 : substr($vars['single']['start_time'], -2);
-											
+
 		$cal_data							= $this->data->fetch_calendars_basics(
-													$this->data->get_site_id(), 
+													$this->data->get_site_id(),
 													$event->default_data['calendar_id']
 											  );
-		
-		$time_format						= (/*isset($cal_data[0]) AND*/ 
-												$cal_data[0]['time_format'] != '') ? 
-													$cal_data[0]['time_format'] : 
+
+		$time_format						= (/*isset($cal_data[0]) AND*/
+												$cal_data[0]['time_format'] != '') ?
+													$cal_data[0]['time_format'] :
 												$this->time_format;
 
 		$vars['single']['start_time']		= $this->cdt_format_date_string($event->dates[$ymd][$time]['date'], $time_format);
@@ -8060,14 +8455,14 @@ class Calendar extends Module_builder_calendar
 		$vars['single']['end_minute']		= $this->cdt_format_date_string($event->dates[$ymd][$time]['end_date'], 'i');
 		$vars['single']['first_day']		= ($ymd == $event->default_data['start_date']) ? TRUE : FALSE;
 		$vars['single']['last_day']			= ($ymd == $event->default_data['end_date']) ? TRUE : FALSE;
-		$vars['single']['duration_minutes']	= (isset($event->dates[$ymd])) ? 
-												$event->dates[$ymd][$time]['duration']['minutes'] : 
+		$vars['single']['duration_minutes']	= (isset($event->dates[$ymd])) ?
+												$event->dates[$ymd][$time]['duration']['minutes'] :
 												$event->default_data['duration']['minutes'];
-		$vars['single']['duration_hours']	= (isset($event->dates[$ymd])) ? 
-												$event->dates[$ymd][$time]['duration']['hours'] : 
+		$vars['single']['duration_hours']	= (isset($event->dates[$ymd])) ?
+												$event->dates[$ymd][$time]['duration']['hours'] :
 												$event->default_data['duration']['hours'];
-		$vars['single']['duration_days']	= (isset($event->dates[$ymd])) ? 
-												$event->dates[$ymd][$time]['duration']['days'] : 
+		$vars['single']['duration_days']	= (isset($event->dates[$ymd])) ?
+												$event->dates[$ymd][$time]['duration']['days'] :
 												$event->default_data['duration']['days'];
 		$vars['single']['all_day']			= $event->dates[$ymd][$time]['all_day'];
 		$vars['single']['multi_day']		= $event->dates[$ymd][$time]['multi_day'];
@@ -8088,15 +8483,15 @@ class Calendar extends Module_builder_calendar
 				else
 				{
 					$vdate 				= $this->CDT->ymd_to_array($v);
-					
+
 					$vars['date'][$key] = $this->CDT->change_datetime(
-						$vdate['year'], 
-						$vdate['month'], 
-						$vdate['day'], 
-						$vtime['hour'], 
+						$vdate['year'],
+						$vdate['month'],
+						$vdate['day'],
+						$vtime['hour'],
 						$vtime['minute']
 					);
-					
+
 					$this->CDT->reset();
 				}
 			}
@@ -8123,7 +8518,7 @@ class Calendar extends Module_builder_calendar
 	 */
 
 	protected function prep_occurrences_output($tagdata, $data, $include_default = TRUE)
-	{		
+	{
 		// -------------------------------------
 		//  Ensure $this->CDT is ready
 		// -------------------------------------
@@ -8142,18 +8537,18 @@ class Calendar extends Module_builder_calendar
 		{
 			ksort($data->dates[$ymd]);
 		}
-		
+
 		ksort($data->dates);
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	order arrays for later multi sorting
 		//--------------------------------------------
 
-		$calendar_orderby_params = array(	
+		$calendar_orderby_params = array(
 			'event_start_date',
 			'occurrence_start_date'
 		);
-				
+
 		$orders 				= explode('|', $this->P->value('orderby'));
 		$sorts 					= explode('|', $this->P->value('sort'));
 		$calendar_orders 		= array();
@@ -8173,22 +8568,22 @@ class Calendar extends Module_builder_calendar
 		//  Are prior_ or upcoming_ limits in effect?
 		// -------------------------------------
 
-		$prior_limit	= ($this->P->value('prior_occurrences_limit') !== FALSE) ? 
+		$prior_limit	= ($this->P->value('prior_occurrences_limit') !== FALSE) ?
 							$this->P->value('prior_occurrences_limit') : FALSE;
-		$upcoming_limit	= ($this->P->value('upcoming_occurrences_limit') !== FALSE) ? 
+		$upcoming_limit	= ($this->P->value('upcoming_occurrences_limit') !== FALSE) ?
 							$this->P->value('upcoming_occurrences_limit') : FALSE;
 
 		if ( $prior_limit !== FALSE OR $upcoming_limit !== FALSE)
-		{				
+		{
 			$priors			= array();
 			$upcoming		= array();
 
 			//set date to current
 			$this->CDT->set_date_to_now();
-				
+
 			foreach ($data->dates as $ymd => $info)
-			{		
-				//yeterday or before	
+			{
+				//yeterday or before
 				if ($ymd < $this->CDT->ymd)
 				{
 					$priors[$ymd] = $info;
@@ -8201,15 +8596,15 @@ class Calendar extends Module_builder_calendar
 					{
 						$temp_end_hour 		= ($time_data['end_date']['hour'] + (($time_data['end_date']['pm']) ? 12 : 0));
 						$temp_end_minute 	= $time_data['end_date']['minute'];
-					
+
 						//if this is an all day item and we are still in this day, its current
 						if ($time_data['all_day'] == TRUE)
 						{
 							$upcoming[$ymd][$time] = $time_data;
 						}
-						//is it still up coming in hours and minutes?						
-						else if ($temp_end_hour > $this->CDT->hour() OR 
-								 ( $temp_end_hour == $this->CDT->hour() AND 
+						//is it still up coming in hours and minutes?
+						else if ($temp_end_hour > $this->CDT->hour() OR
+								 ( $temp_end_hour == $this->CDT->hour() AND
 								   $temp_end_minute > $this->CDT->minute()
 								 )
 								)
@@ -8234,7 +8629,7 @@ class Calendar extends Module_builder_calendar
 			if ($prior_limit !== FALSE)
 			{
 				$priors = $this->apply_occurrences_limit($priors, $prior_limit, 0, 'prior');
-				
+
 				//$priors = array_slice(array_reverse($priors, TRUE), 0, $prior_limit, TRUE);
 			}
 
@@ -8248,16 +8643,16 @@ class Calendar extends Module_builder_calendar
 			//this has to be recursive because we can have the same $YMD happening if its today's date
 			$data->dates = array_merge_recursive($priors, $upcoming);
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	get default data from parent entry_id
 		//--------------------------------------------
-		
+
 		if ( ! isset($this->cache['entry_info']))
 		{
 			$this->cache['entry_info'] = array();
 		}
-		
+
 		//we need some extra data about this entry so we can parse occurrences items
 		if ( ! isset($this->cache['entry_info'][$data->default_data['entry_id']]))
 		{
@@ -8268,7 +8663,7 @@ class Calendar extends Module_builder_calendar
 				 ON			ct.author_id = m.member_id
 				 WHERE		ct.entry_id = " . ee()->db->escape_str($data->default_data['entry_id'])
 			);
-			
+
 			if ($entry_info_query->num_rows() > 0)
 			{
 				$this->cache['entry_info'][$data->default_data['entry_id']] = $entry_info_query->row_array();
@@ -8278,9 +8673,9 @@ class Calendar extends Module_builder_calendar
 				$this->cache['entry_info'][$data->default_data['entry_id']] = array();
 			}
 		}
-		
+
 		$entry_info = $this->cache['entry_info'][$data->default_data['entry_id']];
-				
+
 		// -------------------------------------
 		//  Grab entry IDs from the occurrences
 		// -------------------------------------
@@ -8316,14 +8711,14 @@ class Calendar extends Module_builder_calendar
 			//	----------------------------------------
 			//	Invoke Channel class
 			//	----------------------------------------
-			
+
 			if (APP_VER < 2.0)
 			{
 				if ( ! class_exists('Weblog') )
 				{
 					require PATH_MOD.'/weblog/mod.weblog'.EXT;
 				}
-		
+
 				$channel = new Weblog;
 			}
 			else
@@ -8332,22 +8727,22 @@ class Calendar extends Module_builder_calendar
 				{
 					require PATH_MOD.'/channel/mod.channel'.EXT;
 				}
-		
+
 				$channel = new Channel;
 			}
 
 			//default is 100 and that could limit events when there are very many to be shown
 			$channel->limit = 500;
-			
+
 			// --------------------------------------------
 			//  Invoke Pagination for EE 2.4 and Above
 			// --------------------------------------------
-	
+
 			if (APP_VER >= '2.4.0')
 			{
 				ee()->load->library('pagination');
 				$channel->pagination = new Pagination_object('Channel');
-				
+
 				// Used by pagination to determine whether we're coming from the cache
 				$channel->pagination->dynamic_sql = FALSE;
 			}
@@ -8380,13 +8775,13 @@ class Calendar extends Module_builder_calendar
 			{
 				$channel->fetch_custom_channel_fields();
 			}
-			
+
 			$channel->fetch_custom_member_fields();
-			
+
 			// --------------------------------------------
 			//  Pagination Tags Parsed Out
 			// --------------------------------------------
-			
+
 			if (APP_VER >= '2.4.0')
 			{
 				$channel->pagination->get_template();
@@ -8414,21 +8809,21 @@ class Calendar extends Module_builder_calendar
 			// -------------------------------------
 
 			$channel->build_sql_query();
-	
+
 			if ($channel->sql == '')
 			{
 				return $this->no_results();
 			}
-			
+
 			$channel->query = ee()->db->query($channel->sql);
 
 			if ($channel->query->num_rows() == 0)
 			{
 				//ee()->TMPL->log_item('Calendar: Channel module says no results, bailing');
-	
+
 				return $this->no_results();
 			}
-			
+
 			$channel->query->result	= $channel->query->result_array();
 
 			// -------------------------------------
@@ -8489,7 +8884,7 @@ class Calendar extends Module_builder_calendar
 			//  Prep variable aliases
 			// -------------------------------------
 
-			$variables = array(	
+			$variables = array(
 				'title'			=> 'occurrence_title',
 				'url_title'		=> 'occurrence_url_title',
 				'entry_id'		=> 'occurrence_id',
@@ -8505,7 +8900,7 @@ class Calendar extends Module_builder_calendar
 			foreach ($channel->query->result as $k => $row)
 			{
 				$channel->query->result[$k]['author'] = ($row['screen_name'] != '') ? $row['screen_name'] : $row['username'];
-				
+
 				$entry_id = $row['entry_id'];
 
 				if (isset($ids[0]) AND $entry_id == $ids[0])
@@ -8562,14 +8957,14 @@ class Calendar extends Module_builder_calendar
 			}
 
 			unset($CDT);
-		
+
 			//	----------------------------------------
 			//	Redeclare
 			//	----------------------------------------
 			//	We will reassign the $channel->query->result with our
 			//	reordered array of values. Thank you PHP for being so fast with array loops.
 			//	----------------------------------------
-	
+
 			if (APP_VER < 2.0)
 			{
 				$channel->query->result	= $channel->query->result;
@@ -8582,14 +8977,14 @@ class Calendar extends Module_builder_calendar
 			// --------------------------------------------
 			//  Typography
 			// --------------------------------------------
-			
+
 			if (APP_VER < 2.0)
 			{
 				if ( ! class_exists('Typography'))
 				{
 					require PATH_CORE.'core.typography'.EXT;
 				}
-						
+
 				$channel->TYPE = new Typography;
 				$channel->TYPE->convert_curly = FALSE;
 			}
@@ -8605,9 +9000,9 @@ class Calendar extends Module_builder_calendar
 			// -------------------------------------
 			//  Parse
 			// -------------------------------------
-	
+
 			//ee()->TMPL->log_item('Calendar: Parsing, via channel module');
-			
+
 			if (APP_VER < 2.0)
 			{
 				$channel->parse_weblog_entries();
@@ -8660,16 +9055,16 @@ class Calendar extends Module_builder_calendar
 		//  Date and time variables
 		// -------------------------------------
 
-		$dt_vars = array(	
+		$dt_vars = array(
 			'start_date',
 			'end_date',
 			'start_time',
 			'end_time'
 		);
-		
+
 		$count = 1;
 		$total = 0;
-		
+
 		foreach ($data->dates as $date)
 		{
 			$total += count($date);
@@ -8680,48 +9075,48 @@ class Calendar extends Module_builder_calendar
 			return $this->no_results();
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	reverse sorting
 		//--------------------------------------------
 
-		if ($this->parent_method == 'occurrences' AND 
-			ee()->TMPL->fetch_param('reverse') AND 
+		if ($this->parent_method == 'occurrences' AND
+			ee()->TMPL->fetch_param('reverse') AND
 			strtolower(ee()->TMPL->fetch_param('reverse')) === 'true' )
 		{
 			krsort($data->dates);
 		}
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	orderby sorting
 		//--------------------------------------------
-		
-		/*if ($this->parent_method == 'occurrences' AND 
+
+		/*if ($this->parent_method == 'occurrences' AND
 			ee()->TMPL->fetch_param('orderby'))
 		{
-			$sort = (ee()->TMPL->fetch_param('sort') AND 
+			$sort = (ee()->TMPL->fetch_param('sort') AND
 					 strtolower(ee()->TMPL->fetch_param('sort')) === 'DESC') ? 'DESC' : 'ASC';
-			
-					
+
+
 		}*/
-		
-		//--------------------------------------------  
+
+		//--------------------------------------------
 		//	pagination
 		//--------------------------------------------
-		
+
 		if ($this->parent_method === 'occurrences')
 		{
 			$this->paginate = FALSE;
 		}
-				
-		$limit = ee()->TMPL->fetch_param('occurrences_limit') ? 
-					ee()->TMPL->fetch_param('occurrences_limit') : 
+
+		$limit = ee()->TMPL->fetch_param('occurrences_limit') ?
+					ee()->TMPL->fetch_param('occurrences_limit') :
 					$this->limit;
-		
-		if ($this->parent_method === 'occurrences' AND $total > $limit)
-		{			
+
+		if ($limit > 0 AND $this->parent_method === 'occurrences' AND $total > $limit)
+		{
 			//get pagination info
 			$pagination_data = $this->universal_pagination(array(
-				'total_results'			=> $total, 
+				'total_results'			=> $total,
 				//had to remove this jazz before so it didn't get iterated over
 				'tagdata'				=> $tagdata . $this->paginate_tagpair_data,
 				'limit'					=> $limit,
@@ -8733,7 +9128,7 @@ class Calendar extends Module_builder_calendar
 			if ($pagination_data['paginate'] === TRUE)
 			{
 				$this->paginate			= $pagination_data['paginate'];
-				$this->page_next		= $pagination_data['page_next']; 
+				$this->page_next		= $pagination_data['page_next'];
 				$this->page_previous	= $pagination_data['page_previous'];
 				$this->p_page			= $pagination_data['pagination_page'];
 				$this->current_page  	= $pagination_data['current_page'];
@@ -8746,21 +9141,21 @@ class Calendar extends Module_builder_calendar
 			}
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	event limiter
 		//--------------------------------------------
 
-		$offset = (ee()->TMPL->fetch_param('occurrences_offset') ? 
-					ee()->TMPL->fetch_param('occurrences_offset') : 
+		$offset = (ee()->TMPL->fetch_param('occurrences_offset') ?
+					ee()->TMPL->fetch_param('occurrences_offset') :
 					0);
 		$page 	= (($this->current_page -1) * $limit);
-				
+
 		if ($this->parent_method === 'occurrences' AND $page > 0)
 		{
 			$offset += $page;
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	Add final variables and swap out,
 		//	then add tagdata to return variable
 		//--------------------------------------------
@@ -8774,13 +9169,13 @@ class Calendar extends Module_builder_calendar
 				//offset and limiting
 				if ($this->parent_method === 'occurrences' AND ++$offset_counter <= $offset) continue;
 				if ($this->parent_method === 'occurrences' AND $offset_counter > ($limit + $offset)) break (2);
-				
-				//--------------------------------------------  
+
+				//--------------------------------------------
 				//	output variables
 				//--------------------------------------------
-				
-				$tdata = (isset($data->occurrences[$ymd][$time]['entry_id'])) ? 
-							$tagdatas[$data->occurrences[$ymd][$time]['entry_id']] : 
+
+				$tdata = (isset($data->occurrences[$ymd][$time]['entry_id'])) ?
+							$tagdatas[$data->occurrences[$ymd][$time]['entry_id']] :
 							$tagdatas[$data->default_data['entry_id']];
 
 				if ($info['all_day'] === TRUE OR $info['all_day'] == 'y')
@@ -8794,13 +9189,13 @@ class Calendar extends Module_builder_calendar
 					$info['duration']['hours']  = '24';
 				}
 
-				$vars = array( 
-					'single' => array(	
+				$vars = array(
+					'single' => array(
 						'occurrence_duration_minutes'	=> $info['duration']['minutes'],
 						'occurrence_duration_hours'		=> $info['duration']['hours'],
 						'occurrence_duration_days'		=> $info['duration']['days'],
 						'occurrence_id'					=> (isset($data->occurrences[$ymd][$time]['entry_id'])) ?
-															$data->occurrences[$ymd][$time]['entry_id'] : 
+															$data->occurrences[$ymd][$time]['entry_id'] :
 															$data->default_data['entry_id'],
 						'occurrence_start_year'			=> $info['date']['year'],
 						'occurrence_start_month'		=> $info['date']['month'],
@@ -8818,15 +9213,15 @@ class Calendar extends Module_builder_calendar
 						'occurrence_author'				=> (isset($entry_info['screen_name']) ? $entry_info['screen_name'] : (isset($entry_info['username']) ? $entry_info['username'] : '')),
 						'occurrence_title'				=> (isset($entry_info['title']) ? $entry_info['title'] : ''),
 						'occurrence_url_title'			=> (isset($entry_info['url_title']) ? $entry_info['url_title'] : ''),
-						'occurrence_status'				=> (isset($entry_info['status']) ? $entry_info['status'] : ''),							
+						'occurrence_status'				=> (isset($entry_info['status']) ? $entry_info['status'] : ''),
 					),
-					'conditional' => array(	
+					'conditional' => array(
 						'occurrence_all_day'			=> $info['all_day'],
 						'occurrence_multi_day'			=> $info['multi_day'],
 						'occurrence_status'				=> (isset($entry_info['status']) ? $entry_info['status'] : ''),
-						'occurrence_author_id'			=> (isset($entry_info['author_id']) ? $entry_info['author_id'] : ''),	
+						'occurrence_author_id'			=> (isset($entry_info['author_id']) ? $entry_info['author_id'] : ''),
 					),
-					'date' => array(	
+					'date' => array(
 						'occurrence_start_date'			=> $info['date'],
 						'occurrence_start_time'			=> $info['date'],
 						'occurrence_end_date'			=> $info['end_date'],
@@ -8840,7 +9235,7 @@ class Calendar extends Module_builder_calendar
 			}
 		}
 
-		//--------------------------------------------  
+		//--------------------------------------------
 		//	offset too much? buh bye
 		//--------------------------------------------
 
@@ -8874,7 +9269,7 @@ class Calendar extends Module_builder_calendar
 		//  Date and time variables
 		// -------------------------------------
 
-		$dt_vars = array(	
+		$dt_vars = array(
 			'start_date',
 			'end_date',
 			'start_time',
@@ -8886,9 +9281,9 @@ class Calendar extends Module_builder_calendar
 		foreach ($data as $ymd => $info)
 		{
 			$tdata = $tagdata;
-			
+
 			foreach ($dt_vars as $var)
-			{				
+			{
 				if (! isset($info[$var])) continue;
 
 				if (strpos($tdata, LD.'exception_'.$var) !== FALSE)
@@ -8897,23 +9292,23 @@ class Calendar extends Module_builder_calendar
 					{
 						foreach ($matches[1] as $k => $format)
 						{
-							//--------------------------------------------  
+							//--------------------------------------------
 							//	this is a quick and dirty fix for now
 							//	so that icalendar export can work
 							//--------------------------------------------
-							
+
 							//$this->cdt_format_date_string($info[$var], $format, '%');
 							$format = str_replace(array('%', 'T'), array('', '~~~~'), $format);
 							$format = str_replace('~~~~', 'T', date(
-								$format, 
-								mktime( 
-									0, 0, 0, 
+								$format,
+								mktime(
+									0, 0, 0,
 									substr($info[$var], 4, 2), //month
 									substr($info[$var], 6, 2), //day
 									substr($info[$var], 0, 4)  //year
 								)
 							));
-							
+
 							$tdata = str_replace($matches[0][$k], $format, $tdata);
 						}
 					}
@@ -8943,7 +9338,7 @@ class Calendar extends Module_builder_calendar
 		$output = '';
 
 		$variables = array();
-		$variables['single'] = array(	
+		$variables['single'] = array(
 			'rule_id'				=> '',
 			'rule_type'				=> '',
 			'rule_all_day'			=> '',
@@ -8958,15 +9353,15 @@ class Calendar extends Module_builder_calendar
 			'rule_stop_by'			=> '',
 			'rule_last_date'		=> ''
 		);
-		
-		$variables['pair'] = array(	
+
+		$variables['pair'] = array(
 			'rule_days_of_week'		=> array('day_of_week' => ''),
 			'rule_relative_dow'		=> array('relative_dow' => ''),
 			'rule_days_of_month'	=> array('day_of_month' => ''),
 			'rule_months_of_year'	=> array('month_of_year' => '')
 		);
-		
-		$variables['date'] = array(	
+
+		$variables['date'] = array(
 			'rule_start_date'		=> '',
 			'rule_end_date'			=> '',
 			'rule_stop_by'			=> '',
@@ -8975,7 +9370,7 @@ class Calendar extends Module_builder_calendar
 
 		//if we have no rules, return all blank
 		if (empty($data))
-		{ 
+		{
 			return $this->swap_vars($variables, $tagdata);
 		}
 
@@ -8995,12 +9390,12 @@ class Calendar extends Module_builder_calendar
 						$which = ($var == 'rule_start_date') ? 'start' : 'end';
 
 						//this catches non prefixed 0's
-						$hour = substr($info[$which. '_time'], 0, -2); 
+						$hour = substr($info[$which. '_time'], 0, -2);
 						$minute = substr($info[$which. '_time'], -2);
 
 						$this->CDT->change_ymd($val);
 						$this->CDT->change_time($hour, $minute);
-						
+
 						$val = $this->CDT->datetime_array();
 					}
 
@@ -9040,7 +9435,14 @@ class Calendar extends Module_builder_calendar
 
 	public function cdt_format_date_string($date, $format, $prefix = '')
 	{
-		$this->CDT->change_datetime($date['year'], $date['month'], $date['day'], $date['hour'], $date['minute']);
+		$this->CDT->change_datetime(
+			$date['year'],
+			$date['month'],
+			$date['day'],
+			$date['hour'],
+			$date['minute']
+		);
+
 		return $this->CDT->format_date_string($format, $prefix);
 	}
 	// END format_date_string()
@@ -9086,7 +9488,7 @@ class Calendar extends Module_builder_calendar
 			$cats = ee()->db->query(
 				"SELECT cat_id, cat_url_title
 				 FROM 	exp_categories
-				 WHERE 	cat_url_title 
+				 WHERE 	cat_url_title
 				 IN 	('" . implode("','", ee()->db->escape_str(array_keys($to_fix))) . "')"
 			);
 
@@ -9128,15 +9530,15 @@ class Calendar extends Module_builder_calendar
 		//valid n' stuff
 		if (APP_VER < 2.0 OR
 			REQ != 'ACTION' OR
-			trim((string) $group_id) === '' OR 
-			! is_numeric($group_id) OR 
+			trim((string) $group_id) === '' OR
+			! is_numeric($group_id) OR
 			! ($group_id > 0) )
 		{
 			return $this->send_ajax_response(array(
-				'success' => FALSE, 
-				'message' => ee()->lang->line('invalid_permissions_json_request')
+				'success' => FALSE,
+				'message' => lang('invalid_permissions_json_request')
 			));
-		} 
+		}
 
 		ee()->load->library('calendar_permissions');
 

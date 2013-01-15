@@ -100,7 +100,7 @@ body {
   text-decoration: underline;
 }
 #fc_calendar .out_of_range .date {
-    background: transparent url(/themes/solspace_themes/calendar/img/pad_date.png) repeat-x;
+    background: transparent url(/themes/third_party/calendar/img/pad_date.png) repeat-x;
     color: #999;
   }
 #fc_calendar .day_cell {

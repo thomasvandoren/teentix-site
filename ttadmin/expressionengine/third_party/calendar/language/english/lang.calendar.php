@@ -1,5 +1,17 @@
 <?php
 
+/**
+ * Calendar - Language
+ *
+ * @package		Solspace:Calendar
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/calendar
+ * @license		http://www.solspace.com/license_agreement
+ * @version		1.8.0
+ * @filesource	calendar/language/english/lang.calendar.php
+ */
+
 $L = $lang = array(
 
 //----------------------------------------
@@ -367,7 +379,7 @@ $L = $lang = array(
 'permissions_saved' =>
 "Permissions Saved",
 
-'group_permissions' => 
+'group_permissions' =>
 'Group Permissions',
 
 'permissions_instructions' =>
@@ -415,7 +427,7 @@ $L = $lang = array(
 'clock_type_description' =>
 'Use 12-hour or 24-hour clock in control panel?',
 
-'12_hour' => 
+'12_hour' =>
 '12-hour',
 
 '24_hour' =>
@@ -471,11 +483,14 @@ $L = $lang = array(
 'no_results' =>
 'No results.',
 
+'no_title' =>
+'No Title',
+
 'invalid_request' =>
 "Invalid Request",
 
 'calendar_module_disabled' =>
-"The Calendar module is currently disabled. Please insure it is installed and up to date by going 
+"The Calendar module is currently disabled. Please insure it is installed and up to date by going
 to the module's control panel in the ExpressionEngine Control Panel",
 
 'disable_module_to_disable_extension' =>
@@ -546,6 +561,9 @@ to the module's control panel in the ExpressionEngine Control Panel",
 
 'invalid_permissions_json_request' =>
 "In valid JSON request. Requires group_id and EE 2.x+.",
+
+'cannot_update_extensions_disabled' =>
+'This module cannot update while extensions are disabled.',
 
 //----------------------------------------
 //  Days
@@ -902,7 +920,10 @@ to the module's control panel in the ExpressionEngine Control Panel",
 'URL to iCalendar (.ics) file',
 
 'ics_url_desc' =>
-'Add one or more URLs to .ics files - separated by newlines - to import to this calendar.',
+"Add one or more URLs to .ics files - separated by newlines - to import to this calendar. All imported times will be adjusted to this calendar's timezone settings.",
+
+'ics_url_stub' =>
+"All imported times will be adjusted to this calendar's timezone settings.",
 
 'time_format_label' =>
 'Time Format',
@@ -916,4 +937,3 @@ to the module's control panel in the ExpressionEngine Control Panel",
 /* END */
 ''=>''
 );
-?>

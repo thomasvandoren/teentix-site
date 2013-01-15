@@ -3,43 +3,43 @@
 	<table class="mainTable padTable"  style="width:100%;"  cellspacing="0"  cellpadding="0"  border="0">
 	    <thead>
   				<tr>
-  					<th style="width:25%;"><?=ee()->lang->line('preference')?></th>
-  					<th style="width:40%;"><?=ee()->lang->line('setting')?></th>
-  					<th style="width:35%;"><?=ee()->lang->line('description')?></th>
+  					<th style="width:25%;"><?=lang('preference')?></th>
+  					<th style="width:40%;"><?=lang('setting')?></th>
+  					<th style="width:35%;"><?=lang('description')?></th>
   				</tr>
   			</thead>
 
 		<tr class="odd">
-			<td><strong><?=ee()->lang->line('first_day_of_week')?></strong></td>
+			<td><strong><?=lang('first_day_of_week')?></strong></td>
 			<td>
 				<select name="first_day_of_week">
 			<?php for ($i = 0; $i < 7; $i++): ?>
-				<option value="<?=$i?>"<?=($i == $first_day_of_week) ? ' selected="selected"' : '';?>><?=ee()->lang->line('day_'.$i.'_full')?></option>
+				<option value="<?=$i?>"<?=($i == $first_day_of_week) ? ' selected="selected"' : '';?>><?=lang('day_'.$i.'_full')?></option>
 			<?php endfor;?>
 				</select>
 			</td>
-			<td><?=ee()->lang->line('first_day_of_week_description');?></td>
+			<td><?=lang('first_day_of_week_description');?></td>
 		</tr>
-		
+
 		<tr class="even">
-			<td><strong><?=ee()->lang->line('clock_type'); ?></strong></td>
+			<td><strong><?=lang('clock_type'); ?></strong></td>
 			<td>
 				<select name="clock_type">
-					<option value="12" <?=($clock_type == '12') ? 'selected="selected"' : '';?>><?=ee()->lang->line('12_hour')?></option>
-					<option value="24" <?=($clock_type == '24') ? 'selected="selected"' : '';?>><?=ee()->lang->line('24_hour')?></option>
+					<option value="12" <?=($clock_type == '12') ? 'selected="selected"' : '';?>><?=lang('12_hour')?></option>
+					<option value="24" <?=($clock_type == '24') ? 'selected="selected"' : '';?>><?=lang('24_hour')?></option>
 				</select>
 			</td>
-			<td><?=ee()->lang->line('clock_type_description')?></td>
+			<td><?=lang('clock_type_description')?></td>
 		</tr>
-		
+
 		<tr class="odd">
-			<td><strong><?=ee()->lang->line('default_timezone')?></strong></td>
+			<td><strong><?=lang('default_timezone')?></strong></td>
 			<td><?=str_replace('default', '', $this->view('timezone_menu.html'))?></td>
-			<td><?=ee()->lang->line('default_timezone_description')?></td>
+			<td><?=lang('default_timezone_description')?></td>
 		</tr>
-		
+
 		<tr class="even">
-			<td><strong><?=ee()->lang->line('default_date_format')?></strong></td>
+			<td><strong><?=lang('default_date_format')?></strong></td>
 			<td>
 				<select name="date_format">
 					<option value="mm/dd/yy" <?php if ($date_format == 'mm/dd/yy') echo "selected='selected'";?>>M/D/Y - 02/29/2012</option>
@@ -60,14 +60,14 @@
 					<option value="yy-d-m" <?php if ($date_format == 'yy-d-m') echo "selected='selected'";?>>Y-d-m - 2012-29-2</option>
 				</select>
 			</td>
-			<td><?=ee()->lang->line('default_date_format_description');?></td>
+			<td><?=lang('default_date_format_description');?></td>
 		</tr>
-		
+
 		<tr class="odd">
-			<td><strong><?=ee()->lang->line('default_time_format'); ?></strong></td>
+			<td><strong><?=lang('default_time_format'); ?></strong></td>
 			<td><input type="text" name="time_format" value="<?=$time_format?>" /></td>
-			<td><?=ee()->lang->line('default_time_format_description')?></td>
+			<td><?=lang('default_time_format_description')?></td>
 		</tr>
 	</table>
-	<p><input type="submit" class="submit" value="<?=ee()->lang->line('update'); ?>" /> </p>
+	<p><input type="submit" class="submit" value="<?=lang('update'); ?>" /> </p>
 </form>

@@ -1,16 +1,16 @@
 <table class="mainTable padTable"  style="width:100%;"  cellspacing="0"  cellpadding="0"  border="0">
 	<thead>
 	 	<tr>
-			<th style="width:10%;"><?=ee()->lang->line('calendar_id')?></th>
-			<th style="width:60%;"><?=ee()->lang->line('calendar_name')?></th>
-			<th style="width:10%;"><?=ee()->lang->line('status')?></th>
-			<th style="width:20%;"><?=ee()->lang->line('total_events')?></th>
+			<th style="width:10%;"><?=lang('calendar_id')?></th>
+			<th style="width:60%;"><?=lang('calendar_name')?></th>
+			<th style="width:10%;"><?=lang('status')?></th>
+			<th style="width:20%;"><?=lang('total_events')?></th>
 		</tr>
 	</thead>
 	<tbody>
 <?php if (empty($calendars)): ?>
 		<tr class="odd">
-			<td colspan="4"><?=ee()->lang->line('no_results')?></td>
+			<td colspan="4"><?=lang('no_results')?></td>
 		</tr>
 <?php else:?>
 
@@ -22,13 +22,13 @@
 			<td><?=$row['total_events']?></td>
 		</tr>
 	<?php endforeach;?>
-	
+
 	<?php if (! empty($paginate)) : ?>
 		<tr class="<?=$this->cycle('odd', 'even');?>">
 			<td colspan="4"><?=$paginate?></td>
 		</tr>
 	<?php endif;?>
-	
+
 <?php endif;?>
      </tbody>
 </table>

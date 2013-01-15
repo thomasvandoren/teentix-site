@@ -1,35 +1,26 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
- 
- /**
- * Solspace - Calendar
+
+/**
+ * Calendar - Permissions
  *
  * @package		Solspace:Calendar
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2011, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/Calendar/
- * @version		1.6.4
- * @filesource 	./system/modules/Calendar/
- * 
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/calendar
+ * @license		http://www.solspace.com/license_agreement
+ * @filesource	calendar/libraries/calendar_permissions.php
  */
- 
- /**
- * Calendar - Fields Library
- *
- * @package 	Solspace:Calendar
- * @author		Solspace DevTeam
- * @filesource 	./system/modules/Calendar/libraries/Calendar_permissions.php
- */
- 
-if ( ! defined('APP_VER')) define('APP_VER', '2.0'); // EE 2.0's Wizard doesn't like CONSTANTs	
+
+if ( ! defined('APP_VER')) define('APP_VER', '2.0'); // EE 2.0's Wizard doesn't like CONSTANTs
 
 if ( ! class_exists('Addon_builder_calendar'))
 {
-	require_once '../addon_builder/addon_builder.php';	
+	require_once '../addon_builder/addon_builder.php';
 }
 
-class Calendar_permissions extends Addon_builder_calendar 
+class Calendar_permissions extends Addon_builder_calendar
 {
-	private $prefs 					= array(); 
+	private $prefs 					= array();
 	private $calendar_permissions 	= array();
 	private $calendar_ids 			= array();
 	private $filter_types 		 	= array('none', 'disable_link', 'search_filter');
@@ -65,7 +56,7 @@ class Calendar_permissions extends Addon_builder_calendar
 	public function enabled()
 	{
 		return (
-			isset($this->prefs['enabled']) AND 
+			isset($this->prefs['enabled']) AND
 			$this->prefs['enabled'] == TRUE
 		);
 	}
@@ -83,9 +74,9 @@ class Calendar_permissions extends Addon_builder_calendar
 
 	public function filter_on()
 	{
-		return (($this->enabled() AND 
-				isset($this->prefs['filter_on'])) ? 
-					$this->prefs['filter_on'] : 
+		return (($this->enabled() AND
+				isset($this->prefs['filter_on'])) ?
+					$this->prefs['filter_on'] :
 					'none'
 		);
 	}
@@ -105,7 +96,7 @@ class Calendar_permissions extends Addon_builder_calendar
 
 	public function group_has_permission ($group_id, $calendar_id)
 	{
-		if (//permissions enabled? 
+		if (//permissions enabled?
 			! $this->enabled() OR
 			//does this calendar allow everyone?
 			(
@@ -113,8 +104,8 @@ class Calendar_permissions extends Addon_builder_calendar
 				$this->prefs['calendar'][$calendar_id]['allow_all']
 			) OR
 			//group allowed all?
-			in_array($group_id, $this->get_groups_allowed_all()) OR 
-			( 
+			in_array($group_id, $this->get_groups_allowed_all()) OR
+			(
 				! in_array($group_id, $this->get_groups_denied_all()) AND
 				isset($this->prefs['calendar'][$calendar_id][$group_id]) AND
 				$this->prefs['calendar'][$calendar_id][$group_id]
@@ -145,8 +136,8 @@ class Calendar_permissions extends Addon_builder_calendar
 			//super admins always allowed
 			array(1),
 			(
-				isset($this->prefs['groups_allowed_all']) ? 
-				$this->prefs['groups_allowed_all'] : 
+				isset($this->prefs['groups_allowed_all']) ?
+				$this->prefs['groups_allowed_all'] :
 				array()
 			)
 		);
@@ -166,8 +157,8 @@ class Calendar_permissions extends Addon_builder_calendar
 	public function get_groups_denied_all()
 	{
 		return (
-			isset($this->prefs['groups_denied_all']) ? 
-			$this->prefs['groups_denied_all'] : 
+			isset($this->prefs['groups_denied_all']) ?
+			$this->prefs['groups_denied_all'] :
 			array()
 		);
 	}
@@ -187,7 +178,7 @@ class Calendar_permissions extends Addon_builder_calendar
 		//-1 is only if nothing was passed
 		if ( $calendar_id !== -1)
 		{
-			$calendar_id = (is_numeric($calendar_id) AND $calendar_id >= 0) ? $calendar_id : 0; 			
+			$calendar_id = (is_numeric($calendar_id) AND $calendar_id >= 0) ? $calendar_id : 0;
 		}
 
 		$member_groups = $this->data->get_member_groups();
@@ -199,7 +190,7 @@ class Calendar_permissions extends Addon_builder_calendar
 
 			//not quite redundant
 			$this->calendar_permissions = isset($this->prefs['calendar']) ?
-											$this->prefs['calendar'] : 
+											$this->prefs['calendar'] :
 											array();
 
 			//for every cal, and every member, if the default isn't set, do false
@@ -224,7 +215,7 @@ class Calendar_permissions extends Addon_builder_calendar
 		{
 			if (isset($this->calendar_permissions[$calendar_id]))
 			{
-				return $this->calendar_permissions[$calendar_id]; 	
+				return $this->calendar_permissions[$calendar_id];
 			}
 			//return blanks if not set
 			else
@@ -247,8 +238,8 @@ class Calendar_permissions extends Addon_builder_calendar
 	 *
 	 * @access	public
 	 * @param 	int 	calendar_id to save group for
-	 * @param 	array 	group data to save	 
-	 * @return	null 	
+	 * @param 	array 	group data to save
+	 * @return	null
 	 */
 
 	public function save_calendar_permissions ($calendar_id, $data)
@@ -269,14 +260,14 @@ class Calendar_permissions extends Addon_builder_calendar
 		// -------------------------------------
 
 		$prefs['calendar'][$calendar_id]['allow_all'] = (
-			isset($data['calendar_allow_all']) AND 
+			isset($data['calendar_allow_all']) AND
 			$this->check_yes($data['calendar_allow_all'])
 		);
 
 		// -------------------------------------
 		//	groups
 		// -------------------------------------
-		
+
 		foreach ($member_groups as $group_id => $group_name)
 		{
 			$prefs['calendar'][$calendar_id][$group_id] = (
@@ -322,7 +313,7 @@ class Calendar_permissions extends Addon_builder_calendar
 		// -------------------------------------
 
 		$prefs['enabled'] = (
-			isset($data['permissions_enabled']) AND 
+			isset($data['permissions_enabled']) AND
 			$this->check_yes($data['permissions_enabled'])
 		);
 
@@ -331,9 +322,9 @@ class Calendar_permissions extends Addon_builder_calendar
 		// -------------------------------------
 
 		$prefs['filter_on'] = (
-			(isset($data['filter_on']) AND 
-			in_array($data['filter_on'], $this->filter_types)) ? 
-				$data['filter_on'] : 
+			(isset($data['filter_on']) AND
+			in_array($data['filter_on'], $this->filter_types)) ?
+				$data['filter_on'] :
 				'none'
 		);
 
@@ -344,7 +335,7 @@ class Calendar_permissions extends Addon_builder_calendar
 		foreach ( $calendar_list as $calendar_id => $somedata)
 		{
 			$prefs['calendar'][$calendar_id]['allow_all'] = (
-				isset($data['cal_' . $calendar_id . '_allow_all']) AND 
+				isset($data['cal_' . $calendar_id . '_allow_all']) AND
 				$this->check_yes($data['cal_' . $calendar_id . '_allow_all'])
 			);
 
@@ -354,10 +345,10 @@ class Calendar_permissions extends Addon_builder_calendar
 			foreach ($member_groups as $group_id => $group_name)
 			{
 				$prefs['calendar'][$calendar_id][$group_id] = (
-					isset($data['cal_' . $calendar_id . '_group_' . $group_id]) AND 
+					isset($data['cal_' . $calendar_id . '_group_' . $group_id]) AND
 					$this->check_yes($data['cal_' . $calendar_id . '_group_' . $group_id])
 				);
-			}	
+			}
 		}
 
 		// -------------------------------------
@@ -370,7 +361,7 @@ class Calendar_permissions extends Addon_builder_calendar
 			//	allowed all
 			// -------------------------------------
 
-			if (isset($data['allowed_all_group_' . $group_id]) AND 
+			if (isset($data['allowed_all_group_' . $group_id]) AND
 				$this->check_yes($data['allowed_all_group_' . $group_id]))
 			{
 				$prefs['groups_allowed_all'][] = $group_id;
@@ -384,7 +375,7 @@ class Calendar_permissions extends Addon_builder_calendar
 				$this->check_yes($data['denied_all_group_' . $group_id]))
 			{
 				$prefs['groups_denied_all'][] = $group_id;
-			}		
+			}
 		}
 
 		// -------------------------------------
@@ -409,7 +400,7 @@ class Calendar_permissions extends Addon_builder_calendar
 	 */
 
 	private function valid_calendar_id ($calendar_id)
-	{			
+	{
 		//its cached, don't fuss :p
 		return array_key_exists($calendar_id, $this->data->get_calendar_list());
 	}
@@ -470,7 +461,7 @@ class Calendar_permissions extends Addon_builder_calendar
 	 *
 	 * @access	public
 	 * @param 	int 	group_id
-	 * @return	null 	
+	 * @return	null
 	 */
 
 	public function permissions_json($group_id)
@@ -485,7 +476,7 @@ class Calendar_permissions extends Addon_builder_calendar
 		$allowed_calendars  = array();
 
 		//if they are allowed everything, just send it through and don't bother
-		if ($this->enabled() AND 
+		if ($this->enabled() AND
 			! in_array($group_id, $this->get_groups_allowed_all()))
 		{
 			$all_allowed 		= FALSE;
@@ -497,10 +488,10 @@ class Calendar_permissions extends Addon_builder_calendar
 				$allowed_entry_ids = $this->get_allowed_entry_ids($group_id);
 			}
 		}
-		
+
 		return $this->send_ajax_response(array(
-			'success' 			=> TRUE, 
-			'message' 			=> ee()->lang->line('success'),
+			'success' 			=> TRUE,
+			'message' 			=> lang('success'),
 			'allAllowed'		=> $all_allowed,
 			'allDenied'			=> $all_denied,
 			'channelIds'		=> $channelIds,
@@ -518,7 +509,7 @@ class Calendar_permissions extends Addon_builder_calendar
 	 *
 	 * @access	public
 	 * @param 	int 	group_id
-	 * @param 	bool 	get opposite? (this is will be used with get_denied_entry_ids)	 
+	 * @param 	bool 	get opposite? (this is will be used with get_denied_entry_ids)
 	 * @return	array 	array of allowed entry ids
 	 */
 
@@ -533,7 +524,7 @@ class Calendar_permissions extends Addon_builder_calendar
 
 		$not = ($not) ? ' NOT ' : '';
 
-		//since this needs to be very fast, 
+		//since this needs to be very fast,
 		//lets just get the permissions per group directly
 		$calendar_permissions = $this->prefs['calendar'];
 
@@ -550,7 +541,7 @@ class Calendar_permissions extends Addon_builder_calendar
 		$events_table = ee()->db->escape_str($this->data->events_table);
 
 		//Get all of the entry IDs possible.
-		//Yes, this will be stupid big, but its supposed to be ajax 
+		//Yes, this will be stupid big, but its supposed to be ajax
 		//requested, so no slow down for users.
 		//Has to be this way because there is just one events channel :/.
 		//Thinking the group concat here might have better performance than
@@ -574,7 +565,7 @@ class Calendar_permissions extends Addon_builder_calendar
 			$oc_query = ee()->db->query(
 				"SELECT GROUP_CONCAT(entry_id separator '|') as entry_ids
 				 FROM 	exp_calendar_events_occurrences
-				 WHERE 	event_id 					
+				 WHERE 	event_id
 				 IN 	(" . str_replace('|', ',', $search) . ")"
 			);
 
@@ -582,7 +573,7 @@ class Calendar_permissions extends Addon_builder_calendar
 			if ($oc_query->num_rows() > 0 AND $oc_query->row('entry_ids') != NULL)
 			{
 				$allowed_entry_ids = array_merge(
-					$allowed_entry_ids, 
+					$allowed_entry_ids,
 					preg_split("/\|/", $oc_query->row('entry_ids'), -1, PREG_SPLIT_NO_EMPTY)
 				);
 			}
@@ -612,11 +603,11 @@ class Calendar_permissions extends Addon_builder_calendar
 	 *
 	 * Like get allowed, but a blacklist instead for things that need to allow
 	 * non calendar entry ids through and the entry id is all we have.
-	 * This may appear redundant, but is needed for search filtering where we 
+	 * This may appear redundant, but is needed for search filtering where we
 	 * cannot specify a parent calendar id.
 	 *
 	 * @access	public
-	 * @param 	int 	group_id 
+	 * @param 	int 	group_id
 	 * @return	array 	array of denied entry ids
 	 */
 
@@ -640,7 +631,7 @@ class Calendar_permissions extends Addon_builder_calendar
 	 * get_denied_entry_ids
 	 *
 	 * @access	public
-	 * @param 	int 	group_id 
+	 * @param 	int 	group_id
 	 * @return	array 	array of denied entry ids
 	 */
 
@@ -657,11 +648,11 @@ class Calendar_permissions extends Addon_builder_calendar
 			array('site_id' => $this->data->get_site_id())
 		);
 
-		ee()->db->insert(
+		ee()->db->query(ee()->db->insert_string(
 			'calendar_permissions_preferences',
 			array('preferences' => $this->json_encode($prefs)),
 			array('site_id' => $this->data->get_site_id())
-		);
+		));
 	}
 
 	public function get_permissions_preferences ()

@@ -1,28 +1,28 @@
-		<div class="rule <?=($first === TRUE) ? 'first' : '';?>">
+		<div class="rule  ui-widget-content ui-corner-all ui-widget <?=($first === TRUE) ? 'first' : '';?>">
 			<div class="inner">
-				<div class="rule_number">
+				<div class="rule_number ui-state-default ui-corner-br ui-corner-tl">
 					<span><?=$rule_number;?></span>
 				</div>
-				
-				<div class="rule_close">
-					<a href="#">x</a>
+
+				<div class="rule_close ui-state-default  ui-corner-bl ui-corner-tr">
+					<span class="ui-icon ui-icon-close"></span>
 				</div>
 				<div class="group first type line">
 					<div class="leader">
-						<label><?=ee()->lang->line('type');?></label>
+						<label><?=lang('type');?></label>
 						<select name="type">
-							<option value="+"><?=ee()->lang->line('include');?></option>
-							<option value="-" selected="selected"><?=ee()->lang->line('exclude');?></option>
+							<option value="+"><?=lang('include');?></option>
+							<option value="-" selected="selected"><?=lang('exclude');?></option>
 						</select>
 					</div>
 					<br  class="clear" />
 				</div>
-				
+
 				<div class="group date_range inactive <?=($first === TRUE) ? 'first' : ''; ?>">
-					<div class="all_day line inactive"><input type="checkbox" id="all_day_<?=$rule_number;?>" name="all_day" <?=($all_day == 'y') ? 'checked="checked"' : ''; ?> /> <label for="all_day_<?=$rule_number;?>"><?=ee()->lang->line('all_day_event');?></label></div>
+					<div class="all_day line inactive"><input type="checkbox" id="all_day_<?=$rule_number;?>" name="all_day" <?=($all_day == 'y') ? 'checked="checked"' : ''; ?> /> <label for="all_day_<?=$rule_number;?>"><?=lang('all_day_event');?></label></div>
 					<div class="from line inactive">
 						<div class="date leader">
-							<label><?=ee()->lang->line('from');?></label>
+							<label><?=lang('from');?></label>
 							<input type="text" name="start_date" class="picker" value="<?=($start_date > 0) ? $start_date : '';?>" />
 						</div>
 						<div class="time inactive">
@@ -38,10 +38,10 @@
 						</div>
 						<br class="clear" />
 					</div>
-					
+
 					<div class="to line inactive">
 						<div class="date leader">
-							<label><?=ee()->lang->line('to');?></label>
+							<label><?=lang('to');?></label>
 							<input type="text" name="end_date" class="picker" value="<?=($end_date > 0) ? $end_date : '';?>" />
 						</div>
 						<div class="time inactive">
@@ -59,17 +59,17 @@
 					</div>
 					<br class="clear" />
 				</div>
-				
+
 				<div class="group repeat line">
 					<div class="repeat_select leader">
-						<label><?=ee()->lang->line('repeat');?></label>
+						<label><?=lang('repeat');?></label>
 						<select name="interval">
-							<option value="none"><?=ee()->lang->line('none');?></option>
-							<option value="daily"><?=ee()->lang->line('daily');?></option>
-							<option value="weekly"><?=ee()->lang->line('weekly');?></option>
-							<option value="monthly"><?=ee()->lang->line('monthly');?></option>
-							<option value="yearly"><?=ee()->lang->line('yearly');?></option>
-							<?php if ($first !== TRUE) :?><option value="select_dates" selected="selected"><?=ee()->lang->line('select_dates');?></option><?php endif; ?>
+							<option value="none"><?=lang('none');?></option>
+							<option value="daily"><?=lang('daily');?></option>
+							<option value="weekly"><?=lang('weekly');?></option>
+							<option value="monthly"><?=lang('monthly');?></option>
+							<option value="yearly"><?=lang('yearly');?></option>
+							<?php if ($first !== TRUE) :?><option value="select_dates" selected="selected"><?=lang('select_dates');?></option><?php endif; ?>
 						</select>
 					</div>
 

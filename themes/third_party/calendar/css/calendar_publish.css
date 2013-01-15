@@ -17,8 +17,8 @@ br.clear { height: 1px; }
 		background-image: 		    -ms-linear-gradient(top, #ffffff, #ededed); /* IE10 */
 		background-image: 		     -o-linear-gradient(top, #ffffff, #ededed); /* Opera 11.10+ */
 		background-image: 		        linear-gradient(top, #ffffff, #ededed);
-		-moz-border-radius: 	5px; 
-		-webkit-border-radius: 	5px; 
+		-moz-border-radius: 	5px;
+		-webkit-border-radius: 	5px;
 		border-radius: 			5px;
 		border: 				1px solid #a4a4a4;
 		padding: 				3px 8px 4px;
@@ -27,7 +27,7 @@ br.clear { height: 1px; }
 
 }
 	#calendar_new_date.ie7 button,
-	#calendar_new_date.ie8 button {		          
+	#calendar_new_date.ie8 button {
 		filter: 				progid:DXImageTransform.Microsoft.gradient(startColorStr='#ffffff', EndColorStr='#ededed'); /* IE6–IE9 */
 	}
 
@@ -36,9 +36,9 @@ br.clear { height: 1px; }
 	 stupid stupid ie >:|*/
 	#calendar_new_date.ie9 button {
 		background-image: 		url(../img/stupid_ie9.svg);
-	    background-size: 		100% 100%;
-	    background-repeat: 		repeat-x;
-	    background-position:	0 0;
+		background-size: 		100% 100%;
+		background-repeat: 		repeat-x;
+		background-position:	0 0;
 	}
 
 #calendar_calendars {
@@ -49,7 +49,7 @@ br.clear { height: 1px; }
 }
 #calendar_select, #calendar_help {
 	margin-top: 4px;
-} 
+}
 #calendar_help {
 	margin-left: 20px;
 	text-decoration: underline;
@@ -89,8 +89,8 @@ br.clear { height: 1px; }
 }
 
 #calendar_fields div.rule div.time input {
-	width: 55px;
-	background-image: url(../img/time_icon.png);
+	width: 65px;
+	/*background-image: url(../img/time_icon.png);*/
 	background-position: 92% 5px;
 	background-repeat: no-repeat;
 }
@@ -109,7 +109,7 @@ line-height:100%;
 	margin-top:2px;
 }
 #calendar_fields div.rule div.options input {
-	width: 20px;
+	width: 40px;
 }
 #calendar_fields div.rule div.options .by_date,
 #calendar_fields div.rule div.options .by_relative {
@@ -316,3 +316,11 @@ line-height:100%;
 	z-index:10000;
 	zoom:1;
 }
+
+#calendar_fields .ui-datepicker-calendar .ui-state-active,
+#calendar_fields .ui-datepicker-calendar .ui-widget-content .ui-state-active,
+#calendar_fields .ui-datepicker-calendar .ui-widget-header .ui-state-active {
+	background:	#8D98A3 !important;
+	color:		#fff;
+}
+
