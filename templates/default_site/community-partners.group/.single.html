@@ -12,31 +12,47 @@
   
   <!-- Three-up Content Blocks -->
   
-  <div class="row">
-  
-    <div class="twelve columns">
-    
-    	<div class="row">
-    		<div class="eight columns">
-    			<h1 id="page-name">{title}</h1>
-    			<p><a href="{org_website}">{org_website}</a></p>
-    			{org_contact_info} 	
-  			{if org_facebook}
-    			<p>{org_facebook}</p>
-    		{/if}
-    		{if org_twitter}
-    			<p>{org_twitter}</p>
-    		{/if}	
-    			{org_description}	
-    		</div>
-    		<div class="four columns">
-    		{exp:ce_img:pair src="{org_image}" width="300"}
-					<img src="{made}" alt="" width="{width}" height="{height}" />
+  <div id="main-content" class="row">
+  	{edit_this}
+
+		
+		<div class="eight columns">		
+  		<div class="row">
+  				
+  			<div class="eight columns">
+  				<h1 id="page-name">{title}</h1>
+					<div id="org-contact">
+					{if org_website}					
+		  			<p class="org-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{org_website}{/exp:parse_url}</a></p>
+		  		{/if}
+		  		{if org_address}
+		  			<p class="org-address">{org_address}</p>
+		  		{/if}
+		  		{if org_phone}
+		  			<p class="org-phone">{org_phone}</p>
+		  		{/if}
+		  		{if org_email}
+		  			<p class="org-email">
+		  			{org_email}
+		    			{if name}{name}: {/if}{encode="{email}" title="{email}"}<br />
+		  			{/org_email}
+		  			</p>
+		  		{/if}			
+		  		</div>
+		  	</div>
+		  	<div class="four columns">
+  			{exp:ce_img:pair src="{org_image}" width="220"}
+					<div id="org-logo">
+						<img src="{made}" alt="" width="{width}" height="{height}" />
+					</div>
 				{/exp:ce_img:pair}
-    		</div>
-    	</div>
-      	
-    </div>
+				</div>
+			</div>
+			{org_description}	
+		</div>
+		<div class="four columns">
+		&nbsp;
+		</div>
     
   </div>
 {/exp:channel:entries}

@@ -16,13 +16,14 @@
 				<h1 id="page-name">{title}</h1>
     		{general_body}
     	</div>
-    {/exp:channel:entries}
+    
     </div>
 
   	<div id="sidebar" class="four columns">
-      <p>sidebar</p>
+      {general_sidebar}
     </div>
   
-  </div>
-
+  </div><!-- end #main-content -->
+	{/exp:channel:entries}
+	
 {embed="inc/.footer"}
