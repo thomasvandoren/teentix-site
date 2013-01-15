@@ -5,14 +5,11 @@
 	end_title="Applicant"
 } 
   
-  <div class="row">
+  <div id="main-content" class="row">
     <div class="twelve columns">
       <h1>View application</h1>
     </div>
-  </div>
-
-  
-  <div class="row">  
+ 
   {exp:channel:entries 
       channel="applications"  
     }
@@ -145,7 +142,6 @@
     </div>
     
   {/exp:channel:entries}
-  </div>
-  
+  </div><!-- end #main-content -->
   
 {embed="inc/.footer"}

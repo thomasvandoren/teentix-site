@@ -7,18 +7,15 @@
 	end_title="Monthly"
 }
     
-  <div class="row">
+  <div id="main-content" class="row">
     <div class="twelve columns">
       <h1 id="page-name">Calendar: Monthly
       </h1>
     </div>
-  </div>
     
-{embed="calendar/.calendar-nav"}
+		{embed="calendar/.calendar-nav"}
   
-  <div class="row">
 		<div id="main" class="nine columns">
-
 			<div id="monthly_calendar">
 		  {exp:calendar:cal
 			{if segment_3 == ''}
@@ -94,6 +91,6 @@
   	{embed="calendar/.sidebar"}
     </div><!-- end #sidebar -->
 
-	</div>
+	</div><!-- end #main-content -->
 		
 {embed="inc/.footer"}

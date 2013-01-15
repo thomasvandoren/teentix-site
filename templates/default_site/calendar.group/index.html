@@ -9,7 +9,7 @@
 	{/if}	
 }
     
-  <div class="row">
+  <div id="main-content" class="row">
     <div class="twelve columns">
       <h1 id="page-name">Calendar:
       {if segment_2=="category"}
@@ -20,11 +20,9 @@
       {/if}
       </h1>
     </div>
-  </div>
   
 {embed="calendar/.calendar-nav"}
   
-  <div class="row">
   
     <div id="main" class="eight columns">
 		{exp:calendar:events 
@@ -65,6 +63,7 @@
     <div id="sidebar" class="three columns">
     	{embed="calendar/.sidebar"}
     </div>
-  </div>
+    
+  </div><!-- end #main-content -->
   
 {embed="inc/.footer"}

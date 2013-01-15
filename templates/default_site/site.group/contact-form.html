@@ -8,7 +8,7 @@
 	end_title="{title}"
 } 
     
-  <div class="row">
+  <div id="main-content" class="row">
     <div id="main" class="eight columns">
     	<div class="entry">
 				<h1 id="page-name">{title}</h1>
@@ -30,10 +30,6 @@
     		</fieldset>
 			 			 
 			{/exp:freeform:form}
-
-
-    		
-    		
     	</div>
     
     </div>
@@ -41,7 +37,9 @@
   	<div id="sidebar" class="four columns">
       <p>{general_body}</p>
     </div>
+    
+	</div><!-- end #main-content -->
+
 {/exp:channel:entries}  
-  </div>
 
 {embed="inc/.footer"}

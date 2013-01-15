@@ -14,7 +14,7 @@
 	end_title="{title}"
 } 
   
-  <div class="row">
+  <div id="main-content" class="row">
   	<div id="page-header" class="twelve columns">
   	<h5 id="event-genre">
 			{if event_recommended == "y"}TeenTix Pick{/if}
@@ -23,9 +23,7 @@
 		
 		  <h1 id="page-name">{event_title}</h1>
   	</div>
-  </div>
   
-  <div class="row">
   	<div id="main" class="eight columns">
 
 			<div class="event">
@@ -210,6 +208,7 @@
 			</div>
 		{/exp:calendar:events}
 		</div>
-	</div>
+		
+	</div><!-- end #main-content -->
   
 {embed="inc/.footer"}

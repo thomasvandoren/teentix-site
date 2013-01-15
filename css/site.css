@@ -531,7 +531,13 @@ ul.breadcrumbs {
 /* -----------------------------------------
    Blog
 ----------------------------------------- */
-
+.blog #sidebar {
+	padding-top: 50px;
+}
+.blog #blog-terms p {
+	font-size: 13px;
+	line-height: 1.3em;
+}
 
 
 
