@@ -221,7 +221,7 @@ input.submit:hover {
 	padding: 3px 0px;
 }
 #main-nav > li > a:first-child {
-	padding: 0px 29px;
+	padding: 0px 20px;
 	text-transform: uppercase;
 }
 #main-nav > li.has-flyout > a:first-child {
@@ -260,7 +260,7 @@ ul.breadcrumbs {
 ----------------------------------------- */
 .entry {
 	line-height: 1.5em;
-	border-bottom: 1px solid #ccc;
+/* 	border-bottom: 1px solid #ccc; */
 	padding-bottom: 20px;
 	margin-bottom: 20px;
 }

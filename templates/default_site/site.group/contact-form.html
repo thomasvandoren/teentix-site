@@ -13,17 +13,26 @@
     	<div class="entry">
 				<h1 id="page-name">{title}</h1>
 				
-    		
-    		<fieldset>
+    	{exp:freeform:form
+		    form_name="contact"
+		    form:id ="contact-form"
+		    return="contact/thanks"
+			}
+				<fieldset>
     			<legend>Get in touch!</legend>
     			<label>Your Name</label>
-    			<input type="text" name="name" />
+    			<input type="text" name="name" class="required" />
     			<label>Your Email</label>
-    			<input type="text" name="email" />
+    			<input type="text" name="email" class="required" />
     			<label>Your Message</label>
-    			<textarea name="message"></textarea>
+    			<textarea name="message" class="message required"></textarea>
     			<input type="submit" value="submit" class="button" />
     		</fieldset>
+			 			 
+			{/exp:freeform:form}
+
+
+    		
     		
     	</div>
     

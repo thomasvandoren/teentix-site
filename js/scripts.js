@@ -184,6 +184,8 @@
   
   $('#nav-bar-login form').validate();
   
+  $('#contact-form').validate();
+  
   
 /////////////////////////////////////  
 //	Form Value Check

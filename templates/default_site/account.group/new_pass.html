@@ -83,13 +83,10 @@
 				{if first_name == "" OR last_name == ""	OR bday_m == "" OR bday_d == "" OR bday_y == "" OR street_address == "" OR city == "" OR state == "" OR zip_code == ""}
 					<p><em>Please complete your contact information.</em></p>
 				{if:else}
+					
 					{exp:freeform:form
-				    collection="request_pass"
+				    form_name="request_pass"
 				    return="account/new_pass_confirm/%%entry_id%%"
-				    notify="michiko@michiko23.com"
-				    template="pass_notification" 
-				    send_user_email="yes"
-				    user_email_template="pass_delivery" 
 					}
 					 
 					    <input type="hidden" name="name" value="{first_name} {middle_initial} {last_name}" />

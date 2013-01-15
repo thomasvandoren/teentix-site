@@ -1,28 +1,32 @@
-<?php if ( ! defined('EXT')) exit('No direct script access allowed');
- 
- /**
- * Solspace - Freeform
- *
- * @package		Solspace:Freeform
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2008-2012, Solspace, Inc.
- * @link		http://solspace.com/docs/addon/c/Freeform/
- * @version		3.1.4
- * @filesource 	./system/expressionengine/third_party/freeform/
- */
- 
- /**
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+/**
  * Freeform - Constants
  *
- * Central location for various values we need throughout the module
+ * Central location for various values we need throughout the module.
  *
- * @package 	Solspace:Freeform
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/freeform/constants.freeform.php
+ * @package		Solspace:Freeform
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/freeform
+ * @license		http://www.solspace.com/license_agreement
+ * @version		4.0.10
+ * @filesource	freeform/constants.freeform.php
  */
- 
+
 if ( ! defined('FREEFORM_VERSION'))
 {
-	define('FREEFORM_VERSION',	'3.1.4');
-	define('FREEFORM_DOCS_URL',	'http://www.solspace.com/docs/addon/c/Freeform/');
+	define('FREEFORM_VERSION',	'4.0.10');
+	define('FREEFORM_DOCS_URL',	'http://solspace.com/docs/freeform/');
+
+	//Changing this to true wont give you Freeform Pro for free,
+	//as the required files would still be missing.
+	//This is just a helper for us.
+	//You can purchase Freeform Pro at http://solspace.com ;).
+
+	
+	define('FREEFORM_PRO',		FALSE);
+	
+
+	
 }
