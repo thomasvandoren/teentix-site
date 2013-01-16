@@ -18,8 +18,15 @@ body {
 }
 
 /* typography */
+h1, h2, h3, h4, h5, h6, p
+.button, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea {
+	font-family: "museo-sans", Helvetica, Arial, san-serif;
+}
+
 h1, h2, h3, h4, h5, h6 {
 	margin-top: 0px;
+}
+p {
 }
 
 .hidden {
