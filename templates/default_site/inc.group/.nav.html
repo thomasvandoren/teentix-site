@@ -49,90 +49,92 @@
 	</div><!-- end #utility-nav -->
 	
   <!-- Header and Nav -->
-  
-  <div id="header" class="row">
-    <div class="twelve columns">
-    	<div id="how-to-graphic">
-	      <h1 id="logo"><a href="{site_url}"><img src="http://placehold.it/400x100&text=Logo" /></a></h1>
-	      <div id="get-info"><a href="{path='how-to'}" class="small button">More Info</a></div>
-				<div id="get-pass"><a href="{path='application'}" class="small button">Get Your Pass</a></div>
-			</div>
-    </div>
-  </div>
-  
-  <div id="top-nav" class="row">
-  	<div class="twelve columns">
-	  	<ul id="main-nav" class="nav-bar">
-	      <li {if segment_1==''}class='active'{/if}><a href="{site_url}">Home</a></li>
-	      <li {if segment_1=='calendar'}class='active'{/if}><a href="{path='calendar'}">Calendar</a></li>
-	      <li {if segment_1=='blog'}class='active'{/if}><a href="{path='blog'}">Blog</a></li>
-	      <li {if segment_1=='organizations'}class='active'{/if}><a href="{path='organizations'}">Participating Orgs</a></li>
-	      <li {if segment_1=='locations'}class='active'{/if}><a href="{path='locations'}">Locations</a></li>
-	      <li class="{if segment_1=='about'}active {/if}has-flyout">
-			    <a href="#">About</a>
-			    <a href="#" class="flyout-toggle"><span> </span></a>
-			    <div class="flyout large right">
-			    	<div class="row">
-			    		<div class="four columns">
-			    			<h4>About TeenTix</h4>
-			    			<ul>
-				    			<li><a href="{site_url}about">Learn about us</a></li>
-						      <li><a href="{site_url}how-to">How to use TeenTix</a></li>
-						      <li><a href="{site_url}faqs">FAQs</a></li>
-						    </ul>
-			    		</div>
-			    		<div class="four columns">
-			    			<h4>Our Partners</h4>
-			    			<ul>
-			    				<li><a href="{site_url}community-partners">Community Partners</a></li>
-				    			<li><a href="{site_url}organizations">Participating Organizations</a></li>
-						      
-						      <li><a href="{site_url}become-partner">Become a TeenTix Partner</a></li>
-						    </ul>
-			    		</div>
-			    		<div class="four columns">
-			    			<h4>Get Involved</h4>
-			    			<ul>
-				    			<li><a href="/teen-steering-committee">Teen Steering Committee</a></li>
-				    			<li><a href="/write-for-our-blog">Write for Our Blog</a></li>
-						      <li><a href="/support-teentix">Support TeenTix</a></li>
-						    </ul>
-			    		</div>
-			    	</div>
-			      
-			  </div>
-	      
-	      <li><a href="{path='contact'}">Contact</a></li>
-	      
-	    </ul>
+  <div id="header">
+	  <div class="row">
+	    <div class="twelve columns">
+	    	<div id="how-to-graphic">
+		      <h1 id="logo"><a href="{site_url}"><img src="http://placehold.it/400x100&text=Logo" /></a></h1>
+		      <div id="get-pass"><a href="{path='application'}" class="small button">Get Your Pass</a></div>
+		      <div id="get-info"><a href="{path='how-to'}" class="small button">More Info</a></div>
+					
+				</div>
+	    </div>
 	  </div>
-  </div>
+  </div><!-- end #header -->
   
-  <!-- End Header and Nav -->
-  {if segment_1 != ""}
-  <div id="nav-breadcrumb" class="row">
-  	<div class="twelve columns">
-  		<ul class="breadcrumbs">
-  			<li><a href="{site_url}">Home</a></li>
-	  	{if segment_1}
-	  		<li {if segment_2 == ""}class="current"{/if}><a href="{site_url}{segment_1}">{if embed:segment_1_title}{embed:segment_1_title}{if:else}{segment_1}{/if}</a></li>
-	  	{/if}
-	  	{if embed:end_title}
-	  		<li class="current"><a href="#">{embed:end_title}</a></li>
-	  	{/if}
-	  	</ul>
-  	</div>
-  </div>
-  {/if}	
+  <div id="top-nav">
+	  <div class="row">
+	  	<div class="twelve columns">
+		  	<ul id="main-nav" class="nav-bar">
+		      <li {if segment_1==''}class='active'{/if}><a href="{site_url}">Home</a></li>
+		      <li {if segment_1=='calendar'}class='active'{/if}><a href="{path='calendar'}">Calendar</a></li>
+		      <li {if segment_1=='blog'}class='active'{/if}><a href="{path='blog'}">Blog</a></li>
+		      <li {if segment_1=='organizations'}class='active'{/if}><a href="{path='organizations'}">Participating Orgs</a></li>
+		      <li {if segment_1=='locations'}class='active'{/if}><a href="{path='locations'}">Locations</a></li>
+		      <li class="{if segment_1=='about'}active {/if}has-flyout">
+				    <a href="#">About</a>
+				    <a href="#" class="flyout-toggle"><span> </span></a>
+				    <div class="flyout large right">
+				    	<div class="row">
+				    		<div class="four columns">
+				    			<h4>About TeenTix</h4>
+				    			<ul>
+					    			<li><a href="{site_url}about">Learn about us</a></li>
+							      <li><a href="{site_url}how-to">How to use TeenTix</a></li>
+							      <li><a href="{site_url}faqs">FAQs</a></li>
+							    </ul>
+				    		</div>
+				    		<div class="four columns">
+				    			<h4>Our Partners</h4>
+				    			<ul>
+				    				<li><a href="{site_url}community-partners">Community Partners</a></li>
+					    			<li><a href="{site_url}organizations">Participating Organizations</a></li>
+							      
+							      <li><a href="{site_url}become-partner">Become a TeenTix Partner</a></li>
+							    </ul>
+				    		</div>
+				    		<div class="four columns">
+				    			<h4>Get Involved</h4>
+				    			<ul>
+					    			<li><a href="/teen-steering-committee">Teen Steering Committee</a></li>
+					    			<li><a href="/write-for-our-blog">Write for Our Blog</a></li>
+							      <li><a href="/support-teentix">Support TeenTix</a></li>
+							    </ul>
+				    		</div>
+				    	</div>
+				      
+				  </div>
+		      
+		      <li><a href="{path='contact'}">Contact</a></li>
+		      
+		    </ul>
+		  </div>
+	  </div>
+  </div><!-- #top-nav -->
   
-  {if embed:end_title == "Error"}
-  <div id="nav-breadcrumb" class="row">
-  	<div class="twelve columns">
-  		<ul class="breadcrumbs">
-  			<li><a href="{site_url}">Home</a></li>
-	  		<li><a href="{site_url}account">Account</a></li>
-	  		<li class="current"><a href="#">{embed:end_title}</a></li>
-	  	</ul>
+  <div id="nav-breadcrumb">
+	  <div class="row">
+	  	<div class="twelve columns">
+	  		<ul class="breadcrumbs">
+			  {if segment_1 != ""}
+	  		
+		  			<li><a href="{site_url}">Home</a></li>
+			  	{if segment_1}
+			  		<li {if segment_2 == ""}class="current"{/if}><a href="{site_url}{segment_1}">{if embed:segment_1_title}{embed:segment_1_title}{if:else}{segment_1}{/if}</a></li>
+			  	{/if}
+			  	{if embed:end_title}
+			  		<li class="current"><a href="#">{embed:end_title}</a></li>
+			  	{/if}
+			  {/if}	
+  
+			  {if embed:end_title == "Error"}
+	  			<li><a href="{site_url}">Home</a></li>
+		  		<li><a href="{site_url}account">Account</a></li>
+		  		<li class="current"><a href="#">{embed:end_title}</a></li>
+			  {/if}
+  			</ul>
+  		</div>
   	</div>
-  </div>
-  {/if}
+  </div><!-- end #nav-breadcrumb -->
+  
+  <div id="main-content">

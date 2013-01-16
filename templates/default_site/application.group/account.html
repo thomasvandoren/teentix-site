@@ -1,6 +1,7 @@
 {if segment_3 == ""}
 	{redirect="account/new"}
 {/if}
+
 {if segment_3 != ""}
 	{embed="inc/.header"
 		title="Create a TeenTix Account | Application"
@@ -10,7 +11,7 @@
 		end_title="Create Account"
 	} 
 	  
-	  <div id="main-content" class="row">
+	  <div class="row">
 	    <div class="twelve columns">
 	      <h1>TeenTix Application</h1>
 	    </div>
@@ -29,7 +30,7 @@
 	    {/exp:channel:entries}
 	    </div>
 	        
-	  </div><!-- end #main-content -->
+	  </div>
 	  
 	{exp:channel:entries 
 	  entry_id="{segment_3}"  
@@ -53,7 +54,6 @@
 			{embed="application/.email" entry_id="{segment_3}"}
 		{/if}
 	{/exp:channel:entries}  
-	
-	  
+	 
 	{embed="inc/.footer"}
 {/if}

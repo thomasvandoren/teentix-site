@@ -13,6 +13,10 @@
    Shared Styles
 ----------------------------------------- */
 
+body {
+	background: #004c4c;
+}
+
 /* typography */
 h1, h2, h3, h4, h5, h6 {
 	margin-top: 0px;
@@ -170,30 +174,31 @@ input.submit:hover {
    Header
 ----------------------------------------- */
 #header {
+	background: #e9d9b9;
+	width: 100%;
 	margin-top: 0px;
 }
 #header #how-to-graphic {
 	position: relative;
 	width: 100%;
 	height: 140px;
-	background: #eee;
 }
 #logo {
 	margin: 0px;
 	width: 200px;
 	position: absolute;
-	left: 10px;
+	left: 0px;
 	top: 40px;
 }
-#header #get-info {
+#header #get-pass {
 	position: absolute;
 	top: 30px;
 	right: 10px;
 	text-align: center;
 }
-#header #get-pass {
+#header #get-info {
 	position: absolute;
-	top: 70px;
+	top: 80px;
 	right: 10px;
 	text-align: center;
 }
@@ -208,6 +213,7 @@ input.submit:hover {
    Top Bar
 ----------------------------------------- */
 #main-nav {
+	background: transparent;
 	margin-top: 0px;
 	margin-bottom: 0px;
 }
@@ -221,22 +227,40 @@ input.submit:hover {
 	padding: 3px 0px;
 }
 #main-nav > li > a:first-child {
-	padding: 0px 20px;
+	padding: 0px 15px 0px 0px;
+	margin-right: 15px;
 	text-transform: uppercase;
 }
 #main-nav > li.has-flyout > a:first-child {
 	padding-right: 40px;
 }
+#main-nav > li {
+	box-shadow: none;
+	background: transparent;
+	border: none;
+}
+#main-nav > li > a {
+	background: transparent;
+	border: none;
+}
+
+
 /* breadcrumb */
 #nav-breadcrumb {
-	font-size: 12px;
-	padding: 10px 0px 20px 0px;
+	width: 100%;
+	background: #fff;
+	padding-bottom: 10px;	
 }
 ul.breadcrumbs {
+	font-size: 11px;
 	padding: 0px;
 	margin-bottom: 0px;
 	background: none;
 	border: none;
+}
+ul.breadcrumbs li a,
+ul.breadcrumbs li.current a {
+	color: #aaa;
 }
 
 
@@ -246,7 +270,9 @@ ul.breadcrumbs {
    Main Content
 ----------------------------------------- */
 #main-content {
+	background: #fff;
 	position: relative;
+	padding-bottom: 30px;
 }
 #main-content .edit-this {
 	position: absolute;
@@ -677,7 +703,6 @@ ul.breadcrumbs {
 	color: #fff;
 	width: 100%;
 	padding: 40px 0px;
-	margin-top: 30px;
 }
 #footer .footer-header {
 	color: #fff;
@@ -690,4 +715,16 @@ ul.breadcrumbs {
 }
 #footer li.spacer {
 	height: 20px;
+}
+
+
+
+
+/* -----------------------------------------
+   Credits
+----------------------------------------- */
+#credits {
+	background: #004c4c;
+	width: 100%;
+	padding: 20px 0px;
 }

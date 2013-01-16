@@ -14,14 +14,12 @@
   <div class="row">  
     <div class="three columns">
     {embed="account/.sidebar"}
-    </div>
-    
+    </div>    
     <div class="nine columns">
     {exp:user:edit
     	form:id="account_edit_settings" 
     	error_page="account/error" 
-    }
-      
+    }      
       <fieldset>
 	      <legend>Account Settings</legend>
 	      <div class="row">
@@ -59,13 +57,8 @@
 	       
       </fieldset> 
       <p><input type="submit" value="Submit" class="medium button" /></p>
-   
-   {/exp:user:edit}  
-    
-         
+   {/exp:user:edit}      
     </div>   
-    
   </div>
-  
   
 {embed="inc/.footer"}
