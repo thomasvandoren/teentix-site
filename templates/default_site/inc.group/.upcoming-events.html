@@ -1,0 +1,5 @@
+{exp:calendar:events event_id="{embed:event_id}"}
+	{if '{event_last_date format="%Y%m%d"}' > '{current_time format="%Y%m%d"}'}		
+   <p><a href="{url_title_path='calendar/event'}">{title}</a></p>
+  {/if}
+{/exp:calendar:events}  

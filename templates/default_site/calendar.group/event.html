@@ -16,6 +16,7 @@
   
   <div id="main-content" class="row">
   	<div id="page-header" class="twelve columns">
+  	{edit_this}
   	<h5 id="event-genre">
 			{if event_recommended == "y"}TeenTix Pick{/if}
 			{categories backspace="3" show_group="1"}<a href="{path='calendar'}">{category_name}</a> | {/categories}
@@ -53,8 +54,8 @@
 					  <p>
 					  	<strong>Location</strong><br /> 
 					  {related_entries id="event_venue"}
-						  <a href="{url_title_path='venues'}">{title}</a><br />
-						  {venue_address} 
+						  <a href="{url_title_path='locations'}">{title}</a><br />
+						  {location_address} 
 					  {/related_entries}
 					  </p>
 				  </div>
@@ -73,9 +74,7 @@
 			  {/if}
 			  <div id="event-description">
 			  {event_description}
-			  </div>
-			
-			
+			  </div>	
 			 
 			</div>
 			
@@ -192,7 +191,7 @@
 			<div id="event-box-office-info">
 				<h5>Box Office Info</h5>
 			{related_entries id="event_venue"}
-			  {venue_box_office} 
+			  {location_box_office} 
 		  {/related_entries}
 				{event_box_office_info}
 			</div>

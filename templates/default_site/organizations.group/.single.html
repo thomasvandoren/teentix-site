@@ -58,13 +58,11 @@
   	{if org_locations}	    			
 			{embed="organizations/.locations" entry_id="{org_locations}"}	    		
   	{/if}
+  	
   		<div id="org-events">
   			<h4>Upcoming Events</h4>
-			{reverse_related_entries channel="calendar_events" sort="desc" orderby="title"}
-        <p><a href="{url_title_path='calendar/event'}">{title}</a></p>
-       {if no_reverse_related_entries} 
-       	<p>There are currently no events.</p>
-       {/if}
+			{reverse_related_entries channel="calendar_events" sort="desc" orderby="date" limit="10"}
+		    {embed="inc/.upcoming-events" event_id="{entry_id}"}
       {/reverse_related_entries}
 
   		</div>
