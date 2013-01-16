@@ -30,40 +30,30 @@
 		    {/if}
 			{/exp:favorites:entries}
 			 
-				<div class="row header">
-			    <div class="eight columns">
+				{!--<div class="row header">
+			    <div class="nine columns">
 			    	Event Info
 			    </div>
-			    <div class="four columns">
-			    	Date Saved
+			    <div class="three columns">
+			    	Saved On
 			    </div>
-			  </div>
-				{exp:favorites:entries
-			    channel="calendar_events"
-			    limit="3"
-			    paginate="bottom"
-			    orderby="favorites_date" 
-				}
-				<div class="row">
-			    <div class="eight columns">
-			    	<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{title}</a></h4>
-			    	<p class="event-location">
-			    	{related_entries id="event_venue"}{title}{/related_entries}</p>
-			    </div>
-			    <div class="four columns">
-			      <p>
-			      	{favorites_date format="%D, %M %j, %Y"}<br />
-			      	{favorites_date format="%g:%i %a"}
-			      </p>
-			    </div>	
-			  </div>	 
-			    {paginate}
-		        <p class="paginate">Page {current_page} of {total_pages} pages {pagination_links}</p>
-			    {/paginate}
-			    {if no_results}
-	        <p>You have not saved any events.</p>
-	        {/if}
-				{/exp:favorites:entries}
+			  </div>--}
+			{exp:favorites:entries
+		    channel="calendar_events"
+		    limit="10"
+		    paginate="bottom"
+		    orderby="favorites_date" 
+			}
+				<div class="row">		    
+		    	{embed="account/.event-dates" event_id="{entry_id}" favorites_date="{favorites_date format='%n/%j/%y'}" favorites_time="{favorites_date format='%g:%i %a'}"}	
+		    </div>		    		 
+		    {paginate}
+	        <p class="paginate">Page {current_page} of {total_pages} pages {pagination_links}</p>
+		    {/paginate}
+		    {if no_results}
+        <p>You have not saved any events.</p>
+        {/if}
+			{/exp:favorites:entries}
 				
 			</div><!-- end #member_events -->
 			

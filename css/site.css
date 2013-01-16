@@ -654,6 +654,19 @@ ul.breadcrumbs {
 .account.edit .label_birthdate_error {
 	color: #cc0000;
 }
+.account .event-name {
+	margin-bottom: 0px;
+}
+.account .event-dates {
+	font-weight: bold;
+	margin-bottom: 0px;
+}
+.account .event-over {
+	font-weight: normal;
+}
+.account .event-saved {
+	font-size: 12px;
+}
 
 
 /* -----------------------------------------

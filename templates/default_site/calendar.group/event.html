@@ -29,11 +29,7 @@
 
 			<div class="event">
 			  <h4 id="event-date">			  
-			  {if event_recurs}
-					{event_start_date format="%D %M %j, %Y"} &ndash; {event_last_date format="%D %M %j, %Y"}					
-				{if:else}
-					{event_start_date format="%D %M %j, %Y"}
-				{/if}
+					{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
 				{if event_availability =="n"}
 					<br /><span class="ticket-available">TeenTix tickets are no longer available</span>
 				{/if}

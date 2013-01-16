@@ -62,12 +62,7 @@
 		    paginate="bottom"
 			}
 			  <div class="row">
-			    <div class="six columns">
-			    	<h4><a href="{url_title_path='calendar/event'}">{title}</a></h4>
-			    </div>
-			    <div class="six columns">
-			      <p>Saved on {favorites_date format="%D, %M %j, %Y at %g:%i %a"}</p>
-			    </div>	
+			    {embed="account/.event-dates" event_id="{entry_id}" favorites_date="{favorites_date format='%n/%j/%y'}" favorites_time="{favorites_date format='%g:%i %a'}"}	
 			  </div>		 
 		    {paginate}
         <p class="view-all"><a href="{path='account/events'}">View all saved events &raquo;</a></p>
