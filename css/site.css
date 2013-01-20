@@ -33,6 +33,12 @@ h1, h2, h3, h4, h5, h6 {
 p {
 
 }
+a {
+	color: #8FC73E;
+}
+a:hover {
+	color: #86B239;
+}
 .sans {
   font-family: "museo-sans",sans-serif;
 }
@@ -511,12 +517,6 @@ ul.breadcrumbs li.current a {
 .home .entry img {
 	margin-bottom: 10px;
 }
-.home .entry a {
-	color: #8FC73E;
-}
-.home .entry a:hover {
-	color: #86B239;
-}
 .home .entry a.more {
 	background: #8FC73E;
 	color: #fff;
@@ -956,10 +956,26 @@ ul.breadcrumbs li.current a {
    Footer
 ----------------------------------------- */
 #footer {
-	background: #000;
+	background: #1E7577;
 	color: #fff;
 	width: 100%;
-	padding: 40px 0px;
+	padding: 30px 0px 10px 0px;;
+}
+#footer .footer-header {
+  font-family: "museo-sans",sans-serif;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+#footer #footer-about {
+	border-right: 2px dotted #999;
+	padding-right: 20px;
+}
+#footer #footer-about p {
+	font-size: 18px;
+}
+#footer #footer-about img {
+	float: left;
+	margin-right: 20px;
 }
 #footer .footer-header {
 	color: #fff;
@@ -969,9 +985,10 @@ ul.breadcrumbs li.current a {
 }
 #footer li {
 	list-style: none;
+	line-height: 1.3em;
 }
-#footer li.spacer {
-	height: 20px;
+#footer #footer-utility-nav {
+	padding-bottom: 20px;
 }
 
 
