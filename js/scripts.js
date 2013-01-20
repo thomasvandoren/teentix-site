@@ -27,13 +27,13 @@
     
   
   
-  $("#featured").orbit();
+
   $("#gallery").orbit({ 
   	animation: 'fade',
   	startClockOnMouseOut: true,
   	timer: false,
   	bullets: true,
-  	captions: true 
+  	captions: true ,
   });
     
 

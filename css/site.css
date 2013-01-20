@@ -14,19 +14,33 @@
 ----------------------------------------- */
 
 body {
-	background: #004c4c;
+	background: #1E7577;
 }
 
 /* typography */
-h1, h2, h3, h4, h5, h6, p
+p, ul, ol, li,
 .button, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea {
 	font-family: "museo-sans", Helvetica, Arial, san-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
+  font-family: "atrament-web",sans-serif;
+  font-stretch: narrower;
+}
+h1, h2, h3, h4, h5, h6 {
 	margin-top: 0px;
 }
 p {
+
+}
+.sans {
+  font-family: "museo-sans",sans-serif;
+}
+.slab {
+  font-family: "quatro-slab",serif;
+}
+.condensed {
+  font-family: "atrament-web",sans-serif;
 }
 
 .hidden {
@@ -106,6 +120,14 @@ input.submit:hover {
 /* -----------------------------------------
    Utility Nav
 ----------------------------------------- */
+#utility-nav {
+	background: #000;
+}
+.top-bar {
+	margin-bottom: 0px;
+	background: #000;
+	color: #ccc;
+}
 .top-bar,
 .top-bar ul,
 .top-bar ul > li a:not(.button)  {
@@ -113,58 +135,89 @@ input.submit:hover {
 	line-height: 36px;
 	margin-bottom: 0px;
 }
-.top-bar {
-	margin-bottom: 0px;
+.top-bar ul > li a:not(.button) {
+	display: inline;
+}
+.top-bar.contain-to-grid:before, 
+.top-bar.contain-to-grid:after {
+	background: none;
+	height: 36px;
+	width: auto;
 }
 .top-bar ul > li:hover, .top-bar ul > li.active {
 	background: transparent;
 }
 .top-bar ul > li.has-dropdown .dropdown li {
-	background: #ccc;
+	background: #000;
 }
 .top-bar ul > li.has-dropdown .dropdown li a:hover {
-	background: #aaa;
+	color: #ccc;
+	background: #000;
 }
 .top-bar ul > li.has-dropdown .dropdown li a {
-	color: #000;
+	color: #fff;
+}
+#join-mailing-list {
+	font-size: 13px;
+}
+#join-mailing-list a {
+	padding-left: 3px;
 }
 #utility-search {
-	width: 260px;
-	padding: 4px 0px 0px 20px;
+	width: 220px;
 }
 #utility-search form {
 	margin: 0px;
 	padding: 0px;
+	position: relative;
+	width: 200px;
+	height: 36px;
 }
 #utility-search input {
-	float: left;
 	margin: 0px;
 }
 #utility-search input#keywords {
 	width: 200px;
 	padding: 3px 5px;
-	height: 28px;
+	padding-left: 24px;
+	height: 24px;
+	border: none;
+	border-radius: 10px;
+	position: absolute;
+	top: 5px;
+	left: 0px;
+	color: #949494;
+	background: #fff url(images/site/search-icon.png) no-repeat 6px center;
+	font-size: 13px;
 }
 #utility-search input.submit {
-	height: 28px;
-	padding: 3px 6px;
+	height: 20px;
+	width: 20px
+	padding: 0px;
+	position: absolute;
+	top: 7px;
+	right: 5px;
+	background: none;
+	border: none;
+	background: transparent url(images/site/arrow-r-gray.png) no-repeat center center;
+	opacity: .5;
 }
 #utility-nav .right {
 	margin-right: 10px;
 }
 #utility-nav .dropdown {
 	top: 36px;
-	background: #ccc;
+	background: #000;
 }
 #utility-nav #nav-bar-login {
-	padding: 10px;
-	background: #ccc;
+	padding: 10px 20px;
+	background: #000;
 }
 #utility-nav #nav-bar-login form {
 	margin: 0px;
 }
 #utility-nav #nav-bar-login label {
-  color: #333;
+  color: #fff;
   font-size: 12px;
   font-weight: bold;
   padding-left: 0px;
@@ -181,11 +234,12 @@ input.submit:hover {
    Header
 ----------------------------------------- */
 #header {
-	background: #e9d9b9;
+	background: #e9d9b9 url(images/site/wood-grain.png) repeat-x center center;
 	width: 100%;
 	margin-top: 0px;
 }
 #header #how-to-graphic {
+	background: url(images/site/how-to.png) no-repeat center center;
 	position: relative;
 	width: 100%;
 	height: 140px;
@@ -195,34 +249,78 @@ input.submit:hover {
 	width: 200px;
 	position: absolute;
 	left: 0px;
-	top: 40px;
+	top: 30px;
 }
 #header #get-pass {
 	position: absolute;
-	top: 30px;
-	right: 10px;
+	top: 25px;
+	right: 0px;
 	text-align: center;
 }
 #header #get-info {
 	position: absolute;
 	top: 80px;
-	right: 10px;
+	right: 0px;
 	text-align: center;
 }
 #header #get-info a,
 #header #get-pass a {
-	width: 100px;
+	display: block;
+	width: 135px;
+/* 	color: transparent; */
+	font-size: 0px;
 }
-
+#header #get-info a {
+	height: 38px;
+	background: url(images/site/button-learn.png) no-repeat left top;
+}
+#header #get-info a:hover {
+	background-position: right top;
+}
+#header #get-pass a {
+	height: 46px;
+	background: url(images/site/button-signup.png) no-repeat left top;
+}
+#header #get-pass a:hover {
+	background-position: right top;
+}
 
 
 /* -----------------------------------------
    Top Bar
 ----------------------------------------- */
+#top-nav {
+	background: url(images/site/shadow.png) repeat-x center top; 
+}
 #main-nav {
 	background: transparent;
 	margin-top: 0px;
 	margin-bottom: 0px;
+	height: 48px;
+	position: relative;
+}
+#main-nav > li {	
+	line-height: 24px;
+	padding: 12px 0px;
+	box-shadow: none;
+	background: transparent;
+	border: none;
+}
+#main-nav > li > a {
+	background: transparent;
+	border: none;
+}
+#main-nav > li > a:first-child {
+	padding: 0px 15px 0px 0px;
+	margin-right: 15px;
+	font-family: "quatro-slab",serif;
+	font-size: 18px;
+	letter-spacing: .03em;
+	text-transform: capitalize;
+	border-right: 2px dotted #9BBCBD;
+}
+#main-nav > li.last a {
+	border-right: none;
 }
 #main-nav .flyout ul {
 	margin: 0px;
@@ -233,30 +331,40 @@ input.submit:hover {
 #main-nav .flyout li a {
 	padding: 3px 0px;
 }
-#main-nav > li > a:first-child {
-	padding: 0px 15px 0px 0px;
-	margin-right: 15px;
-	text-transform: uppercase;
+#main-nav > li.has-flyout > a:first-child:after {
+	top: 10px;
+	right: 15px;
 }
 #main-nav > li.has-flyout > a:first-child {
-	padding-right: 40px;
+	padding-right: 30px;
 }
-#main-nav > li {
-	box-shadow: none;
-	background: transparent;
-	border: none;
+#main-nav #get-lost-pass {
+	width: 135px;
+	position: absolute;
+	right: 0px;
+	top: 10px;
+	padding: 0px;
 }
-#main-nav > li > a {
-	background: transparent;
-	border: none;
+#main-nav #get-lost-pass a {
+	display: block;
+	width: 135px;
+	height: 30px;
+	color: transparent;
+	font-size: 0px;
+	background: url(images/site/button-lost.png) no-repeat left top;
 }
+#main-nav #get-lost-pass a:hover {
+	background-position: right top;
+}
+
 
 
 /* breadcrumb */
 #nav-breadcrumb {
 	width: 100%;
-	background: #fff;
-	padding-bottom: 10px;	
+	background: #fff url(images/site/shadow.png) repeat-x center top;
+	padding-top: 10px;
+	padding-bottom: 0px;	
 }
 ul.breadcrumbs {
 	font-size: 11px;
@@ -308,9 +416,25 @@ ul.breadcrumbs li.current a {
 /* -----------------------------------------
    Home
 ----------------------------------------- */
-.home #main-featured {
-	margin-top: 20px;
+.home #main-content {
+	padding-top: 10px;
 }
+.orbit-wrapper {
+	margin-bottom: 20px;
+}
+.home #slider {
+	overflow: hidden;
+	border-radius: 15px;
+}
+.home #slider .slide {
+	width: 1000px;
+	height: 360px;
+	background: #000;
+	border-radius: 15px;
+	background-repeat: no-repeat;
+	background-position: right top;
+}
+
 .home .entry {
 	padding: 10px 0px;
 	margin: 0px;

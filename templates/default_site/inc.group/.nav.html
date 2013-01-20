@@ -1,22 +1,20 @@
 	<div id="utility-nav">
-		<nav class="top-bar">
+		<nav class="top-bar contain-to-grid">
 		  <ul>
-		  	<li>
-		  		<div id="utility-search" class="search-form">
-	  			{exp:search:simple_form channel="news"}
-            <input type="text" name="keywords" id="keywords" value="" placeholder="Search TeenTix" size="18" maxlength="100">
-            <input type="submit" value="GO" class="submit small button">
-					{/exp:search:simple_form}
-		  		</div>
-		  	</li>
+		  	<li id="join-mailing-list" class="slab">Want updates and specials? <a href="{site_url}newsletter">Join our mailing list!</a></li>
 		    <li class="toggle-topbar"><a href="#"></a></li>
 		  </ul>
 		  <section>
-		    <ul class="left">
-		      <li><a href="{site_url}newsletter">Get our newsletter</a></li>		      
-		    </ul>
 		
 		    <ul class="right">
+		    	<li>
+			  		<div id="utility-search" class="search-form">
+		  			{exp:search:simple_form channel="news"}
+	            <input type="text" name="keywords" id="keywords" value="" placeholder="Search TeenTix" size="18" maxlength="100">
+	            <input type="submit" value="" class="submit">
+						{/exp:search:simple_form}
+			  		</div>
+			  	</li>
 		    {if logged_out}
 	        <li class="has-dropdown">
 	          <a href="{path='account/login'}">Login</a>
@@ -53,9 +51,9 @@
 	  <div class="row">
 	    <div class="twelve columns">
 	    	<div id="how-to-graphic">
-		      <h1 id="logo"><a href="{site_url}"><img src="http://placehold.it/400x100&text=Logo" /></a></h1>
-		      <div id="get-pass"><a href="{path='application'}" class="small button">Get Your Pass</a></div>
-		      <div id="get-info"><a href="{path='how-to'}" class="small button">More Info</a></div>
+		      <h1 id="logo"><a href="{site_url}"><img src="{site_url}css/images/site/teentix-logo.png" /></a></h1>
+		      <div id="get-pass"><a href="{path='application'}">Get Your Pass</a></div>
+		      <div id="get-info"><a href="{path='how-to'}">More Info</a></div>
 					
 				</div>
 	    </div>
@@ -65,7 +63,7 @@
   <div id="top-nav">
 	  <div class="row">
 	  	<div class="twelve columns">
-		  	<ul id="main-nav" class="nav-bar">
+		  	<ul id="main-nav" class="nav-bar slab">
 		      <li {if segment_1==''}class='active'{/if}><a href="{site_url}">Home</a></li>
 		      <li {if segment_1=='calendar'}class='active'{/if}><a href="{path='calendar'}">Calendar</a></li>
 		      <li {if segment_1=='blog'}class='active'{/if}><a href="{path='blog'}">Blog</a></li>
@@ -102,12 +100,13 @@
 							    </ul>
 				    		</div>
 				    	</div>
-				      
-				  </div>
-		      
-		      <li><a href="{path='contact'}">Contact</a></li>
-		      
+					  </div>
+				  </li>
+				  
+		      <li class="last"><a href="{path='contact'}">Contact</a></li>
+		      <li class="last" id="get-lost-pass"><a href="{path=''}">Lost Pass</a></li>
 		    </ul>
+		    
 		  </div>
 	  </div>
   </div><!-- #top-nav -->
@@ -117,7 +116,6 @@
 	  	<div class="twelve columns">
 	  		<ul class="breadcrumbs">
 			  {if segment_1 != ""}
-	  		
 		  			<li><a href="{site_url}">Home</a></li>
 			  	{if segment_1}
 			  		<li {if segment_2 == ""}class="current"{/if}><a href="{site_url}{segment_1}">{if embed:segment_1_title}{embed:segment_1_title}{if:else}{segment_1}{/if}</a></li>
