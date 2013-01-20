@@ -1,11 +1,11 @@
 {exp:channel:entries channel="organizations" limit="1"}
 {embed="inc/.header"
-	title="{title} | Participating Organizations"
+	title="{title} | Partners"
 	body_class="orgs single"
 }
 
 {embed="inc/.nav"
-	segment_1_title="Participating Organizations"
+	segment_1_title="Partners"
 	end_title="{title}"
 }
   
@@ -56,7 +56,7 @@
   		{/if}
   		</div>
   	{if org_locations}	    			
-			{embed="organizations/.locations" entry_id="{org_locations}"}	    		
+			{embed="partners/.locations" entry_id="{org_locations}"}	    		
   	{/if}
   	
   		<div id="org-events">
