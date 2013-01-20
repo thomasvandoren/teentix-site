@@ -12,10 +12,10 @@
       			<img src="{site_url}css/images/fpo-nirvana.png" />
       		</div>
       		<div class="slide-text">
-	      		<h3>1. Nirvana &ndash; Taking Punk to the Masses</h3>
-	      		<p>April 14&ndash;July 30</p>
-	      		<p>EMP Museum</p>
-	      		<a href="more">More</a>
+	      		<h3 class="event-name condensed">Nirvana &ndash; Taking Punk to the Masses</h3>
+	      		<p class="event-date slab">April 14&ndash;July 30</p>
+	      		<p class="event-venue">EMP Museum</p>
+	      		<a class="slide-more" href="/">More</a>
       		</div>	      		
       	</div>
  				<div class="slide">
@@ -23,10 +23,10 @@
       			<img src="{site_url}css/images/fpo-nirvana.png" />
       		</div>
       		<div class="slide-text">
-	      		<h3>2. Nirvana &ndash; Taking Punk to the Masses</h3>
-	      		<p>April 14&ndash;July 30</p>
-	      		<p>EMP Museum</p>
-	      		<a href="more">More</a>
+	      		<h3 class="event-name condensed">Nirvana &ndash; Taking Punk to the Masses 2</h3>
+	      		<p class="event-date slab">April 14&ndash;July 30</p>
+	      		<p class="event-venue">EMP Museum</p>
+	      		<a class="slide-more" href="/">More</a>
       		</div>	      		
       	</div>
       </div>
@@ -38,39 +38,56 @@
   <!-- Three-up Content Blocks -->
   
   <div class="row">  
-    <div class="four columns">
-      <img src="http://placehold.it/400x300&text=[img]" />
+    <div id="home-promo" class="four columns">
+    	<div class="promo-background">
+    		<a href="{site_url}application"><img src="{site_url}css/images/site/home-promo-pass.png" /></a>
+    	</div>
+      
     </div>
     
-    <div class="four columns">
+    <div id="home-featured-post" class="four columns">
     {exp:channel:entries channel="blog" limit="1" status="featured"}
     	
     	<div class="entry">
   		{if blog_image}
   			<a href="{url_title_path='blog'}">
-  			{exp:ce_img:pair src="{blog_image}" width="300" height="225" crop="yes"}
+  			{exp:ce_img:pair src="{blog_image}" width="300" height="200" crop="yes"}
 				<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
   			</a>
     	{/if}    	
-    		<h3><a href="{url_title_path='blog'}">{title}</a></h3>
+    		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
 {!--     		<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p> --}
     		<p>
-    		{exp:trunchtml chars="320" inline="..." ending="<a href='{path=site/comments}'>read on</a>"}	    		
+    		{exp:trunchtml chars="240" inline="..." ending="<a href='{url_title_path=blog}' class='more condensed'>More</a>"}	    		
+	    		{exp:strip_line_breaks}
 	    		{exp:strip_html keep='b|em'}
-					{blog_body}
+					
+						{blog_body}
+					
 					{/exp:strip_html}
+					{/exp:strip_line_breaks}
 				{/exp:trunchtml} 
 				</p> 		
     	</div>
 		{/exp:channel:entries} 
     </div>
     
-    <div class="four columns">
-    {exp:channel:entries channel="blog" limit="5"}
+    <div id="home-recent-posts" class="four columns">
+    	<h4 class="section-head condensed">Recent Blog Posts</h4>
+    {exp:channel:entries channel="blog" limit="3"}
     	<div class="entry">
 				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
-    		<h4><a href="{url_title_path='blog'}">{title}</a></h4>
+    		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
+    		<p>
+    		{exp:trunchtml chars="80" inline="..." ending="<a href='{url_title_path=blog}' class='more condensed'>More</a>"}	    		
+	    		{exp:strip_html keep='b|em'}
+					{exp:strip_line_breaks}
+						{blog_body}
+					{/exp:strip_line_breaks}
+					{/exp:strip_html}
+				{/exp:trunchtml} 
+				</p>
     	</div>
 		{/exp:channel:entries} 
     </div>
@@ -81,16 +98,16 @@
   <!-- Call to Action Panel -->
   <div class="row">
     <div class="twelve columns">
-    
-      <div class="panel">
-        <h4>Get in touch!</h4>
-            
-        <div class="row">
-          <div class="nine columns">
-            <p>We'd love to hear from you, you attractive person you.</p>
+    	<hr />
+      <div id ="home-contact">
+	      <div class="row">
+	      	<div id="contact-left" class="two columns">&nbsp;</div>
+          <div id="contact-center" class="six columns">
+          	<h4 class="condensed">Got something to say?</h4>
+            <p class="slab">We want to hear it!</p>
           </div>
-          <div class="three columns">
-            <a href="#" class="radius button right">Contact Us</a>
+          <div id="contact-right" class="four columns">
+            <a href="{site_url}contact" class="button">Contact Us</a>
           </div>
         </div>
       </div>

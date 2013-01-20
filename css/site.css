@@ -43,6 +43,7 @@ p {
   font-family: "atrament-web",sans-serif;
 }
 
+
 .hidden {
 	display: none;
 }
@@ -56,6 +57,17 @@ p {
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
+
+
+/* header styles */
+.section-head {
+	color: #487578;
+	border-bottom: 1px solid #87AEB0;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	text-transform: uppercase;
+}
+
 
 
 
@@ -159,6 +171,7 @@ input.submit:hover {
 }
 #join-mailing-list {
 	font-size: 13px;
+	padding-left: 10px;
 }
 #join-mailing-list a {
 	padding-left: 3px;
@@ -201,9 +214,6 @@ input.submit:hover {
 	border: none;
 	background: transparent url(images/site/arrow-r-gray.png) no-repeat center center;
 	opacity: .5;
-}
-#utility-nav .right {
-	margin-right: 10px;
 }
 #utility-nav .dropdown {
 	top: 36px;
@@ -407,8 +417,9 @@ ul.breadcrumbs li.current a {
 }
 .entry-date {
 	font-size: 12px;
-	margin-bottom: 3px;
+	margin-bottom: 0px;
 	text-transform: uppercase;
+	color: #999;
 }
 
 
@@ -419,14 +430,12 @@ ul.breadcrumbs li.current a {
 .home #main-content {
 	padding-top: 10px;
 }
-.orbit-wrapper {
-	margin-bottom: 20px;
-}
-.home #slider {
+.home #main-featured {
 	overflow: hidden;
 	border-radius: 15px;
+	margin-bottom: 20px;
 }
-.home #slider .slide {
+.home #main-featured .slide {
 	width: 1000px;
 	height: 360px;
 	background: #000;
@@ -434,15 +443,130 @@ ul.breadcrumbs li.current a {
 	background-repeat: no-repeat;
 	background-position: right top;
 }
+.home #main-featured .slide-image {
+	width: 100%;
+	height: 360px;
+	text-align: right;
+	position: absolute;
+}
+.home #main-featured .slide-text {
+	position: absolute;
+	width: 550px;
+	height: 360px;
+	padding: 30px 100px 30px 30px;
+	color: #fff;
+	background: url(images/site/main-featured-overlay.png) no-repeat left top;
+}
+.home #main-featured .event-name {
+	color: #fff;
+	font-size: 48px;
+	font-weight: 400;
+	margin-bottom: 10px;
+}
+.home #main-featured .event-date {
+	color: #81AAAD;
+	font-size: 21px;
+	text-transform: uppercase;
+	margin-bottom: 5px;
+}
+.home #main-featured .event-venue {
+	font-size: 21px;
+	text-transform: uppercase;
+	font-weight: 100;
+}
+.home #main-featured a.slide-more {
+	display: block;
+	width: 74px;
+	height: 38px;
+	background: url(images/site/button-more.png) no-repeat left top;
+	font-size: 0px;
+	color: transparent;
+}
+.home #main-featured a.slide-more:hover {
+	background-position: right top;
+}
+.home #home-promo {
 
+}
+.home #home-promo .promo-background {
+	height: 344px;
+	width: 300px;
+	background: #F1F7E8;
+	border-radius: 15px;
+}
+.home #home-promo a {
+	position: absolute;
+	left: -20px;
+	top: 0px;
+}
 .home .entry {
-	padding: 10px 0px;
+	padding-bottom: 10px;
 	margin: 0px;
 }
-.home .entry h4 {
+.home .entry .entry-title {
+	font-size: 22px;
+	font-weight: 300;
 	margin-bottom: 0px
 }
-
+.home .entry img {
+	margin-bottom: 10px;
+}
+.home .entry a {
+	color: #8FC73E;
+}
+.home .entry a:hover {
+	color: #86B239;
+}
+.home .entry a.more {
+	background: #8FC73E;
+	color: #fff;
+	margin-left: 5px;
+	padding: 0px 10px 0px 4px;
+	border-radius: 3px;
+	font-size: 14px;
+	font-weight: 400;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	background: #8FC73E url(images/site/arrow-r-white.png) no-repeat right 4px;
+}
+.home .entry a.more:hover {
+	background-color: #86B239;
+}
+.home #home-recent-posts .section-head {
+	font-size: 28px;
+	font-weight: 400;
+}
+.home #contact-center {
+	min-height: 110px;
+	text-align: center;
+	background: url(images/site/arrow-tall-gray.png) no-repeat right center;
+}
+.home #contact-center h4 {
+	font-size: 50px;
+	color: #1E7577;
+	text-transform: uppercase;
+	margin: 0px;
+	padding-top: 3px;
+}
+.home #contact-center p {
+	font-size: 30px;
+	color: #4D4D4D;
+	margin: 0px;
+	line-height: 1.2em;
+}
+.home #contact-right .button {
+	width: 240px;
+	height: 65px;
+	border: none;
+	background: url(images/site/button-contact.png) no-repeat left top;
+	color: transparent;
+	font-size: 0px;
+	margin-top: 20px;
+	margin-left: 40px;
+}
+.home #contact-right .button:hover {
+	background-position: right top;
+}
 
 
 /* -----------------------------------------
@@ -547,6 +671,8 @@ ul.breadcrumbs li.current a {
 .calendar.day .event-summary p {
 	font-size: 13px;
 }
+
+
 
 /* -----------------------------------------
    Event

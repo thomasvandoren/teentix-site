@@ -35,6 +35,8 @@
   	bullets: true,
   	captions: true ,
   });
+  
+  $('#main-featured').cycle();
     
 
   // UNCOMMENT THE LINE YOU WANT BELOW IF YOU WANT IE8 SUPPORT AND ARE USING .block-grids
