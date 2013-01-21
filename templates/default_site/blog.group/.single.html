@@ -30,11 +30,11 @@
     {/exp:channel:entries}
     	
     	<div class="entry-nav">
-	    {exp:channel:next_entry channel="blog"}
+	    {exp:channel:next_entry channel="blog" status="not closed"}
 		    <p class="entry-next">Next entry: <a href="{path='blog'}">{title}</a></p>
 			{/exp:channel:next_entry}
 	
-			{exp:channel:prev_entry channel="blog"}
+			{exp:channel:prev_entry channel="blog" status="not closed"}
 		    <p class="entry-prev">Previous entry: <a href="{path='blog'}">{title}</a></p>
 			{/exp:channel:prev_entry}
 			</div>
