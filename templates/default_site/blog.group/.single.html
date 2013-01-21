@@ -18,11 +18,9 @@
 				<p class="entry-date">{author} | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}</p>
 				
   		{if blog_image}
-  			<a href="{url_title_path='blog'}">
   			{exp:ce_img:pair src="{blog_image}" width="620"}
 				<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
-  			</a>
     	{/if}
     		{blog_body}
     	</div>
