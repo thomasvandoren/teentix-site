@@ -1,29 +1,29 @@
 <div id="become-reviewer">
-	<p><a href="/write-for-our-blog" class="button large">Become a Teen Reviewer</a></p>
+	<a href="/write-for-our-blog">Become a Teen Reviewer</a>
 </div>
 
 <div id="blog-categories">
-	<h4>Articles</h4>
+	<h4 class="section-head sans">Articles</h4>
 	{exp:channel:categories channel="blog" category_group="4"}
   <a href="{path='blog'}">{category_name}</a>
 	{/exp:channel:categories}
 	
-	<h4>Genres</h4>
+	<h4 class="section-head sans">Genres</h4>
 	{exp:channel:categories channel="blog" category_group="1"}
   <a href="{path='blog'}">{category_name}</a>
 	{/exp:channel:categories}
 </div>
 
 <div id="blog-archive">
-	<h4>Archives</h4>
+	<h4 class="section-head sans">Archives</h4>
 	<ul>
-	{exp:channel:month_links channel="blog" limit="50"}
-    <li><a href="{path='blog/archives'}">{month}, {year}</a></li>
-	{/exp:channel:month_links}
+	{exp:yearlist channel="blog"}
+		<li><a href="{path='blog/archives'}/{year}">{year}</a></li>
+	{/exp:yearlist}
 	</ul>
 </div>
 
 <div id="blog-terms">
-	<h4>Disclaimer</h4>
+	<h4 class="section-head sans">Disclaimer</h4>
 	{blog_disclaimer}
 </div>

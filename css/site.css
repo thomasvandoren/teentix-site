@@ -28,6 +28,7 @@ p, ul, ol, li,
 h1, h2, h3, h4, h5, h6 {
   font-family: "atrament-web",sans-serif;
   font-stretch: narrower;
+  color: #4D4D4D;
 }
 h1, h2, h3, h4, h5, h6 {
 	margin-top: 0px;
@@ -493,7 +494,7 @@ ul.breadcrumbs li.current a {
 
 
 /* -----------------------------------------
-   Blog Entries
+    Entries
 ----------------------------------------- */
 .entry {
 	line-height: 1.5em;
@@ -519,6 +520,40 @@ ul.breadcrumbs li.current a {
 }
 .entry li {
 	list-style-position: outside;
+}
+
+
+
+/* -----------------------------------------
+    Comments
+----------------------------------------- */
+#comments {
+	border-top: 2px dotted #9BBCBD;
+	padding-top: 5px;
+}
+#comments h3 {
+	color: #487578;
+}
+.comment-entry {
+	padding: 10px;
+	padding-bottom: 1px;
+	background: #eee;
+	border-radius: 5px;
+}
+.comment-entry p {
+	margin-bottom: 10px;
+	font-size: 16px;
+}
+.comment-author {
+	margin-bottom: 20px;
+	padding: 2px 10px;
+	padding-left: 30px;
+	font-size: 12px;
+}
+#comment-form h3 {
+	font-size: 20px;
+	font-weight: bold;
+	margin-top: 40px;
 }
 
 
@@ -908,12 +943,8 @@ ul.breadcrumbs li.current a {
 /* -----------------------------------------
    Blog
 ----------------------------------------- */
-.blog #sidebar {
-	padding-top: 20px;
-}
-.blog #blog-terms p {
-	font-size: 13px;
-	line-height: 1.3em;
+.blog #main {
+	padding-right: 10px;
 }
 .blog .entry {
 	border-top: 2px dotted #9BBCBD;
@@ -928,6 +959,10 @@ ul.breadcrumbs li.current a {
 	margin-bottom: 20px;
 	font-size: 18px;
 }
+.blog #pagination {
+	border-top: 2px dotted #9BBCBD;
+	padding-top: 5px;
+}
 .blog.single .entry {
 	border: none;
 }
@@ -939,16 +974,34 @@ ul.breadcrumbs li.current a {
 .blog.single .entry-nav p {
 	margin-bottom: 0px;
 }
-.blog.single #comments {
-	border-top: 2px dotted #9BBCBD;
-	padding-top: 5px;
-}
-.blog.single #comments h3 {
-	color: #487578;
-}
 .blog.single .social-buttons {
 	border: none;
 	margin-bottom: 20px;
+}
+.blog #sidebar {
+	padding-top: 20px;
+	padding-left: 30px;
+}
+.blog #blog-terms p {
+	font-size: 13px;
+	line-height: 1.3em;
+}
+.blog #sidebar .section-head {
+	margin-top: 30px;
+}
+.blog #sidebar li {
+	list-style: none;
+}
+.blog #become-reviewer a {
+	display: block;
+	width: 300px;
+	height: 120px;
+	background: url(images/site/button-become-reviewer.png) no-repeat left top;
+	font-size: 0px;
+	color: transparent;
+}
+.blog #become-reviewer a:hover {
+	background-position: right top;
 }
 
 

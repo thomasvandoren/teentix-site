@@ -38,35 +38,11 @@
 			{/exp:channel:prev_entry}
 			</div>
 			
-			<div id="comments">
-				<h3>Comments</h3>
-			{exp:comment:entries sort="asc" limit="20"}
-        {comment}
-        <p>By {name} on {comment_date format="%Y %m %d"}</p>
-			{/exp:comment:entries}
-			</div>
-			
-			{if logged_out}
-        <p>Please <a href="{path='account/login'}">login to leave a comment</a>.</p>
-      {/if}
-      {if logged_in}
-      <div id="comment-form">
-			{exp:comment:form channel="blog" preview="channel/preview"}
-
-        <label for="comment">Comment:</label><br />
-        <textarea name="comment" cols="70" rows="10">{comment}</textarea>
-        <label><input type="checkbox" name="save_info" value="yes" {save_info} /> Remember my personal information</label><br />
-        <label><input type="checkbox" name="notify_me" value="yes" {notify_me} /> Notify me of follow-up comments?</label><br />
-        <input type="submit" name="submit" value="Submit" />
-        <input type="submit" name="preview" value="Preview" />
-
-			{/exp:comment:form}
-			</div>
-			{/if}
+			{embed="inc/.comments" channel="blog"}
 			
     </div>
 
-  	<div id="sidebar" class="three columns">
+  	<div id="sidebar" class="four columns">
 		{edit_this}
 			<div class="social-buttons">
 				<!-- AddThis Button BEGIN -->

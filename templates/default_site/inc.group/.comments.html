@@ -1,41 +1,26 @@
 <div id="comments">
 	<h3>Comments</h3>
-	{exp:comment:entries limit="20"}
-  <div class="comment" id="comment_{comment_id}">
-    <span class="comment_body">
-      {comment}
-    </span>
-
-  {if editable}
-    <a href="#" class="edit_link">Edit</a>
-
-    <div class="editCommentBox" style="display:none;">
-      <textarea cols="70" rows="8">{comment_stripped}</textarea><br />
-      <input type="submit" name="cancel" value="Cancel" class="cancel_edit">
-      <input type="submit" name="save" value="Save" class="submit_edit">
-    </div>
-  {/if}
-
-    {if can_moderate_comment}
-    <a href="#" class="mod_link">Close</a>
-    {/if}
-  </div>
-	{/exp:comment:entries}
-	
-	{exp:comment:form channel="{embed:channel}" preview="channel/preview"}
-	<div id="comment-form">
-  {if logged_out}
-    <p>Please <a href="{path='account/login'}">log in</a> or <a href="{path='account/new'}">create an account</a> to leave a comment.</p>
-  
-  {if:else}
-	  <label for="comment">Comment:</label><br />
-	  <textarea name="comment" cols="70" rows="10">{comment}</textarea>
-	  <label><input type="checkbox" name="save_info" value="yes" {save_info} /> Remember my personal information</label><br />
-	  <label><input type="checkbox" name="notify_me" value="yes" {notify_me} /> Notify me of follow-up comments?</label><br />
-	  <input type="submit" name="submit" value="Submit" />
-	  <input type="submit" name="preview" value="Preview" />
-	{/if}
+{exp:comment:entries sort="asc" limit="20"}
+	<div class="comment-entry">
+	  {comment}
 	</div>
-	{/exp:comment:form}
-
+  <p class="comment-author">By {name} on {comment_date format="%F %j, %Y"} at {comment_date format="%g:%i %a"}</p>
+	
+{/exp:comment:entries}
 </div>
+
+{if logged_out}
+  <p>Please <a href="{path='account/login'}">login to leave a comment</a>.</p>
+{/if}
+{if logged_in}
+<div id="comment-form">
+{exp:comment:form channel="{embed:channel}"}
+
+  <h3 class="sans">Leave a Comment:</h3>
+  <textarea name="comment" cols="70" rows="10">{comment}</textarea>
+  <label><input type="checkbox" name="notify_me" value="yes" {notify_me} /> Notify me of follow-up comments?</label><br />
+  <input class="button small" type="submit" name="submit" value="Submit" />
+
+{/exp:comment:form}
+</div>
+{/if}

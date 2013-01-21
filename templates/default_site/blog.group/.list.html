@@ -3,7 +3,14 @@
 	body_class="blog"
 }
 
-{embed="inc/.nav"}  
+{embed="inc/.nav"
+	{if segment_2=="archives"}
+	end_title="{segment_3} Archives"
+	{/if}
+	{if segment_2=="category"}
+	end_title="{exp:channel:category_heading channel="blog"}{category_name}{/exp:channel:category_heading}"
+	{/if}
+}  
     
   <div class="row">
     <div id="main" class="eight columns">
@@ -11,12 +18,12 @@
       {exp:channel:category_heading channel="blog"} - {category_name}{/exp:channel:category_heading}
     {exp:channel:entries channel="blog" limit="10" status="not closed"}
 	    {if segment_2=="archives"}
-	    	{date_heading display="monthly"}                 
-				- {entry_date format="%F %Y"}
+	    	{date_heading display="yearly"}                 
+				- {entry_date format="%Y"}
 				{/date_heading}
 			{/if}
 			</h1>		
-    	<div class="entry">    	
+    	<div class="entry clearfix">    	
 				
     		<h2 class="entry-title"><a href="{url_title_path='blog'}">{title}</a></h2>
     		<p class="entry-date">{author} | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}</p>
@@ -27,7 +34,7 @@
 				{/exp:ce_img:pair}
   			</a>
     	{/if}
-    	{exp:trunchtml chars="400" inline="..." ending="<a href='{url_title_path=blog}' class='more'>Read more</a>"}	
+    	{exp:trunchtml chars="400" inline="... " ending="<a href='{url_title_path=blog}' class='more'>Read more</a>"}	
     		{blog_body}
     	{/exp:trunchtml}
     	</div>
@@ -41,7 +48,7 @@
       
     </div>
   	
-  	<div id="sidebar" class="three columns">
+  	<div id="sidebar" class="four columns">
       {embed="blog/.sidebar"}
     </div>
   
