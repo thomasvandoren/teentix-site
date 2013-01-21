@@ -35,7 +35,8 @@ h1, h2, h3, h4, h5, h6 {
 p {
 	font-size: 14px;
 }
-a {
+a,
+a:visited {
 	color: #8FC73E;
 }
 a:hover {
@@ -1037,6 +1038,18 @@ ul.breadcrumbs li.current a {
 .account .event-saved {
 	font-size: 12px;
 }
+
+/* -----------------------------------------
+   Search
+----------------------------------------- */
+.search .entry { 
+	padding: 10px 0px;
+	border-top: 1px solid #ccc;
+}
+.search .entry .channel-name {
+	margin-bottom: 3px;
+}
+
 
 
 /* -----------------------------------------
