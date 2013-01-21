@@ -487,9 +487,18 @@ ul.breadcrumbs li.current a {
 	padding-top: 1px;
 }
 .social-buttons .addthis_counter {
-	width: 50px;
-	height: 65px;
+
 }
+.social-buttons .addthis_button_facebook_send {
+	width: 60px;
+}
+.social-buttons .addthis_button_pinterest_pinit {
+	top: 0px;
+}
+.social-buttons .addthis_counter.addthis_pill_style {
+	width: 100px;
+}
+
 
 
 
