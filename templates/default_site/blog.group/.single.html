@@ -9,22 +9,14 @@
 } 
     
   <div class="row">
-  	{edit_this}
+  	
     <div id="main" class="eight columns">
+    	
     	<div class="entry">
-				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
+				
 				<h1 id="page-name">{title}</h1>
-				<div class="social-butons">
-				<!-- AddThis Button BEGIN -->
-					<div class="addthis_toolbox addthis_default_style ">
-						<a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
-						<a class="addthis_button_tweet"></a>
-						<a class="addthis_button_pinterest_pinit"></a>
-						<a class="addthis_counter addthis_pill_style"></a>
-					</div>
-					<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b179a669bc22d4"></script>
-				<!-- AddThis Button END -->
-				</div>
+				<p class="entry-date">{author} | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}</p>
+				
   		{if blog_image}
   			<a href="{url_title_path='blog'}">
   			{exp:ce_img:pair src="{blog_image}" width="620"}
@@ -53,35 +45,40 @@
         <p>By {name} on {comment_date format="%Y %m %d"}</p>
 			{/exp:comment:entries}
 			</div>
-			<div id="comment-form">
-			{exp:comment:form channel="blog" preview="channel/preview"}
-
-      {if logged_out}
-        <label for="name">Name:</label> <input type="text" name="name" value="{name}" size="50" /><br />
-        <label for="email">Email:</label> <input type="text" name="email" value="{email}" size="50" /><br />
-        <label for="location">Location:</label> <input type="text" name="location" value="{location}" size="50" /><br />
-        <label for="url">URL:</label> <input type="text" name="url" value="{url}" size="50" /><br />
+			
+			{if logged_out}
+        <p>Please <a href="{path='account/login'}">login to leave a comment</a>.</p>
       {/if}
+      {if logged_in}
+      <div id="comment-form">
+			{exp:comment:form channel="blog" preview="channel/preview"}
 
         <label for="comment">Comment:</label><br />
         <textarea name="comment" cols="70" rows="10">{comment}</textarea>
         <label><input type="checkbox" name="save_info" value="yes" {save_info} /> Remember my personal information</label><br />
         <label><input type="checkbox" name="notify_me" value="yes" {notify_me} /> Notify me of follow-up comments?</label><br />
-
-      {if captcha}
-        <label for="captcha">Please enter the word you see in the image below:</label><br />
-        <p>{captcha}<br />
-        <input type="text" name="captcha" value="{captcha_word}" maxlength="20" /></p>
-      {/if}
-
         <input type="submit" name="submit" value="Submit" />
         <input type="submit" name="preview" value="Preview" />
 
 			{/exp:comment:form}
 			</div>
+			{/if}
+			
     </div>
 
   	<div id="sidebar" class="three columns">
+		{edit_this}
+			<div class="social-buttons">
+				<!-- AddThis Button BEGIN -->
+				<div class="addthis_toolbox addthis_counter_style">
+					<a class="addthis_button_facebook_like" fb:like:layout="box_count"></a>
+					<a class="addthis_button_tweet" tw:count="vertical"></a>
+					<a class="addthis_button_google_plusone" g:plusone:size="tall"></a>
+					<a class="addthis_counter"></a>
+				</div>
+				<script type="text/javascript" src="http://s7.addthis.com/js/300/addthis_widget.js#pubid=xa-50b1e32f0df63aa4"></script>
+				<!-- AddThis Button END -->
+			</div>
       {embed="blog/.sidebar"}
     </div>
   

@@ -7,20 +7,19 @@
     
   <div class="row">
     <div id="main" class="eight columns">
-      <h1 id="page-name">TeenTix Blog</h1>
-    {exp:channel:category_heading channel="blog"}
-    	<h3 id="page-subhead">Category: {category_name}</h3>
-    {/exp:channel:category_heading}
-      
+      <h1 id="page-name">TeenTix Blog
+      {exp:channel:category_heading channel="blog"} - {category_name}{/exp:channel:category_heading}
     {exp:channel:entries channel="blog" limit="10" status="not closed"}
-    {if segment_2=="archives"}
-    	{date_heading display="monthly"}                 
-			<h3 id="page-subhead">Archives: {entry_date format="%F %Y"}</h3>
-			{/date_heading}
-		{/if}		
+	    {if segment_2=="archives"}
+	    	{date_heading display="monthly"}                 
+				- {entry_date format="%F %Y"}
+				{/date_heading}
+			{/if}
+			</h1>		
     	<div class="entry">    	
-				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
-    		<h3><a href="{url_title_path='blog'}">{title}</a></h3>
+				
+    		<h2 class="entry-title"><a href="{url_title_path='blog'}">{title}</a></h2>
+    		<p class="entry-date">{author} | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}</p>
   		{if blog_image}
   			<a href="{url_title_path='blog'}">
   			{exp:ce_img:pair src="{blog_image}" width="620"}
@@ -28,7 +27,9 @@
 				{/exp:ce_img:pair}
   			</a>
     	{/if}
+    	{exp:trunchtml chars="400" inline="..." ending="<a href='{url_title_path=blog}' class='more'>Read more</a>"}	
     		{blog_body}
+    	{/exp:trunchtml}
     	</div>
     	
     	{paginate}
