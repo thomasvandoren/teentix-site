@@ -1,0 +1,56 @@
+{embed="inc/.header"
+	title="Search"
+	body_class="search results"
+}
+
+{embed="inc/.nav"
+	segment_1_title="search"
+} 
+    
+  <div class="row">
+  	<div id="page-header" class="twelve columns">
+	  	<h1 id="page-name">Search: {exp:search:keywords}</h1>
+	  	<p>There are {exp:search:total_results}{total_results}{/exp:search:total_results} results.</p>
+  	</div>
+  	
+    <div id="main" class="eight columns">
+  	{exp:search:search_results}
+    	<div class="entry">
+    		<p class="channel-name">
+  			{if channel_short_name=="calendar_events"}
+    			<a href="{path='calendar'}">Calendar</a></a>
+    		{if:elseif channel_short_name == "static"}
+    			    		
+    		{if:else}	
+    			<a href="{path='{channel_short_name}'}">{channel}</a>
+    		{/if}
+    		</p>
+				<h3>
+				{if page_uri}
+					<a href="{page_uri}">{title}</a>
+				{if:else}
+					<a href="{auto_path}">{title}</a>
+				{/if}
+				</h3>
+				{if channel_short_name=="blog"}<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>{/if}
+				{if channel_short_name=="calendar_events"}<p class="event-dates slab">{embed="calendar/.event-dates" entry_id="{entry_id}"}</p>{/if}
+				{excerpt}
+    	</div>
+    {paginate}
+    	<div id="pagination">
+        <p>Page {current_page} of {total_pages} pages {pagination_links}</p>
+      </div>
+    {/paginate}
+
+    {/exp:search:search_results}
+    
+    </div>
+
+  	<div id="sidebar" class="four columns">
+			&nbsp;
+		</div>
+  
+  </div>
+
+	
+{embed="inc/.footer"}
