@@ -502,12 +502,6 @@ ul.breadcrumbs li.current a {
 	padding-bottom: 20px;
 	margin-bottom: 20px;
 }
-.entry-date {
-	font-size: 12px;
-	margin-bottom: 0px;
-	text-transform: uppercase;
-	color: #999;
-}
 .entry h3,
 .entry h4,
 .entry h5,
@@ -521,6 +515,32 @@ ul.breadcrumbs li.current a {
 .entry li {
 	list-style-position: outside;
 }
+.entry-date {
+	font-size: 12px;
+	margin-bottom: 0px;
+	text-transform: uppercase;
+	color: #999;
+}
+.entry-category,
+.entry-category:visited {
+	font-size: 15px;
+	letter-spacing: .07em;
+  font-family: "atrament-web",sans-serif;
+  font-weight: 700;
+  text-transform: uppercase;
+	background: #8FC73E;
+	color: #fff;
+	border-radius: 5px;
+	margin: 10px 5px 10px 0px;
+	padding: 1px 5px;
+	display: block;
+	float: left;
+}
+.entry-category:hover {
+	color: #fff;
+	background: #86B239;
+}
+
 
 
 
@@ -962,6 +982,9 @@ ul.breadcrumbs li.current a {
 .blog #pagination {
 	border-top: 2px dotted #9BBCBD;
 	padding-top: 5px;
+}
+.blog.single #page-name {
+	margin-bottom: 3px;
 }
 .blog.single .entry {
 	border: none;
