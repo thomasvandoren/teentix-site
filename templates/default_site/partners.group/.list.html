@@ -10,6 +10,7 @@
   <div class="row">
   	<div class="twelve columns">
       <h1 id="page-name">Partners</h1>
+      <p class="page-description">{description_partners}</p>
     </div>
     <div class="twelve columns">
 	  	<ul id="org-grid" class="block-grid five-up">
@@ -17,12 +18,12 @@
 	    	<li class="org">
 	    		<div class="org-logo">
 		  			<a href="{url_title_path='partners'}">
-		  			{exp:ce_img:pair src="{org_image}" width="150" height="150" filter="grayscale"}
+		  			{exp:ce_img:pair src="{org_image}" width="140" height="140" filter="grayscale"}
 						<img src="{made}" alt="" width="{width}" height="{height}" />
 						{/exp:ce_img:pair}
 						</a>
 					</div>
-					<h4 class="org-name"><a href="{url_title_path='partners'}">{title}</a></h4>
+					<h4 class="org-name sans"><a href="{url_title_path='partners'}">{title}</a></h4>
 	    	</li>
 			{/exp:channel:entries}	      	
 	    </ul>

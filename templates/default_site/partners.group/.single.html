@@ -11,10 +11,10 @@
   
   <div class="row">
 		{edit_this}
-		<div class="eight columns">		
+		<div id="main" class="eight columns">		
   		<div class="row">
   				
-  			<div class="eight columns">
+  			<div class="seven columns">
   				<h1 id="page-name">{title}</h1>
 					<div id="org-contact">
 					{if org_website}					
@@ -35,18 +35,20 @@
 		  		{/if}			
 		  		</div>
 		  	</div>
-		  	<div class="four columns">
-  			{exp:ce_img:pair src="{org_image}" width="220"}
+		  	<div class="five columns">
+  			{exp:ce_img:pair src="{org_image}" width="260" height="260"}
 					<div id="org-logo">
 						<img src="{made}" alt="" width="{width}" height="{height}" />
 					</div>
 				{/exp:ce_img:pair}
 				</div>
 			</div>
-			{org_description}	
+			<div id="org-description">
+				{org_description}	
+			</div>
 		</div>
 		   		
-		<div class="four columns">
+		<div id="sidebar" class="four columns">
 			<div id="org-social" class="social-links">
 			{if org_facebook}
   			<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_facebook}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{org_facebook}{/exp:parse_url}</a></p>
@@ -60,7 +62,7 @@
   	{/if}
   	
   		<div id="org-events">
-  			<h4>Upcoming Events</h4>
+  			<h4 class="section-head sans">Upcoming Events</h4>
 			{reverse_related_entries channel="calendar_events" sort="desc" orderby="date" limit="10"}
 		    {embed="inc/.upcoming-events" event_id="{entry_id}"}
       {/reverse_related_entries}

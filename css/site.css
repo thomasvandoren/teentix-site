@@ -15,6 +15,7 @@
 
 body {
 	background: #1E7577;
+	color: #4D4D4D;
   font-family: "museo-sans",sans-serif;
 }
 
@@ -32,13 +33,20 @@ h1, h2, h3, h4, h5, h6 {
 	margin-top: 0px;
 }
 p {
-
+	font-size: 14px;
 }
 a {
 	color: #8FC73E;
 }
 a:hover {
 	color: #86B239;
+}
+.button {
+	background: #8FC73E;
+	border-color: #86B239;
+}
+.button:hover {
+	background: #86B239;
 }
 .sans {
   font-family: "museo-sans",sans-serif;
@@ -67,12 +75,20 @@ a:hover {
 
 
 /* header styles */
+#page-name {
+	color: #487578;
+	font-size: 60px;
+}
 .section-head {
 	color: #487578;
 	border-bottom: 1px solid #87AEB0;
 	padding-bottom: 5px;
 	margin-bottom: 10px;
 	text-transform: uppercase;
+	font-size: 20px;
+}
+.page-description {
+	font-size: 18px;
 }
 
 
@@ -80,12 +96,21 @@ a:hover {
 
 /* Forms */
 fieldset {
-	background: #f9f9f9;
-  padding: 20px 15px;
+	background: #fff;
+	border: none;
+  padding: 20px 0px 20px 0px;
   margin-bottom: 30px;
 }
 fieldset legend {
-  font-size: 22px;
+  
+  color: #487578;
+	border-bottom: 1px solid #87AEB0;
+	padding: 0px;
+	padding-bottom: 5px;
+	margin: 0px;
+	text-transform: uppercase;
+	font-size: 20px;
+	width: 100%;
 }
 select { 
   font-size: 13px;
@@ -339,6 +364,14 @@ input.submit:hover {
 #main-nav > li.last a {
 	border-right: none;
 }
+#main-nav .flyout {
+	top: 45px;
+	background: #1E7577;
+	border: none;
+	color: #fff;
+	left: -20px;
+	box-shadow: 0px 3px 3px rgba(0, 0, 0, 0.2)
+}
 #main-nav .flyout ul {
 	margin: 0px;
 }
@@ -346,7 +379,16 @@ input.submit:hover {
 	border: none;
 }
 #main-nav .flyout li a {
-	padding: 3px 0px;
+	padding: 4px 0px;
+	background: none;
+	color: #E6E6E6;
+	border: none;
+	box-shadow: none;
+	font-size: 16px;
+	line-height: 1.2em;
+}
+#main-nav .flyout li a:hover {
+	color: #fff;
 }
 #main-nav > li.has-flyout > a:first-child:after {
 	top: 10px;
@@ -354,6 +396,11 @@ input.submit:hover {
 }
 #main-nav > li.has-flyout > a:first-child {
 	padding-right: 30px;
+}
+#main-nav .flyout h4 {
+	font-weight: 400;
+	color: #fff;	
+	font-size: 22px;
 }
 #main-nav #get-lost-pass {
 	width: 135px;
@@ -405,6 +452,7 @@ ul.breadcrumbs li.current a {
 	background: #fff;
 	position: relative;
 	padding-bottom: 30px;
+	padding-top: 10px;
 }
 #main-content .edit-this {
 	position: absolute;
@@ -427,6 +475,19 @@ ul.breadcrumbs li.current a {
 	margin-bottom: 0px;
 	text-transform: uppercase;
 	color: #999;
+}
+.entry h3,
+.entry h4,
+.entry h5,
+.entry h6 {
+  font-family: "museo-sans",sans-serif;	
+}
+.entry ul,
+.entry ol {
+	margin-left: 30px;
+}
+.entry li {
+	list-style-position: outside;
 }
 
 
@@ -751,13 +812,13 @@ ul.breadcrumbs li.current a {
 	margin: 10px -10px;
 }
 #org-grid > li { 
-	padding: 0 10px 10px; 
+	padding: 10px; 
+	border-top: 1px solid #ccc;
 }
 #org-grid .org-logo {
 	height: 170px;
 	width: 100%;
 	padding: 10px;
-	border: 1px solid #ccc;
 	margin-bottom: 10px;
 	text-align: center;
 	display: table;
@@ -773,16 +834,35 @@ ul.breadcrumbs li.current a {
 #org-grid .org-name {
 	text-align: center;
 	font-size: 14px;
-	margin-bottom: 20px;
+	margin-bottom: 10px;
+	color: #B3B3B3;
+	text-transform: uppercase;
+	font-weight: 300;
 }
 #org-grid .org-name a {
-	color: #000;
+	color: #B3B3B3;
+}
+#org-grid .org-name a:hover {
+	color: #999;
 }
 .orgs.single #org-logo {
-	margin-bottom: 10px;z
+	margin-bottom: 10px;
 }
 .orgs.single #org-contact p {
 	margin-bottom: 0px;
+}
+.orgs.single #main {
+	padding-right: 20px;
+	border-right: 2px dotted #9BBCBD;
+}
+.orgs.single #main p {
+	font-size: 18px;
+}
+.orgs.single #sidebar {
+	padding-left: 20px;
+}
+.orgs.single #org-description {
+	margin-top: 20px;
 }
 
 
@@ -790,18 +870,9 @@ ul.breadcrumbs li.current a {
 /* -----------------------------------------
    Locations
 ----------------------------------------- */
-.locations .row.header {
-	background:  #000;
-	
-	margin-bottom: 10px;
-}
-.locations .row.header p {
-	margin: 0px;
-	color: #fff;
-	font-weight: bold;
-	text-transform: uppercase;
-}
 .locations .row.location {
+	border-top: 1px solid #ccc;
+	padding: 20px 0px;
 }
 .locations .location-name {
 	margin-bottom: 3px;
@@ -810,6 +881,21 @@ ul.breadcrumbs li.current a {
 .locations .location-address {
 	margin-bottom: 3px;
 }
+.locations .location .branding {
+	text-align: center;
+}
+.locations.single #main {
+	padding-right: 20px;
+	border-right: 2px dotted #9BBCBD;
+}
+.locations.single #main p {
+	font-size: 18px;
+}
+.locations.single #sidebar {
+	padding-left: 20px;
+}
+
+
 
 
 /* -----------------------------------------
@@ -968,7 +1054,6 @@ ul.breadcrumbs li.current a {
   margin-bottom: 5px;
 }
 #footer #footer-about {
-	border-right: 2px dotted #999;
 	padding-right: 20px;
 }
 #footer #footer-about p {
@@ -978,9 +1063,12 @@ ul.breadcrumbs li.current a {
 	float: left;
 	margin-right: 20px;
 }
-#footer .footer-header {
+#footer #footer-links {
+	border-left: 2px dotted #999;
+	padding-left: 20px;
+}
+#footer .section-head {
 	color: #fff;
-	border-bottom: 1px solid #ccc;
 	line-height: 1em;
 	padding-bottom: 5px;
 }

@@ -1,6 +1,6 @@
 {embed="inc/.header"
 	title="Community Partners"
-	body_class="partners"
+	body_class="orgs community"
 }
 
 {embed="inc/.nav"
@@ -10,37 +10,28 @@
   <div class="row">
     <div class="twelve columns">
       <h1 id="page-name">Community Partners</h1>
+      <p class="page-description">{description_community_partners}</p>
     </div>
   
-	{exp:channel:entries url_title="community-partners"}
-		<div class="eight columns">
-			{general_body}
-		</div>
-		<div class="eight columns">&nbsp;</div>  	
-	{/exp:channel:entries}
-  
-  
-    <div class="twelve columns">
-    {exp:channel:entries channel="partners" limit="200" orderby="title" sort="asc"}
-    	<div class="org row">
-    		<div class="three columns">
-    			<a href="{url_title_path='community-partners'}">
-    			{exp:ce_img:pair src="{org_image}" width="220"}
-					<img src="{made}" alt="" width="{width}" height="{height}" />
-					{/exp:ce_img:pair}
-    			</a>
-    		</div>
-    		<div class="six columns">
-    			<h2><a href="{url_title_path='community-partners'}">{title}</a></h2>
-    		</div>
-    		<div class="three columns">
-    			
-    		</div>
-    	
-    	</div>
-		{/exp:channel:entries}
-      	
+
+		<div class="twelve columns">
+	  	<ul id="org-grid" class="block-grid five-up">
+	    {exp:channel:entries channel="partners" limit="200" orderby="title" sort="asc"}
+	    	<li class="org">
+	    		<div class="org-logo">
+		  			<a href="{url_title_path='community-partners'}">
+		  			{exp:ce_img:pair src="{org_image}" width="140" height="140" filter="grayscale"}
+						<img src="{made}" alt="" width="{width}" height="{height}" />
+						{/exp:ce_img:pair}
+						</a>
+					</div>
+					<h4 class="org-name sans"><a href="{url_title_path='community-partners'}">{title}</a></h4>
+	    	</li>
+			{/exp:channel:entries}	      	
+	    </ul>
     </div>
+		
+    
     
   </div>
 

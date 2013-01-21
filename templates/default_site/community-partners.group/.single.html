@@ -1,7 +1,7 @@
 {exp:channel:entries channel="partners" limit="1"}
 {embed="inc/.header"
 	title="{title} | Community Partners"
-	body_class="partners single"
+	body_class="orgs single community"
 }
 
 {embed="inc/.nav"
@@ -13,7 +13,7 @@
   <div class="row">
   	{edit_this}
 		
-		<div class="eight columns">		
+		<div id="main" class="eight columns">		
   		<div class="row">
   				
   			<div class="eight columns">
@@ -37,6 +37,7 @@
 		  		{/if}			
 		  		</div>
 		  	</div>
+		  	
 		  	<div class="four columns">
   			{exp:ce_img:pair src="{org_image}" width="220"}
 					<div id="org-logo">
@@ -45,9 +46,11 @@
 				{/exp:ce_img:pair}
 				</div>
 			</div>
-			{org_description}	
+			<div id="org-description">
+				{org_description}	
+			</div>
 		</div>
-		<div class="four columns">
+		<div id="sidebar" class="four columns">
 		&nbsp;
 		</div>
     
