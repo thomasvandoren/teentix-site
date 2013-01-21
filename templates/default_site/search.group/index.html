@@ -33,11 +33,13 @@
 				{/if}
 				</h3>
 				{if channel_short_name=="blog"}<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>{/if}
-				{if channel_short_name=="calendar_events"}<p class="event-dates">{embed="calendar/.event-dates" entry_id="{entry_id}"}</p>{/if}
+				{if channel_short_name=="calendar_events"}<p class="event-dates slab">{embed="calendar/.event-dates" entry_id="{entry_id}"}</p>{/if}
 				{excerpt}
     	</div>
     {paginate}
-      <p>Page {current_page} of {total_pages} pages {pagination_links}</p>
+    	<div id="pagination">
+        <p>Page {current_page} of {total_pages} pages {pagination_links}</p>
+      </div>
     {/paginate}
 
     {/exp:search:search_results}

@@ -1170,10 +1170,18 @@ ul.breadcrumbs li.current a {
 ----------------------------------------- */
 .search .entry { 
 	padding: 10px 0px;
-	border-top: 1px solid #ccc;
+	border-top: 2px dotted #9BBCBD;
 }
 .search .entry .channel-name {
 	margin-bottom: 3px;
+}
+.search .entry .event-dates {
+	font-size: 18px;
+	margin-top: -10px;
+}
+.search #pagination {
+	border-top: 2px dotted #9BBCBD;
+	padding-top: 5px;
 }
 
 
