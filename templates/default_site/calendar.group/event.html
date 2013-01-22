@@ -15,40 +15,35 @@
 } 
   
   <div class="row">
-  	<div id="page-header" class="twelve columns">
-  	{edit_this}
-  	<h5 id="event-genre">
-			{if event_recommended == "y"}TeenTix Pick{/if}
-			{categories backspace="3" show_group="1"}<a href="{path='calendar'}">{category_name}</a> | {/categories}
-			</h5>
-		
-		  <h1 id="page-name">{event_title}</h1>
-  	</div>
-  
+    
   	<div id="main" class="eight columns">
-
+			{edit_this}
 			<div class="event">
-			  <h4 id="event-date">			  
+			
+			  <h1 id="page-name">{event_title}</h1>
+			  <div class="entry-cat-list clearfix">
+					{if event_recommended == "y"}<a href="" class="entry-category pick">Pick</a>{/if}
+					{categories backspace="3" show_group="1"}<a href="{path='calendar'}" class="entry-category">{category_name}</a> | {/categories}
+				</div>
+			  <p class="event-date slab">			  
 					{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
 				{if event_availability =="n"}
 					<br /><span class="ticket-available">TeenTix tickets are no longer available</span>
 				{/if}
-				</h4>
+				</p>
 			
 			  <div class="row">
 			  	<div id="event-info" class="six columns">
+			  		<h4 class="section-head sans">Partner Organization</h4>
 						<p>
 					  {related_entries id="event_organization"}
-					  	<strong>Partner</strong> <a href="{url_title_path='partners'}">{title}</a><br />
+					  	<a href="{url_title_path='partners'}">{title}</a><br />
 					  {/related_entries}
-						{if event_website}
-							<strong>More info</strong> <a href="{event_website}">Event Website</a>
-						{/if}
 					  </p>
 				  </div>
 				  <div id="event-location" class="six columns">
+				  	<h4 class="section-head sans">Location</h4>
 					  <p>
-					  	<strong>Location</strong><br /> 
 					  {related_entries id="event_venue"}
 						  <a href="{url_title_path='locations'}">{title}</a><br />
 						  {location_address} 
@@ -56,33 +51,70 @@
 					  </p>
 				  </div>
 			  </div>
-			  {if event_video_embed}
+
+			{if event_video_embed}
 				<div class="flex-video widescreen">
 			  	{event_video_embed}
 			  </div>
-			  	{if event_images}
-			  	
-			  	{/if}
-			  {if:else}
-			  	{if event_images}
-			  	
-			  	{/if}
-			  {/if}
+		  {/if}
+
+	  	{if event_images}
+		  	<div id="event-gallery" class="clearfix {if event_video_embed}has-video{/if}">
+		  		<div id="event-slideshow" class="clearfix">
+	  			{event_images}
+	  				<div class="slide">
+			  		{exp:ce_img:pair src="{image}" width="620" height="450"}
+							<img src="{made}" alt="" width="{width}" height="{height}" />
+							<div class="slide-caption">{caption}</div>
+						{/exp:ce_img:pair}
+						</div>
+			  	{/event_images}
+		  		</div>
+		  		<ul id="event-slideshow-pager">
+			  	{event_images}
+		  		{exp:ce_img:pair src="{image}" width="100" height="100" crop="yes"}
+						<li><a href="#"><img src="{made}" alt="" width="{width}" height="{height}" /></a></li>
+					{/exp:ce_img:pair}
+			  	{/event_images}
+			  	</ul>
+			  </div>
+		  {/if}
 			  <div id="event-description">
 			  {event_description}
 			  </div>	
-			 
 			</div>
 			
+			
+		{reverse_related_entries channel="blog" sort="desc" orderby="date" limit="3"}
+			{if count == 1}
+			<div id="reviews">
+  			<h3>Reviews</h3>
+			{/if}
+		    <h4 class="entry-title"><a href="{url_title_path='blog'}">{title}</a></h4>
+		    <p class="entry-date">By <a href="{profile_path='member'}">{author}</a> | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}</p>
+		    {exp:trunchtml chars="600" inline="..." ending=" <a href='{url_title_path=blog}'>Read more</a>"}	    		
+	    		{exp:strip_html keep='p|b|em'}
+						{blog_body}
+					{/exp:strip_html}
+				{/exp:trunchtml} 
+		  {if total_results==count}
+		  </div>
+		  {/if}
+    {/reverse_related_entries}
+
+  		
 		{if no_results}
 			<p>No Results</p>
 		{/if}
+		
 		{/exp:calendar:events}
+		
+		
 		
 		{embed="inc/.comments" channel="calendar_events"}
 		</div>
 
-		<div id="sidebar" class="three columns">
+		<div id="sidebar" class="four columns">
 		{exp:calendar:events 
 			orderby="title" sort="asc" 
 			event_name="{segment_3}" 
@@ -91,35 +123,79 @@
 			dynamic="off"
 		}
 			<div class="event-favorite">
-				<p>
 			{if logged_in}
 		    {exp:favorites:saved}
 	        {if not_saved}
-            <span class="favorited">
+            <div class="favorited">
               <span class="Favorites_Status"></span>
               <a class="Favorites_Save_Full" href="{path='_ajax/favorite_add'}/{entry_id}">Save this event</a>
               <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add'}">save</a>
               <a class="Favorites_Delete Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add/delete/'}">delete</a>
-            </span>
+            </div>
 	        {/if}
 	        {if saved}
-            <span class="favorited">
+            <div class="favorited">
               <span class="Favorites_Status">Event saved</span>
               <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add/'}">save</a>
               <a class="Favorites_Delete Favorites_Trigger" href="{permalink='_ajax/favorite_add/delete/'}">delete</a>
-            </span>
+            </div>
 	        {/if}
 		    {/exp:favorites:saved}
-		    <br /><a href="{path='account/events'}">View your saved events</a>
 			{if:else}
-		    <a href="{path='account/login'}" href="#">Login to save this event</a>
-			{/if} 
-				</p> 
+				<div class="favorited">
+          <span class="Favorites_Save_Disabled">Save this event</a>
+        </div>
+        <p>
+		    <a href="{path='account/login'}" href="#">Login to save this event</a></p>
+			{/if}  
 			</div>
 		{/exp:calendar:events}
+		
 			{embed="inc/.social-buttons"}
-      <div id="event-upcoming">
-	      <h5>Upcoming Dates</h5>
+      
+		{exp:calendar:events 
+			orderby="title" sort="asc" 
+			event_name="{segment_3}" 
+			date_range_start="99 months ago" 
+			show_months="999" 
+			dynamic="off"
+		}
+			<div id="event-links">
+				<h4 class="section-head sans">Event Links</h4>
+				<p>
+				{if event_website}<a href="{event_website}">Event website</a><br />{/if}
+				{if event_facebook}<a href="{event_facebook}">Facebook page</a><br />{/if}
+				{if event_twitter}<a href="{event_twitter}">Twitter</a><br />{/if}
+				{if event_tumblr}<a href="{event_tumblr}">Tumblr page</a><br />{/if}
+				</p>
+			</div>
+			
+    {if event_age_restrictions} 
+			<div id="event-age-restrictions">
+				<h4 class="section-head sans">Age Restrictions</h4>
+				<p>{event_age_restrictions}</p>
+			</div>
+		{/if}
+		
+			<div id="event-ticket-info">
+				<h4 class="section-head sans">Ticket Info</h4>
+				<p>Tickets Available 
+				{categories backspace="7" show_group="2"}<span class="event-ticket-type">&bull; {category_name}</span>{/categories}
+				<p>
+				{event_ticket_info}
+			</div>
+			
+			<div id="event-box-office-info">
+				<h4 class="section-head sans">Box Office Info</h4>
+			{related_entries id="event_venue"}
+			  {location_box_office} 
+		  {/related_entries}
+				{event_box_office_info}
+			</div>
+		{/exp:calendar:events}
+		
+		<div id="event-upcoming">
+	      <h4 class="section-head sans">Upcoming Dates</h4>
 	      <ul>
 				{exp:calendar:occurrences 
 	       	event_name="{segment_3}" 
@@ -150,48 +226,11 @@
 					<li class="view-more">View more &raquo;</li>
 					{/if}
 				{/if}
+				{if calendar_no_results}<p>There are no upcoming events.</p>{/if} 
 				{/exp:calendar:occurrences}
 	      </ul>
 	    </div>
-		{exp:calendar:events 
-			orderby="title" sort="asc" 
-			event_name="{segment_3}" 
-			date_range_start="99 months ago" 
-			show_months="999" 
-			dynamic="off"
-		}
-    {if event_age_restrictions} 
-			<div id="event-age-restrictions">
-				<h5>Age Restrictions</h5>
-				{event_age_restrictions}
-			</div>
-		{/if}
 		
-			<div id="event-ticket-info">
-				<h5>Ticket Info</h5>
-				<p>Tickets Available<br />
-				{categories backspace="6" show_group="2"}&bull; {category_name}<br />{/categories}
-				{event_ticket_info}
-			</div>
-			
-			<div id="event-box-office-info">
-				<h5>Box Office Info</h5>
-			{related_entries id="event_venue"}
-			  {location_box_office} 
-		  {/related_entries}
-				{event_box_office_info}
-			</div>
-			
-			<div id="event-links">
-				<h5>Event Links</h5>
-				<p>
-				{if event_website}<a href="{event_website}">Event website</a><br />{/if}
-				{if event_facebook}<a href="{event_facebook}">Facebook page</a><br />{/if}
-				{if event_twitter}<a href="{event_twitter}">Twitter</a><br />{/if}
-				{if event_tumblr}<a href="{event_tumblr}">Tumblr page</a><br />{/if}
-				</p>
-			</div>
-		{/exp:calendar:events}
 		</div>
 		
 	</div>

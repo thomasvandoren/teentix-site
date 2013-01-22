@@ -28,16 +28,6 @@
   
   
 
-  $("#gallery").orbit({ 
-  	animation: 'fade',
-  	startClockOnMouseOut: true,
-  	timer: false,
-  	bullets: true,
-  	captions: true ,
-  });
-  
-  $('#main-featured').cycle();
-    
 
   // UNCOMMENT THE LINE YOU WANT BELOW IF YOU WANT IE8 SUPPORT AND ARE USING .block-grids
   // $('.block-grid.two-up>li:nth-child(2n+1)').css({clear: 'both'});
@@ -284,8 +274,43 @@
       return false;
   });
   
+  
+/*   view more */
+  
   $('.event .view-more').click(function() {
   	$(this).prev().toggleClass('hidden');
   });
+  
+  
+/*   galleries */
+  $("#gallery").orbit({ 
+  	animation: 'fade',
+  	startClockOnMouseOut: true,
+  	timer: false,
+  	bullets: true,
+  	captions: true ,
+  });
+  
+  $('#main-featured').cycle();
+  $('#event-slideshow').cycle({
+  	timeout: 0,
+  	pager: '#event-slideshow-pager',
+  	pagerAnchorBuilder: function(idx, slide) { 
+        // return selector string for existing anchor 
+        return '#event-slideshow-pager li:eq(' + idx + ') a'; 
+    }
+  }); 
+  
+  $('.event #event-slideshow-pager li').click(function(){
+  	$('.event #event-slideshow').slideDown();
+  })
+	
+	function hideSlideshow() {
+		if ($('#event-gallery').hasClass('has-video')) {
+			$('#event-slideshow').hide();
+		}
+	}
+	
+	hideSlideshow();
 
 })(jQuery, this);
