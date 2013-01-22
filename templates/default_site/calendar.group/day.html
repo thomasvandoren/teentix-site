@@ -4,16 +4,15 @@
 }
 
 {embed="inc/.nav"
-	end_title="Daily"
+	
 }
-    
     
   <div class="row">		
   
 		<div id="main" class="nine columns">
 			
 			{embed="calendar/.calendar-nav"}
-
+			
 			<div id="daily_calendar">
 			
 			{exp:calendar:cal pad_short_weeks="n"
@@ -37,21 +36,22 @@
 		        <a href="{path='calendar/day'}/{next_day format="%Y/%m/%d"}/">Next &raquo;</a>
 		      </div>
 		      <div class="center">
-		        <h4>{day format="%l, %F %d, %Y"}</h4>
+		        <h4 class="slab">{day format="%l, %F %d, %Y"}</h4>
 		      </div>		      
 			  </div><!-- end .header -->
 			  
 			  <div class="row">  	
-			  {display_each_hour}
-			  	
-				  {if hour_event_total != "0"}
+		  {display_each_hour}
+		  	{if no_results}<p>Sorry, there are no events this day.</p>{/if}
+		  	
+		  {if hour_event_total != "0"}
 				  <div class="three columns">
 					  <h5 class="header-hour">{time format="%g %a"}</h5>
 					</div>
 
 				  <div class="nine columns">
-				  {events}
-				  {if event_all_day}
+			  {events}
+			  {if event_all_day}
 						<div class="three columns">
 						  <h5 class="header-hour">All Day
 						  </h5>
@@ -72,8 +72,7 @@
 						  </div><!-- end .entry -->
 						</div>
 						<hr />
-						
-					{if:else}
+				{if:else}
 					  <div class="entry">
 							<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h4>
 							<p class="event-info">
@@ -89,15 +88,16 @@
 							</p>
 							{if event_summary}<div class="event-summary">{event_summary}</div>{/if}
 					  </div><!-- end .entry -->			
-					{/if}
-					
-				  {/events}
+				{/if}
+				
+			  {/events}
 				  </div>
 				  <hr />
-				  {/if}
-			  {/display_each_hour}
+		  {/if}
+		  {/display_each_hour}
 			  	
-			  </div>
+			  </div><!--end .row -->
+			  
 			{/display_each_day}
 			{/exp:calendar:cal}
 			

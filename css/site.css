@@ -766,7 +766,6 @@ ul.breadcrumbs li.current a {
    Calendar
 ----------------------------------------- */
 .calendar #main {
-	padding-right: 30px;
 }
 .calendar #calendar-nav {
 	margin-top: 20px;
@@ -834,23 +833,17 @@ ul.breadcrumbs li.current a {
 	font-weight: normal;
 	font-size: 14px;
 }
-.calendar .entry {
-	padding: 10px 0px;
-	border-top: 1px solid #ccc;
-}
-.calendar .entry .calendaar-meta {
-	margin-bottom: 3px;
-}
+
 
 /* upcoming */
-.calendar.upcoming .entry img {
+.calendar.all .entry img {
 	float: left;
 	margin-right: 20px;
 }
-.calendar.upcoming .entry .event-name {
+.calendar.all .event-name {
 	margin-bottom: 3px;
 }
-.calendar.upcoming .entry .event-venue {
+.calendar.upcoming .event-venue {
 	font-weight: bold;
 	margin-bottom: 3px;
 }
@@ -903,6 +896,15 @@ ul.breadcrumbs li.current a {
 }
 .calendar.day .event-summary p {
 	font-size: 13px;
+}
+
+/* sidebar */
+.calendar #sidebar {
+	padding-left: 30px;
+	padding-top: 35px;
+}
+.calendar #sidebar li {
+	list-style: none;
 }
 
 

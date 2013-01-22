@@ -1,12 +1,12 @@
 <div id="calendar-genre">
 	<h4 class="section-head sans">Genres</h4>
 	{exp:channel:categories channel="calendar_events" category_group="1"}
-    <a href="{path='calendar'}">{category_name}</a>
+    <a href="{path='calendar/all'}">{category_name}</a>
 	{/exp:channel:categories}
 </div><!-- end #calendar-genre -->
 <div id="calendar-ticket-type">
 	<h5 class="section-head sans">TeenTix Tickets</h4>
 	{exp:channel:categories channel="calendar_events" category_group="2"}
-    <a href="{path='calendar'}">{category_name}</a>
+    <a href="{path='calendar/all'}">{category_name}</a>
 	{/exp:channel:categories}
 </div><!-- end #calendar-ticket-type -->

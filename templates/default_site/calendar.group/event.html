@@ -23,7 +23,7 @@
 			  <h1 id="page-name">{event_title}</h1>
 			  <div class="entry-cat-list clearfix">
 					{if event_recommended == "y"}<a href="" class="entry-category pick">Pick</a>{/if}
-					{categories backspace="3" show_group="1"}<a href="{path='calendar'}" class="entry-category">{category_name}</a> | {/categories}
+					{categories show_group="1"}<a href="{path='calendar/all'}" class="entry-category">{category_name}</a>{/categories}
 				</div>
 			  <p class="event-date slab">			  
 					{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
