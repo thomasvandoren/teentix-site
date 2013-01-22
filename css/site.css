@@ -591,6 +591,9 @@ ul.breadcrumbs li.current a {
 #comments h3 {
 	color: #487578;
 }
+.comment-count {
+	font-size: 20px;
+}
 .comment-entry {
 	padding: 10px;
 	padding-bottom: 1px;
@@ -1080,9 +1083,17 @@ ul.breadcrumbs li.current a {
 	padding-top: 10px;
 	padding-bottom: 50px;
 }
-.blog .entry-title {
+.blog .entry-title  {
 	font-size: 48px;
 	margin-bottom: 3px;
+}
+.blog #page-subhead + .entry-cat-list {
+	margin-top: -10px;
+}
+.blog #page-subhead p {
+	color: #87AEB0;
+	font-size: 26px;
+	margin-bottom: 0px;
 }
 .blog .entry-date {
 	margin-bottom: 20px;

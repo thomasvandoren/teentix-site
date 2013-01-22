@@ -1,5 +1,5 @@
 <div id="comments">
-	<h3>Comments</h3>
+	<h3>Comments <span class="comment-count sans">({embed:comment_total})</span></h3>
 {exp:comment:entries sort="asc" limit="20"}
 	<div class="comment-entry clearfix">
 	  <a href="{path='member'}/{author_id}"><img src="{avatar_url}" class="comment-author-avatar" /></a>{comment}

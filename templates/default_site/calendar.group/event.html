@@ -109,9 +109,10 @@
 		
 		{/exp:calendar:events}
 		
-		
-		
-		{embed="inc/.comments" channel="calendar_events"}
+
+		{embed="inc/.comments" channel="calendar_events" comment_total="{exp:channel:entries channel='calendar_events' limit='1' status='not closed'}{comment_total}{/exp:channel:entries}"}
+
+
 		</div>
 
 		<div id="sidebar" class="four columns">
