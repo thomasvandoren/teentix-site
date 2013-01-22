@@ -7,15 +7,13 @@
 	end_title="Monthly"
 }
     
-  <div class="row">
-    <div class="twelve columns">
-      <h1 id="page-name">Calendar: Monthly
-      </h1>
-    </div>
     
-		{embed="calendar/.calendar-nav"}
+  <div class="row">		
   
 		<div id="main" class="nine columns">
+			
+			{embed="calendar/.calendar-nav"}
+  
 			<div id="monthly_calendar">
 		  {exp:calendar:cal
 			{if segment_3 == ''}

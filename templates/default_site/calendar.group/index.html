@@ -4,19 +4,15 @@
 }
 
 {embed="inc/.nav"
-	end_title="Daily"
+	
 }
     
-  <div class="row">
-    <div class="twelve columns">
-      <h1 id="page-name">Calendar: Today
-      </h1>
-    </div>
-  
-		{embed="calendar/.calendar-nav"}
+  <div class="row">		
   
 		<div id="main" class="nine columns">
-
+			
+			{embed="calendar/.calendar-nav"}
+			
 			<div id="daily_calendar">
 			
 			{exp:calendar:cal pad_short_weeks="n"
@@ -40,7 +36,7 @@
 		        <a href="{path='calendar/day'}/{next_day format="%Y/%m/%d"}/">Next &raquo;</a>
 		      </div>
 		      <div class="center">
-		        <h4>{day format="%l, %F %d, %Y"}</h4>
+		        <h4 class="slab">{day format="%l, %F %d, %Y"}</h4>
 		      </div>		      
 			  </div><!-- end .header -->
 			  

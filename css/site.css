@@ -765,12 +765,52 @@ ul.breadcrumbs li.current a {
 /* -----------------------------------------
    Calendar
 ----------------------------------------- */
+.calendar #main {
+	padding-right: 30px;
+}
+.calendar #calendar-nav {
+	margin-top: 20px;
+}
+.calendar #calendar-page-header {
+	background: url(images/site/header-calendar.png) no-repeat center center;
+	display: block;
+	width: 150px;
+	height: 40px;
+	text-indent: -9999px;
+	position: relative;
+	top: -10px;
+}
+.calendar dl.tabs.five-up dd {
+	width: 18.75%;
+}
+.calendar dl.tabs.five-up dd.tab-header {
+	width: 25%
+}
+.calendar dl.tabs {
+	border-color: #ccc;
+	margin-bottom: 10px;
+}
+.calendar dl.tabs dd a {
+	text-transform: uppercase;
+	font-size: 18px;
+	color: #8FC73E;
+}
+.calendar dl.tabs dd.active {
+  border-top: 1px solid #E6E6E6;
+  margin-top: -1px;
+}
+.calendar dl.tabs dd.active ,
+.calendar dl.tabs dd.active a {
+	border-radius: 10px 10px 0px 0px;
+	border-color: #ccc;
+  color: #4D4D4D;
+}
 .calendar .header {
 	position: relative;
-	border-top: 1px solid #ccc;
 	border-bottom: 1px solid #ccc;
 	margin-bottom: 20px;
 	padding: 10px 0px;
+	padding-bottom: 20px;
 }
 .calendar .header .left {
 	position: absolute;

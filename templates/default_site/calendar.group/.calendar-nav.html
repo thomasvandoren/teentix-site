@@ -1,10 +1,11 @@
+	<div id="calendar-nav" class="row">
   	<div class="twelve columns">
-  		<p>
-  			View: 
-	  		
-	  		<a href="{path='calendar/day'}">Today's Calendar</a> |
-	  		<a href="{path='calendar/current'}">Current Events</a> | 
-	  		<a href="{path='calendar/week'}">Weekly Calendar</a> |
-	  		<a href="{path='calendar/month'}">Monthly Calendar</a>
-  		</p> 
+   		<dl class="tabs five-up">
+  			<dd class="tab-header"><div id="calendar-page-header">View Events</div></dd>
+  			<dd class="{if segment_2=='all'} active{/if}"><a href="{path='calendar/current'}">All</a></dd>
+	  		<dd class="{if segment_2==''} active{/if}"><a href="{path='calendar/day'}">Today</a></dd>
+	  		<dd class="{if segment_2=='week'} active{/if}"><a href="{path='calendar/week'}">Weekly</a></dd>
+	  		<dd class="{if segment_2=='month'} active{/if}"><a href="{path='calendar/month'}">Monthly</a></dd>
+			</dl>
   	</div>
+  </div>
