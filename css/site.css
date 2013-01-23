@@ -166,7 +166,14 @@ label.field_return.unavailable {
 input.submit:hover {
 	cursor: pointer;
 }
-
+.notice-required {
+	float: right;
+	color: #000;
+	text-transform: none;
+	letter-spacing: 0em;
+	font-size: 14px;
+	margin-top: 6px;
+}
 
 /* -----------------------------------------
    Utility Nav
@@ -1254,7 +1261,7 @@ ul.breadcrumbs li.current a {
   margin-left: -20px;
 }
 .application p.require {
-	text-align: right;
+
 }
 #account_terms label.error {
 	clear: both;

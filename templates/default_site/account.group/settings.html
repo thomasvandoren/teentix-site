@@ -7,7 +7,7 @@
   
   <div class="row">
     <div class="twelve columns">
-      <h1>Hi, {screen_name}.</h1>
+      <h1 id="page-name">Hi, {screen_name}.</h1>
     </div>
   </div>
 
@@ -21,9 +21,9 @@
     	error_page="account/error" 
     }      
       <fieldset>
-	      <legend>Account Settings</legend>
+	      <legend>Account Settings  <span class="notice-required">Required information*</span></legend>
 	      <div class="row">
-	      	<label class="three columns">Email</label>
+	      	<label class="require three columns">Email*</label>
 	      	<div class="six columns">
 	      		<input type="email" name="email" value="{email}" class="required" id="account_username" data-current="{email}" />
 	      	</div>

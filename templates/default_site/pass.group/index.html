@@ -9,7 +9,7 @@
   
   <div class="row">
     <div class="twelve columns">
-      <h1>Lost Your Pass?</h1>
+      <h1 id="page-name">Lost Your Pass?</h1>
     </div>
 
     <div class="four columns">
@@ -18,9 +18,6 @@
     </div>
     
     <div class="eight columns">
-    	<p class="require">
-				<strong>Required information*</strong>
-			</p>
 		{exp:freeform:form
 	    form_name="request_pass"
 	    form:id ="lost-pass-form"
@@ -28,7 +25,7 @@
 		}
         
       <fieldset id="app_info">
-        <legend>Pass Holder Info</legend>
+        <legend>Pass Holder Info  <span class="notice-required">Required information*</span></legend>
 
         <label for="name" class="require">Full Name</label>
         <input type="text" name="name" id="name" class="required">

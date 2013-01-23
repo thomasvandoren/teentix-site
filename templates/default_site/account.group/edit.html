@@ -6,7 +6,7 @@
 }
   <div class="row">
     <div class="twelve columns">
-      <h1>Hi, {screen_name}.</h1>
+      <h1 id="page-name">Hi, {screen_name}.</h1>
     </div>
   </div>
 
@@ -23,13 +23,10 @@
     	screen_name_password_required="no" 
     	error_page="account/error" 
     }
-    	<p class="require">
-				<strong>Required information*</strong>
-			</p>
-			
+
       <fieldset id="member_profile">
       	
-	      <legend>Public Profile </legend>
+	      <legend>Public Profile <span class="notice-required">Required information*</span></legend>
 	      <div class="row">
 	      	<label class="three columns">Profile Image</label>
 	      	<div class="nine columns">

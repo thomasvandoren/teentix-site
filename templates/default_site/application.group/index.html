@@ -6,7 +6,7 @@
   
   <div class="row">
     <div class="twelve columns">
-      <h1>Join TeenTix</h1>
+      <h1 id="page-name">Join TeenTix</h1>
     </div>
 
     <div class="four columns">
@@ -15,9 +15,6 @@
     </div>
     
     <div class="eight columns">
-    	<p class="require">
-				<strong>Required information*</strong>
-			</p>
     {exp:safecracker 
       channel="applications" 
       return="application/account/ENTRY_ID" 
@@ -30,7 +27,7 @@
     }
         
         <fieldset id="app_info">
-          <legend>Applicant Info</legend>
+          <legend>Applicant Info  <span class="notice-required">Required information*</span></legend>
           <p>Please fill out the information for the TeenTix pass holder</p>
           <div class="row">
             <div class="five columns">
