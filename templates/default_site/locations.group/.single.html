@@ -9,8 +9,6 @@
 }
     
   <div class="row">
-  
-  	{edit_this}
   	
 		<div id="main" class="eight columns"> 
   		
@@ -57,6 +55,7 @@
 		</div>
 		
 		<div id="sidebar" class="four columns">
+		{edit_this}
 			<div id="location-social" class="social-links">
 			{if location_facebook}
   			<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_facebook}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_facebook}{/exp:parse_url}</a></p>

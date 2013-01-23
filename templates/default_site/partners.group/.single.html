@@ -10,7 +10,7 @@
 }
   
   <div class="row">
-		{edit_this}
+		
 		<div id="main" class="eight columns">		
   		<div class="row">
   				
@@ -49,6 +49,7 @@
 		</div>
 		   		
 		<div id="sidebar" class="four columns">
+		{edit_this}
 			<div id="org-social" class="social-links">
 			{if org_facebook}
   			<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_facebook}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{org_facebook}{/exp:parse_url}</a></p>
