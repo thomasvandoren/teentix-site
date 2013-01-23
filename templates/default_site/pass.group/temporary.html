@@ -3,9 +3,11 @@
 	entry_id="{segment_3}"
 	status="not closed"
 } 
+
 	{exp:calendar:date base_date="{freeform:entry_date format='%Y-%m-%d'}" output_date="2 weeks" } 
 		{embed="pass/.pass" name="{freeform:field:name}" issue_date="{freeform:entry_date format='%M %j, %Y'}" expiration_date="{date format='%M %j, %Y'}"}			
 	{/exp:calendar:date}
 	 
 	{if freeform:no_results}{redirect="pass/expired"}{/if}
+	{if segment_4 == ""}{redirect="pass/expired"}{/if}
 {/exp:freeform:entries} 
