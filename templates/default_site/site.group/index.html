@@ -7,30 +7,27 @@
   <div class="row">
     <div class="twelve columns">
       <div id="main-featured">
-      	<div class="slide">
-      		<div class="slide-image">
-      			<img src="{site_url}css/images/fpo-nirvana.png" />
-      		</div>
-      		<div class="slide-text">
-	      		<h3 class="event-name condensed">Nirvana &ndash; Taking Punk to the Masses</h3>
-	      		<p class="event-date slab">April 14&ndash;July 30</p>
-	      		<p class="event-venue">EMP Museum</p>
-	      		<a class="slide-more" href="/">More</a>
-      		</div>	      		
-      	</div>
+			{exp:calendar:events 
+				orderby="date" sort="asc" 
+				date_range_start="99 months ago" 
+				show_months="999" 
+				status="featured"
+			}
  				<div class="slide">
       		<div class="slide-image">
-      			<img src="{site_url}css/images/fpo-nirvana.png" />
+      		{exp:ce_img:pair src="{event_featured_image}" width="620" height="360" crop="yes"}
+						<img src="{made}" alt="" width="{width}" height="{height}" />
+					{/exp:ce_img:pair}
       		</div>
       		<div class="slide-text">
-	      		<h3 class="event-name condensed">Nirvana &ndash; Taking Punk to the Masses 2</h3>
-	      		<p class="event-date slab">April 14&ndash;July 30</p>
-	      		<p class="event-venue">EMP Museum</p>
-	      		<a class="slide-more" href="/">More</a>
+	      		<h3 class="event-name condensed">{title}</h3>
+	      		<p class="event-date slab">{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}</p>
+	      		<p class="event-venue">{related_entries id="event_venue"}{title}{/related_entries}</p>
+	      		<a class="slide-more" href="{url_title_path='calendar/event'}">More</a>
       		</div>	      		
       	</div>
+      {/exp:calendar:events}
       </div>
-      
     </div>
   </div>
   

@@ -13,17 +13,17 @@
   </div>
 
   <div class="row">  
-    <div class="three columns">
+    <div id="sidebar" class="three columns">
 		{embed="account/.sidebar"}
     </div>
     
-    <div class="nine columns">
+    <div id="main" class="nine columns">
      
      {exp:user:stats} 
  
 			<div id="member_profile" class="section">
-				<div class="edit-profile"><a href="{path='account/edit'}" class="button">Edit Profile</a></div>
-				<h3>Your Public Profile </h3>
+				<div class="edit-profile"><a href="{path='account/edit'}" class="button small">Edit Profile</a></div>
+				<h3 class="section-head sans">Your Public Profile </h3>
 				<div class="row">
 					<div class="three columns">
 					{if avatar_filename}
@@ -50,7 +50,7 @@
 		    channel="calendar_events"
 		    favorites_count="yes"
 			}
-		    <h3>My Saved Events</h3>
+		    <h3 class="section-head sans">My Saved Events</h3>
 		    {if favorites_count > 0}
 		    <p>You have {favorites_count} saved event</p>
 		    {/if}
@@ -75,7 +75,7 @@
 			
 			{exp:user:stats} 			
 			<div id="member_info" class="section">
-				<h3>Private Information</h3>
+				<h3 class="section-head sans">Private Information</h3>
 				<div class="row">
 					<div class="four columns">
 						<p>Name</p>
@@ -183,7 +183,7 @@
 			</div><!-- end #member_stats -->
 			
 			<div id="member_comments" class="section">
-				<h3>My Comments</h3>			
+				<h3 class="section-head sans">My Comments</h3>			
 			{if total_comments > 0}
 				<p class="total-count">You have {total_comments} total comments</p>
 				{exp:comment:entries 

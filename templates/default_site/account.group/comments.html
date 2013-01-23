@@ -13,15 +13,15 @@
   </div>
 
   <div class="row">  
-    <div class="three columns">
+    <div id="sidebar" class="three columns">
 		{embed="account/.sidebar"}
     </div>
     
-    <div class="nine columns">   
+    <div id="main" class="nine columns">   
 			
 			{exp:user:stats} 						
 			<div id="member_comments">
-				<h3>My Comments</h3>			
+				<h3 class="section-head sans">My Comments</h3>			
 			{if total_comments > 0}
 				<p class="total-count">You have {total_comments} total comments</p>
 				{exp:comment:entries 

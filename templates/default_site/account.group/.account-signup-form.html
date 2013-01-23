@@ -1,6 +1,3 @@
-	<p class="require">
-		<strong>Required information*</strong>
-	</p>
 {exp:user:register 
   form:name="account_form"  
   form:id="account_form"   
@@ -9,7 +6,7 @@
   error_page="account/error" 
 }
   <fieldset>
-    <legend>Account Info</legend>
+    <legend>Account Info <span class="notice-required">Required information*</span></legend>
     <p>Email and public screen names must be unique.</p>
     <div class="row">
     	<div class="nine columns">

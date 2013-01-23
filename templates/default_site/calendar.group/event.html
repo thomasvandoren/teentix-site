@@ -4,6 +4,7 @@
 	date_range_start="99 months ago" 
 	show_months="999" 
 	dynamic="off"
+	status="not closed"
 }
 {embed="inc/.header"
 	title="{title} | Event"
@@ -22,7 +23,7 @@
 			
 			  <h1 id="page-name">{event_title}</h1>
 			  <div class="entry-cat-list clearfix">
-					{if event_recommended == "y"}<a href="" class="entry-category pick">Pick</a>{/if}
+					{categories show_group="5"}<a href="{path='calendar/all'}" class="entry-category {category_url_title}">{category_name}</a>{/categories}
 					{categories show_group="1"}<a href="{path='calendar/all'}" class="entry-category">{category_name}</a>{/categories}
 				</div>
 			  <p class="event-date slab">			  
@@ -201,10 +202,11 @@
 				{exp:calendar:occurrences 
 	       	event_name="{segment_3}" 
 	       	date_range_start="today" 
-	       	date_range_end="3 months" 
+	       	date_range_end="6 months" 
 	       	upcoming_occurrences_limit="100" 
-	       	prior_occurrences_limit="0" 
+	       	prior_occurrences_limit="30" 
 	       	dynamic="off"
+	       	status="not closed"
 				}
 				{if occurrence_count < "6"}
 					{if occurrence_all_day}
@@ -227,7 +229,7 @@
 					<li class="view-more">View more &raquo;</li>
 					{/if}
 				{/if}
-				{if calendar_no_results}<p>There are no upcoming events.</p>{/if} 
+				{if calendar_no_results}<li>There are no upcoming events.</li>{/if} 
 				{/exp:calendar:occurrences}
 	      </ul>
 	    </div>

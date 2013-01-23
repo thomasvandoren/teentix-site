@@ -36,6 +36,7 @@
 				show_weeks="4" 
 				dynamic="off"
 				category="{segment_4}"
+				status="not closed"
 			}
 				{if no_results}<p>Sorry, there are no upcoming events.</p>{/if}
 				<div class="row">
@@ -52,7 +53,7 @@
 						{/event_image}
 			  	{/if}
 			  	
-						<h3 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h3>		
+						<h3 class="event-name sans"><a href="{url_title_path='calendar/event'}">{event_title}</a></h3>		
 						
 					{related_entries id="event_venue"}
 					  <span class="event-venue">{title}</span>

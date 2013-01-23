@@ -105,7 +105,8 @@ a:hover {
 fieldset {
 	background: #fff;
 	border: none;
-  padding: 20px 0px 20px 0px;
+  padding: 0px 0px 20px 0px;
+  margin-top: 5px;
   margin-bottom: 30px;
 }
 fieldset legend {
@@ -115,6 +116,7 @@ fieldset legend {
 	padding: 0px;
 	padding-bottom: 5px;
 	margin: 0px;
+	margin-bottom: 10px;
 	text-transform: uppercase;
 	font-size: 20px;
 	width: 100%;
@@ -567,8 +569,12 @@ ul.breadcrumbs li.current a {
 	background: #1E7577 url(images/site/pick-star.png) no-repeat 3px 5px;
 	padding-left: 15px;
 }
-.entry-category.pick:hover {
+.entry-category.pick:hover,
+.entry-category.weird-of-the-week:hover {
 	background-color: #004C4C;
+}
+.entry-category.weird-of-the-week {
+	background: #1E7577;
 }
 
 
@@ -640,8 +646,10 @@ ul.breadcrumbs li.current a {
 	overflow: hidden;
 	border-radius: 15px;
 	margin-bottom: 20px;
+	border-radius: 15px;
 }
 .home #main-featured .slide {
+	overflow: hidden;
 	width: 1000px;
 	height: 360px;
 	background: #000;
@@ -650,10 +658,11 @@ ul.breadcrumbs li.current a {
 	background-position: right top;
 }
 .home #main-featured .slide-image {
-	width: 100%;
+	width: 1000px;
 	height: 360px;
 	text-align: right;
 	position: absolute;
+	border-radius: 15px;
 }
 .home #main-featured .slide-text {
 	position: absolute;
@@ -662,6 +671,7 @@ ul.breadcrumbs li.current a {
 	padding: 30px 100px 30px 30px;
 	color: #fff;
 	background: url(images/site/main-featured-overlay.png) no-repeat left top;
+	border-radius: 15px;
 }
 .home #main-featured .event-name {
 	color: #fff;
@@ -1102,6 +1112,9 @@ ul.breadcrumbs li.current a {
 .orgs.single #org-description {
 	margin-top: 20px;
 }
+.orgs #sidebar li {
+	list-style: none;
+}
 
 
 
@@ -1131,6 +1144,9 @@ ul.breadcrumbs li.current a {
 }
 .locations.single #sidebar {
 	padding-left: 20px;
+}
+.locations #sidebar li {
+	list-style: none;
 }
 
 
@@ -1278,7 +1294,6 @@ ul.breadcrumbs li.current a {
 .account .section {
 	padding-bottom: 20px;
 	margin-bottom: 20px;
-	border-bottom: 1px solid #ccc;
 }
 .account .row.header {
 	background: #000;
@@ -1299,6 +1314,7 @@ ul.breadcrumbs li.current a {
 	font-style: italic;
 }
 .account .edit-profile {
+	margin-top: -10px;
 	float: right;
 }
 .account p.require {

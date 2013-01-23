@@ -1,3 +1,9 @@
+<div id="calendar-picks">
+	<h4 class="section-head sans">TeenTix Favorites</h4>
+	{exp:channel:categories channel="calendar_events" category_group="5"}
+    <a href="{path='calendar/all'}">{category_description}</a>
+	{/exp:channel:categories}
+</div><!-- end #calendar-genre -->
 <div id="calendar-genre">
 	<h4 class="section-head sans">Genres</h4>
 	{exp:channel:categories channel="calendar_events" category_group="1"}
