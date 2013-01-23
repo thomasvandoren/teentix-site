@@ -178,7 +178,13 @@
   
   $('#lost-pass-form').validate();
   
-  $('#contact-form').validate();
+  $('#contact-form').validate({
+    rules: {
+      email: { 
+        email: true 
+      }
+    }
+  });
   
   
   

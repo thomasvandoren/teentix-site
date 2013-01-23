@@ -18,7 +18,7 @@
     
     <div class="nine columns">
     	<h3>Request a new TeenTix pass</h3> 
-    	<p>Please make sure your contact information is accurate.</p> 
+    	<p><strong>Please make sure your contact information is accurate.<br /><a href="{path='account/edit'}#member_info">Edit my contact info &raquo;</a></strong></p>
 		{exp:user:stats} 				
 			 
 			<div id="private_info">
@@ -73,11 +73,7 @@
 						</p>
 					</div>
 				</div>
-				<div class="row">
-					<div class="twelve columns">
-						<p><a href="{path='account/edit'}#member_info">Edit my contact info &raquo;</a></p>
-					</div>
-				</div>
+				
 				<div class="row">
 					<div class="twelve columns">
 				{if first_name == "" OR last_name == ""	OR bday_m == "" OR bday_d == "" OR bday_y == "" OR street_address == "" OR city == "" OR state == "" OR zip_code == ""}
@@ -96,7 +92,7 @@
 					    <input type="hidden" name="state" value="{state}" />
 					    <input type="hidden" name="zip_code" value="{zip_code}" />
 					    <input type="hidden" name="country" value="{country}" />
-					    <input type="hidden" name="birthdate" value="{bday_m}-{bday_d}-{bday_y}" />
+					    <input type="hidden" name="birthday" value="{bday_m}-{bday_d}-{bday_y}" />
 					    <input type="hidden" name="member" value="{member_id}" />
 					    
 
