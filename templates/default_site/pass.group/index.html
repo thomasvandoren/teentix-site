@@ -21,8 +21,9 @@
 		{exp:freeform:form
 	    form_name="request_pass"
 	    form:id ="lost-pass-form"
-	    status = "open"
 	    return="pass/confirm/%%entry_id%%"
+	    notify_user="yes"
+	    user_notification_template="pass_delivery" 
 		}
         
       <fieldset id="app_info">
