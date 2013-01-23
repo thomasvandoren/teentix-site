@@ -843,9 +843,13 @@ ul.breadcrumbs li.current a {
 .calendar.all .event-name {
 	margin-bottom: 3px;
 }
-.calendar.upcoming .event-venue {
+.calendar.all .event-venue {
 	font-weight: bold;
 	margin-bottom: 3px;
+}
+.calendar.all .event-date {
+	margin-bottom: 0px;
+	font-weight: 700;
 }
 
 /* monthly */
@@ -883,6 +887,13 @@ ul.breadcrumbs li.current a {
 	color: #666;
 	font-size: 12px;
 }
+.calendar.week .event-list .event-category {
+	font-size: 12px;
+}
+.calendar.week .event-weekday {
+	font-weight: bold;
+}
+
 /* daily */
 .calendar.day .entry {
 	border: none;
@@ -896,6 +907,10 @@ ul.breadcrumbs li.current a {
 }
 .calendar.day .event-summary p {
 	font-size: 13px;
+}
+.calendar.day .event-time {
+	font-weight: 700;
+	margin-bottom: 0px;
 }
 
 /* sidebar */

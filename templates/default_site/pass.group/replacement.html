@@ -10,7 +10,7 @@
 		
 		{exp:calendar:date base_date="{entry_date format='%Y-%m-%d'}" output_date="2 weeks" } 
 				
-			{embed="pass/.pass" name="{name}" issue_date="{current_time format='%M %j, %Y'}" expiration_date="{date format='%M %j, %Y'}"}			
+			{embed="pass/.pass" name="{name}" issue_date="{entry_date format='%M %j, %Y'}" expiration_date="{date format='%M %j, %Y'}"}			
 		{/exp:calendar:date} 
 		 
 		{if no_results}{redirect="pass/expired"}{/if}

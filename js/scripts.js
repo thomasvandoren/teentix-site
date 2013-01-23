@@ -176,7 +176,10 @@
   
   $('#nav-bar-login form').validate();
   
+  $('#lost-pass-form').validate();
+  
   $('#contact-form').validate();
+  
   
   
 /////////////////////////////////////  

@@ -40,13 +40,10 @@
 				{if no_results}<p>Sorry, there are no upcoming events.</p>{/if}
 				<div class="row">
 					<div class="three columns">
-						<p class="calendar-meta"><strong>{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</strong>
-						{if event_recurs}
-							{event_start_date format="%D %M %j, %Y"} &ndash; {event_last_date format="%D %M %j, %Y"}					
-						{if:else}
-							{event_start_date format="%D %M %j, %Y"}
-						{/if}
+						<p class="event-date">
+							{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash;<br />{event_last_date format="%D %M %j, %Y"}{/if}
 						</p>
+						<p class="event-category"><strong>{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</strong></p>
 					</div>
 					<div class="nine columns">
 					{if event_image}

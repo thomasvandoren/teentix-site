@@ -1,19 +1,19 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
 <head>  
 	<meta charset="utf-8">
 	<title>TeenTix Temporary Pass</title>
 	<meta name="robots" content="noindex, nofollow" />
+  <link rel="stylesheet" href="{site_url}css/pass.css">
 </head>
 <body>
-	<div class="container">
-
-		<h1>TeenTix Temporary Pass</h1>
+	<div id="pass">
+		<h1><img src="{site_url}css/images/site/teentix-logo-pass.png" /></h1>
 	  <h3>{embed:name}</h3>
 
-		<p>Issue Date: {embed:issue_date}</p>
-		<p>Expiration Date: {embed:expiration_date}</p>			
-
+		<p>Issued: <strong>{embed:issue_date}</strong></p>
+		<p>Expires: <strong>{embed:expiration_date}</strong></p>			
 	</div>
+	
 </body>
 </html>

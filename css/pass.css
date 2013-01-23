@@ -1,0 +1,21 @@
+body {
+	margin: 20px;
+	font-family: Helvetica, Arial, san-serif;
+}
+#pass {
+	margin: 100px auto;
+	width: 400px;
+	height: 300px;
+	border: 2px dashed #000;
+	text-align: center;
+}
+#pass h1 {
+	margin-bottom: 0px;
+}
+#pass h3 {
+	font-size: 2em;
+	margin: 20px 0px;
+}
+#pass p strong {
+	font-size: 1.25em;
+}

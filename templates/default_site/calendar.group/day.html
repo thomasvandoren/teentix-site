@@ -45,16 +45,14 @@
 		  	{if no_results}<p>Sorry, there are no events this day.</p>{/if}
 		  	
 		  {if hour_event_total != "0"}
-				  <div class="three columns">
-					  <h5 class="header-hour">{time format="%g %a"}</h5>
-					</div>
-
-				  <div class="nine columns">
+				  
 			  {events}
 			  {if event_all_day}
 						<div class="three columns">
-						  <h5 class="header-hour">All Day
-						  </h5>
+						  <p class="event-time">All Day
+						  </p>
+							<p class="event-category"><strong>{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</strong></p>
+						  
 						</div>
 						<div class="nine columns">
 						  <div class="entry">
@@ -73,6 +71,12 @@
 						</div>
 						<hr />
 				{if:else}
+					<div class="three columns">
+					  <p class="event-time">{time format="%g %a"}</p>
+						<p class="event-category"><strong>{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</strong></p>
+					</div>
+
+				  <div class="nine columns">
 					  <div class="entry">
 							<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h4>
 							<p class="event-info">

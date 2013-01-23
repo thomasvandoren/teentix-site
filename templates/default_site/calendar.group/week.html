@@ -44,10 +44,10 @@
 			  {display_each_day}
 			  <div class="row">
 				  <div class="day three columns">
-						<h5>
-							{day format="%l"}<br />
+						<p class="event-date">
+							<span class="event-weekday">{day format="%l"}</span><br />
 							<a href="{path='calendar/day'}/{day format="%Y/%m/%d"}/">{day format="%M %j, %Y"}</a>
-						</h5>
+						</p>
 					</div>
 					<div class="nine columns">
 						<ul class="event-list">
@@ -62,9 +62,11 @@
 				      	{/if}
 				      	</span>
 				      	<strong><a href="{url_title_path='calendar/event'}">{event_title}</a></strong> 
+				      	
 				      	{related_entries id="event_venue"}
 								  <span class="event-venue">{title}</span>
 							  {/related_entries}
+							  <span class="event-category">{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</span>
 						  </li>
 						  {/events}
 						</ul>
