@@ -1,6 +1,6 @@
 {exp:calendar:events event_id="{embed:event_id}" event_limit="1"}
 	<div class="nine columns">
-		<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{title}</a></h4>
+		<h4 class="event-name sans"><a href="{url_title_path='calendar/event'}">{title}</a></h4>
 		<p class="event-dates">		
 			{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
 		{if '{event_last_date format="%Y%m%d"}' < '{current_time format="%Y%m%d"}'}	
