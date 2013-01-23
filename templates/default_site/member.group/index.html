@@ -1,5 +1,5 @@
 {if segment_2==""}
-	{redirect="account/login"}
+	{redirect="account"}
 {/if}
 {exp:user:stats
  member_id="{segment_2}"
@@ -88,13 +88,15 @@
 				<p>You have not left any comments</p>
 			{/if}
 			</div><!-- end #member_comments -->
-			{/exp:user:stats}   
 			
+			 
+			{if user_no_results}{redirect="account"}{/if}
 		</div>	
 		
 		<div id="sidebar" class="three columns">
 		&nbsp;
     </div>		   
   </div>
-  
+
+{/exp:user:stats}  
 {embed="inc/.footer"}
