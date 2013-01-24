@@ -48,7 +48,9 @@
     </div>
 
   	<div id="sidebar" class="four columns">
+  	{exp:channel:entries channel="blog" limit="1" status="not closed"}
 			{edit_this}
+		{/exp:channel:entries}
 			{embed="inc/.social-buttons"}
       {embed="blog/.sidebar"}
     </div>

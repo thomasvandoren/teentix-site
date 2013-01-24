@@ -117,7 +117,6 @@
 		</div>
 
 		<div id="sidebar" class="four columns">
-		{edit_this}
 		{exp:calendar:events 
 			orderby="title" sort="asc" 
 			event_name="{segment_3}" 
@@ -125,6 +124,7 @@
 			show_months="999" 
 			dynamic="off"
 		}
+		{edit_this}
 			<div class="event-favorite">
 			{if logged_in}
 		    {exp:favorites:saved}
