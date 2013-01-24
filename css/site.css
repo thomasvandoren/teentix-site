@@ -1226,6 +1226,10 @@ ul.breadcrumbs li.current a {
 .blog #become-reviewer a:hover {
 	background-position: right top;
 }
+.blog .draft-status {
+	font-size: 24px;
+	color: #999;
+}
 
 
 
