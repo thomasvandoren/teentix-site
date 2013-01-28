@@ -266,6 +266,7 @@ input.submit:hover {
 #utility-nav .dropdown {
 	top: 36px;
 	background: #000;
+	padding-bottom: 5px;
 }
 #utility-nav #nav-bar-login {
 	padding: 10px 20px;
@@ -284,6 +285,20 @@ input.submit:hover {
 }
 #utility-nav #nav-bar-login input[type=text] {
 	width: 200px;
+}
+#utility-nav ul > li.has-dropdown .dropdown li a {
+	padding-left: 20px;
+	line-height: 1.3em;
+}
+#utility-nav #util-new-account {
+	padding-top: 5px;
+	padding-bottom: 5px;
+	height: 30px;
+	font-weight: bold;
+}
+#utility-nav #util-password {
+	padding-bottom: 8px;
+	height: 30px;
 }
 
 
@@ -1331,6 +1346,11 @@ ul.breadcrumbs li.current a {
 .account p.require {
 	text-align: right;
 }
+.account .terms {
+  background: #f6f6f6;
+  padding: 10px 20px;
+  margin: 10px 0px;
+}
 .account.home #member_profile .row {
 	background: #f6f6f6;
 	padding: 20px 10px;
@@ -1367,6 +1387,17 @@ ul.breadcrumbs li.current a {
 	font-size: 12px;
 }
 
+
+/* -----------------------------------------
+   Facebook
+----------------------------------------- */
+#fb-util-login {
+	padding: 8px 20px;
+}
+#fb-register {
+	font-size: 16px;
+	margin-bottom: 30px;
+}
 
 
 

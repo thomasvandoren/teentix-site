@@ -1,0 +1,69 @@
+{if segment_3 == ""}
+	{redirect="account/new"}
+{/if}
+
+{if segment_3 != ""}
+	{embed="inc/.header"
+		title="Create a TeenTix Account | Application"
+	  body_class="application"
+	}
+	{embed="inc/.nav"
+		end_title="Temporary Pass"
+	} 
+
+{exp:channel:entries 
+  entry_id="{segment_3}" 
+  track_views="one" 
+}		  
+	  <div class="row">
+	    <div class="twelve columns">
+	      <h1 id="page-name">Welcome to TeenTix {app_first_name}!</h1>
+	    </div>
+	  </div>
+  
+		<div class="row">
+	    <div id="main" class="eight columns">
+	      <h4 class="sans">Download Your Temporary Pass</h4>
+	      <p>Please allow two weeks for your TeenTix pass to arrive in the mail. If you would like to go see a show before your pass arrives, just print out this Temporary Pass and bring it with you to the venue. Your temporary pass expires two weeks from today.</p>
+					
+				<p>You should receive an email containing a link to your temporary pass with more information about using TeenTix.</p>
+				<h4><a href="{site_url}pass/new/{entry_id}/{entry_date}" class="button large" target="_blank">Temporary Pass</a></h4>
+				<h4 class="sans">Create a TeenTix.com account.</h4>
+				<p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+				<p>Here are some reasons why you should create a TeenTix.com account.</p>
+				<ul>
+					<li>Save events your like</li>
+					<li>Leave comments on blogs and events</li>
+					<li>Get replacement passes</li>
+				</ul>
+				<p><a href="{site_url}account/new" class="button medium" target="_blank">Create an Account &raquo;</a></>
+
+	    </div>
+	    
+	    <div id="sidebar" class="four columns">
+	    &nbsp;
+	    </div>
+	        
+	  </div>
+	  
+		{if app_newsletter == 'yes'}
+		  {exp:mailchimp_ee:subscribe 
+		  	api_key="2919b6f49b6db2cf940a1ce3bb6520e4-us1" 
+		  	list_id="0d9d72b4f4" 
+		  	email_address="{app_email}" 
+		  	merge_fname="{app_first_name}" 
+		  	merge_lname="{app_last_name}" 
+		  	merge_BDATE='{app_birthdate format="%Y-%m-%d"}' 
+		  	merge_MTYPE='{app_member_type}' 
+		  	interest_groups='{categories show_group="1" backspace="1"}{category_name}|{/categories}' 
+		  	double_optin='no'
+		  }
+		{/if}
+		
+		{if view_count_one < 1}
+			{embed="application/.email" entry_id="{segment_3}"}
+		{/if}
+	{/exp:channel:entries}  
+	 
+	{embed="inc/.footer"}
+{/if}

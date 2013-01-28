@@ -3,6 +3,7 @@
 {/if}
 {embed="inc/.header"
   body_class="account login"
+	title="Login | Account"
 }
 {embed="inc/.nav"
 	end_title="Login"
@@ -28,6 +29,7 @@
     </div>
     
     <div id="main" class="eight columns">
+    	<h4 id="fb-register" class="sans">{embed="inc/.fbc_login" size="large"} or </h4>
     {exp:member:login_form return="account" id="login-form"}
       <fieldset>
         

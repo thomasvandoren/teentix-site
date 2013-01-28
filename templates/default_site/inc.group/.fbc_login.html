@@ -1,0 +1,8 @@
+{exp:fbc:login
+	login_button_label="Login with Facebook"
+	button_size="{embed:size}"
+	permissions="email|publish_stream|read_stream"
+}
+	{if fbc_logged_out == "y"}{fbc_login_button}{/if}
+	{if fbc_logged_in == "y"}Logged in through Facebook (<a href="{path='logout'}">Log Out</a>){/if}
+{/exp:fbc:login}

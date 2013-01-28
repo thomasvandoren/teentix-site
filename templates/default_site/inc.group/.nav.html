@@ -27,6 +27,7 @@
 	        <li class="has-dropdown">
 	          <a href="{path='account/login'}">Login</a>
 	          <ul class="dropdown">
+			        <li id="fb-util-login">{embed="inc/.fbc_login" size="large"}</li>
 			        <li id="nav-bar-login">
 			          
 		          {exp:member:login_form return="{exp:currentlee type='url'}"}
@@ -38,8 +39,9 @@
 		          {/exp:member:login_form}
 		              
 			        </li>
-			        <li><a href="{site_url}account/new">Create an account</a></li>
-							<li><a href="{path='account/password'}">Reset your password</a></li>
+			        <li id="util-new-account"><a href="{site_url}account/new">Create an account</a></li>
+							<li id="util-password"><a href="{path='account/password'}">Reset your password</a></li>
+							
 			      </ul>
 	          
 	        </li>
