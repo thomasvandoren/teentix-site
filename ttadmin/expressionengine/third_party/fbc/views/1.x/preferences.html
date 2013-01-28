@@ -1,0 +1,103 @@
+<?php echo $this->view('header.html'); ?>
+
+<script type="text/javascript">
+//<![CDATA[
+
+<?php $this->view('js/default.js'); ?>
+
+//]]>
+</script>
+		<form method="post" id="prefs_form" action="<?php echo $this->output($base_uri.'&P=preferences');?>">
+
+		<table class="tableBorder" style="width:100%;" cellspacing="0" cellpadding="0" border="0">
+			<thead>
+				<tr>
+					<td class="tableHeadingAlt" colspan="3"><?=$LANG->line('preferences_exp'); ?></td>
+				</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td class="tableCellOne" style="width:20%;"><?=$LANG->line('fbc_app_id'); ?></td>
+				<td class="tableCellOne" style="width:30%;">
+					<input name="fbc_app_id" value="<?=$prefs['fbc_app_id']; ?>" style="width:100%;" />
+				</td>
+				<td class="tableCellOne"><?=$LANG->line('fbc_app_id_exp'); ?></td>
+			</tr>
+			<!-- Facebook App ID -->
+			
+			<tr>
+				<td class="tableCellTwo" style="width:20%;"><?=$LANG->line('fbc_secret'); ?></td>
+				<td class="tableCellTwo" style="width:30%;">
+					<input name="fbc_secret" value="<?=$prefs['fbc_secret']; ?>" style="width:100%;" />
+				</td>
+				<td class="tableCellTwo"><?=$LANG->line('fbc_secret_exp'); ?></td>
+			</tr>
+			<!-- Facebook secret -->
+			
+			<tr>
+				<td class="tableCellOne" style="width:20%;"><?=$LANG->line('fbc_eligible_member_groups'); ?></td>
+				<td class="tableCellOne" style="width:30%;">
+<?php foreach ( $member_groups as $key => $val ) : $checked = ( in_array( $key,  $prefs['fbc_eligible_member_groups'] ) === TRUE ) ? 'checked="checked"': ''; ?>
+					<input type="checkbox" class="fbc_eligible_member_groups" id="fbc_eligible_member_groups_<?=$key; ?>" name="fbc_eligible_member_groups[]" value="<?=$key; ?>" <?=$checked; ?> /> <label for="fbc_eligible_member_groups_<?=$key; ?>"><?=$val; ?></label><br />
+<?php endforeach; ?>
+				</td>
+				<td class="tableCellOne"><?=$LANG->line('fbc_eligible_member_groups_exp'); ?></td>
+			</tr>
+			<!-- Facebook eligible member groups -->
+			
+			<tr>
+				<td class="tableCellTwo" style="width:20%;"><?=$LANG->line('fbc_member_group'); ?></td>
+				<td class="tableCellTwo" style="width:30%;">
+					<select name="fbc_member_group">
+<?php foreach ( $member_groups as $key => $val ) : $selected = ( $key == $prefs['fbc_member_group'] ) ? 'selected="selected"': ''; ?>
+						<option value="<?=$key; ?>" <?=$selected; ?>><?=$val; ?></option>
+<?php endforeach; ?>
+					</select>
+				</td>
+				<td class="tableCellTwo"><?=$LANG->line('fbc_member_group_exp'); ?></td>
+			</tr>
+			<!-- Facebook member group -->
+			
+			<tr>
+				<td class="tableCellOne" style="width:20%;"><?=$LANG->line('fbc_require_member_account_activation'); ?></td>
+				<td class="tableCellOne" style="width:30%;">
+					<select name="fbc_account_activation">
+<?php foreach ( $account_activation as $val ) : $selected = ( $val == $prefs['fbc_account_activation'] ) ? 'selected="selected"': ''; ?>
+						<option value="<?=$val; ?>" <?=$selected; ?>><?=$LANG->line( $val ); ?></option>
+<?php endforeach; ?>
+					</select>
+				</td>
+				<td class="tableCellOne"><?=$LANG->line('fbc_require_member_account_activation_exp'); ?></td>
+			</tr>
+			<!-- Facebook account activation -->
+			
+			<tr>
+				<td class="tableCellTwo" style="width:20%;"><?=$LANG->line('fbc_confirm_account_sync'); ?></td>
+				<td class="tableCellTwo" style="width:30%;">
+<?php $checked_yes = ( $prefs['fbc_confirm_account_sync'] == 'y' ) ? 'checked="checked"': ''; $checked_no = ( $prefs['fbc_confirm_account_sync'] == 'n' ) ? 'checked="checked"': ''; ?>
+					<input type="radio" id="fbc_confirm_account_sync_y" name="fbc_confirm_account_sync" value="y" <?=$checked_yes?> />&nbsp;<label for="fbc_confirm_account_sync_y"><?=ee()->lang->line('yes')?></label>
+					<input type="radio" id="fbc_confirm_account_sync_n" name="fbc_confirm_account_sync" value="n" <?=$checked_no?> />&nbsp;<label for="fbc_confirm_account_sync_n"><?=ee()->lang->line('no')?></label>
+				</td>
+				<td class="tableCellOne"><?=$LANG->line('fbc_confirm_account_sync_exp'); ?></td>
+			</tr>
+			<!-- Facebook confirm account sync -->
+			
+			<tr>
+				<td class="tableCellOne" style="width:20%;"><?=$LANG->line('fbc_passive_registration'); ?></td>
+				<td class="tableCellOne" style="width:30%;">
+<?php $checked_yes = ( $prefs['fbc_passive_registration'] == 'y' ) ? 'checked="checked"': ''; $checked_no = ( $prefs['fbc_passive_registration'] == 'n' ) ? 'checked="checked"': ''; ?>
+					<input type="radio" id="fbc_passive_registration_y" name="fbc_passive_registration" value="y" <?=$checked_yes?> />&nbsp;<label for="fbc_passive_registration_y"><?=ee()->lang->line('yes')?></label>
+					<input type="radio" id="fbc_passive_registration_n" name="fbc_passive_registration" value="n" <?=$checked_no?> />&nbsp;<label for="fbc_passive_registration_n"><?=ee()->lang->line('no')?></label>
+				</td>
+				<td class="tableCellOne"><?=$LANG->line('fbc_passive_registration_exp'); ?></td>
+			</tr>
+			<!-- Facebook passive registration -->
+			</tbody>
+		</table>
+		<div class='clearfix' >&nbsp;</div>
+		<div class='itemWrapper'>
+			<input type="submit" value="<?=$LANG->line('submit'); ?>" />
+		</div>
+		</form>
+	
+<?php echo $this->view('footer.html'); ?>
