@@ -22,15 +22,24 @@
      {exp:user:stats} 
  
 			<div id="member_profile" class="section">
-				<div class="edit-profile"><a href="{path='account/edit'}" class="button small">Edit Profile</a></div>
+				<div class="edit-profile"><a href="{path='member'}/{member_id}" class="button small">View Profile</a></div>
 				<h3 class="section-head sans">Your Public Profile </h3>
 				<div class="row">
 					<div class="three columns">
+				{exp:fbc:member_data 
+		    	profile_pic_width="150"
+		    	profile_pic_size="normal" 
+		    	member_id="{member_id}" 
+		    	profile_pic_linked="false"
+		    }
 					{if avatar_filename}
-						<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}'s photo" />
-					{if:else}
-						<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
-					{/if}
+				  	<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}" />
+				  {if:elseif fbc_facebook_profile_pic}
+			      {fbc_facebook_profile_pic}
+			    {if:else}
+			    	<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
+			    {/if}
+				{/exp:fbc:member_data}
 					</div>
 					<div class="nine columns">
 						<h4 class="sans">{screen_name}</h4>

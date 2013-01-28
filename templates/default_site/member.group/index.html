@@ -28,11 +28,20 @@
 			<div id="member_profile" class="section">
 				<div class="row">
 					<div class="three columns">
+		    {exp:fbc:member_data 
+		    	profile_pic_width="150"
+		    	profile_pic_size="normal" 
+		    	member_id="{segment_2}" 
+		    	profile_pic_linked="false"
+		    }
 					{if avatar_filename}
-						<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}'s photo" />
-					{if:else}
-						<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
-					{/if}
+				  	<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}" />
+				  {if:elseif fbc_facebook_profile_pic}
+			      {fbc_facebook_profile_pic}
+			    {if:else}
+			    	<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
+			    {/if}
+				{/exp:fbc:member_data}
 					</div>
 					<div class="nine columns">
 						<h4 class="sans">{screen_name}</h4>
@@ -46,25 +55,29 @@
 				</div>				
 			</div><!-- end #member_profile -->
 			
-			<div id="member_comments" class="section">
-				<h3 class="section-head sans">Articles</h3>			
+		{if group_id != "5"}		
+			<div id="member_articles" class="section">
+				<h3 class="section-head sans">Articles</h3>	
+						
 				{exp:channel:entries 
 					dynamic="no" 
+					channel="blog"
 					author_id="{segment_2}" 
 					limit="5"
 				}
+				{absolute_results}
 				<div class="comment">
 					<p class="posted">Posted on {entry_date format="%D, %M %j, %Y"}</p>
 	        <h3 class="sans"><a href="{url_title_path}">{title}</a></h3>
-	        
         </div>
         {paginate}
 {!--         <p class="view-all"><a href="{path='account/comments'}">View all comments &raquo;</a></p> --}
 		    {/paginate}
+		    {if no_results} content {/if}
 				{/exp:channel:entries}
 
-			</div><!-- end #member_comments -->
-			
+			</div><!-- end #member_articles -->
+		{/if}
 			
 			
 			<div id="member_comments" class="section">

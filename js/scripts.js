@@ -128,15 +128,10 @@
   
   $('#account_edit_settings').validate({
     rules: {
-      email: { 
-        email: true 
-      },
       password: { 
-      	required: false,
         minlength: 5 
       },
       password_confirm: {
-      	required: false,
         equalTo: "#password"
       }
     }
@@ -324,5 +319,5 @@
 	}
 	
 	hideSlideshow();
-
+	
 })(jQuery, this);

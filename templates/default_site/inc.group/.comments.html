@@ -1,10 +1,27 @@
 <div id="comments">
 	<h3>Comments <span class="comment-count sans">({embed:comment_total})</span></h3>
 {exp:comment:entries sort="asc" limit="20"}
+    {exp:fbc:member_data profile_pic_size="square" member_id="{author_id}" profile_pic_linked="false"}
+
 	<div class="comment-entry clearfix">
-	  <a href="{path='member'}/{author_id}"><img src="{avatar_url}" class="comment-author-avatar" /></a>{comment}
+	  <a href="{path='member'}/{author_id}" class="comment-author-avatar" >
+	  {if avatar}
+	  	<img src="{avatar_url}" alt="" />
+	  {if:elseif fbc_facebook_profile_pic}
+      {fbc_facebook_profile_pic}
+    {if:else}
+    	<img src="{site_url}images/avatars/default.jpg" alt="" />
+    {/if}
+    </a>
+	  {comment}
 	</div>
-  <p class="comment-author">By <a href="{path='member'}/{author_id}">{name}</a> on {comment_date format="%F %j, %Y"} at {comment_date format="%g:%i %a"}</p>
+  <p class="comment-author">By 
+  	<a href="{path='member'}/{author_id}">
+	  	{author}
+	  </a> on {comment_date format="%F %j, %Y"} at {comment_date format="%g:%i %a"}</p>
+  {/exp:fbc:member_data}
+   
+  
 {/exp:comment:entries}
 </div>
 

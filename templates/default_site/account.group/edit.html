@@ -78,7 +78,31 @@
       </fieldset>
       
       <fieldset id="member_info">
-	      <legend>Private Information </legend>
+	      <legend>Private Information <span class="notice-required">Required information*</span></legend>
+	      <div class="row">
+	      	<label class="require three columns">Name*</label>
+	      	<div class="three columns">
+	      		<label>First</label>
+	      		<input type="text" name="first_name" value="{first_name}" class="required" />
+	      	</div>
+	      	<div class="one columns">
+		      	<label>M.I.</label>
+	      		<input type="text" name="middle_initial" value="{middle_initial}" />
+	      	</div>
+	      	<div class="three columns end">
+	      		<label>Last</label>
+	      		<input type="text" name="last_name" value="{last_name}" class="required" />
+	      	</div>
+	      </div>
+	      <div class="row">
+	      	<label class="require three columns">Email*</label>
+	      	<div class="six columns">
+	      		<input type="email" name="email" value="{email}" class="required" id="account_username" data-current="{email}" />
+	      	</div>
+	      	<div class="three columns">
+	      		<label class="field_return username_return"></label>
+	      	</div>
+	      </div>
 	      <div class="row">
 	      	<label class="require three columns">Birthdate*</label>
 	      	<div class="nine columns">
@@ -245,21 +269,7 @@
 						</p>
 	      	</div>
 	      </div>
-	      <div class="row">
-	      	<label class="require three columns">Name*</label>
-	      	<div class="three columns">
-	      		<label>First</label>
-	      		<input type="text" name="first_name" value="{first_name}" class="required" />
-	      	</div>
-	      	<div class="one columns">
-		      	<label>M.I.</label>
-	      		<input type="text" name="middle_initial" value="{middle_initial}" />
-	      	</div>
-	      	<div class="three columns end">
-	      		<label>Last</label>
-	      		<input type="text" name="last_name" value="{last_name}" class="required" />
-	      	</div>
-	      </div>
+	      
 	      
 	      <div class="row">
 	      	<label class="require three columns">Mailing Address*</label>
