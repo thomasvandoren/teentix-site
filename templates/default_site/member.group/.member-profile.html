@@ -1,0 +1,41 @@
+{exp:user:stats
+	{if segment_3 == ""}
+  	member_id="{segment_2}" 
+  {if:else}
+  	member_id="{segment_3}" 
+  {/if}
+} 
+<div id="member_profile" class="section">
+	<div class="row">
+		<div class="three columns">
+  {exp:fbc:member_data 
+  	profile_pic_width="150"
+  	profile_pic_size="normal" 
+	  {if segment_3 == ""}
+	  	member_id="{segment_2}" 
+	  {if:else}
+	  	member_id="{segment_3}" 
+	  {/if}
+  	profile_pic_linked="false"
+  }
+		{if avatar_filename}
+	  	<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}" />
+	  {if:elseif fbc_facebook_profile_pic}
+      {fbc_facebook_profile_pic}
+    {if:else}
+    	<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
+    {/if}
+	{/exp:fbc:member_data}
+		</div>
+		<div class="nine columns">
+			<h4 class="sans">{screen_name}</h4>
+			<p>
+				{if location}Location: {location}<br />{/if}
+				{if url}Website: <a href="{url}" target="_blank">{url}</a><br />{/if}
+				{if facebook}Facebook: <a href="{facebook}" target="_blank">facebook</a><br />{/if}
+				{if twitter}Twitter: <a href="{twitter}" target="_blank">twitter</a><br />{/if}
+			</p>
+		</div>
+	</div>				
+</div><!-- end #member_profile -->
+{/exp:user:stats} 

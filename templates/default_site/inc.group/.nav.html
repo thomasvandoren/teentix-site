@@ -129,6 +129,9 @@
 			  	{if segment_1}
 			  		<li {if segment_2 == ""}class="current"{/if}><a href="{site_url}{segment_1}">{if embed:segment_1_title}{embed:segment_1_title}{if:else}{segment_1}{/if}</a></li>
 			  	{/if}
+			  	{if embed:member_name}
+			  		<li><a href="{path='member'}/{segment_3}">{embed:member_name}</a></li>
+			  	{/if}
 			  	{if embed:end_title}
 			  		<li class="current"><a href="#">{embed:end_title}</a></li>
 			  	{/if}

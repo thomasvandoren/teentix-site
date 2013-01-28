@@ -1,0 +1,63 @@
+{exp:user:stats
+ member_id="{segment_3}"
+} 
+{embed="inc/.header"
+  body_class="account home member"
+  title="{screen_name} Articles | Member"
+}
+{embed="inc/.nav"
+	member_name="{screen_name}"
+	end_title="Articles"
+}  
+{/exp:user:stats}
+
+  <div class="row">
+    <div class="twelve columns">
+      <h1 id="page-name">TeenTix Member Articles</h1>
+    </div>
+  </div>
+
+  <div class="row">  
+    
+    <div id="main" class="nine columns">
+      
+			{embed="member/.member-profile"}
+			
+			<div id="member_articles" class="section">
+				<h3 class="section-head sans">Articles</h3>	
+						
+			{exp:channel:entries 
+				dynamic="no" 
+				channel="blog"
+				author_id="{segment_3}" 
+				limit="20"
+			}
+				{if absolute_count == "1"}
+				<p>Total articles: {absolute_results}</p>
+				{/if}
+				
+				<div class="entry">
+					<p class="posted">Posted on {entry_date format="%D, %M %j, %Y"}</p>
+			    <h3 class="sans"><a href="{url_title_path}">{title}</a></h3>
+			  </div>
+			  {paginate}
+			  <div id="pagination">
+	        <p>Page {current_page} of {total_pages} pages {pagination_links}</p>
+	      </div>
+			  {/paginate}
+			  {if no_results}
+			  <p>This member has not written any articles.</p>
+			  {/if}
+			{/exp:channel:entries}
+			
+			</div><!-- end #member_articles -->
+			<p><a href="{path='member'}/{segment_3}">&laquo; View member profile</a></p>
+			 
+		</div>	
+		
+		<div id="sidebar" class="three columns">
+		&nbsp;
+    </div>		   
+  </div>
+
+{embed="inc/.footer"}

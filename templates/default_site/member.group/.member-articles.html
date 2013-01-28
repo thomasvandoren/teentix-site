@@ -1,0 +1,26 @@
+<div id="member_articles" class="section">
+	<h3 class="section-head sans">Articles</h3>	
+			
+{exp:channel:entries 
+	dynamic="no" 
+	channel="blog"
+	author_id="{segment_2}" 
+	limit="5"
+}
+	{if absolute_count == "1"}
+	<p>Total articles: {absolute_results}</p>
+	{/if}
+	
+	<div class="entry">
+		<p class="posted">Posted on {entry_date format="%D, %M %j, %Y"}</p>
+    <h3 class="sans"><a href="{url_title_path}">{title}</a></h3>
+  </div>
+  {paginate}
+  <p class="view-all"><a href="{path='member/articles'}/{segment_2}">View all articles &raquo;</a></p>
+  {/paginate}
+  {if no_results}
+  <p>This member has not written any articles.</p>
+  {/if}
+{/exp:channel:entries}
+
+</div><!-- end #member_articles -->

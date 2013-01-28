@@ -20,88 +20,15 @@
 
   <div class="row">  
     
-    
     <div id="main" class="nine columns">
-     
-     
- 
-			<div id="member_profile" class="section">
-				<div class="row">
-					<div class="three columns">
-		    {exp:fbc:member_data 
-		    	profile_pic_width="150"
-		    	profile_pic_size="normal" 
-		    	member_id="{segment_2}" 
-		    	profile_pic_linked="false"
-		    }
-					{if avatar_filename}
-				  	<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}" />
-				  {if:elseif fbc_facebook_profile_pic}
-			      {fbc_facebook_profile_pic}
-			    {if:else}
-			    	<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
-			    {/if}
-				{/exp:fbc:member_data}
-					</div>
-					<div class="nine columns">
-						<h4 class="sans">{screen_name}</h4>
-						<p>
-							{if location}Location: {location}<br />{/if}
-							{if url}Website: <a href="{url}">{url}</a><br />{/if}
-							{if facebook}Facebook: <a href="{facebook}">facebook</a><br />{/if}
-							{if twitter}Twitter: <a href="{twitter}">twitter</a><br />{/if}
-						</p>
-					</div>
-				</div>				
-			</div><!-- end #member_profile -->
-			
-		{if group_id != "5"}		
-			<div id="member_articles" class="section">
-				<h3 class="section-head sans">Articles</h3>	
+      
+			{embed="member/.member-profile"}
 						
-				{exp:channel:entries 
-					dynamic="no" 
-					channel="blog"
-					author_id="{segment_2}" 
-					limit="5"
-				}
-				{absolute_results}
-				<div class="comment">
-					<p class="posted">Posted on {entry_date format="%D, %M %j, %Y"}</p>
-	        <h3 class="sans"><a href="{url_title_path}">{title}</a></h3>
-        </div>
-        {paginate}
-{!--         <p class="view-all"><a href="{path='account/comments'}">View all comments &raquo;</a></p> --}
-		    {/paginate}
-		    {if no_results} content {/if}
-				{/exp:channel:entries}
-
-			</div><!-- end #member_articles -->
+		{if group_id != "5"}		
+			{embed="member/.member-articles"}
 		{/if}
 			
-			
-			<div id="member_comments" class="section">
-				<h3 class="section-head sans">Comments</h3>			
-			{if total_comments > 0}
-				<p class="total-count">{total_comments} total comments</p>
-				{exp:comment:entries 
-					dynamic="no" 
-					author_id="{segment_2}" 
-					limit="5"
-				}
-				<div class="comment">
-	        <p class="posted">Comment for <a href="{comment_url_title_auto_path}">{title}</a> on {comment_date format="%D, %M %j, %Y at %g:%i %a"}</p>
-        	{comment}
-        </div>
-        {paginate}
-        <p class="view-all"><a href="{path='account/comments'}">View all comments &raquo;</a></p>
-		    {/paginate}
-				{/exp:comment:entries}
-			{if:else}
-				<p>You have not left any comments</p>
-			{/if}
-			</div><!-- end #member_comments -->
-			
+			{embed="member/.member-comments"}		
 			 
 			{if user_no_results}{redirect="account"}{/if}
 		</div>	

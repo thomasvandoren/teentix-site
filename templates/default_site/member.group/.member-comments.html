@@ -1,0 +1,22 @@
+<div id="member_comments" class="section">
+	<h3 class="section-head sans">Comments</h3>			
+	{exp:comment:entries 
+		dynamic="no" 
+		author_id="{segment_2}" 
+		limit="1"
+	}
+{if count == "1"}
+	<p class="total-count">Total Comments: {total_comments}</p>
+{/if}
+	<div class="comment">
+    <p class="posted">Comment for <a href="{comment_url_title_auto_path}">{title}</a> on {comment_date format="%D, %M %j, %Y at %g:%i %a"}</p>
+  	{comment}
+  </div>
+  {paginate}
+  <p class="view-all"><a href="{path='member/comments'}/{segment_2}">View all comments &raquo;</a></p>
+  {/paginate}
+  {if no_results}
+  <p>This member has not left any comments.</p>
+  {/if}
+	{/exp:comment:entries}
+</div><!-- end #member_comments -->	
