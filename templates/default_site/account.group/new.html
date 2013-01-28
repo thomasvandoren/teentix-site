@@ -19,6 +19,19 @@
       <h4 class="sans">Create a TeenTix.com website account</h4>
       <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
       <p>Already have an account? <a href="{path='account/login'}">Login here</a>.</p>
+      <div>
+      {exp:fbc:login
+				permissions="email|publish_stream|read_stream"
+				return_when_logged_in="fbc_main/status/logged_in"
+				return_when_logged_out="fbc_main/status/logged_out"
+				return_for_passive_register="fbc_main/status/registered"
+				return_for_register="fbc_main/register"
+				return_on_failure="fbc_main/status/fail"
+			}
+				{if fbc_logged_out == "y"}{fbc_login_button}{/if}
+				{if fbc_logged_in == "y"}Logged in through Facebook (<a href="{path='logout'}">Log Out</a>){/if}
+			{/exp:fbc:login}
+      </div>
     </div>
     
     <div id="main" class="eight columns">
