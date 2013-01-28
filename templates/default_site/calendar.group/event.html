@@ -123,6 +123,7 @@
 			date_range_start="99 months ago" 
 			show_months="999" 
 			dynamic="off"
+			status="not closed"
 		}
 		{edit_this}
 			<div class="event-favorite">
@@ -148,8 +149,7 @@
 				<div class="favorited">
           <span class="Favorites_Save_Disabled">Save this event</a>
         </div>
-        <p>
-		    <a href="{path='account/login'}" href="#">Login to save this event</a></p>
+        <p><a href="#" data-reveal-id="login-modal" data-animation="fade">Login to save this event</a></p>
 			{/if}  
 			</div>
 		{/exp:calendar:events}
@@ -239,4 +239,4 @@
 		
 	</div>
   
-{embed="inc/.footer"}
+{embed="inc/.footer" include_login="true"}

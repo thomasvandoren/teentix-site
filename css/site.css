@@ -25,9 +25,13 @@ p, ul, ol, li,
 	font-family: "museo-sans", Helvetica, Arial, san-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
   font-family: "atrament-web",sans-serif;
   font-stretch: narrower;
+  color: #4D4D4D;
+}
+h2, h3, h4, h5, h6 {
+  font-family: "museo-sans",sans-serif;
   color: #4D4D4D;
 }
 h1, h2, h3, h4, h5, h6 {
@@ -60,8 +64,6 @@ a:hover {
 .condensed {
   font-family: "atrament-web",sans-serif;
 }
-
-
 .hidden {
 	display: none;
 }
@@ -1179,6 +1181,8 @@ ul.breadcrumbs li.current a {
 	padding-bottom: 50px;
 }
 .blog .entry-title  {
+  font-family: "atrament-web",sans-serif;
+  font-stretch: narrower;
 	font-size: 48px;
 	margin-bottom: 3px;
 }
@@ -1397,6 +1401,9 @@ ul.breadcrumbs li.current a {
 #fb-register {
 	font-size: 16px;
 	margin-bottom: 30px;
+}
+#fb-modal-login {
+	margin-bottom: 20px;
 }
 
 

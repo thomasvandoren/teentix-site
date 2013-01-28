@@ -1,5 +1,5 @@
-  </div><!-- end #main-content -->  
-  
+  </div><!-- end #main-content -->  	
+	
   <!-- Footer -->
   <div id="footer">
 	  <footer class="row">
@@ -93,6 +93,24 @@
   	</div>
   </div>
   
+{if embed:include_login == "true"} 
+  <div id="login-modal" class="reveal-modal medium">
+	  <div id="fb-modal-login">{embed="inc/.fbc_login" size="large"}</div>
+    <div id="modal-login">
+  
+    {exp:member:login_form return="{exp:currentlee type='url'}"}
+      <label for="username">Email Address:</label>
+      <input type="text" name="username" class="required" />
+      <label for="password">Password:</label>
+      <input type="password" name="password" class="required" />
+      <input type="submit" name="submit" value="Submit" class="submit button small" />
+    {/exp:member:login_form}
+    
+    </div>
+    <p><a href="{site_url}account/new">Create an account</a> | <a href="{path='account/password'}">Reset your password</a></p>
+	</div>
+{/if}
+
   <!-- Included JS Files (Compressed) -->
   <script src="{site_url}js/jquery.js"></script>
   <script src="{site_url}js/foundation.min.js"></script>
