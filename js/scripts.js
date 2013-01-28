@@ -182,6 +182,9 @@
     rules: {
       email: { 
         email: true 
+      },
+      message: { 
+        maxlength: 1000 
       }
     }
   });
