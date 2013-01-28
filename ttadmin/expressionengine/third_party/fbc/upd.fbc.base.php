@@ -5,9 +5,9 @@
  *
  * @package 	Solspace:FBC
  * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2011, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
  * @link		http://www.solspace.com/docs/addon/c/Facebook_Connect/
- * @version		2.0.6
+ * @version		2.0.9
  * @filesource 	./system/expressionengine/third_party/fbc/
  */
  
@@ -42,12 +42,7 @@ class Fbc_updater_base extends Module_builder_fbc
 	 */
     
 	function Fbc_updater_base( )
-    {
-    	if ( isset($GLOBALS['CI']) && get_class($GLOBALS['CI']) == 'Wizard')
-    	{
-    		return;
-    	}
-    	
+    {    	
     	parent::Module_builder_fbc('fbc');
     	
 		// --------------------------------------------

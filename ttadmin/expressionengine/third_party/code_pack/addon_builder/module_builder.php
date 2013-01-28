@@ -7,7 +7,7 @@
  * @author		Solspace DevTeam
  * @copyright	Copyright (c) 2008-2011, Solspace, Inc.
  * @link		http://solspace.com/docs/
- * @version		1.2.3
+ * @version		1.2.2
  */
  
  /**

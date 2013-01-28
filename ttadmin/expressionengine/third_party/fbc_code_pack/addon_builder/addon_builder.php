@@ -45,7 +45,7 @@ if (APP_VER < 2.0)
 
 class Addon_builder_fbc_code_pack {
 	
-	static $bridge_version		= '1.2.2';
+	static $bridge_version		= '1.2.3';
 								
 	public $cache				= array(); // Internal cache
 								
@@ -95,7 +95,7 @@ class Addon_builder_fbc_code_pack {
 	
 	public $updater;
 	
-	public $aob_path			= array();
+	public $aob_path			= '';
 
 	public $auto_paginate 		= FALSE;
 		
@@ -108,10 +108,10 @@ class Addon_builder_fbc_code_pack {
 	 * @return	null
 	 */
 	
-	public function Addon_builder_fbc_code_pack($name='')
+	public function Addon_builder_fbc_code_pack ($name='')
 	{
 		//path to this folder
-		$this->aob_path = realpath(dirname(__FILE__));
+		$this->aob_path = rtrim(realpath(dirname(__FILE__)), '/') . '/';
 		
 		$this->EE =& get_instance();
 		
@@ -127,9 +127,6 @@ class Addon_builder_fbc_code_pack {
 				ee()->extensions->end_script 	=& $GLOBALS['EXT']->end_script;
 			}			
 		}
-
-		// Super short cuts!!!
-		$this->sc = $this->generate_shortcuts();
 
 		// --------------------------------------------
 		//  Session Global
@@ -209,7 +206,7 @@ class Addon_builder_fbc_code_pack {
 			define('NL', "\n");
 		}
 		
-		if (APP_VER > 2.0 AND ! defined('PATH_THIRD') AND defined('PATH_MOD'))
+		if (APP_VER < 2.0 AND ! defined('PATH_THIRD') AND defined('PATH_MOD'))
 		{
 			define('PATH_THIRD', PATH_MOD);	
 		}
@@ -284,7 +281,9 @@ class Addon_builder_fbc_code_pack {
 		// Important Class Vars
 		//--------------------------------------------
 		
-		if (APP_VER <= '2.1.4')
+		//this should always be loaded after EE 2.1.4
+		if ( ! isset(ee()->security) OR 
+			 ! is_object(ee()->security))
 		{
 			ee()->load->library('security');
 		}
@@ -293,6 +292,12 @@ class Addon_builder_fbc_code_pack {
 		$this->class_name		= ucfirst($this->lower_name);
 		
 		$this->extension_name	= $this->class_name . ((APP_VER < 2.0) ? '_extension' : '_ext'); 
+
+		// -------------------------------------
+		//	set short cuts (must be done after lowername)
+		// -------------------------------------
+
+		$this->sc = $this->generate_shortcuts();
 		
 		//--------------------------------------------
 		// Prepare Caching
@@ -433,11 +438,13 @@ class Addon_builder_fbc_code_pack {
 			{
 				if ( ! class_exists('Addon_builder_data_fbc_code_pack'))
 				{
-					require_once $this->aob_path . '/data.addon_builder.php';
+					require_once $this->aob_path . 'data.addon_builder.php';
 				}
 				
 				$this->data = new Addon_builder_data_fbc_code_pack($this);
 			}
+
+			$this->cache['objects']['data'] =& $this->data;
 		}
 		
 		$this->data->parent_aob_instance =& $this;
@@ -446,11 +453,11 @@ class Addon_builder_fbc_code_pack {
 		// documentDOM_fbc_code_pack instantiated, might move this.
 		//--------------------------------------------
 
-		if (REQ == 'CP' AND file_exists($this->aob_path . '/document_dom.php'))
+		if (REQ == 'CP' AND file_exists($this->aob_path . 'document_dom.php'))
 		{
 			if ( ! class_exists('documentDOM_fbc_code_pack'))
 			{
-				require_once $this->aob_path . '/document_dom.php';
+				require_once $this->aob_path . 'document_dom.php';
 			}
 		
 			$this->document = new documentDOM_fbc_code_pack();
@@ -468,7 +475,8 @@ class Addon_builder_fbc_code_pack {
 		$this->cached_vars['message']		 	= '';
 		
 		$this->cached_vars['caller'] 		 	=& $this;
-		$this->cached_vars['theme_url']			= $this->sc->theme_url . $this->lower_name . '/';
+		$this->cached_vars['theme_url']			= $this->sc->addon_theme_url;
+		$this->cached_vars['addon_theme_url']	= $this->sc->addon_theme_url;
 		
 		//--------------------------------------------
 		// Determine View Path for Add-On
@@ -535,10 +543,34 @@ class Addon_builder_fbc_code_pack {
 	 * @return	object
 	 */
 	
-	public function generate_shortcuts()
+	public function generate_shortcuts ()
 	{
 		$is2 = ! (APP_VER < 2.0);
 		
+		if (defined('URL_THIRD_THEMES'))
+		{
+			$theme_url = URL_THIRD_THEMES;
+		}
+		else
+		{
+			$theme_url = (
+				rtrim(ee()->config->item('theme_folder_url'), '/') . 
+				'/' . ($is2 ? 'third_party/' : '')
+			);
+		}
+
+		if (defined('PATH_THIRD_THEMES'))
+		{
+			$theme_path = PATH_THIRD_THEMES;
+		}
+		else
+		{
+			$theme_path = (
+				rtrim(ee()->config->item('theme_folder_path'), '/') . 
+				'/' . ($is2 ? 'third_party/' : '')
+			);
+		}
+
 		return (object) array(
 			'db'	=> (object) array(
 				'channel_name'			=> $is2 ? 'channel_name'              	: 'blog_name',
@@ -558,10 +590,10 @@ class Addon_builder_fbc_code_pack {
 			),
 			'channel'					=> $is2 ? 'channel'        				: 'weblog',
 			'channels'					=> $is2 ? 'channels'        			: 'weblogs',
-			'theme_path'				=> rtrim(ee()->config->item('theme_folder_path'), '/') . 
-											'/' . ($is2 ? 'third_party/' : ''),
-			'theme_url'					=> rtrim(ee()->config->item('theme_folder_url'), '/') . 
-											'/' . ($is2 ? 'third_party/' : '')
+			'theme_url'					=> $theme_url,
+			'theme_path'				=> $theme_path,
+			'addon_theme_url' 			=> $theme_url . $this->lower_name . '/',
+			'addon_theme_path' 			=> $theme_path . $this->lower_name . '/',
 		);
 	}
 	/* END generate_shortcuts() */
@@ -578,7 +610,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	object|NULL
 	 */
 	
-	public function instantiate( $name , $variables = array())
+	public function instantiate ( $name , $variables = array())
 	{
 		$lower_name = strtolower($name);
 		$class_name = ucfirst($lower_name);
@@ -632,7 +664,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	object
 	 */
 	 
-	public function actions()
+	public function actions ()
 	{
 		if ( ! is_object($this->actions))
 		{	
@@ -664,7 +696,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	string
 	 */
 	
-	public function database_version($ignore_cache = FALSE)
+	public function database_version ($ignore_cache = FALSE)
 	{    	
 		if ( ! $ignore_cache AND
 			 isset($this->cache['database_version']))
@@ -762,7 +794,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	null|string		If preference does not exist, NULL is returned, else the value
 	 */
 	 
-	public function preference()
+	public function preference ()
 	{
 		$s = func_num_args();
 		
@@ -823,7 +855,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	bool	Whether the extensions are allowed
 	 */
 	 
-	public function extensions_allowed()
+	public function extensions_allowed ()
 	{	
 		return $this->check_yes(ee()->config->item('allow_extensions'));
 	}
@@ -844,7 +876,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	bool	Whether the comparison is TRUE or FALSE
 	 */
 	 
-	public function version_compare($v1, $operator, $v2)
+	public function version_compare ($v1, $operator, $v2)
 	{
 		// Allowed operators
 		if ( ! in_array($operator, array('>', '<', '>=', '<=', '==', '!=')))
@@ -915,7 +947,7 @@ class Addon_builder_fbc_code_pack {
 	 * @param	array
 	 * @return	void
 	 */
-	public function ee_cp_view($view)
+	public function ee_cp_view ($view)
 	{
 		//--------------------------------------------
 		// Build Crumbs!
@@ -1003,7 +1035,7 @@ class Addon_builder_fbc_code_pack {
 	 * @param	array
 	 * @return	void
 	 */
-	public function file_view($view, $modification_time = '')
+	public function file_view ($view, $modification_time = '')
 	{
 		//--------------------------------------------
 		// Auto-detect the Type
@@ -1122,7 +1154,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return		string
 	 */
 	 
-	public function view($view, $vars = array(), $return = FALSE, $path='')
+	public function view ($view, $vars = array(), $return = FALSE, $path='')
 	{	
 		//have to keep this for legacy footers	
 		global $DSP, $LANG, $PREFS;
@@ -1230,7 +1262,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	string
 	 */
 	 
-	public function fetch_stylesheet()
+	public function fetch_stylesheet ()
 	{	 	
 		// Change CSS on the click so it works like the hover until they unclick?  
 		
@@ -1268,7 +1300,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	null
 	 */
 	 
-	public function add_crumbs($array)
+	public function add_crumbs ($array)
 	{
 		if ( is_array($array))
 		{
@@ -1298,7 +1330,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	null
 	 */
 	
-	public function add_crumb($text, $link='')
+	public function add_crumb ($text, $link='')
 	{
 		$this->crumbs[] = ($link == '') ? array($text) : array($text, $link);
 	}
@@ -1314,19 +1346,20 @@ class Addon_builder_fbc_code_pack {
 	 * @return	null
 	 */
 	
-	public function build_crumbs()
+	public function build_crumbs ()
 	{
 		global $DSP, $OUT;
 		
 		if ( is_string($this->crumbs))
 		{
-			$DSP->title	= $this->crumbs;
+			if (APP_VER < 2.0) $DSP->title	= $this->crumbs;
+			
 			$this->cached_vars['page_crumb'] = $this->crumbs;
 			$this->cached_vars['page_title'] = $this->crumbs;
 			return;
 		}
 		
-		$DSP->crumb = '';
+		if (APP_VER < 2.0) $DSP->crumb = '';
 		$this->cached_vars['page_crumb'] = '';
 		$this->cached_vars['page_title'] = '';
 		
@@ -1389,7 +1422,7 @@ class Addon_builder_fbc_code_pack {
 		/**  1.x Breadcrumb View Variable
 		/** --------------------------------------------*/
 		
-		$DSP->crumb = $this->cached_vars['page_crumb'];
+		if (APP_VER < 2.0) $DSP->crumb = $this->cached_vars['page_crumb'];
 	}
 	/* END build_crumbs() */
 	
@@ -1405,7 +1438,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	string|array
 	 */
 	
-	function output($item)
+	function output ($item)
 	{
 		if (is_array($item))
 		{
@@ -1441,7 +1474,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	string|array
 	 */
 	
-	function cycle($items)
+	function cycle ($items)
 	{	
 		if ( ! is_array($items))
 		{
@@ -1478,7 +1511,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	array
 	 */
 	
-	function order_array($array, $key, $order = 'desc')
+	function order_array ($array, $key, $order = 'desc')
 	{	
 		// http://us2.php.net/manual/en/function.array-multisort.php
 	}
@@ -1495,7 +1528,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	array
 	 */
 	
-	public function column_exists( $column, $table, $cache = TRUE )
+	public function column_exists ( $column, $table, $cache = TRUE )
 	{		
 		if ($cache === TRUE AND isset($this->cache['column_exists'][$table][$column]))
 		{
@@ -1529,7 +1562,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	bool		Success or failure.  Data result stored in $this->remote_data
 	 */
 	
-	public function retrieve_remote_file($url, $cache_length = 24, $path='', $file='')
+	public function retrieve_remote_file ($url, $cache_length = 24, $path='', $file='')
 	{
 		global $FNS;
 	
@@ -1627,9 +1660,16 @@ class Addon_builder_fbc_code_pack {
 	 * @return	string
 	 */
 	
-	public function fetch_url($url, $post = array(), $username = FALSE, $password = FALSE)
+	public function fetch_url ($url, $post = array(), $username = FALSE, $password = FALSE)
 	{
 		$data = '';
+		
+		$user_agent = ini_get('user_agent');
+		
+		if ( empty($user_agent))
+		{
+			$user_agent = $this->class_name.'/1.0';
+		}
 		
 		/** --------------------------------------------
 		/**  file_get_contents()
@@ -1637,13 +1677,16 @@ class Addon_builder_fbc_code_pack {
 		
 		if ((bool) @ini_get('allow_url_fopen') !== FALSE && empty($post) && $username == FALSE)
 		{
-			if ($data = @file_get_contents($url))
+			$opts = array('http'	=> array('header' => "User-Agent:".$user_agent."\r\n"),
+						  'https'	=> array('header' => "User-Agent:".$user_agent."\r\n"));
+						  
+			$context = stream_context_create($opts);
+			
+			if ($data = @file_get_contents($url, FALSE, $context))
 			{
-				return trim($data);
+				return $data;
 			}
 		}
-		
-		$user_agent = ini_get('user_agent');
 		
 		/** --------------------------------------------
 		/**  cURL
@@ -1694,7 +1737,7 @@ class Addon_builder_fbc_code_pack {
 
 			if ($data !== FALSE)
 			{
-				return trim($data);
+				return $data;
 			}
 		}
 		
@@ -1773,7 +1816,7 @@ class Addon_builder_fbc_code_pack {
 			
 			while ( ! feof($fp))
 			{
-				$data .= trim(fgets($fp, 128));
+				$data .= fgets($fp, 128);
 			}
 			
 			error_reporting($old_level);
@@ -1797,7 +1840,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	bool
 	 */
 	
-	function write_file($file, $data)
+	function write_file ($file, $data)
 	{	
 		$temp_file = $file.'.tmp';
 		
@@ -1862,7 +1905,7 @@ class Addon_builder_fbc_code_pack {
 	 */
 	
 	
-	public function is_really_writable($file, $remove = FALSE)
+	public function is_really_writable ($file, $remove = FALSE)
 	{
 		// is_writable() returns TRUE on Windows servers
 		// when you really can't write to the file
@@ -1903,7 +1946,7 @@ class Addon_builder_fbc_code_pack {
 	 *	@return		bool
 	 */
 	
-	public function check_captcha()
+	public function check_captcha ()
 	{        
 		if ( ee()->config->item('captcha_require_members') == 'y'  OR 
 			(ee()->config->item('captcha_require_members') == 'n' AND 
@@ -1955,7 +1998,7 @@ class Addon_builder_fbc_code_pack {
 	 *	@return		bool
 	 */
 	
-	public function check_secure_forms()
+	public function check_secure_forms ()
 	{        
 		//	----------------------------------------
 		//	 Secure forms?
@@ -2026,7 +2069,7 @@ class Addon_builder_fbc_code_pack {
 	 * @return	string
 	 */
 	
-	function js_magic_checkboxes()
+	function js_magic_checkboxes ()
 	{
 		return <<< EOT
 <script type="text/javascript"> 
@@ -2055,7 +2098,7 @@ EOT;
 	 * @return	array
 	 */
 	
-	public function balance_uri( $uri )
+	public function balance_uri ( $uri )
 	{
 		$uri = '/'.trim($uri, '/').'/';
 		
@@ -2079,7 +2122,7 @@ EOT;
 	 * @return	array
 	 */    
 	
-	public function fetch_themes($path)
+	public function fetch_themes ($path)
 	{
 		$themes = array();
 		
@@ -2114,7 +2157,7 @@ EOT;
 	 * @param	string
 	 * @return	bool
 	 */	
-	public function allowed_group($which = '')
+	public function allowed_group ($which = '')
 	{
 		if ( is_object(ee()->cp))
 		{
@@ -2137,7 +2180,7 @@ EOT;
 	 * @param	string
 	 * @return	bool
 	 */	
-	public function show_error($which = '')
+	public function show_error ($which = '')
 	{
 		if ( function_exists('show_error'))
 		{
@@ -2162,20 +2205,14 @@ EOT;
 	 *	@return		bool
 	 */
 
-	function check_yes($which)
+	function check_yes ($which)
 	{
-		switch($which)
+		if (is_string($which))
 		{
-			case 'y'	:
-			case 'yes'	:
-			case 'on'	:
-			case 'true'	:
-				return TRUE;
-			break;
-			default		:
-				return FALSE;	
-			break;
+			$which = strtolower(trim($which));
 		}
+
+		return in_array($which, array('yes', 'y', 'true', 'on'), TRUE);
 	}
 	/* END check_yes() */
 	
@@ -2191,20 +2228,14 @@ EOT;
 	 *	@return		bool
 	 */
 
-	function check_no($which)
+	function check_no ($which)
 	{
-		switch($which)
+		if (is_string($which))
 		{
-			case 'n'	:
-			case 'no'	:
-			case 'off'	:
-			case 'false'	:
-				return TRUE;
-			break;
-			default		:
-				return FALSE;	
-			break;
+			$which = strtolower(trim($which));
 		}
+
+		return in_array($which, array('no', 'n', 'false', 'off'), TRUE);
 	}
 	/* END check_yes() */
 
@@ -2219,7 +2250,7 @@ EOT;
 	 *	@return		string
 	 */
 
-	public function json_encode($data)
+	public function json_encode ($data)
 	{
 		if (function_exists('json_encode'))
 		{
@@ -2228,7 +2259,7 @@ EOT;
 		
 		if ( ! class_exists('Services_JSON'))
 		{
-			require_once $this->aob_path . '/json.php';
+			require_once $this->aob_path . 'json.php';
 		}
 		
 		if ( ! is_object($this->json))
@@ -2252,7 +2283,7 @@ EOT;
 	 *	@return		object
 	 */
 
-	public function json_decode($data, $associative = FALSE)
+	public function json_decode ($data, $associative = FALSE)
 	{
 		if (function_exists('json_decode'))
 		{
@@ -2261,7 +2292,7 @@ EOT;
 		
 		if ( ! class_exists('Services_JSON'))
 		{
-			require_once $this->aob_path . '/json.php';
+			require_once $this->aob_path . 'json.php';
 		}
 		
 		if ( $associative == TRUE)
@@ -2310,7 +2341,7 @@ EOT;
 	 *	@return		array
 	 */
 
-	public function universal_pagination( $input_data )
+	public function universal_pagination ( $input_data )
 	{	
 		// -------------------------------------
 		//	prep input data
@@ -2362,7 +2393,11 @@ EOT;
 		$config['query_string_segment'] = $input_data['query_string_segment'];
 		$config['page_query_string']	= $use_query_strings;
 
-		if (APP_VER >= '2.3.0')
+		//need the prefix so our segments are like /segment/segment/P10
+		//instead of like /segment/segment/10
+		//this only works in EE 2.x because CI 1.x didn't have the prefix
+		//a hack later in the code makes this work for EE 1.x
+		if (REQ == 'PAGE')
 		{
 			$config['prefix'] = $config['query_string_segment'];
 		}
@@ -2547,8 +2582,11 @@ EOT;
 
 				$return_data['base_url'] = ee()->pagination->base_url;
 
-				//fix links if not query strings
-				if ( ! $use_query_strings )
+				//CI 1.x pagination does not have the
+				//prefix variable so we have to use this hack
+				//to turn /segment/segment/10/ into /segment/segment/P10/
+				//where P is $p
+				if (APP_VER < 2.0 AND ! $use_query_strings )
 				{					
 					$return_data['pagination_links']		= preg_replace( 
 						"/" . preg_quote($return_data['base_url'], '/') . 
@@ -2807,7 +2845,7 @@ EOT;
 			else
 			{
 				$match['1'] 	= preg_replace(
-					"/" . LD . $tag_friends_path . '.*?' . RD . "/", 	
+					"/" . LD . $tag_path . '.*?' . RD . "/", 	
 					$page_previous, 
 					$match['1']
 				);
@@ -2897,6 +2935,87 @@ EOT;
 
 
 	// --------------------------------------------------------------------
+
+	/**
+	 * pagination_prefix_replace
+	 * gets the tag group id from a number of places and sets it to the
+	 * instance default param
+	 *
+	 * @access 	public
+	 * @param 	string 	prefix for tag
+	 * @param 	string 	tagdata
+	 * @param 	bool 	reverse, are we removing the preixes we did before?
+	 * @return	string 	tag data with prefix changed out
+	 */
+
+	public function pagination_prefix_replace ($prefix = '', $tagdata = '', $reverse = FALSE)
+	{
+		if ($prefix == '')
+		{
+			return $tagdata;
+		}
+
+		$prefix = rtrim($prefix, '_') . '_'; 
+
+		//if there is nothing prefixed, we don't want to do anything datastardly
+		if ( ! $reverse AND
+			strpos($tagdata, LD.$prefix . 'paginate'.RD) === FALSE)
+		{
+			return $tagdata;	
+		} 
+
+		$hash 	= 'e2c518d61874f2d4a14bbfb9087a7c2d';
+		
+		$items 	= array(
+			'paginate',
+			'pagination_links',			
+			'current_page',				
+			'total_pages',				
+			'page_count',		
+			'previous_page',		
+			'next_page',	
+			'auto_path',	
+			'path'
+		);
+
+		$find 			= array();
+		$hash_replace 	= array();
+		$prefix_replace = array();
+
+		$length = count($items);
+
+		foreach ($items as $key => $item)
+		{
+			$nkey = $key + $length;
+
+			//this is terse, but it ensures that we 
+			//find any an all tag pairs if they occur
+			$find[$key] 			= LD . $item . RD;
+			$find[$nkey] 			= LD . T_SLASH .  $item . RD;		 
+			$hash_replace[$key] 	= LD . $hash . $item . RD;
+			$hash_replace[$nkey] 	= LD . T_SLASH .  $hash . $item . RD;
+			$prefix_replace[$key] 	= LD . $prefix . $item . RD;
+			$prefix_replace[$nkey] 	= LD . T_SLASH .  $prefix . $item . RD;
+		}
+
+		//prefix standard and replace prefixs
+		if ( ! $reverse)
+		{
+			$tagdata = str_replace($find, $hash_replace, $tagdata);
+			$tagdata = str_replace($prefix_replace, $find, $tagdata);
+		}
+		//we are on the return, fix the hashed ones
+		else
+		{
+			$tagdata = str_replace($hash_replace, $find, $tagdata);
+		}
+
+		return $tagdata;
+	}
+	//END pagination_prefix_replace
+
+	
+	// --------------------------------------------------------------------
 	
 	/**
 	 * Create XID
@@ -2907,7 +3026,7 @@ EOT;
 	 * @return	string
 	 */
 	 
-	public function create_xid()
+	public function create_xid ()
 	{
 		$sql 		= "INSERT INTO exp_security_hashes (date, ip_address, hash) VALUES";
 
@@ -2932,7 +3051,7 @@ EOT;
 	 * @param	string	sql to query
 	 * @return	object	query object
 	 */
-	public function cacheless_query($sql)
+	public function cacheless_query ($sql)
 	{
 		$reset = FALSE;
 		
@@ -2966,7 +3085,7 @@ EOT;
 	 * @return	string
 	 */
 	
-	public function _imploder($arguments)
+	public function _imploder ($arguments)
 	{
 		return md5(serialize($arguments));
 	}
@@ -2989,7 +3108,7 @@ EOT;
 	 * @return	mixed
 	 */
 	
-	public function prepare_keyed_result( $query, $key = '', $val = '' )
+	public function prepare_keyed_result ( $query, $key = '', $val = '' )
 	{
 		if ( ! is_object( $query )  OR $key == '' ) return FALSE;
 	
@@ -3021,7 +3140,7 @@ EOT;
 	 * @param	mixed	bool or array of items to check against
 	 * @return	mixed
 	 */
-	public function either_or_base($args = array(), $test = FALSE)
+	public function either_or_base ($args = array(), $test = FALSE)
 	{
 		foreach ($args as $arg)
 		{
@@ -3057,7 +3176,7 @@ EOT;
 	 * @param	mixed	any number of arguments consisting of variables to be returned false
 	 * @return	mixed
 	 */
-	public function either_or()
+	public function either_or ()
 	{
 		$args = func_get_args();
 
@@ -3075,7 +3194,7 @@ EOT;
 	 * @param	mixed	any number of arguments consisting of variables to be returned false
 	 * @return	mixed
 	 */
-	public function either_or_strict()
+	public function either_or_strict ()
 	{
 		$args = func_get_args();
 
@@ -3094,7 +3213,7 @@ EOT;
 	 * @return	(null)
 	 */
 	
-	public function add_right_link($text, $link)
+	public function add_right_link ($text, $link)
 	{	
 		//no funny business
 		if (REQ != 'CP') return;
@@ -3112,7 +3231,7 @@ EOT;
 	 * @return	(null)
 	 */
 	
-	public function build_right_links()
+	public function build_right_links ()
 	{	
 		//no funny business
 		if (REQ != 'CP' OR empty($this->right_links)) return;
@@ -3138,7 +3257,7 @@ EOT;
 	 *	@return		string
 	 */
 	
-	public function mfields()
+	public function mfields ()
 	{
 		return $this->mfields = $this->data->get_member_fields();
 	}
@@ -3155,7 +3274,7 @@ EOT;
 	 * @return	bool	Whether the extensions are allowed
 	 */
 	 
-	public function has_hooks()
+	public function has_hooks ()
 	{					
 		//is it there? is it array? is it empty? Such are life's unanswerable questions, until now.
 		if ( ! $this->updater() OR
@@ -3184,15 +3303,20 @@ EOT;
 	 * @return	obj		updater object for module
 	 */
 	 
-	public function updater()
+	public function updater ()
 	{					
 		if ( ! is_object($this->updater) )
 		{
-			$class 			= $this->class_name . '_updater_base';
-	
-			$update_file 	= $this->addon_path . 'upd.' . $this->lower_name . '.base.php';
+			//why not use the app_ver constant here?
+			//well its not available while in wizard
+
+			$ee1_class 		= $this->class_name . '_updater';
+			$ee2_class 		= $this->class_name . '_upd';
+			
+			$update_file 	= $this->addon_path . 'upd.' . $this->lower_name . '.php';
 		
-			if ( ! class_exists($class))
+			if ( ! class_exists($ee1_class) AND 
+				 ! class_exists($ee2_class))
 			{
 				if (is_file($update_file))
 				{
@@ -3206,6 +3330,8 @@ EOT;
 				}			 
 			}
 		
+			$class 			= class_exists($ee2_class) ? $ee2_class : $ee1_class;
+
 			$this->updater	= new $class();
 		}
 		
@@ -3225,7 +3351,7 @@ EOT;
 	 * @return	bool	Whether the extensions are enabled if need be
 	 */
 	 
-	public function extensions_enabled( $check_all_enabled = FALSE )
+	public function extensions_enabled ( $check_all_enabled = FALSE )
 	{		
 		if ( ! $this->has_hooks() ) return TRUE;
 		//we don't want to end on this as it would confuse users
@@ -3259,23 +3385,62 @@ EOT;
 	// --------------------------------------------------------------------
 
 	/**
-	 *	AJAX Request
+	 * AJAX Request
 	 *
-	 *	Tests via headers or GET/POST parameter whether the incoming request is AJAX in nature
-	 *	Useful when we want to change the output of a method.
+	 * Tests via headers or GET/POST parameter whether the incoming 
+	 * request is AJAX in nature
+	 * Useful when we want to change the output of a method.
 	 *
-	 *	@access		public
-	 *	@return		boolean
+	 * @access public
+	 * @return boolean
 	 */
 
-	public function is_ajax_request()
+	public function is_ajax_request ()
 	{
+		// --------------------------------------------
+        //  Headers indicate this is an AJAX Request
+        //	- They can disable via a parameter or GET/POST
+        //	- If not, TRUE
+        // --------------------------------------------
+	
 		if (ee()->input->server('HTTP_X_REQUESTED_WITH') === 'XMLHttpRequest')
 		{
+			// Check for parameter
+			if (isset(ee()->TMPL) AND is_object(ee()->TMPL))
+			{
+				if (ee()->TMPL->fetch_param('ajax_request') !== FALSE && 
+					$this->check_no(ee()->TMPL->fetch_param('ajax_request')))
+				{
+					return FALSE;
+				}
+			}
+		
+			// Check for GET/POST variable
+			if (ee()->input->get_post('ajax_request') !== FALSE && 
+				$this->check_no(ee()->input->get_post('ajax_request')))
+			{
+				return FALSE;
+			}
+			
+			// Not disabled
 			return TRUE;
 		}
-		
-		if ($this->check_yes(ee()->input->get_post('ajax_request')) == TRUE)
+	
+		// --------------------------------------------
+        //  Headers do NOT indicate it is an AJAX Request
+        //	- They can force with a parameter OR GET/POST variable
+        //	- If not, FALSE
+        // --------------------------------------------
+        
+		if (isset(ee()->TMPL) AND is_object(ee()->TMPL))
+		{
+			if ($this->check_yes(ee()->TMPL->fetch_param('ajax_request')))
+			{
+				return TRUE;
+			}
+		}
+      	
+      	if ($this->check_yes(ee()->input->get_post('ajax_request')))
 		{
 			return TRUE;
 		}
@@ -3290,15 +3455,18 @@ EOT;
 	/**
 	 * Send AJAX response
 	 *
-	 * Outputs and exit either an HTML string or a JSON array with the Profile disabled and correct
+	 * Outputs and exit either an HTML string or a 
+	 * JSON array with the Profile disabled and correct
 	 * headers sent.
 	 *
 	 * @access	public
 	 * @param	string|array	String is sent as HTML, Array is sent as JSON
 	 * @param	bool			Is this an error message?
+	 * @param 	bool 			bust cache for JSON?
 	 * @return	void
 	 */
-	public function send_ajax_response($msg, $error = FALSE)
+
+	public function send_ajax_response ($msg, $error = FALSE, $cache_bust = TRUE)
 	{
 		ee()->output->enable_profiler(FALSE);
 		
@@ -3307,19 +3475,36 @@ EOT;
 			//ee()->output->set_status_header(500);
 		}
 		
-		if (ee()->config->item('send_headers') == 'y')
+		$send_headers = (ee()->config->item('send_headers') == 'y');
+
+		//if this is an array or object, output json
+		if (is_array($msg) OR is_object($msg))
 		{
-			if (is_array($msg))
+			if ($send_headers)
 			{
-				@header('Content-Type: application/json');
+				if ($cache_bust)
+				{
+					//cache bust
+					@header('Cache-Control: no-cache, must-revalidate');
+					@header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');	
+				}
+
+				@header('Content-Type: application/json');	
 			}
-			else
-			{
-				@header('Content-Type: text/html; charset=UTF-8');	
-			}
+
+			echo $this->json_encode($msg);
 		}
-		
-		exit($this->json_encode($msg));
+		else
+		{
+			if ($send_headers)
+			{
+				@header('Content-Type: text/html; charset=UTF-8');
+			}
+
+			echo (string) $msg;	
+		}
+
+		exit();
 	}
 	//END send_ajax_response()
 	
@@ -3335,7 +3520,7 @@ EOT;
 	 *	@param		string|array
 	 *	@return		array  $vars - Contains two keys good/bad of, what else, good and bad emails
 	 */
-	public function validate_emails($emails)
+	public function validate_emails ($emails)
 	{
 		ee()->load->helper('email');
 		
@@ -3399,5 +3584,51 @@ EOT;
 		return ee()->functions->fetch_site_index(0, 0) . QUERY_MARKER . 'ACT=' . $action_id;
 	}
 	//END get_action_url
+
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * is_positive_intlike 
+	 * 
+	 * return
+	 * 
+	 * (is_positive_entlike would have taken forever)
+	 * 
+	 * @access 	public
+	 * @param 	mixed 	num 		number/int/string to check for numeric
+	 * @param 	int 	threshold 	lowest number acceptable (default 1)
+	 * @return  bool 	
+	 */
+
+	public function is_positive_intlike ($num, $threshold = 1)
+	{
+		//without is_numeric, bools return positive
+		//because preg_match auto converts to string
+		return (
+			is_numeric($num) AND 
+			preg_match("/^[0-9]+$/", $num) AND 
+			$num >= $threshold
+		);
+	}
+	//END is_positive_intlike
+
+
+	// --------------------------------------------------------------------
+
+	/**
+	 * get_post_or_zero
+	 *
+	 * @access	public
+	 * @param 	string 	name of GET/POST var to check
+	 * @return	int 	returns 0 if the get/post is not present or numeric or above 0	
+	 */
+
+	public function get_post_or_zero ($name)
+	{
+		$name = ee()->input->get_post($name);
+		return ($this->is_positive_intlike($name) ? $name : 0);
+	}
+	//END get_post_or_zero
 }
-/* END Addon_builder Class */
+// END Addon_builder Class

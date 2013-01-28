@@ -7,7 +7,7 @@
  * @author		Solspace DevTeam
  * @copyright	Copyright (c) 2008-2011, Solspace, Inc.
  * @link		http://solspace.com/docs/
- * @version		1.2.3
+ * @version		1.2.2
  */
  
  /**
@@ -336,7 +336,7 @@ language file for the extension, if required...
     //-------------------------------------
 
     function fetch_language_file($which = '', $object = FALSE)
-	{        
+    {        
         if ($which == '')
         {
             return;
@@ -371,9 +371,7 @@ language file for the extension, if required...
         if ( ! in_array($which, $this->cur_used))
         {
 			$options = array($this->addon_path.'language/'.$user_lang.'/lang.'.$which.EXT,
-							 $this->addon_path.'language/'.$user_lang.'/'.$which.'_lang'.EXT,
-							 $this->addon_path.'language/english/lang.'.$which.EXT,
-							 $this->addon_path.'language/english/'.$which.'_lang'.EXT);
+							 $this->addon_path.'language/english/lang.'.$which.EXT);
         					 
         	$success = FALSE;
         	
@@ -404,18 +402,6 @@ language file for the extension, if required...
             	}
             	
             	unset($L);
-            }
-            elseif (isset($lang))
-            {
-            	$this->language = array_merge($this->language, $lang);
-            	
-            	if (isset($GLOBALS['LANG']))
-            	{
-            		ee()->lang->language = array_merge(ee()->lang->language, $lang);
-            		ee()->lang->cur_used[] = $which;
-            	}
-            	
-            	unset($lang);
             }
         }
     }

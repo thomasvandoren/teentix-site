@@ -5,9 +5,9 @@
  *
  * @package 	Solspace:FBC
  * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2011, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
  * @link		http://www.solspace.com/docs/addon/c/Facebook_Connect/
- * @version		2.0.6
+ * @version		2.0.9
  * @filesource 	./system/expressionengine/third_party/fbc/
  */
  
@@ -23,7 +23,7 @@
  
 if ( ! defined('FBC_VERSION'))
 {
-	define('FBC_VERSION',	'2.0.6');
+	define('FBC_VERSION',	'2.0.9');
 	define('FBC_DOCS_URL',	'http://www.solspace.com/docs/addon/c/Facebook_Connect/');
 	define('FBC_ACTIONS',	'account_sync|activate_member|email_sync|facebook_post_authorize_callback|facebook_post_remove_callback|facebook_login|facebook_logout|register');
 	define('FBC_PREFERENCES',	'fbc_app_id|fbc_secret|fbc_eligible_member_groups|fbc_member_group|fbc_account_activation|fbc_passive_registration|fbc_confirm_account_sync');

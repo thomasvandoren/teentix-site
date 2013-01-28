@@ -13,7 +13,7 @@ $lang = $L = array(
 "Integrate Facebook with your website",
 
 "fbc_module_version" =>
-"Facebook Connect Module Version",
+"Facebook Connect",
 
 'modules' =>
 "Modules",

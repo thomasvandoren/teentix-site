@@ -5,9 +5,9 @@
  *
  * @package 	Solspace:FBC
  * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2011, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
  * @link		http://www.solspace.com/docs/addon/c/Facebook_Connect/
- * @version		2.0.6
+ * @version		2.0.9
  * @filesource 	./system/expressionengine/third_party/fbc/
  */
  
@@ -70,17 +70,17 @@ class Fbc_data extends Addon_builder_data_fbc
 <div id="fb-root"></div>' . NL .
 			'<script>' . NL .
 			'window.fbAsyncInit = function() {
-	FB._https = true; // Required because FB Javascript SDK tries to submit https to http
+	FB._https = (window.location.protocol == "https:"); // Required because FB Javascript SDK tries to submit https to http
 	FB.init({' . 
 			'appId:"' . ee()->config->item('fbc_app_id') . '", cookie:true, status:true, xfbml:true, oauth:true' . 
 			'});' . NL .
 		'};' . NL .
-			'(function() {
-	var e = document.createElement("script");
-	e.src = document.location.protocol + "' . str_replace( 'en_US', $language, FBC_LOADER_JS ) . '";
-	e.async = true;
-	document.getElementById("fb-root").appendChild(e);
-}());' . NL .
+			"(function(d){
+           var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+           js = d.createElement('script'); js.id = id; js.async = true;
+           js.src = \"//connect.facebook.net/en_US/all.js\";
+           d.getElementsByTagName('head')[0].appendChild(js);
+         }(document));" . NL .
 		'</script>' . NL;
 			
 		// --------------------------------------------

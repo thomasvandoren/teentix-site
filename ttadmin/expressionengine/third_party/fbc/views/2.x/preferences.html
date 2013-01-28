@@ -80,8 +80,8 @@
 				<tr class="even">
 					<td><?=ee()->lang->line('fbc_confirm_account_sync'); ?></td>
 					<td>
-<?php $checked_yes = ( $prefs['fbc_confirm_account_sync'] == 'y' ) ? 'checked="checked"': ''; $checked_no = ( $prefs['fbc_confirm_account_sync'] == 'n' ) ? 'checked="checked"': ''; ?>
-						<input type="radio" id="fbc_confirm_account_sync_y" name="fbc_confirm_account_sync" value="y" <?=$checked_yes?> />&nbsp;<label for="fbc_confirm_account_sync_y"><?=ee()->lang->line('yes')?></label>
+<?php $checked_yes = ( $prefs['fbc_confirm_account_sync'] == 'y' ) ? 'checked="checked"': ''; $checked_no = ( empty( $prefs['fbc_confirm_account_sync'] ) OR $prefs['fbc_confirm_account_sync'] == 'n' ) ? 'checked="checked"': ''; ?>
+						<input type="radio" id="fbc_confirm_account_sync_y" name="fbc_confirm_account_sync" value="y" <?=$checked_yes?> />&nbsp;<label for="fbc_confirm_account_sync_y"><?=ee()->lang->line('yes')?></label>&nbsp;
 						<input type="radio" id="fbc_confirm_account_sync_n" name="fbc_confirm_account_sync" value="n" <?=$checked_no?> />&nbsp;<label for="fbc_confirm_account_sync_n"><?=ee()->lang->line('no')?></label>
 					</td>
 					<td><?=ee()->lang->line('fbc_confirm_account_sync_exp'); ?></td>
@@ -91,8 +91,8 @@
 				<tr class="odd">
 					<td><?=ee()->lang->line('fbc_passive_registration'); ?></td>
 					<td>
-<?php $checked_yes = ( $prefs['fbc_passive_registration'] == 'y' ) ? 'checked="checked"': ''; $checked_no = ( $prefs['fbc_passive_registration'] == 'n' ) ? 'checked="checked"': ''; ?>
-						<input type="radio" id="fbc_passive_registration_y" name="fbc_passive_registration" value="y" <?=$checked_yes?> />&nbsp;<label for="fbc_passive_registration_y"><?=ee()->lang->line('yes')?></label>
+<?php $checked_yes = ( empty( $prefs['fbc_passive_registration'] ) OR $prefs['fbc_passive_registration'] == 'y' ) ? 'checked="checked"': ''; $checked_no = ( $prefs['fbc_passive_registration'] == 'n' ) ? 'checked="checked"': ''; ?>
+						<input type="radio" id="fbc_passive_registration_y" name="fbc_passive_registration" value="y" <?=$checked_yes?> />&nbsp;<label for="fbc_passive_registration_y"><?=ee()->lang->line('yes')?></label>&nbsp;
 						<input type="radio" id="fbc_passive_registration_n" name="fbc_passive_registration" value="n" <?=$checked_no?> />&nbsp;<label for="fbc_passive_registration_n"><?=ee()->lang->line('no')?></label>
 					</td>
 					<td><?=ee()->lang->line('fbc_passive_registration_exp'); ?></td>

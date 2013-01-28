@@ -5,9 +5,9 @@
  *
  * @package 	Solspace:FBC
  * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2011, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
  * @link		http://www.solspace.com/docs/addon/c/Facebook_Connect/
- * @version		2.0.6
+ * @version		2.0.9
  * @filesource 	./system/expressionengine/third_party/fbc/
  */
  
@@ -280,7 +280,7 @@ class Fbc_api extends Module_builder_fbc
 	 * @return	array
 	 */
     
-	function get_user_id()
+	function get_user_id($recheck = FALSE)
     {
  		// --------------------------------------------
         //  Prep Cache, Return if Set
@@ -289,7 +289,7 @@ class Fbc_api extends Module_builder_fbc
  		$cache_name = __FUNCTION__;
  		$cache_hash = $this->_imploder( func_get_args() );
  		
- 		if (isset($this->cached[$cache_name][$cache_hash]))
+ 		if ($recheck !== TRUE && isset($this->cached[$cache_name][$cache_hash]))
  		{
  			return $this->cached[$cache_name][$cache_hash];
  		}
@@ -309,6 +309,11 @@ class Fbc_api extends Module_builder_fbc
  		// --------------------------------------------
         //	Try and get Facebook user id
         // --------------------------------------------
+        
+        if ($recheck === TRUE)
+        {
+        	$this->FB->destroySession();
+        }
         
         try
         {

@@ -5,9 +5,9 @@
  *
  * @package 	Solspace:FBC
  * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2011, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
  * @link		http://www.solspace.com/docs/addon/c/Facebook_Connect/
- * @version		2.0.6
+ * @version		2.0.9
  * @filesource 	./system/expressionengine/third_party/fbc/
  */
  
@@ -32,8 +32,9 @@ class Fbc_extension_base extends Extension_builder_fbc
 	var $version		= '';
 	var $description	= '';
 	var $settings_exist	= 'n';
-	var $docs_url		= '';
-	
+	var $docs_url		= '';	
+
+	public $required_by 	= array('module');
 	// -------------------------------------------------------------
 
 	/**
@@ -175,7 +176,7 @@ class Fbc_extension_base extends Extension_builder_fbc
 			
 			$post['message']	= stripslashes( $data['comment'] );
 			$post['name']		= $query->row('title');
-			$post['caption']	= $query->row('title');
+			// $post['caption']	= $query->row('title');
 			$post['link']		= $_SERVER['HTTP_REFERER'];
 			
 			$row	= $query->row_array();
@@ -356,7 +357,7 @@ class Fbc_extension_base extends Extension_builder_fbc
 			
 			$post['message']	= stripslashes( $comment );
 			$post['name']		= $query->row('title');
-			$post['caption']	= $query->row('title');
+			//$post['caption']	= $query->row('title');
 			$post['link']		= $_SERVER['HTTP_REFERER'];
 			
 			$row	= $query->row_array();

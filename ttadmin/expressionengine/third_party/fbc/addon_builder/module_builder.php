@@ -252,6 +252,8 @@ class Module_builder_fbc extends Addon_builder_fbc
 	
 	public function install_module_sql()
 	{
+		$sql = array();
+	
 		// --------------------------------------------
         //  Our Install Queries
         // --------------------------------------------

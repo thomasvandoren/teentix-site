@@ -5,9 +5,9 @@
  *
  * @package 	Solspace:FBC
  * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2011, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
  * @link		http://www.solspace.com/docs/addon/c/Facebook_Connect/
- * @version		2.0.6
+ * @version		2.0.9
  * @filesource 	./system/expressionengine/third_party/fbc/
  */
  
@@ -163,7 +163,19 @@ class Fbc_actions extends Addon_builder_fbc
 		
 		if ( ! empty( $member_data['password'] ) )
 		{
-			$data['password']	= ee()->functions->hash( stripslashes( $member_data['password'] ) );
+			//$data['password']	= ee()->functions->hash( stripslashes( $member_data['password'] ) );
+			
+			if (APP_VER < '2.2.0')
+			{
+				$data['password'] = ee()->functions->hash(stripslashes( $member_data['password']));
+			}
+			else
+			{
+				$pass_data = ee()->auth->hash_password(stripslashes( $member_data['password']));
+				
+				$data['password']    	= $pass_data['password'];
+				$data['salt']    		= $pass_data['salt'];
+			}
 		}
         
         // --------------------------------------------
@@ -246,7 +258,7 @@ class Fbc_actions extends Addon_builder_fbc
 		
 		if ( ee()->extensions->active_hook('fbc_member_member_register') === TRUE )
 		{
-			$edata = ee()->extensions->universal_call('fbc_member_member_register');
+			$edata = ee()->extensions->universal_call('fbc_member_member_register', $data);
 			if (ee()->extensions->end_script === TRUE) return FALSE;
 		}
         
@@ -383,6 +395,7 @@ class Fbc_actions extends Addon_builder_fbc
 			$member	= ee()->db->get_where( 'members', array('member_id' => $member_data['member_id'] ) );
 			
 			$session 	= new Auth_result( $member->row() );
+			if (APP_VER >= '2.4.0') { $session->remember_me(60*60*24*182); }
 			$session->start_session();
 			
 			// Update system stats
@@ -419,37 +432,41 @@ class Fbc_actions extends Addon_builder_fbc
 			// --------------------------------------------
 			//  Update stats
 			// --------------------------------------------
-	
-			$cutoff		= ee()->localize->now - (15 * 60);
-	
-			ee()->db->query(
-				"DELETE FROM exp_online_users
-				WHERE site_id = '" . ee()->db->escape_str(ee()->config->item('site_id')) . "'
-				AND (( ip_address = '" . ee()->input->ip_address() . "'
-				AND member_id = '0' )
-				OR date < $cutoff )"
-			);
-	
-			$data = array(
-				'member_id'		=> ee()->session->userdata('member_id'),
-				'name'			=> (ee()->session->userdata['screen_name'] == '') ? ee()->session->userdata['username'] : ee()->session->userdata['screen_name'],
-				'ip_address'	=> ee()->input->ip_address(),
-				'date'			=> ee()->localize->now,
-				'anon'			=> 'n',
-				'site_id'		=> ee()->config->item('site_id')
-			);
-	
-			ee()->db->query(
-				ee()->db->update_string(
-					'exp_online_users',
-					$data,
-					array(
-						"ip_address" => ee()->input->ip_address(),
-						"member_id" => $data['member_id']
+			
+			if ($this->EE->config->item('enable_online_user_tracking') == 'y' &&
+				$this->EE->config->item('disable_all_tracking') == 'n')
+			{
+				$cutoff		= ee()->localize->now - (15 * 60);
+		
+				ee()->db->query(
+					"DELETE FROM exp_online_users
+					WHERE site_id = '" . ee()->db->escape_str(ee()->config->item('site_id')) . "'
+					AND (( ip_address = '" . ee()->input->ip_address() . "'
+					AND member_id = '0' )
+					OR date < $cutoff )"
+				);
+		
+				$data = array(
+					'member_id'		=> ee()->session->userdata('member_id'),
+					'name'			=> (ee()->session->userdata['screen_name'] == '') ? ee()->session->userdata['username'] : ee()->session->userdata['screen_name'],
+					'ip_address'	=> ee()->input->ip_address(),
+					'date'			=> ee()->localize->now,
+					'anon'			=> 'n',
+					'site_id'		=> ee()->config->item('site_id')
+				);
+		
+				ee()->db->query(
+					ee()->db->update_string(
+						'exp_online_users',
+						$data,
+						array(
+							"ip_address" => ee()->input->ip_address(),
+							"member_id" => $data['member_id']
+						)
 					)
-				)
-			);
-	
+				);
+			}
+			
 			// --------------------------------------------
 			//  Delete old password lockouts
 			// --------------------------------------------
