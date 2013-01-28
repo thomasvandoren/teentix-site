@@ -34,6 +34,7 @@
 			{exp:favorites:entries
 		    channel="calendar_events"
 		    favorites_count="yes"
+		    status="not closed"
 			}
 		    <h3 class="section-head sans">My Saved Events</h3>
 		    {if favorites_count > 0}
@@ -45,6 +46,9 @@
 		    channel="calendar_events"
 		    limit="3"
 		    paginate="bottom"
+		    status="not closed"
+		    orderby="favorites_date"
+		    sort="desc"
 			}
 			  <div class="row">
 			    {embed="account/.event-dates" event_id="{entry_id}" favorites_date="{favorites_date format='%n/%j/%y'}" favorites_time="{favorites_date format='%g:%i %a'}"}	
