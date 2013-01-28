@@ -1346,7 +1346,7 @@ ul.breadcrumbs li.current a {
 	font-style: italic;
 	color: #999;
 }
-.account #member_comments .comment .posted {
+.account #member-comments .comment .posted {
 	margin: 0px;
 	font-size: 12px;
 	font-style: italic;
@@ -1363,9 +1363,14 @@ ul.breadcrumbs li.current a {
   padding: 10px 20px;
   margin: 10px 0px;
 }
-.account.home #member_profile .row {
-	background: #f6f6f6;
-	padding: 20px 10px;
+.account #member-profile {
+	background: #eee;
+}
+.account #member-profile #member-avatar img {
+	margin: 10px;
+}
+.account #member-profile #member-screenname {
+	margin: 20px 0px 5px 0px;
 }
 .account .total-count {
 	font-weight: bold;
@@ -1399,6 +1404,40 @@ ul.breadcrumbs li.current a {
 	font-size: 12px;
 }
 
+
+/* -----------------------------------------
+   Facebook
+----------------------------------------- */
+.member #member-profile {
+	background: #eee;
+	margin-bottom: 30px;
+}
+.member #member-profile #member-avatar img {
+	margin: 10px;
+}
+.member #member-profile #member-screenname {
+	margin: 20px 0px 5px 0px;
+}
+.member .total-count {
+	font-weight: bold;
+}
+.member .entry {
+	margin-bottom: 0px;
+	padding-bottom: 10px;
+}
+.member .entry .posted {
+	margin-bottom: 0px;
+}
+.member #pagination {
+	border-top: 2px dotted #9BBCBD;
+	padding-top: 5px;
+}
+.member .view-all {
+	margin-bottom: 40px;
+}
+.member .comment .posted {
+	margin-bottom: 0px;
+}
 
 /* -----------------------------------------
    Facebook

@@ -2,7 +2,7 @@
  member_id="{segment_3}"
 } 
 {embed="inc/.header"
-  body_class="account home member"
+  body_class="member articles"
   title="{screen_name} Articles | Member"
 }
 {embed="inc/.nav"
@@ -22,9 +22,9 @@
     
     <div id="main" class="nine columns">
       
-			{embed="member/.member-profile"}
+			{embed="member/.member-profile" member_id="{segment_3}"}
 			
-			<div id="member_articles" class="section">
+			<div id="member-articles" class="section">
 				<h3 class="section-head sans">Articles</h3>	
 						
 			{exp:channel:entries 
@@ -34,7 +34,7 @@
 				limit="20"
 			}
 				{if absolute_count == "1"}
-				<p>Total articles: {absolute_results}</p>
+				<p class="total-count">Total articles: {absolute_results}</p>
 				{/if}
 				
 				<div class="entry">

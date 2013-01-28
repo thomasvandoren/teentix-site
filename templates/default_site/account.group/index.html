@@ -21,40 +21,16 @@
      
      {exp:user:stats} 
  
-			<div id="member_profile" class="section">
+			<div id="public-profile" class="section">
 				<div class="edit-profile"><a href="{path='member'}/{member_id}" class="button small">View Profile</a></div>
 				<h3 class="section-head sans">Your Public Profile </h3>
-				<div class="row">
-					<div class="three columns">
-				{exp:fbc:member_data 
-		    	profile_pic_width="150"
-		    	profile_pic_size="normal" 
-		    	member_id="{member_id}" 
-		    	profile_pic_linked="false"
-		    }
-					{if avatar_filename}
-				  	<img src="{avatar_url}{avatar_filename}" width="150" alt="{screen_name}" />
-				  {if:elseif fbc_facebook_profile_pic}
-			      {fbc_facebook_profile_pic}
-			    {if:else}
-			    	<img src="{site_url}images/avatars/default.jpg" alt="Upload a profile image" />
-			    {/if}
-				{/exp:fbc:member_data}
-					</div>
-					<div class="nine columns">
-						<h4 class="sans">{screen_name}</h4>
-						<p>
-							Location: {if location}{location}{if:else}<span class="no_info">No location saved</span>{/if}<br />
-							Website: {if url}<a href="{url}">{url}</a>{if:else}<span class="no_info">No website saved</span>{/if}<br />
-							Facebook: {if facebook}<a href="{facebook}">facebook</a>{if:else}<span class="no_info">No facebook saved</span>{/if}<br />
-							Twitter: {if twitter}<a href="{twitter}">twitter</a>{if:else}<span class="no_info">No twitter saved</span>{/if}<br />
-						</p>
-					</div>
-				</div>				
-			</div><!-- end #member_profile -->
+				
+				{embed="member/.member-profile" dynamic="no"}
+			
+			</div><!-- end #public-profile -->
 			{/exp:user:stats} 
 			
-			<div id="member_events" class="section">
+			<div id="member-events" class="section">
 			{exp:favorites:entries
 		    channel="calendar_events"
 		    favorites_count="yes"
@@ -80,10 +56,10 @@
         <p>You have not saved any events.</p>
         {/if}
 			{/exp:favorites:entries}
-			</div><!-- end #member_events -->
+			</div><!-- end #member-events -->
 			
 			{exp:user:stats} 			
-			<div id="member_info" class="section">
+			<div id="member-info" class="section">
 				<h3 class="section-head sans">Private Information</h3>
 				<div class="row">
 					<div class="four columns">
@@ -169,7 +145,7 @@
 						</p>
 					</div>
 				</div>
-			</div><!-- end #member_info -->
+			</div><!-- end #member-info -->
 			 
 			<!--<div id="members_stats" class="section">
 				<h3>Stats</h3>
@@ -189,9 +165,9 @@
 						<p>{last_visit format="%M %j, %Y %g:%i %a"}</p>
 					</div>
 				</div>		
-			</div><!-- end #member_stats -->
+			</div><!-- end #member-stats -->
 			
-			<div id="member_comments" class="section">
+			<div id="member-comments" class="section">
 				<h3 class="section-head sans">My Comments</h3>			
 			{if total_comments > 0}
 				<p class="total-count">You have {total_comments} total comments</p>
@@ -211,7 +187,7 @@
 			{if:else}
 				<p>You have not left any comments</p>
 			{/if}
-			</div><!-- end #member_comments -->
+			</div><!-- end #member-comments -->
 			{/exp:user:stats}   
 			
 		</div>			   

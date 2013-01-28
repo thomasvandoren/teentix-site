@@ -5,7 +5,7 @@
  member_id="{segment_2}"
 } 
 {embed="inc/.header"
-  body_class="account home member"
+  body_class="member"
   title="{screen_name} | Member"
 }
 {embed="inc/.nav"
@@ -22,7 +22,7 @@
     
     <div id="main" class="nine columns">
       
-			{embed="member/.member-profile"}
+			{embed="member/.member-profile" member_id="{segment_2}"}
 						
 		{if group_id != "5"}		
 			{embed="member/.member-articles"}

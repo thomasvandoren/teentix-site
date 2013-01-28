@@ -1,13 +1,11 @@
 {exp:user:stats
-	{if segment_3 == ""}
-  	member_id="{segment_2}" 
-  {if:else}
-  	member_id="{segment_3}" 
-  {/if}
+	member_id="{embed:member_id}"
+	dynamic="{embed:dynamic}" 
 } 
-<div id="member_profile" class="section">
+<div id="member-profile">
 	<div class="row">
-		<div class="three columns">
+		<div id="member-avatar" class="three columns">
+		
   {exp:fbc:member_data 
   	profile_pic_width="150"
   	profile_pic_size="normal" 
@@ -27,15 +25,33 @@
     {/if}
 	{/exp:fbc:member_data}
 		</div>
-		<div class="nine columns">
-			<h4 class="sans">{screen_name}</h4>
-			<p>
-				{if location}Location: {location}<br />{/if}
-				{if url}Website: <a href="{url}" target="_blank">{url}</a><br />{/if}
-				{if facebook}Facebook: <a href="{facebook}" target="_blank">facebook</a><br />{/if}
-				{if twitter}Twitter: <a href="{twitter}" target="_blank">twitter</a><br />{/if}
-			</p>
+		
+		<div id="member-data" class="nine columns">
+			<h4 id="member-screenname" class="sans">{screen_name}</h4>
+			<div class="row">
+				<div class="six columns">
+					<p>
+				{if group_id =="1"}
+					TeenTix Administrator
+				{/if}
+				{if groupd_id == "6" || group_id == "7"}
+					TeenTix Contributor
+				{/if}
+				{if groupd_id == "5"}
+					TeenTix Member
+				{/if}
+					<br />Member since {join_date format="%M %j, %Y"}</p>
+				</div>
+				<div class="six columns">
+					<p>
+						{if location}Location: {location}<br />{/if}
+						{if url}Website: <a href="{url}" target="_blank">{url}</a><br />{/if}
+						{if facebook}Facebook: <a href="{facebook}" target="_blank">facebook</a><br />{/if}
+						{if twitter}Twitter: <a href="{twitter}" target="_blank">twitter</a><br />{/if}
+					</p>
+				</div>
+			</div>
 		</div>
 	</div>				
-</div><!-- end #member_profile -->
+</div><!-- end #member-profile -->
 {/exp:user:stats} 
