@@ -16,15 +16,15 @@
     	
     {exp:channel:entries channel="locations" limit="200" orderby="title" sort="asc"}
     	<div class="location row">
-    		<div class="four columns branding">
+    		<div class="three columns branding">
     			<a href="{url_title_path='locations'}">
-    			{exp:ce_img:pair src="{location_logo}" width="220" height="150" filter="grayscale"}
+    			{exp:ce_img:pair src="{location_logo}" width="150" height="100" filter="grayscale"}
 					<img src="{made}" alt="" width="{width}" height="{height}" />
 					{/exp:ce_img:pair}
     			</a>
     		</div>
     		
-    		<div class="six columns address">
+    		<div class="seven columns address">
     			<h3 class="location-name"><a href="{url_title_path='locations'}">{title}</a></h3>
     			<p class="location-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}</a></p>
     			<p class="location-address">{location_address}</p>
