@@ -11,25 +11,18 @@
 
   <div class="row">
     <div class="twelve columns">
-    {if segment_3 == "welcome"}
-    	<h1 id="page-name">Your account is now active.</h1>
-    {if:else}
-      <h1 id="page-name">Hi, sign in.</h1>
-    {/if}
+      <h1 id="page-name">{account_login_title}</h1>
     </div>
   </div>
 
   <div class="row">  
     <div id="sidebar" class="four columns">
-      <h4 class="sans">Log into your TeenTix.com account.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
-    
-      <p><a href="{path='account/password'}">Forgot your password?</a></p>
-      <p><a href="{path='account/new'}">Create a new account</a></p>
+      <h4 class="sans">{account_login_kicker}</h4>
+      {account_login_content}
     </div>
     
     <div id="main" class="eight columns">
-    	<h4 id="fb-register" class="sans">{embed="inc/.fbc_login" size="large"} or </h4>
+    	<h4 id="fb-register" class="sans">{embed="inc/.fbc_login" size="large"} or login with your email address.</h4>
     {exp:member:login_form return="account" id="login-form"}
       <fieldset>
         

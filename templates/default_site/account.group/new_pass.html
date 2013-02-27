@@ -21,7 +21,8 @@
     
     <div id="main" class="nine columns">
     	<h3 class="section-head sans">Request a new TeenTix pass</h3> 
-    	<p><strong>Please make sure your contact information is accurate.<br /><a href="{path='account/edit'}#member_info">Edit my contact info &raquo;</a></strong></p>
+    	{account_replacepass_instructions}
+    	<p><a href="{path='account/edit'}#member_info">Edit my contact info &raquo;</a></strong></p>
 		{exp:user:stats} 				
 			 
 			<div id="private_info">
