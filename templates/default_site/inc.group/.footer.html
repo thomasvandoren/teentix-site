@@ -50,23 +50,17 @@
 	          	<div class="six columns">
 		          	<div id="footer-social">
 			        		<h5 class="section-head sans">Social Links</h5>
-				        	<ul class="">
-				            <li><a href="#">Facebook</a></li>
-				            <li><a href="#">Twitter</a></li>
-				            <li><a href="#">Flickr</a></li>
-				            <li><a href="#">Tumblr</a></li>
-				            <li><a href="#">YouTube</a></li>
+				        	<ul class="social-links">
+				        	{exp:low_variables:pair var="footer_social_links"}
+									  <li><a href="{url}" target="_blank">{link}</a></li>
+									{/exp:low_variables:pair}
 				          </ul>
 			        	</div>
 	          	</div>
 	          	<div class="six columns">
 		          	<div id="footer-contact">
 			        		<h5 class="section-head sans">Contact Info</h5>
-			        		<p>
-										{encode="info@teentix.org"}<br />
-										206.233.3959<br />
-										<a href="{site_url}contact">Contact Us</a>
-									</p>
+			        		{footer_contact}
 			        	</div>
 	          	</div>
 	          	

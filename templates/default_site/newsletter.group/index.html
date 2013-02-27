@@ -1,3 +1,4 @@
+{exp:channel:entries limit="1"}
 {embed="inc/.header"
   body_class="application"
 }
@@ -5,13 +6,14 @@
   
   <div class="row">
     <div class="twelve columns">
-      <h1 id="page-name">TeenTix Newsletter</h1>
+    {edit_this}
+      <h1 id="page-name">{title}</h1>
     </div>
  
     <div class="four columns">
-      <h4 class="sans">Sign up for the weekly newsletter.</h4>
-      <p>Bacon ipsum dolor sit amet nulla ham qui sint exercitation eiusmod commodo, chuck duis velit. Aute in reprehenderit, dolore aliqua non est magna in labore pig pork biltong. Eiusmod swine spare ribs reprehenderit culpa. Boudin aliqua adipisicing rump corned beef.</p>
+      {general_body}
     </div>
+{/exp:channel:entries} 
     
     <div class="eight columns">
     {exp:safecracker 
@@ -48,6 +50,6 @@
     </div>
     
   </div>
-  
+
   
 {embed="inc/.footer"}
