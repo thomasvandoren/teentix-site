@@ -492,6 +492,10 @@ ul.breadcrumbs li.current a {
 	top: -10px;
 	right: 10px;
 }
+#main-content li {
+	list-style-position: outside;
+	margin: 5px 15px;
+}
 
 
 /* social */
@@ -1321,6 +1325,7 @@ ul.breadcrumbs li.current a {
 	clear: both;
 	padding: 10px 23px;
 }
+
 
 
 
