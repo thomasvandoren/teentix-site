@@ -1,19 +1,18 @@
-{exp:channel:entries limit="1"}
 {embed="inc/.header"
   body_class="application"
+  title="{newsletter_form_title}"
 }
 {embed="inc/.nav"} 
   
   <div class="row">
     <div class="twelve columns">
-    {edit_this}
-      <h1 id="page-name">{title}</h1>
+      <h1 id="page-name">{newsletter_form_title}</h1>
     </div>
  
     <div class="four columns">
-      {general_body}
+    	<h4>{newsletter_form_kicker}</h4>
+      {newsletter_form_content}
     </div>
-{/exp:channel:entries} 
     
     <div class="eight columns">
     {exp:safecracker 

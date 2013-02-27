@@ -1,20 +1,18 @@
-{exp:channel:entries limit="1" dynamic="no"}
-
 {embed="inc/.header"
   body_class="application"
 }
 {embed="inc/.nav"
-	end_title="Newsletter Confirmation"
+	end_title="Confirmation"
 } 
   
   <div class="row">
     <div class="twelve columns">
-      <h1 id="page-name">{title}</h1>
+      <h1 id="page-name">{newsletter_confirm_title}</h1>
     </div> 
     
     <div class="eight columns">
-      
-      {general_body}
+      <h4>{newsletter_confirm_kicker}</h4>
+      {newsletter_confirm_content}
 
     </div>
     
@@ -23,7 +21,6 @@
     </div>
     
   </div>
-{/exp:channel:entries}
   
 {exp:channel:entries 
   entry_id="{segment_3}"  

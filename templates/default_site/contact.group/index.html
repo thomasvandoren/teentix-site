@@ -1,0 +1,49 @@
+{embed="inc/.header"
+	title="{contact_form_title}"
+	body_class="contact single"
+}
+
+{embed="inc/.nav"} 
+  <div class="row">
+  	<div class="twelve columns">
+  		<h1 id="page-name">{contact_form_title}</h1>
+  	</div>
+  </div>
+    
+  <div class="row">
+  	<div id="sidebar" class="four columns">
+  		<h4>{contact_form_kicker}</h4>
+      {contact_form_content}
+    </div>
+    
+    <div id="main" class="eight columns">
+    	<div class="entry">
+				
+				
+    	{exp:freeform:form
+		    form_name="contact"
+		    form:id ="contact-form"
+		    return="contact/thanks"
+			}
+				<fieldset>
+    			<legend>Get in touch! <span class="notice-required">Required information*</span></legend>
+    			<label class="require">Your Name*</label>
+    			<input type="text" name="name" class="required eight" />
+    			<label class="require">Your Email*</label>
+    			<input type="text" name="email" class="required eight" />
+    			<label class="require">Your Message* (Maximum 1000 characters)</label>
+    			<textarea name="message" class="message required"></textarea>
+    			<input type="submit" value="submit" class="button" />
+    		</fieldset>
+			 			 
+			{/exp:freeform:form}
+    	</div>
+    
+    </div>
+
+  	
+    
+	</div>
+
+
+{embed="inc/.footer"}
