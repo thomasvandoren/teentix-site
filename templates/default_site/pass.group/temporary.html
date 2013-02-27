@@ -4,7 +4,7 @@
 	status="not closed"
 } 
 
-	{exp:calendar:date base_date="{freeform:entry_date format='%Y-%m-%d'}" output_date="2 weeks" } 
+	{exp:calendar:date base_date="{freeform:entry_date format='%Y-%m-%d'}" output_date="1 month" } 
 		{embed="pass/.pass" name="{freeform:field:name}" issue_date="{freeform:entry_date format='%M %j, %Y'}" expiration_date="{date format='%M %j, %Y'}"}			
 	{/exp:calendar:date}
 	 
