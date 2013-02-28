@@ -11,11 +11,51 @@
       <h1 id="page-name">Locations</h1>
       <div class="page-description">{description_locations}</div>
     </div>
-  
+  	
+  	<div class="twelve columns">
+  		<div id="location-sort" class="row">
+	  		<div class="seven columns push-three">
+	  			<h5><a href="{path='locations'}" {if segment_2 == ""}class="current"{/if}>Venue Name</a></h5>
+	  		</div>
+	  		<div class="two columns">
+	  			<h5><a href="{path='locations/neighborhood'}" {if segment_2 == "neighborhood"}class="current"{/if}>Neighborhood</a></h5>
+	  		</div>
+	  	</div>
+  	</div>
     <div class="twelve columns">
-    	
+    
+  {if segment_2==""}	
     {exp:channel:entries channel="locations" limit="200" orderby="title" sort="asc"}
     	<div class="location row">
+    		<div class="three columns branding">
+    			<a href="{url_title_path='locations'}">
+    			{exp:ce_img:pair src="{location_logo}" width="150" height="100" filter="grayscale"}
+					<img src="{made}" alt="" width="{width}" height="{height}" />
+					{/exp:ce_img:pair}
+    			</a>
+    		</div>    		
+    		<div class="seven columns address">
+    			<h3 class="location-name"><a href="{url_title_path='locations'}">{title}</a></h3>
+    			<p class="location-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}</a></p>
+    			<p class="location-address">{location_address}</p>
+    			<p class="location-phone">{location_phone}</p>
+    		</div>
+    		<div class="two columns neighborhood">
+    			<p><strong>
+    			{categories}{category_name}
+    			{/categories}
+    			</strong>
+    			</p>
+    		</div>
+    	</div>
+		{/exp:channel:entries}
+  {/if} 
+  
+  {if segment_2=="neighborhood"}	
+  	{exp:channel:category_archive channel="locations" limit="200" style="linear"}	
+	  	{categories}
+	  	{exp:channel:entries channel="locations" dynamic="no" category="{category_id}"}
+	  	<div class="location row">
     		<div class="three columns branding">
     			<a href="{url_title_path='locations'}">
     			{exp:ce_img:pair src="{location_logo}" width="150" height="100" filter="grayscale"}
@@ -31,16 +71,13 @@
     			<p class="location-phone">{location_phone}</p>
     		</div>
     		<div class="two columns neighborhood">
-    			<p>
-    			{categories}{category_name}
-    			{/categories}
-    			</p>
+    			<p><strong>{category_name}</strong></p>
     		</div>
-    	
     	</div>
-    	
-		{/exp:channel:entries}
-      	
+	  	{/exp:channel:entries}    
+			{/categories}
+		{/exp:channel:category_archive}
+  {/if}  	
     </div>
     
   </div>

@@ -1172,6 +1172,25 @@ ul.breadcrumbs li.current a {
 /* -----------------------------------------
    Locations
 ----------------------------------------- */
+.locations #location-sort {
+	border-top: 1px solid #ccc;
+	margin-top: 10px;
+}
+.locations #location-sort h5 {
+	margin: 10px 0px;
+	font-size: 14px;
+}
+.locations #location-sort a {
+	background: url(images/site/arrow-d-gray.png) no-repeat right center;
+	padding-right: 15px;
+}
+.locations #location-sort a:hover {
+	color: #86B239;
+}
+.locations #location-sort a.current {
+	background: url(images/site/arrow-d-black.png) no-repeat right center;
+	color: #000;
+}
 .locations .row.location {
 	border-top: 1px solid #ccc;
 	padding: 20px 0px;
