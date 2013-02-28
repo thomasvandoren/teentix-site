@@ -52,7 +52,14 @@
 		</div>
 		<div id="sidebar" class="four columns">
 		{edit_this}
-		&nbsp;
+			<div id="org-social" class="social-icons">
+			{if org_facebook}
+  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_facebook}{/exp:parse_url}"><img src="{site_url}css/images/social/fb_1.png" alt="" title="{org_facebook}" /></a>
+  		{/if}
+  		{if org_twitter}
+  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_twitter}{/exp:parse_url}"><img src="{site_url}css/images/social/twitter_1.png" alt="" title="{org_twitter}" /></a>
+  		{/if}
+  		</div>
 		</div>
     
   </div>

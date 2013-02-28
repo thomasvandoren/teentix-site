@@ -179,6 +179,15 @@ input.submit:hover {
 	margin-top: 6px;
 }
 
+
+/* social icons */
+.social-icons a {
+	opacity: .8;
+}
+.social-icons a:hover {
+	opacity: 1;
+}
+
 /* -----------------------------------------
    Utility Nav
 ----------------------------------------- */
@@ -1090,6 +1099,7 @@ ul.breadcrumbs li.current a {
 }
 #org-grid > li { 
 	padding: 10px; 
+	margin: 0px;
 	border-top: 1px solid #ccc;
 }
 #org-grid .org-logo {
@@ -1144,6 +1154,9 @@ ul.breadcrumbs li.current a {
 .orgs #sidebar li {
 	list-style: none;
 }
+.orgs #org-social {
+	margin-bottom: 10px;
+}
 
 
 
@@ -1176,6 +1189,9 @@ ul.breadcrumbs li.current a {
 }
 .locations #sidebar li {
 	list-style: none;
+}
+.locations #location-social {
+	margin-bottom: 10px;
 }
 
 
@@ -1411,7 +1427,7 @@ ul.breadcrumbs li.current a {
 
 
 /* -----------------------------------------
-   Facebook
+   Member Profile
 ----------------------------------------- */
 .member #member-profile {
 	background: #eee;
@@ -1422,6 +1438,13 @@ ul.breadcrumbs li.current a {
 }
 .member #member-profile #member-screenname {
 	margin: 20px 0px 5px 0px;
+}
+.member #member-profile .social-icons {
+	margin-top: -10px;
+}
+.member #member-profile .social-icons img {
+	max-width: 24px;
+	height: auto;
 }
 .member .total-count {
 	font-weight: bold;
@@ -1443,6 +1466,8 @@ ul.breadcrumbs li.current a {
 .member .comment .posted {
 	margin-bottom: 0px;
 }
+
+
 
 /* -----------------------------------------
    Facebook

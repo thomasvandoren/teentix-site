@@ -45,12 +45,33 @@
 				<div class="six columns">
 					<p>
 						{if location}Location: {location}<br />{/if}
-						{if url}Website: <a href="{url}" target="_blank">{url}</a><br />{/if}
-						{if facebook}Facebook: <a href="{facebook}" target="_blank">facebook</a><br />{/if}
-						{if twitter}Twitter: <a href="{twitter}" target="_blank">twitter</a><br />{/if}
+					{if url}
+		  			Website: <a href="http://{exp:parse_url parts="host|path|query|fragment"}{url}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{url}{/exp:parse_url}</a>
+		  		{/if}
 					</p>
+					<div class="social-icons">
+					{if facebook}
+		  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{facebook}{/exp:parse_url}"><img src="{site_url}css/images/social/fb_1.png" alt="" title="{facebook}" /></a>
+		  		{/if}
+		  		{if twitter}
+		  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{twitter}{/exp:parse_url}"><img src="{site_url}css/images/social/twitter_1.png" alt="" title="{twitter}" /></a>
+		  		{/if}
+		  		{if tumblr}
+		  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{tumblr}{/exp:parse_url}"><img src="{site_url}css/images/social/tumblr.png" alt="" title="{tumblr}" /></a>
+		  		{/if}
+		  		{if pinterest}
+		  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{pinterest}{/exp:parse_url}"><img src="{site_url}css/images/social/pinterest.png" alt="" title="{pinterest}" /></a>
+		  		{/if}
+					</div>
 				</div>
 			</div>
+			{if bio}
+			<div class="row">
+				<div class="twelve columns">
+					{bio}
+				</div>
+			</div>
+			{/if}
 		</div>
 	</div>				
 </div><!-- end #member-profile -->
