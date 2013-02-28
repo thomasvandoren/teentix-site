@@ -1231,7 +1231,7 @@ ul.breadcrumbs li.current a {
 }
 .blog #page-subhead p {
 	color: #87AEB0;
-	font-size: 26px;
+	font-size: 24px;
 	line-height: 1.2em;
 	margin-bottom: 5px;
 }
@@ -1295,6 +1295,9 @@ ul.breadcrumbs li.current a {
 }
 .blog #become-reviewer a:hover {
 	background-position: right top;
+}
+.blog #blog-search {
+	margin-top: 30px;
 }
 .blog .draft-status {
 	font-size: 24px;

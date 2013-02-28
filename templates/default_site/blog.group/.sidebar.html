@@ -2,6 +2,26 @@
 	<a href="/write-for-our-blog">Become a Teen Reviewer</a>
 </div>
 
+<div id="blog-search" class="row collapse">
+	{exp:search:simple_form 
+		name="utility_search"
+		no_result_page="search/noresults"
+		result_page="search/results"
+		search_in="everywhere"
+		channel="blog"
+		status="open|featured"
+		results="20"
+	}
+	<div class="ten mobile-three columns">
+    <input type="text" name="keywords" id="keywords" value="" placeholder="Search TeenTix Blog" size="18" maxlength="100">
+  </div>
+  <div class="two mobile-one columns">
+    <input type="submit" value="GO" class="submit button  expand postfix">
+  </div>
+	{/exp:search:simple_form}
+	
+</div>
+
 <div id="blog-categories">
 	<h4 class="section-head sans">Articles</h4>
 	{exp:channel:categories channel="blog" category_group="4"}
