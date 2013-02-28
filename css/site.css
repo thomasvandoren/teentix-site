@@ -1141,6 +1141,7 @@ ul.breadcrumbs li.current a {
 }
 .orgs.single #org-logo {
 	margin-bottom: 10px;
+	text-align: right;
 }
 .orgs.single #org-contact p {
 	margin-bottom: 0px;
@@ -1184,6 +1185,9 @@ ul.breadcrumbs li.current a {
 }
 .locations .location .branding {
 	text-align: center;
+}
+.locations .location-logo {
+	text-align: right;
 }
 .locations.single #main {
 	padding-right: 20px;

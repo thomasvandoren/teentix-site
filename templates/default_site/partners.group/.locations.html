@@ -1,6 +1,8 @@
 <div id="org-locations">
 	<h4 class="section-head sans">Event Locations</h4>
+	<ul>
 {exp:channel:entries entry_id="{embed:entry_id}" dynamic="no"}
-	<p><a href="{url_title_path='locations'}">{title}</a></p>
+	<li><a href="{url_title_path='locations'}">{title}</a></li>
 {/exp:channel:entries}
+	</ul>
 </div>
