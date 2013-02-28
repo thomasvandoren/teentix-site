@@ -73,9 +73,11 @@
 		  		</div>
 		  		<ul id="event-slideshow-pager">
 			  	{event_images}
+			  	{if total_results > 1}
 		  		{exp:ce_img:pair src="{image}" width="100" height="100" crop="yes"}
 						<li><a href="#"><img src="{made}" alt="" width="{width}" height="{height}" /></a></li>
 					{/exp:ce_img:pair}
+					{/if}
 			  	{/event_images}
 			  	</ul>
 			  </div>

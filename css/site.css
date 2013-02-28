@@ -183,10 +183,12 @@ input.submit:hover {
 /* social icons */
 .social-icons a {
 	opacity: .8;
+	margin-right: 5px;
 }
 .social-icons a:hover {
 	opacity: 1;
 }
+
 
 /* -----------------------------------------
    Utility Nav
@@ -1016,6 +1018,7 @@ ul.breadcrumbs li.current a {
 .event #event-slideshow-pager li {
 	display: inline;
 	list-style: none;
+	margin: 0px;
 	margin-right: 10px;
 }
 .event #sidebar {
@@ -1160,7 +1163,7 @@ ul.breadcrumbs li.current a {
 	margin: 5px 0px;
 }
 .orgs #org-social {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 
@@ -1203,7 +1206,7 @@ ul.breadcrumbs li.current a {
 	margin: 5px 0px;
 }
 .locations #location-social {
-	margin-bottom: 10px;
+	margin-bottom: 20px;
 }
 
 
