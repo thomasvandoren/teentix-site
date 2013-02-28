@@ -4,15 +4,14 @@
 	status="not closed"
 	require_entry="yes"
 }
+{embed="inc/.header"
+	title="{title} | Blog"
+	body_class="blog single"
+}
 
-	{embed="inc/.header"
-		title="{title} | Blog"
-		body_class="blog single"
-	}
-	
-	{embed="inc/.nav"
-		end_title="{title}"
-	} 
+{embed="inc/.nav"
+	end_title="{title}"
+} 
     
   <div class="row">
   	
@@ -35,43 +34,37 @@
 				<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
     	{/if}
-    		{blog_body}
-    	</div>
-	
-	{if no_results}
-		{redirect="blog"}
-	{/if}
-	
-	{if status=="Draft"}
-		{if logged_out || logged_in_group_id=="5"}
-			{redirect="blog"}
-		{/if}
-	{/if}  	
-
-{/exp:channel:entries}
     	
-    	<div class="entry-nav">
-	    {exp:channel:next_entry channel="blog" status="not closed|draft"}
-		    <p class="entry-next">Next entry: <a href="{path='blog'}">{title}</a></p>
-			{/exp:channel:next_entry}
-	
-			{exp:channel:prev_entry channel="blog" status="not closed|draft"}
-		    <p class="entry-prev">Previous entry: <a href="{path='blog'}">{title}</a></p>
-			{/exp:channel:prev_entry}
-			</div>
+    		{blog_body}
+    		
+    	</div>
+	  	
+  	{if status != "Draft"}
+    	{embed="blog/.single_entrynav"}
 			
-			{embed="inc/.comments" channel="blog" comment_total="{exp:channel:entries channel='blog' limit='1' status='not closed'}{comment_total}{/exp:channel:entries}" }
+			{embed="inc/.comments" channel="blog" comment_total="{comment_total}" }
+		{/if}
 			
     </div>
 
   	<div id="sidebar" class="four columns">
-  	{exp:channel:entries channel="blog" limit="1" status="not closed"}
 			{edit_this}
-		{/exp:channel:entries}
 			{embed="inc/.social-buttons"}
       {embed="blog/.sidebar"}
     </div>
   
   </div>
+	
+	{if status=="Draft"}
+		{if logged_out || logged_in_group_id=="5"}
+			{redirect="blog"}
+		{/if}
+	{/if} 
+	
+	{if no_results}
+		{redirect="blog"}
+	{/if}
+	
+{/exp:channel:entries}
 
 {embed="inc/.footer" include_login="true"}
