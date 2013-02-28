@@ -685,6 +685,9 @@ ul.breadcrumbs li.current a {
 	border-radius: 15px;
 	margin-bottom: 20px;
 	border-radius: 15px;
+	overflow: hidden;
+	width: 1000px;
+	height: 360px;
 }
 .home #main-featured .slide {
 	overflow: hidden;
@@ -1186,6 +1189,12 @@ ul.breadcrumbs li.current a {
 .locations.single #main p {
 	font-size: 18px;
 }
+.locations.single #org-contact p {
+	margin-bottom: 0px;
+}
+.locations.single #location-map {
+	margin: 20px 0px;
+}
 .locations.single #sidebar {
 	padding-left: 20px;
 }
@@ -1229,6 +1238,15 @@ ul.breadcrumbs li.current a {
 .blog .entry-date {
 	margin-bottom: 20px;
 	font-size: 18px;
+}
+.blog .entry-main-image {
+	text-align: center;
+	margin-bottom: 15px;
+}
+.blog .entry-image-caption {
+	margin-bottom: 5px;
+	font-style: italic;
+	font-size: 13px;
 }
 .blog #pagination {
 	border-top: 2px dotted #9BBCBD;

@@ -14,34 +14,38 @@
   		
   		<div class="row">
   			
-  			<div class="seven columns">
+  			<div class="eight columns">
 	  			<h1 id="page-name">{title}</h1>
-  			{if location_website}					
-	  			<p class="org-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}</a></p>
-	  		{/if}
-	  		{if location_address}
-	  			<p class="org-address">{location_address}</p>
-	  		{/if}
-	  		{if location_phone}
-	  			<p class="org-phone">{location_phone}</p>
-	  		{/if}
-	  		{if location_email}
-	  			<p class="org-email">
-	  			{location_email}
-	    			{if name}{name}: {/if}{encode="{email}" title="{email}"}<br />
-	  			{/location_email}
-	  			</p>
-	  		{/if}	   			
+	  			<div id="org-contact">
+	  			{if location_website}					
+		  			<p class="org-website"><a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}">{exp:parse_url parts="host|path|query|fragment"}{location_website}{/exp:parse_url}</a></p>
+		  		{/if}
+		  		{if location_address}
+		  			<p class="org-address">{location_address}</p>
+		  		{/if}
+		  		{if location_phone}
+		  			<p class="org-phone">{location_phone}</p>
+		  		{/if}
+		  		{if location_email}
+		  			<p class="org-email">
+		  			{location_email}
+		    			{if name}{name}: {/if}{encode="{email}" title="{email}"}<br />
+		  			{/location_email}
+		  			</p>
+		  		{/if}	
+	  			</div>   			
   			</div>
-  			<div class="five columns">
-  			{exp:ce_img:pair src="{location_logo}" width="300"}
+  			<div class="four columns">
+  			{exp:ce_img:pair src="{location_logo}" width="220" height="220"}
   				<div class="location-logo">
 						<img src="{made}" alt="" width="{width}" height="{height}" />
 					</div>
 				{/exp:ce_img:pair}
   			</div>
-  		</div>  		
+  		</div>  
+  		<div id="location-map">		
   		{location_google_map}	
+  		</div>
   	{if location_gallery}
 			<div id="gallery">
 			{location_gallery}
