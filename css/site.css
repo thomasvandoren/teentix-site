@@ -1439,13 +1439,6 @@ ul.breadcrumbs li.current a {
 .member #member-profile #member-screenname {
 	margin: 20px 0px 5px 0px;
 }
-.member #member-profile .social-icons {
-	margin-top: -10px;
-}
-.member #member-profile .social-icons img {
-	max-width: 24px;
-	height: auto;
-}
 .member .total-count {
 	font-weight: bold;
 }
@@ -1465,6 +1458,15 @@ ul.breadcrumbs li.current a {
 }
 .member .comment .posted {
 	margin-bottom: 0px;
+}
+
+
+#member-profile .social-icons {
+	margin-top: -10px;
+}
+#member-profile .social-icons img {
+	max-width: 24px;
+	height: auto;
 }
 
 
