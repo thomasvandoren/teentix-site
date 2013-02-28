@@ -975,6 +975,7 @@ ul.breadcrumbs li.current a {
 }
 .calendar #sidebar li {
 	list-style: none;
+	margin: 5px 0px;
 }
 
 
@@ -1153,6 +1154,7 @@ ul.breadcrumbs li.current a {
 }
 .orgs #sidebar li {
 	list-style: none;
+	margin: 5px 0px;
 }
 .orgs #org-social {
 	margin-bottom: 10px;
@@ -1189,6 +1191,7 @@ ul.breadcrumbs li.current a {
 }
 .locations #sidebar li {
 	list-style: none;
+	margin: 5px 0px;
 }
 .locations #location-social {
 	margin-bottom: 10px;
@@ -1261,6 +1264,7 @@ ul.breadcrumbs li.current a {
 }
 .blog #sidebar li {
 	list-style: none;
+	margin: 5px 0px;
 }
 .blog #become-reviewer a {
 	display: block;

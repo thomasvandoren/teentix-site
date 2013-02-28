@@ -57,6 +57,9 @@
   		{if org_twitter}
   			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_twitter}{/exp:parse_url}"><img src="{site_url}css/images/social/twitter_1.png" alt="" title="{org_twitter}" /></a>
   		{/if}
+  		{if org_youtube}
+  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_youtube}{/exp:parse_url}"><img src="{site_url}css/images/social/you_tube.png" alt="" title="{org_youtube}" /></a>
+  		{/if}
   		</div>
   	{if org_locations}	    			
 			{embed="partners/.locations" entry_id="{org_locations}"}	    		
