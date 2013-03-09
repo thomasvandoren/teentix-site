@@ -1,144 +1,29 @@
 {embed="inc/.header"
-	title="Join TeenTix | Application"
   body_class="application"
+  title="{signup_title}"
 }
 {embed="inc/.nav"} 
   
   <div class="row">
     <div class="twelve columns">
-      <h1 id="page-name">{application1_title}</h1>
+      <h1 id="page-name">Sign Up for TeenTix</h1>
     </div>
   </div>
   
-	<div class="row">
-    <div id="sidebar" class="four columns">
-      <h4 class="sans">{application1_kicker}</h4>
-      {application1_content}
+  <div class="row">
+    <div class="four columns">
+    	<h4>Get a Pass</h4>
+      
     </div>
     
-    <div id="main" class="eight columns">
-    {exp:safecracker 
-      channel="applications" 
-      return="application/pass/ENTRY_ID" 
-      dynamic_title="[app_first_name] [app_last_name] Pass Application" 
-      error_handling="inline"
-      id="application_form"
-      include_jquery="no"
-      logged_out_member_id="2" 
-      safecracker_head="no"  
-    }
-        
-        <fieldset id="app_info">
-          <legend>Applicant Info  <span class="notice-required">Required information*</span></legend>
-          <p>Please fill out the information for the TeenTix pass holder</p>
-          <div class="row">
-            <div class="five columns">
-              <label for="app_first_name" class="require">First Name*</label>
-              <input type="text" name="app_first_name" id="app_first_name" value="{app_first_name}" class="required">
-            </div>
-            
-            <div class="two columns">
-              <label for="app_middle_initial">Middle Initial</label>
-              <input type="text" name="app_middle_initial" id="app_middle_initial" value="{app_middle_initial}">
-            </div>
-            
-            <div class="five columns">
-              <label for="app_last_name" class="require">Last Name*</label>
-              <input type="text" name="app_last_name" id="app_last_name" value="{app_last_name}" class="required">
-            </div>
-          </div>
-          
-              
-          <label for="app_phone" class="require">Best Contact Phone Number*</label>
-          <input type="text" name="app_phone" id="app_phone" value="{app_phone}" class="required">
-          {!--<label for="app_phone_alt">Alternative Phone Number</label>
-          <input type="text" name="app_phone_alt" id="app_phone_alt" value="{app_phone_alt}">--}
-        
-          
-          <label for="app_birthdate" class="require">Birthdate (Applicant must be between 13 and 19 years old)*<br />
-          	
-          </label>
-          <div class="birthdate_select">
-            {field:app_birthdate}
-          </div>
-          
-          <label for="app_school">School</label>
-          <input type="text" name="app_school" id="app_school" value="{app_school}">
-        
-        	<div class="app_interests_list clearfix">
-	          <p>Interests?</p>
-	          {categories show_group="1"}
-						<label><input type="checkbox" name="category[]" value="{category_id}" /> {category_name}</label> 
-						{/categories}
-	        </div>
-	        
-        </fieldset>
-        
-        <fieldset id="app_mailing_address"> 
-          <legend>E-mail Address</legend>
-          <p>Please provide us with an email address to receive your temporary pass.</p>
-          <label for="app_email" class="require">Email Address*</label>
-	        <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
-	        <label for="app_newsletter" class="label_checkbox">
-	          <input type="checkbox" name="app_newsletter" id="app_newsletter" value="yes" checked="checked">
-	          I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
-	        </label>
-        </fieldset>
-        
-        <fieldset id="app_mailing_address"> 
-          <legend>Mailing Address</legend>
-          <p>Please provide us with a mailing address to receive your permanent pass.</p>
-          <label for="app_address" class="require">Address*</label>
-          <input type="text" name="app_address" id="app_address" value="{app_address}" class="required">
-          
-          <label for="app_city" class="require">City*</label>
-          <input type="text" name="app_city" id="app_city" value="{app_city}" class="eight required">
-          
-          <label for="app_state" class="require">State*</label>
-          <input type="text" name="app_state" id="app_state" value="{app_state}" class="eight required">
-          
-          <label for="app_zip" class="require">Zip Code*</label>
-          <input type="text" name="app_zip" id="app_zip" value="{app_zip}" class="four required">
-          
-          <label for="app_country">Country (If not US)</label>
-          <input type="text" name="app_country" id="app_country" value="{app_country}" class="eight">
-        </fieldset>
-        
-        <fieldset id="app_other">
-          <legend>Other Info</legend>
-  
-	        <div class="app_member_type_list">
-	          <p>Which applies to you?</p>
-	          <label><input type="radio" name="app_member_type" value="teen"  />&nbsp;I am a Teen (currently aged 13-19)</label>
-	          <label><input type="radio" name="app_member_type" value="parent"  />&nbsp;I am a Parent or Guardian applying for a teen</label>
-	          <label><input type="radio" name="app_member_type" value="other"  />&nbsp;Other</label>
-	        </div>      
-          
-          <label for="app_hear_about">How did you hear about TeenTix?</label>
-          <select name="app_hear_about" class="six">
-            {options:app_hear_about}
-              <option value="{option_value}"{selected}>{option_name}</option>
-            {/options:app_hear_about}
-          </select>
-          
-          <label for="app_referred">Who referred you to TeenTix?</label>
-          <input type="text" name="app_referred" id="app_referred" value="{app_referred}">
-          
-          {if captcha}
-            <label for="captcha">Please enter the word you see in the image below:</label>
-            {captcha}
-            <input type="text" name="captcha" value="{captcha_word}" maxlength="20">
-          {/if}
-          
-        </fieldset>
-        
-        <div class="form_submit">
-          <input type="submit" name="submit" value="Next" class="button">
-        </div>
-        
-    {/exp:safecracker}
-    </div>
+    <div class="four columns">
+  		<h4>Get an Account</h4>
     
+    </div>
+    <div class="four columns">
+    	<h4>Get the newsletter</h4>
+    </div>
   </div>
+
   
 {embed="inc/.footer"}
