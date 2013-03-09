@@ -30,7 +30,14 @@
 			        <li id="fb-util-login">{embed="inc/.fbc_login" size="large"}</li>
 			        <li id="nav-bar-login">
 			          
-		          {exp:member:login_form return="{exp:currentlee type='url'}"}
+		          {exp:member:login_form 
+		          	{if segment_1 == ""}
+			          	return="{site_url}index.php"
+		          	{/if}
+		          	{if segment_1 != ""}
+		          		return="{exp:currentlee type='url'}"
+		          	{/if}
+		          }
 		            <label for="username">Email Address:</label>
 		            <input type="text" name="username" class="required" />
 		            <label for="password">Password:</label>

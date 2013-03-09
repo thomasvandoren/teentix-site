@@ -40,6 +40,7 @@ h1, h2, h3, h4, h5, h6 {
 p {
 	font-size: 14px;
 }
+p.smaller { font-size: 12px; }
 a,
 a:visited {
 	color: #8FC73E;
