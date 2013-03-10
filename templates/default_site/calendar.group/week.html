@@ -26,19 +26,22 @@
 	    	date_range_start="{segment_3}-{segment_4}-{segment_5}" 
 	    	date_range_end="{segment_3}-{segment_4}-{segment_5}"
 	    {/if}
+			{if segment_6 == "category"}
+				category="{segment_8}"
+			{/if}
 	    	status="not closed"
 			}
 	
 			{display_each_week}
 				<div class="header">
 				  <div class="left">
-				     <a href="{path='calendar/week'}/{prev_week format="%Y/%m/%d"}/">&laquo; Prev</a>
+				     <a href="{path='calendar/week'}/{prev_week format="%Y/%m/%d"}/{if segment_6 != ''}{segment_6}/{segment_7}/{segment_8}{/if}">&laquo; Prev</a>
 				  </div>
 				  <div class="right">
-				     <a href="{path='calendar/week'}/{next_week format="%Y/%m/%d"}/">Next &raquo;</a>
+				     <a href="{path='calendar/week'}/{next_week format="%Y/%m/%d"}/{if segment_6 != ''}{segment_6}/{segment_7}/{segment_8}{/if}">Next &raquo;</a>
 				  </div>
 				  <div class="center">
-				     <h4 class="slab">Week of {week format="%F %j, %Y"}</h4>
+				     <h4 class="slab">Week of {week format="%F %j, %Y"}{if segment_6 == "category"}: {exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading}{/if}</h4>
 				  </div>			  
 				</div><!-- end .header -->
 				
@@ -62,12 +65,12 @@
 				      		{event_start_date format="%g:%i%a"}
 				      	{/if}
 				      	</span>
-				      	<strong><a href="{url_title_path='calendar/event'}">{event_title}</a></strong> 
+				      	<span class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></span> 
 				      	
-				      	{related_entries id="event_venue"}
-								  <span class="event-venue">{title}</span>
-							  {/related_entries}
-							  <span class="event-category">{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</span>
+			      	{related_entries id="event_venue"}
+							  <span class="event-venue">{title}</span>
+						  {/related_entries}
+							  <span class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</span>
 						  </li>
 						  {/events}
 						</ul>

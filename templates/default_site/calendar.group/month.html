@@ -26,63 +26,129 @@
 			{/if}
 				status="not closed"
 			}
-	    {display_each_month}	      
+		    {display_each_month}	      
 	      <div class="header">
 				  <div class="left">
-				     <a href="{path='calendar/month'}/{prev_month format="%Y/%m"}/">&laquo; {prev_month format="%F"}</a>
+				     <a href="{path='calendar/month'}/{prev_month format='%Y/%m/%d'}/">&laquo; {prev_month format="%F"}</a>
 				  </div>
 				  <div class="right">
-				     <a href="{path='calendar/month'}/{next_month format="%Y/%m"}/">{next_month format="%F"} &raquo;</a>
+				     <a href="{path='calendar/month'}/{next_month format='%Y/%m/%d'}/">{next_month format="%F"} &raquo;</a>
 				  </div>
 				  <div class="center">
-				     <h4 class="slab">{month format="%F %Y"}</h4>
+				     <h4 class="slab">{month format="%F %Y"}{if segment_6 == "category"}: {exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading}{/if}</h4>
 				  </div>			  
 				</div><!-- end .header -->
-				
-	      <table id="calendar_table">
-					<thead>
-						<tr id="days_of_week">
-						   {display_each_day_of_week}
-						   <th class="day_of_week {day_of_week}">{day_of_week}</th>
-						   {/display_each_day_of_week}
-						</tr>
-          </thead>
-          <tbody>
-          {display_each_week}
-            <tr>
-          	{display_each_day}
-            {if day_in_current_month}
-            	<td class="day_cell"><div class="date"><a class="num" href="{path='calendar/day'}/{day format="%Y/%m/%d"}/">{day format="%j"}</a></div>
-            {if:else}
-              <td class="day_cell out_of_range"><div class="date"><span class="num">{day format="%j"}</span></div>
-            {/if}
-              {display_each_hour}
-              	{events}
-                <div 
-                  class="
-                   event {if event_all_day}all_day{/if} 
-                   {if event_first_day}first_day{/if} 
-                   {if event_last_day}last_day{/if} 
-                   {if all_day_event_index_difference > 0}index_difference_{all_day_event_index_difference}{/if}
-                ">
-
-                {if event_all_day == ''}
-                	{event_start_date format="%g"}{if event_start_minute > 0}:{event_start_minute}{/if}{event_start_date format="%a"}
-                {if:else}
-                	All Day
-                {/if}
-                   <a href="{url_title_path='calendar/event'}" title="{event_title}">{event_title}</a>
-                </div>
-                {/events}
-              {/display_each_hour}
-            	</td>
-          	{/display_each_day}
-            </tr>
-          {/display_each_week}
-          </tbody>
-        </table>
 				{/display_each_month}
 			{/exp:calendar:cal}
+				
+				<div class="row">
+					<div class="five columns">
+					{exp:calendar:cal
+					{if segment_3 == ''}
+						date_range_start="year-month-01" 
+						date_range_end="year-month-last"
+					{/if}
+					{if segment_3 != ""}
+						date_range_start="{segment_3}-{segment_4}-01" 
+						date_range_end="{segment_3}-{segment_4}-last"
+					{/if}
+					{if segment_6 == "category"}
+						category="{segment_8}"
+					{/if}
+						status="not closed"
+					}
+				    {display_each_month}
+			      <table id="calendar-table" cellspacing="0" cellpadding="0">
+							<thead>
+								<tr id="days_of_week">
+								   {display_each_day_of_week}
+								   <th class="day_of_week {day_of_week}">{day_of_week_short}</th>
+								   {/display_each_day_of_week}
+								</tr>
+		          </thead>
+		          <tbody>
+		          {display_each_week}
+		            <tr>
+		          	{display_each_day}
+		            {if day_in_current_month}
+		            	<td 
+		            		class="day_cell 
+			            	{if "{day format='%d'}" == segment_5}current{/if}
+			            	{if segment_3 == ""}{if day_is_today}current{/if}{/if}
+			            	" 
+		            		data-date="day-{date}"
+		            	>
+		            		<div class="date">{day format="%j"}</div>
+		            	{if day_event_total >0}
+		            		<div class="event"><span class="event-count">{day_event_total}</span> event{if day_event_total > "1"}s{/if}</div>
+		            	{/if}
+		            	</td>
+		            {if:else}
+		              <td class="day_cell out_of_range">
+		              	<div class="date"><span class="num">{day format="%j"}</span></div>
+		              </td>
+		            {/if}
+		            	
+		          	{/display_each_day}
+		            </tr>
+		          {/display_each_week}
+		          </tbody>
+		        </table>
+		        {/display_each_month}
+					{/exp:calendar:cal}
+	      	</div>
+	      	
+	      	<div class="seven columns">
+      			<div id="month-schedule">
+	      		{exp:calendar:cal
+						{if segment_3 == ''}
+							date_range_start="year-month-01" 
+							date_range_end="year-month-last"
+						{/if}
+						{if segment_3 != ""}
+							date_range_start="{segment_3}-{segment_4}-01" 
+							date_range_end="{segment_3}-{segment_4}-last"
+						{/if}
+						{if segment_6 == "category"}
+							category="{segment_8}"
+						{/if}
+							status="not closed"
+						}
+	
+	          	{display_each_day}
+	            {if day_in_current_month}
+							<div class="day-schedule day-{date}
+								{if "{day format='%d'}" == segment_5}current{/if}
+	            	{if segment_3 == ""}{if day_is_today}current{/if}{/if}
+	            	" 
+							>
+		          	<h4 class="slab">{date format="%F %j, %Y"}</h4>
+		          	<h5>{day_event_total} {if segment_6 == "category"}{exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading} {/if} Event{if day_event_total !="1"}s{/if}</h5>
+		          	<ul>
+		          	{display_each_hour}
+		              {events}
+                  <li class="event">
+	                  <span class="event-time">
+						      	{if event_all_day}
+						      		All day
+						      	{if:else}
+						      		{event_start_date format="%g:%i%a"}
+						      	{/if}
+						      	</span>
+						      	<span class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></span> 
+									  <span class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</span>
+                  </li>
+                  {/events}
+		              {/display_each_hour}
+		            </ul>
+            	</div>
+	            {/if}
+	          	{/display_each_day}
+						{/exp:calendar:cal}
+						</div><!-- end #month_schedule -->
+	      	</div>
+	      </div>
+				
 			</div><!-- end #monthly_calendar -->
 		</div><!-- end #main -->
 

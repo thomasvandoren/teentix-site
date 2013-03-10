@@ -320,4 +320,15 @@
 	
 	hideSlideshow();
 	
+	
+/* calendar */
+	var month_day = '5';
+	$('#monthly_calendar .day_cell').click(function(){
+		$('.day_cell').removeClass('current');
+		$('.day-schedule').removeClass('current').hide();
+		$(this).addClass('current');
+		var date = $(this).data('date');
+		$('.day-schedule.' + date).fadeIn();
+	})
+	
 })(jQuery, this);

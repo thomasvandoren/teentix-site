@@ -914,24 +914,95 @@ ul.breadcrumbs li.current a {
 }
 
 /* monthly */
-.calendar.month #calendar_table td {
-	width: 15%;
+.calendar.month table thead tr th, 
+.calendar.month table tfoot tr td {
+	padding: 3px;
+}
+.calendar.month #calendar-table {
 	padding: 0px;
 }
-.calendar.month #calendar_table th.day_of_week {
+.calendar.month #calendar-table tbody tr:nth-child(2n) {
+	background: #fff;
+}
+.calendar.month #calendar-table td {
+	width: 12%;
+	padding: 0px;
+}
+.calendar.month #calendar-table th.day_of_week {
 	text-align: center;
-	font-size: 14px;
-}
-.calendar.month #calendar_table .event {
-	font-size: 11px;
-	line-height: 1.1em;
-	padding: 2px 5px;
-}
-.calendar.month #calendar_table .day_cell .date {
-	background: #ccc;
-	font-weight: bold;
 	font-size: 13px;
-	padding: 1px 3px;
+}
+.calendar.month #calendar-table .day_cell {
+	border: 1px solid #eee;
+	padding: 0px;
+	height: 56px;
+}
+.calendar.month #calendar-table .day_cell:hover {
+	cursor: pointer;
+	background: #ddd;
+}
+.calendar.month #calendar-table .day_cell .date {
+	font-size: 11px;
+	padding: 0px 2px;
+	color: #aaa;
+}
+.calendar.month #calendar-table .out_of_range,
+.calendar.month #calendar-table .out_of_range:hover {
+	background: #f9f9f9;
+	cursor: default;
+}
+.calendar.month #calendar-table .out_of_range .date {
+	
+}
+.calendar.month #calendar-table .current,
+.calendar.month #calendar-table .current:hover {
+	background: #8FC73E;
+	cursor: default;
+}
+.calendar.month #calendar-table .current .date {
+	color: #fff;
+}
+.calendar.month #calendar-table .day_cell .event {
+	font-size: 11px;
+	line-height: 1.2em;
+	padding: 2px;
+	text-align: center;	
+}
+.calendar.month #calendar-table .day_cell .event-count {
+	font-weight: bold;
+	font-size: 15px;
+	display: block;
+	padding-bottom: 1px;
+	color: #8FC73E;
+}
+.calendar.month #calendar-table .current .event-count {
+	color: #333;
+}
+.calendar.month #month-schedule {
+	padding: 10px 20px;
+	border: 1px #ccc solid;
+}
+.calendar.month .day-schedule {
+	display: none;	
+	margin: 0px;
+	padding: 0px;
+}
+.calendar.month .day-schedule.current {
+	display: block;
+}
+.calendar.month .day-schedule .event {
+	margin: 0px !important;
+	padding: 0px;
+	list-style: none;
+}
+.calendar.month .day-schedule .event-time {
+	font-weight: bold;
+}
+.calendar.month .day-schedule .event-name {
+	font-weight: bold;
+}
+.calendar.month .day-schedule .event-category {
+	font-size: 12px;
 }
 /* weekly */
 .calendar.week .event-list li {
@@ -945,8 +1016,9 @@ ul.breadcrumbs li.current a {
 	font-weight: bold;
 }
 .calendar.week .event-list .event-venue {
-	color: #666;
+	color: #999;
 	font-size: 12px;
+	font-style: italic;
 }
 .calendar.week .event-list .event-category {
 	font-size: 12px;
