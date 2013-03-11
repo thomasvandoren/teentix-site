@@ -1,12 +1,14 @@
 {exp:calendar:events event_id="{embed:event_id}" event_limit="1" status="not closed"}
 	<div class="nine columns">
 		<h4 class="event-name sans"><a href="{url_title_path='calendar/event'}">{title}</a></h4>
+	{if event_last_date != 0}
 		<p class="event-dates">		
 			{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
 		{if '{event_last_date format="%Y%m%d"}' < '{current_time format="%Y%m%d"}'}	
 			<span class="event-over">[This event is over]</span>
 		{/if}
 	  </p>
+  {/if}
 	  <p class="event-location">
 	  	{related_entries id="event_venue"}<a href="{url_title_path='locations'}">{title}</a>{/related_entries}</p>
   </div>
