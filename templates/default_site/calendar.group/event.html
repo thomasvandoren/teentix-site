@@ -181,23 +181,17 @@
 			
     {if event_age_restrictions} 
 			<div id="event-age-restrictions">
-				<h4 class="section-head sans">Age Restrictions</h4>
+				<h4 class="section-head sans">Age Recommendation</h4>
 				<p>{event_age_restrictions}</p>
 			</div>
 		{/if}
 		
+		{if event_ticket_info}
 			<div id="event-ticket-info">
 				<h4 class="section-head sans">Ticket Info</h4>
-				<p>Tickets Available 
-				{categories backspace="7" show_group="2"}<span class="event-ticket-type">&bull; {category_name}</span>{/categories}
-				</p>
-			</div>
-			
-			<div id="event-ticket-info">
-				<h4 class="section-head sans">Additional Ticket Info</h4>
 				{event_ticket_info}
 			</div>
-			
+		{/if}
 						
 			<div id="event-box-office-info">
 				<h4 class="section-head sans">Box Office Info</h4>
