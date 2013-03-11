@@ -1056,7 +1056,10 @@ ul.breadcrumbs li.current a {
 /* sidebar */
 .calendar #sidebar {
 	padding-left: 30px;
-	padding-top: 35px;
+	padding-top: 28px;
+}
+.calendar #sidebar #calendar-search {
+	margin-bottom: 10px;
 }
 .calendar #sidebar li {
 	list-style: none;

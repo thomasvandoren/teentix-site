@@ -1,5 +1,26 @@
 {add_event}
-<div>
+
+<div id="calendar-search" class="row collapse">
+	{exp:search:simple_form 
+		name="utility_search"
+		no_result_page="search/noresults"
+		result_page="search/results"
+		search_in="everywhere"
+		channel="calendar_events"
+		status="open"
+		results="20"
+	}
+	<div class="ten mobile-three columns">
+    <input type="text" name="keywords" id="keywords" value="" placeholder="Search TeenTix Calendar" size="18" maxlength="100">
+  </div>
+  <div class="two mobile-one columns">
+    <input type="submit" value="GO" class="submit button  expand postfix">
+  </div>
+	{/exp:search:simple_form}
+	
+</div>
+
+<div id="calendar-clear">
 {if segment_2 == "all"}
 	<h4><a href="{site_url}{segment_1}/{segment_2}/">All Events</a></h4>
 {/if}
@@ -7,6 +28,7 @@
 	<h4><a href="{site_url}{segment_1}/{segment_2}/{segment_3}/{segment_4}/{segment_5}">All Events</a></h4>
 {/if}
 </div>
+
 <div id="calendar-picks">
 	<h4 class="section-head sans">TeenTix Favorites</h4>
 	{exp:channel:categories channel="calendar_events" category_group="5"}
@@ -18,7 +40,7 @@
     {if:else}
 	    href="{site_url}{segment_1}/{segment_2}/{segment_3}/{segment_4}/{segment_5}/category/{category_url_title}/{category_id}"
     {/if}
-    >{category_name}</a>
+    >{if category_description}{category_description}{if:else}{category_name}{/if}</a>
 	{/exp:channel:categories}
 </div><!-- end #calendar-genre -->
 

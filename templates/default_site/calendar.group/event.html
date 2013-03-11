@@ -5,6 +5,7 @@
 	show_months="999" 
 	dynamic="off"
 	status="not closed"
+	require_entry="true"
 }
 {embed="inc/.header"
 	title="{title} | Event"
@@ -26,8 +27,10 @@
 					{categories show_group="5"}<a href="{path='calendar/all'}" class="entry-category {category_url_title}">{category_name}</a>{/categories}
 					{categories show_group="1"}<a href="{path='calendar/all'}" class="entry-category">{category_name}</a>{/categories}
 				</div>
-			  <p class="event-date slab">			  
+			  <p class="event-date slab">
+			  {if event_last_date != 0}			  
 					{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
+				{/if}
 				{if event_availability =="n"}
 					<br /><span class="ticket-available">TeenTix tickets are no longer available</span>
 				{/if}
@@ -107,7 +110,7 @@
 
   		
 		{if no_results}
-			<p>No Results</p>
+			{redirect="site/404"}
 		{/if}
 		
 		{/exp:calendar:events}

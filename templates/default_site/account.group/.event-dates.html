@@ -13,6 +13,12 @@
   <div class="three columns">
     <p class="event-saved">
     	Saved {embed:favorites_date} at {embed:favorites_time}
+		{exp:favorites:saved entry_id="{entry_id}"}
+
+      <span class="Favorites_Status"></span>
+      <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add/'}">save</a>
+      <a class="Favorites_Delete_Account Favorites_Trigger" href="{permalink='_ajax/favorite_add/delete/'}">Delete Event</a>
+    {/exp:favorites:saved}
     </p>
   </div>	
 {/exp:calendar:events}  

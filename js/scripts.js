@@ -258,16 +258,16 @@
   $('a.Favorites_Save') .click (function() {
       var link = $(this).attr('href')
       $('.Favorites_Status').load(link, function() {
-              $('.Favorites_Delete').show();
-          });
+          $('.Favorites_Delete').show();
+      });
       $(this).hide();
       return false;
   });
   $('a.Favorites_Save_Full') .click (function() {
       var link = $(this).attr('href')
       $('.Favorites_Status').load(link, function() {
-              $('.Favorites_Delete').show();
-          });
+          $('.Favorites_Delete').show();
+      });
       $(this).hide();
       return false;
   });
@@ -275,9 +275,15 @@
   $('a.Favorites_Delete') .click (function() {
       var link = $(this).attr('href')
       $('.Favorites_Status').load(link, function() {
-              $('.Favorites_Save').show();
-          });
+          $('.Favorites_Save').show();
+      });
       $(this).hide();
+      return false;
+  });
+  
+  $('a.Favorites_Delete_Account') .click (function() {
+      var link = $(this).attr('href')
+      $(this).load(link).hide().closest('.row').fadeOut();
       return false;
   });
   
