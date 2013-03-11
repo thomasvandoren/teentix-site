@@ -897,9 +897,9 @@ ul.breadcrumbs li.current a {
 
 
 /* upcoming */
-.calendar.all .entry img {
-	float: left;
-	margin-right: 20px;
+.calendar.all .event-image {
+	float: right;
+	margin: 0px 0px 10px 10px;
 }
 .calendar.all .event-name {
 	margin-bottom: 3px;
@@ -920,6 +920,7 @@ ul.breadcrumbs li.current a {
 }
 .calendar.month #calendar-table {
 	padding: 0px;
+	width: 300px;
 }
 .calendar.month #calendar-table tbody tr:nth-child(2n) {
 	background: #fff;
@@ -980,7 +981,8 @@ ul.breadcrumbs li.current a {
 }
 .calendar.month #month-schedule {
 	padding: 10px 20px;
-	border: 1px #ccc solid;
+	border: 1px #ddd solid;
+	border-radius: 3px;
 }
 .calendar.month .day-schedule {
 	display: none;	
@@ -1031,6 +1033,11 @@ ul.breadcrumbs li.current a {
 .calendar.day .entry {
 	border: none;
 	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.calendar.day .event-image {
+	float: right;
+	margin: 0px 0px 10px 10px;
 }
 .calendar.day .event-name {
 	margin-bottom: 5px;

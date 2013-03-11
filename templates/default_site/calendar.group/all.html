@@ -29,6 +29,7 @@
 				  </div>			  
 				</div><!-- end .header -->
 				
+				<div class="row">
 			{exp:calendar:events 
 				orderby="title" 
 				sort="asc" 
@@ -39,29 +40,33 @@
 				status="not closed"
 			}
 				{if no_results}<p>Sorry, there are no upcoming events.</p>{/if}
-				<div class="row">
+				
 					<div class="three columns">
 						<p class="event-date">
 							{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash;<br />{event_last_date format="%D %M %j, %Y"}{/if}
 						</p>
-						<p class="event-category"><strong>{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</strong></p>
+						<p class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</p>
 					</div>
 					<div class="nine columns">
-					{if event_image}
-						{event_image}
-						<a href="{url_title_path='calendar/event'}">{exp:ce_img:single src="{image}" width="120"}</a>
-						{/event_image}
-			  	{/if}
+					{if event_images}
+				  	{event_images limit="1"}
+				  	{exp:ce_img:pair src="{image}" width="140" height="100" crop="yes"}
+						<a href="{url_title_path='calendar/event'}" class="event-image"><img src="{made}" alt="" width="{width}" height="{height}" /></a>
+						{/exp:ce_img:pair}
+						{/event_images}
+				  {/if}
 			  	
 						<h3 class="event-name sans"><a href="{url_title_path='calendar/event'}">{event_title}</a></h3>		
-						
-					{related_entries id="event_venue"}
-					  <span class="event-venue">{title}</span>
-				  {/related_entries}
+						<p class="event-info">
+						{related_entries id="event_venue"}
+						  <a href="{url_title_path='venues'}">{title}</a>
+					  {/related_entries}
+						</p>
 					</div>
-				</div>
+				
 				<hr />
 			{/exp:calendar:events}   
+				</div>
     	</div><!-- end #all_calendar -->  	
     	
     </div><!-- end #main -->

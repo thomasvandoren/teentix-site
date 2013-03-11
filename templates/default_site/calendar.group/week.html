@@ -68,7 +68,7 @@
 				      	<span class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></span> 
 				      	
 			      	{related_entries id="event_venue"}
-							  <span class="event-venue">{title}</span>
+							  <span class="event-venue">{if location_short_name}{location_short_name}{if:else}{title}{/if}</span>
 						  {/related_entries}
 							  <span class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</span>
 						  </li>

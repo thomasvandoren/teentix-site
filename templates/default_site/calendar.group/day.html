@@ -30,14 +30,38 @@
 			dynamic="off"
 			status="not closed"
 		}
-			
+			{if no_results}
+				<div class="header">
+		      <div class="left">
+	      	{exp:calendar:date base_date="{segment_3}-{segment_4}-{segment_5}" output_date="yesterday"}
+		        <a href="{path='calendar/day'}/{date format='%Y/%m/%d'}/{if segment_6 != ''}{segment_6}/{segment_7}/{segment_8}{/if}">					    
+					{/exp:calendar:date}
+						&laquo; Previous</a>
+		      </div>
+		      <div class="right">
+	        {exp:calendar:date base_date="{segment_3}-{segment_4}-{segment_5}" output_date="tomorrow"}
+		        <a href="{path='calendar/day'}/{date format='%Y/%m/%d'}/{if segment_6 != ''}{segment_6}/{segment_7}/{segment_8}{/if}">					    
+					{/exp:calendar:date}
+		        Next &raquo;</a>
+		      </div>
+		      <div class="center">
+		        <h4 class="slab">
+		        {exp:calendar:date base_date="{segment_3}-{segment_4}-{segment_5}"}
+					    {date format="%l, %F %d, %Y"}
+						{/exp:calendar:date}
+		        {if segment_6 == "category"}: {exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading}{/if}
+		        </h4>
+		      </div>		      
+			  </div><!-- end .header -->
+				<p>Sorry, there are no events this day.</p>
+			{/if}
 			{display_each_day}
 			  <div class="header">
 		      <div class="left">
-		        <a href="{path='calendar/day'}/{prev_day format="%Y/%m/%d"}/">&laquo; Previous</a>
+		        <a href="{path='calendar/day'}/{prev_day format="%Y/%m/%d"}/{if segment_6 != ''}{segment_6}/{segment_7}/{segment_8}{/if}">&laquo; Previous</a>
 		      </div>
 		      <div class="right">
-		        <a href="{path='calendar/day'}/{next_day format="%Y/%m/%d"}/">Next &raquo;</a>
+		        <a href="{path='calendar/day'}/{next_day format="%Y/%m/%d"}/{if segment_6 != ''}{segment_6}/{segment_7}/{segment_8}{/if}">Next &raquo;</a>
 		      </div>
 		      <div class="center">
 		        <h4 class="slab">{day format="%l, %F %d, %Y"}{if segment_6 == "category"}: {exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading}{/if}</h4>
@@ -46,59 +70,36 @@
 			  
 			  <div class="row">  	
 		  {display_each_hour}
-		  	{if no_results}<p>Sorry, there are no events this day.</p>{/if}
+		  	
 		  	
 		  {if hour_event_total != "0"}
 				  
 			  {events}
-			  {if event_all_day}
-						<div class="three columns">
-						  <p class="event-time">All Day
-						  </p>
-							<p class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</p>
-						  
-						</div>
-						<div class="nine columns">
-						  <div class="entry">
-				        <h4 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h4>
-								<p class="event-info">
-									{related_entries id="event_venue"}
-									  <a href="{url_title_path='venues'}">{title}</a>
-								  {/related_entries}
-								</p>
-							{if event_summary}
-								<div class="event-summary">
-									{event_summary}
-								</div>
-							{/if}
-						  </div><!-- end .entry -->
-						</div>
-						<hr />
-				{if:else}
-					<div class="three columns">
-					  <p class="event-time">{time format="%g %a"}</p>
-						<p class="event-category"><strong>{categories backspace="3" show_group="1"}<a href="{path='calendar/all'}">{category_name}</a> | {/categories}</strong></p>
-					</div>
+			  
+				<div class="three columns">
+				  <p class="event-time">{if event_all_day}All Day{if:else}{time format="%g %a"}{/if}</p>
+					<p class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</p>
+				</div>
 
-				  <div class="nine columns">
-					  <div class="entry">
-							<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h4>
-							<p class="event-info">
-								{related_entries id="event_venue"}
-								  <a href="{url_title_path='venues'}">{title}</a> | 
-							  {/related_entries}
-								{event_start_date format="%g:%i %a"}
-								{if event_end_date}
-									{if "{event_start_date format='%g:%i %a'}" != "{event_end_date format='%g:%i%a'}"}
-									 - {event_end_date format="%g:%i%a"}
-									{/if}
-								{/if}
-							</p>
-							{if event_summary}<div class="event-summary">{event_summary}</div>{/if}
-					  </div><!-- end .entry -->	
-					 </div>
+			  <div class="nine columns">
+				  <div class="entry">
+			  	{if event_images}
+				  	{event_images limit="1"}
+				  	{exp:ce_img:pair src="{image}" width="140" height="100" crop="yes"}
+						<a href="{url_title_path='calendar/event'}" class="event-image"><img src="{made}" alt="" width="{width}" height="{height}" /></a>
+						{/exp:ce_img:pair}
+						{/event_images}
+				  {/if}
+						<h4 class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></h4>
+						<p class="event-info">
+							{related_entries id="event_venue"}
+							  <a href="{url_title_path='venues'}">{title}</a>
+						  {/related_entries}
+						</p>
+						{if event_summary}<div class="event-summary">{event_summary}</div>{/if}
+				  </div><!-- end .entry -->	
+				 </div>
 				  <hr />		
-				{/if}
 				
 			  {/events}
 				  

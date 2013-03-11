@@ -1,16 +1,22 @@
 {add_event}
 <div>
+{if segment_2 == "all"}
+	<h4><a href="{site_url}{segment_1}/{segment_2}/">All Events</a></h4>
+{/if}
+{if segment_2 != "all"}
 	<h4><a href="{site_url}{segment_1}/{segment_2}/{segment_3}/{segment_4}/{segment_5}">All Events</a></h4>
+{/if}
 </div>
 <div id="calendar-picks">
 	<h4 class="section-head sans">TeenTix Favorites</h4>
 	{exp:channel:categories channel="calendar_events" category_group="5"}
     <a 
-    {if segment_3 == ""}
-    href="{site_url}{segment_1}/{segment_2}/{current_time format='%Y/%m/%d'}/category/{category_url_title}/{category_id}"
-    {/if}
-    {if segment_3 != ""}
-    href="{site_url}{segment_1}/{segment_2}/{segment_3}/{segment_4}/{segment_5}/category/{category_url_title}/{category_id}"
+    {if segment_2 == "all"}
+    	href="{site_url}{segment_1}/{segment_2}/category/{category_url_title}/{category_id}"
+    {if:elseif segment_3 == ""}
+	    href="{site_url}{segment_1}/{segment_2}/{current_time format='%Y/%m/%d'}/category/{category_url_title}/{category_id}"
+    {if:else}
+	    href="{site_url}{segment_1}/{segment_2}/{segment_3}/{segment_4}/{segment_5}/category/{category_url_title}/{category_id}"
     {/if}
     >{category_name}</a>
 	{/exp:channel:categories}
@@ -20,11 +26,12 @@
 	<h4 class="section-head sans">Genres</h4>
 	{exp:channel:categories channel="calendar_events" category_group="1"}
     <a 
-    {if segment_3 == ""}
-    href="{site_url}{segment_1}/{segment_2}/{current_time format='%Y/%m/%d'}/category/{category_url_title}/{category_id}"
-    {/if}
-    {if segment_3 != ""}
-    href="{site_url}{segment_1}/{segment_2}/{segment_3}/{segment_4}/{segment_5}/category/{category_url_title}/{category_id}"
+    {if segment_2 == "all"}
+    	href="{site_url}{segment_1}/{segment_2}/category/{category_url_title}/{category_id}"
+    {if:elseif segment_3 == ""}
+	    href="{site_url}{segment_1}/{segment_2}/{current_time format='%Y/%m/%d'}/category/{category_url_title}/{category_id}"
+    {if:else}
+	    href="{site_url}{segment_1}/{segment_2}/{segment_3}/{segment_4}/{segment_5}/category/{category_url_title}/{category_id}"
     {/if}
     >{category_name}</a>
 	{/exp:channel:categories}		
