@@ -46,13 +46,20 @@
     {exp:channel:entries channel="blog" limit="1" status="featured"}
     	
     	<div class="entry">
+  	{if blog_video}
+  		<div class="flex-video widescreen">
+  		{blog_video}
+  		</div>
+  	{if:else}
+    	
   		{if blog_image}
   			<a href="{url_title_path='blog'}">
   			{exp:ce_img:pair src="{blog_image}" width="300" height="200" crop="yes"}
 				<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
   			</a>
-    	{/if}    	
+    	{/if} 
+    {/if}   	
     		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
 {!--     		<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p> --}
     		<p>
