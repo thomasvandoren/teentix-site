@@ -321,7 +321,7 @@ input.submit:hover {
    Header
 ----------------------------------------- */
 #header {
-	background: #e9d9b9 url(images/site/wood-grain.png) repeat-x center center;
+	background: #79CAC9 url(images/site/blue-texture.png) repeat center center;
 	width: 100%;
 	margin-top: 0px;
 }
@@ -1440,6 +1440,18 @@ ul.breadcrumbs li.current a {
 /* -----------------------------------------
    Application
 ----------------------------------------- */
+
+/* signup page */
+.application.signup .entry-image {
+	text-align: center;
+}
+.application.signup .entry-image img {
+	width: 280px;
+	height: auto;
+	margin: 0px auto;
+}
+
+/* signup form */
 .application form p {
 	font-size: 14px;
 	color: #4D4D4D;
