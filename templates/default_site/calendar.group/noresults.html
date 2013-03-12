@@ -1,0 +1,38 @@
+{embed="inc/.header"
+	title="Calendar"
+	body_class="calendar all"
+}
+
+{embed="inc/.nav"
+		end_title="Search: No Results"
+}
+    
+  <div class="row">
+  
+    <div id="main" class="nine columns">
+    {embed="calendar/.calendar-nav"}
+    	<div id="all_calendar">
+    		<div class="header">
+				  <div class="center">
+				     <h4 class="slab">
+				     Calendar Search: {exp:search:keywords}
+				     </h4>
+				  </div>			  
+				</div><!-- end .header -->
+				
+				<div class="row">
+					<div class="twelve columns">
+						<h4 class="event-noresults">Sorry, there are no results for &quot;{exp:search:keywords}&quot;</h4>
+					</div>
+				</div>
+    	</div><!-- end #all_calendar -->  	
+    	
+    </div><!-- end #main -->
+    
+    <div id="sidebar" class="three columns">
+    	{embed="calendar/.sidebar"}
+    </div>
+    
+  </div>
+  
+{embed="inc/.footer"}

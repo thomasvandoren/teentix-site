@@ -1,0 +1,40 @@
+{embed="inc/.header"
+	title="Calendar"
+	body_class="calendar all"
+}
+
+{embed="inc/.nav"
+		end_title="Search: {exp:search:keywords}"
+}
+    
+  <div class="row">
+  
+    <div id="main" class="nine columns">
+    {embed="calendar/.calendar-nav"}
+    	<div id="all_calendar">
+    		<div class="header">
+				  <div class="center">
+				     <h4 class="slab">
+				     Calendar Search: {exp:search:keywords}
+				     </h4>
+				     <p class="event-count">There are {exp:search:total_results}{total_results}{/exp:search:total_results} results</p>
+				  </div>			  
+				</div><!-- end .header -->
+				
+				<div class="row">
+
+			{exp:search:search_results}
+				{embed="calendar/.results-event" entry_id="{entry_id}"}
+			{/exp:search:search_results} 
+				</div>
+    	</div><!-- end #all_calendar -->  	
+    	
+    </div><!-- end #main -->
+    
+    <div id="sidebar" class="three columns">
+    	{embed="calendar/.sidebar"}
+    </div>
+    
+  </div>
+  
+{embed="inc/.footer"}

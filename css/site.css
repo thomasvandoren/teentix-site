@@ -915,6 +915,14 @@ ul.breadcrumbs li.current a {
 	margin-bottom: 0px;
 	font-weight: 700;
 }
+.calendar.all .event-count {
+	text-align: center;
+	margin-bottom: 0px;
+	padding-top: 5px;
+}
+.calendar.all .event-noresults {
+	text-align: center;
+}
 
 /* monthly */
 .calendar.month table thead tr th, 
