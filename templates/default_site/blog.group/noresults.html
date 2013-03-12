@@ -1,0 +1,28 @@
+{embed="inc/.header"
+	title="Blog"
+	body_class="blog"
+}
+
+{embed="inc/.nav"
+		end_title="Search: No Results"
+}
+  
+  <div class="row">
+    <div id="main" class="eight columns">
+	    
+      <h1 id="page-name">TeenTix Blog<h1>
+      <h5>Search: {exp:search:keywords}</h5>		
+    	<div class="entry clearfix"> 
+				<h3>Sorry, there are no results for &quot;{exp:search:keywords}&quot;</h3>
+      </div>
+  	</div>
+  	
+  	<div id="sidebar" class="four columns">
+  	{add_blog}
+      {embed="blog/.sidebar"}
+    </div>
+  
+  </div>
+  
+  
+{embed="inc/.footer"}
