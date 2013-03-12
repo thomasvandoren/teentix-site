@@ -169,15 +169,23 @@
 			dynamic="off"
 			status="not closed"
 		}
-			<div id="event-links">
+			<div id="event-links" class="social-icons">
 				<h4 class="section-head sans">Event Links</h4>
-				<p>
-				{if event_website}<a href="{event_website}">Event website</a><br />{/if}
-				{if event_facebook}<a href="{event_facebook}">Facebook page</a><br />{/if}
-				{if event_twitter}<a href="{event_twitter}">Twitter</a><br />{/if}
-				{if event_tumblr}<a href="{event_tumblr}">Tumblr page</a><br />{/if}
-				</p>
+				
+				
+				{if event_website}<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_website}{/exp:parse_url}">Event Website</a></p>{/if}
+				{if event_facebook}
+	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_facebook}{/exp:parse_url}"><img src="{site_url}css/images/social/fb_1.png" alt="" title="{event_facebook}" /></a>
+	  		{/if}
+	  		{if event_twitter}
+	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_twitter}{/exp:parse_url}"><img src="{site_url}css/images/social/twitter_1.png" alt="" title="{event_twitter}" /></a>
+	  		{/if}
+	  		{if event_youtube}
+	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_youtube}{/exp:parse_url}"><img src="{site_url}css/images/social/you_tube.png" alt="" title="{event_youtube}" /></a>
+	  		{/if}
+				
 			</div>
+
 			
     {if event_age_restrictions} 
 			<div id="event-age-restrictions">
@@ -216,9 +224,9 @@
 				}
 				{if occurrence_count < "6"}
 					{if occurrence_all_day}
-						<li>{occurrence_start_date format="%l %m/%j"}</li>
+						<li>{occurrence_start_date format="%D %F %j"}</li>
 					{if:else}
-						<li>{occurrence_start_date format="%l %m/%j at %g:%i%a"}</li>
+						<li>{occurrence_start_date format="%D %F %j at %g:%i%a"}</li>
 					{/if}
 				{/if}
 				{if occurrence_count > "5"}
@@ -226,16 +234,16 @@
 					<div class="hidden">
 					{/if}
 					{if occurrence_all_day}
-						<li>{occurrence_start_date format="%l %m/%j"}</li>
+						<li>{occurrence_start_date format="%D %F %j"}</li>
 					{if:else}
-						<li>{occurrence_start_date format="%l %m/%j at %g:%i%a"}</li>
+						<li>{occurrence_start_date format="%D %F %j at %g:%i%a"}</li>
 					{/if}
 					{if occurrence_count == occurrence_total} 
 					</div>
 					<li class="view-more">View more &raquo;</li>
 					{/if}
 				{/if}
-				{if calendar_no_results}<li>There are no upcoming events.</li>{/if} 
+				{if calendar_no_results}<li>There are no upcoming dates</li>{/if} 
 				{/exp:calendar:occurrences}
 	      </ul>
 	    </div>

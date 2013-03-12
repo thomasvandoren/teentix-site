@@ -60,6 +60,7 @@
 		
 		<div id="sidebar" class="four columns">
 		{edit_this}
+		{if location_facebook OR location_twitter OR location_youtube}
 			<div id="location-social" class="social-icons">
 				<h4 class="section-head sans">Social Links</h4>
 			{if location_facebook}
@@ -72,6 +73,7 @@
   			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{location_youtube}{/exp:parse_url}"><img src="{site_url}css/images/social/you_tube.png" alt="" title="{location_youtube}" /></a>
   		{/if}
   		</div>
+  	{/if}
 		{if location_hours}
 			<h4 class="section-head sans">Hours</h4>
 			{location_hours}
@@ -86,6 +88,9 @@
 				<ul>			
 				{reverse_related_entries channel="partners" sort="desc" orderby="title"}
 		      <li><a href="{url_title_path='partners'}">{title}</a></li>
+		      {if no_reverse_related_entries}
+		      <li>No partners at this location</li>
+		      {/if}
 		    {/reverse_related_entries}
 		    </ul>
 	    </div>
@@ -95,6 +100,9 @@
 				<ul>
 				{reverse_related_entries channel="calendar_events" sort="desc" orderby="date" limit="10" status="not closed"}
 			    {embed="inc/.upcoming-events" event_id="{entry_id}"}
+			    {if no_reverse_related_entries}
+		      <li>No upcoming events at this time</li>
+		      {/if}
 	      {/reverse_related_entries}
       	</ul>
   		</div>
