@@ -52,6 +52,7 @@
 		</div>
 		<div id="sidebar" class="four columns">
 		{edit_this}
+		{if org_facebook OR org_twitter OR org_youtube OR org_flickr}
 			<div id="org-social" class="social-icons">
 				<h4 class="section-head sans">Social Links</h4>
 			{if org_facebook}
@@ -63,7 +64,11 @@
   		{if org_youtube}
   			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_youtube}{/exp:parse_url}"><img src="{site_url}css/images/social/you_tube.png" alt="" title="{org_youtube}" /></a>
   		{/if}
+  		{if org_flickr}
+  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{org_flickr}{/exp:parse_url}"><img src="{site_url}css/images/social/flickr.png" alt="" title="{org_flickr}" /></a>
+  		{/if}
   		</div>
+  	{/if}
 		</div>
     
   </div>
