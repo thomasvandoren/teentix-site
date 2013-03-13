@@ -377,7 +377,7 @@ input.submit:hover {
    Top Bar
 ----------------------------------------- */
 #top-nav {
-	
+	background: url(images/site/trans-texture.png) 0px -30px;
 }
 #main-nav {
 	background: transparent;
@@ -1714,7 +1714,7 @@ ul.breadcrumbs li.current a {
    Footer
 ----------------------------------------- */
 #footer {
-	background: #1E7577;
+	background: #1E7577 url(images/site/trans-texture.png) 0px -30px;
 	color: #fff;
 	width: 100%;
 	padding: 30px 0px 30px 0px;;
@@ -1762,7 +1762,7 @@ ul.breadcrumbs li.current a {
    Credits
 ----------------------------------------- */
 #credits {
-	background: #004c4c;
+	background: #004c4c url(images/site/trans-texture.png) 0px -30px;
 	width: 100%;
 	padding: 20px 0px;	
 }
