@@ -844,13 +844,13 @@ ul.breadcrumbs li.current a {
 	top: -10px;
 }
 .calendar dl.tabs.five-up dd {
-	width: 18.75%;
+	width: 20%;
 }
 .calendar dl.tabs.five-up dd.tab-header {
 	width: 25%
 }
 .calendar dl.tabs {
-	border-color: #ccc;
+	border-color: #999;
 	margin-bottom: 10px;
 }
 .calendar dl.tabs dd a {
@@ -865,12 +865,15 @@ ul.breadcrumbs li.current a {
 .calendar dl.tabs dd.active ,
 .calendar dl.tabs dd.active a {
 	border-radius: 10px 10px 0px 0px;
-	border-color: #ccc;
+	border-color: #999;
   color: #4D4D4D;
+}
+.calendar dl.tabs dd.tab-search {
+	text-align: right;
 }
 .calendar .header {
 	position: relative;
-	border-bottom: 1px solid #ccc;
+	border-bottom: 1px solid #999;
 	margin-bottom: 20px;
 	padding: 10px 0px;
 	padding-bottom: 20px;
@@ -1066,17 +1069,54 @@ ul.breadcrumbs li.current a {
 
 /* sidebar */
 .calendar #sidebar {
-	padding-left: 30px;
-	padding-top: 28px;
-}
-.calendar #sidebar #calendar-search {
-	margin-bottom: 10px;
+	
 }
 .calendar #sidebar li {
 	list-style: none;
-	margin: 5px 0px;
+	margin: 0px 0px 6px 0px;
+	clear: both;
+	letter-spacing: .1em;
 }
-
+.calendar #sidebar .round {
+	padding: 4px 7px 4px 7px;
+	border-radius: 7px;
+}
+.calendar #sidebar .label {
+	font-weight: 500;
+	font-size: 12px;
+	font-family: "quatro-slab",serif;
+}
+.calendar #sidebar li a {
+	color: #fff;
+}
+.calendar #sidebar .cat-fav .label {
+	background: #1E7577;
+}
+.calendar #sidebar .cat-fav .label:hover {
+	background: #004C4C;
+}
+.calendar #sidebar .cat-genre .label {
+	background: #8FC73E;
+}
+.calendar #sidebar .cat-genre .label:hover {
+	background: #86B239;
+}
+.calendar #sidebar .active .label {
+	background: #000;
+}
+.calendar #sidebar .inactive .label {
+	background: #ddd;
+}
+.calendar #sidebar .inactive .label:hover {
+	background: #bbb;
+}
+.calendar #sidebar .cat-clear.active .label {
+	background: #FFDE00;
+}
+.calendar #sidebar .cat-clear.inactive a:hover {
+	cursor: default;
+	background: #ddd;
+}
 
 
 /* -----------------------------------------

@@ -9,7 +9,7 @@
     
   <div class="row">
   
-    <div id="main" class="nine columns">
+    <div id="main" class="twelve columns">
     {embed="calendar/.calendar-nav"}
     	<div id="all_calendar">
     		<div class="header">
@@ -22,18 +22,23 @@
 				</div><!-- end .header -->
 				
 				<div class="row">
-
-			{exp:search:search_results}
-				{embed="calendar/.results-event" entry_id="{entry_id}"}
-			{/exp:search:search_results} 
+					<div id="sidebar" class="two columns">
+			    	{!--embed="calendar/.sidebar"--}
+			    </div>
+			    <div class="nine columns">
+			    	<div class="row">		
+						{exp:search:search_results}
+							{embed="calendar/.results-event" entry_id="{entry_id}"}
+						{/exp:search:search_results} 
+						</div>
+			    </div>
 				</div>
+				
     	</div><!-- end #all_calendar -->  	
     	
     </div><!-- end #main -->
     
-    <div id="sidebar" class="three columns">
-    	{embed="calendar/.sidebar"}
-    </div>
+    
     
   </div>
   

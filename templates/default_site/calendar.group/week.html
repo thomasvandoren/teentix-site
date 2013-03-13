@@ -10,7 +10,8 @@
     
   <div class="row">		
   
-		<div id="main" class="nine columns">
+		<div id="main" class="twelve columns">
+		
 			
 			{embed="calendar/.calendar-nav"}
 		
@@ -45,48 +46,52 @@
 				  </div>			  
 				</div><!-- end .header -->
 				
-			  {display_each_day}
-			  <div class="row">
-				  <div class="day three columns">
-						<p class="event-date">
-							<span class="event-weekday">{day format="%l"}</span><br />
-							<a href="{path='calendar/day'}/{day format="%Y/%m/%d"}/">{day format="%M %j, %Y"}</a>
-						</p>
-					</div>
-					<div class="nine columns">
-						<ul class="event-list">
-						{if day_event_total == 0}<li>No events for this day.</li>{/if}
-						  {events}
-						  <li class="event">
-						  	<span class="event-time">
-				      	{if event_all_day}
-				      		All day
-				      	{if:else}
-				      		{event_start_date format="%g:%i%a"}
-				      	{/if}
-				      	</span>
-				      	<span class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></span> 
-				      	
-			      	{related_entries id="event_venue"}
-							  <span class="event-venue">{if location_short_name}{location_short_name}{if:else}{title}{/if}</span>
-						  {/related_entries}
-							  <span class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</span>
-						  </li>
-						  {/events}
-						</ul>
-				  </div>
-				  <hr />
-			  </div>
-			  {/display_each_day}
+				<div class="row">
+					<div id="sidebar" class="two columns">
+				  	{embed="calendar/.sidebar"}
+			    </div><!-- end #sidebar -->
+			    <div class="nine columns">
+			    {display_each_day}
+					  <div class="row">
+						  <div class="day two columns">
+								<p class="event-date">
+									<span class="event-weekday">{day format="%l"}</span><br />
+									{day format="%M %j, %Y"}
+								</p>
+							</div>
+							<div class="ten columns">
+								<ul class="event-list">
+								{if day_event_total == 0}<li>No events for this day.</li>{/if}
+								  {events}
+								  <li class="event">
+								  	<span class="event-time">
+						      	{if event_all_day}
+						      		All day
+						      	{if:else}
+						      		{event_start_date format="%g:%i%a"}
+						      	{/if}
+						      	</span>
+						      	<span class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></span> 
+						      	
+					      	{related_entries id="event_venue"}
+									  <span class="event-venue">{if location_short_name}{location_short_name}{if:else}{title}{/if}</span>
+								  {/related_entries}
+									  <span class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</span>
+								  </li>
+								  {/events}
+								</ul>
+						  </div>
+						  <hr />
+					  </div>
+				  {/display_each_day}
+			    </div>
+				</div>
+			  
 			{/display_each_week}
 			{/exp:calendar:cal}
 			</div><!-- end #weekly_calendar -->
 
 		</div><!-- end #main -->
-
-		<div id="sidebar" class="three columns">
-  	{embed="calendar/.sidebar"}
-    </div><!-- end #sidebar -->
 
 	</div>
 		

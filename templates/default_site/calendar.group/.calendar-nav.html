@@ -1,11 +1,34 @@
+	<h1 id="page-name">TeenTix Events Calendar</h1>	
+	
 	<div id="calendar-nav" class="row">
   	<div class="twelve columns">
    		<dl class="tabs five-up">
-  			<dd class="tab-header"><div id="calendar-page-header">View Events</div></dd>
-  			<dd class="{if segment_2=='month'} active{/if}"><a href="{path='calendar/month'}">Monthly</a></dd>
-  			<dd class="{if segment_2=='week'} active{/if}"><a href="{path='calendar/week'}">Weekly</a></dd>
+{!--   			<dd class="tab-header"><div id="calendar-page-header">View Events</div></dd> --}
+  			<dd class="{if segment_2=='month'} active{/if}"><a href="{path='calendar/month'}">Monthly View</a></dd>
+  			<dd class="{if segment_2=='week'} active{/if}"><a href="{path='calendar/week'}">Weekly View</a></dd>
   			<dd class="{if segment_2=='day'} active{/if}"><a href="{path='calendar/day'}">Today</a></dd>
-  			<dd class="{if segment_2=='all'} active{/if}"><a href="{path='calendar/all'}">All</a></dd>
+  			<dd class="{if segment_2=='all'} active{/if}"><a href="{path='calendar/all'}">All Events</a></dd>
+  			<dd class="tab-search">
+  				<div id="calendar-search" class="row collapse">
+						{exp:search:simple_form 
+							name="utility_search"
+							no_result_page="calendar/noresults"
+							result_page="calendar/results"
+							search_in="everywhere"
+							channel="calendar_events"
+							status="open"
+							results="20"
+						}
+						<div class="ten mobile-three columns">
+					    <input type="text" name="keywords" id="keywords" value="" placeholder="Search TeenTix Calendar" size="18" maxlength="100">
+					  </div>
+					  <div class="two mobile-one columns">
+					    <input type="submit" value="GO" class="submit button  expand postfix">
+					  </div>
+						{/exp:search:simple_form}
+						
+					</div>
+  			</dd>
 			</dl>
   	</div>
   </div>

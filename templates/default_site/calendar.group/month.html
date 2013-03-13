@@ -9,9 +9,9 @@
     
     
   <div class="row">		
-  
-		<div id="main" class="nine columns">
-			
+  		
+		<div id="main" class="twelve columns">
+						
 			{embed="calendar/.calendar-nav"}
   
 			<div id="monthly_calendar">
@@ -42,7 +42,11 @@
 			{/exp:calendar:cal}
 				
 				<div class="row">
-					<div class="five columns">
+					<div id="sidebar" class="two columns">
+				  	{embed="calendar/.sidebar"}
+			    </div><!-- end #sidebar -->
+			    
+					<div class="four columns">
 					{exp:calendar:cal
 					{if segment_3 == ''}
 						date_range_start="year-month-01" 
@@ -98,7 +102,7 @@
 					{/exp:calendar:cal}
 	      	</div>
 	      	
-	      	<div class="seven columns">
+	      	<div class="six columns">
       			<div id="month-schedule">
 	      		{exp:calendar:cal
 						{if segment_3 == ''}
@@ -149,12 +153,12 @@
 	      	</div>
 	      </div>
 				
+				{add_event}
+				
 			</div><!-- end #monthly_calendar -->
 		</div><!-- end #main -->
 
-		<div id="sidebar" class="three columns">
-  	{embed="calendar/.sidebar"}
-    </div><!-- end #sidebar -->
+
 
 	</div>
 		
