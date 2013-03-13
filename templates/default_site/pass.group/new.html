@@ -4,7 +4,7 @@
 }
 	{if segment_4 == entry_date}
 
-		{exp:calendar:date base_date="{entry_date format='%Y-%m-%d'}" output_date="2 weeks" } 
+		{exp:calendar:date base_date="{entry_date format='%Y-%m-%d'}" output_date="1 month" } 
 			
 			{embed="pass/.pass" name="{app_first_name} {app_last_name}" issue_date="{entry_date format='%M %j, %Y'}" expiration_date="{date format='%M %j, %Y'}"}		
 			
