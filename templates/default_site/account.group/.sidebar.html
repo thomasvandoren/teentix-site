@@ -3,8 +3,10 @@
 <ul id="account_nav">
 	<li><a href="{path='account/index'}">Account Home</a></li>
 	<li><a href="{path='account/edit'}">Edit Profile</a></li>
+{if fbc_logged_in == "n"} 
 	<li><a href="{path='account/settings'}">Edit Email</a></li>
 	<li><a href="{path='account/password-update'}">Edit Password</a></li>
+{/if}
 	<li><a href="{path='account/events'}">My Events</a></li>
 	<li><a href="{path='account/comments'}">My Comments</a></li>
 	<li><a href="{path='account/new_pass'}">Replace a Lost TeenTix Pass</a></li>
