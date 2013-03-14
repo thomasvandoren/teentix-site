@@ -12,8 +12,8 @@
 /* -----------------------------------------
    Shared Styles
 ----------------------------------------- */
-
 body {
+	min-width: 1020px;
 	background: #1E7577;
 	color: #4D4D4D;
   font-family: "museo-sans",sans-serif;
@@ -1104,18 +1104,31 @@ ul.breadcrumbs li.current a {
 .calendar #sidebar .active .label {
 	background: #000;
 }
+.calendar #sidebar .active .label:hover {
+	background: #000;
+	cursor: default;
+}
 .calendar #sidebar .inactive .label {
 	background: #ddd;
 }
 .calendar #sidebar .inactive .label:hover {
 	background: #bbb;
 }
+.calendar #sidebar .cat-clear .label {
+	padding-left: 22px;
+	font-weight: bold;
+	background: #ddd url(images/site/close-x-12.png) no-repeat 5px 6px;
+}
 .calendar #sidebar .cat-clear.active .label {
-	background: #FFDE00;
+	background: #FFDE00 url(images/site/close-x-12.png) no-repeat 5px 6px;
+}
+.calendar #sidebar .cat-clear.active .label:hover {
+	cursor: pointer;
+	background: #ecca3a url(images/site/close-x-12.png) no-repeat 5px 6px;
 }
 .calendar #sidebar .cat-clear.inactive a:hover {
 	cursor: default;
-	background: #ddd;
+	background: #ddd url(images/site/close-x-12.png) no-repeat 5px 6px;
 }
 
 
