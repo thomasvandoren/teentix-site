@@ -4,37 +4,37 @@
 
 <div class="pageContents">
 	<table id="entries" class="mainTable padTable" border="0" cellspacing="0" cellpadding="0">
-		<thead>	
+		<thead>
 			<tr>
-				<th style="width:100%;" colspan="3"><?=ee()->lang->line('diagnostics_exp'); ?></th>
+				<th style="width:100%;" colspan="3"><?=lang('diagnostics_exp'); ?></th>
 			</tr>
 		</thead>
-		
+
 		<tbody>
 			<tr class="odd">
-				<td style="width:20%;"><?=ee()->lang->line('api_credentials_present'); ?></td>
+				<td style="width:20%;"><?=lang('api_credentials_present'); ?></td>
 				<td style="width:30%;">
 					<?=$api_credentials_present; ?>
 				</td>
-				<td style="width:50%;"><?=ee()->lang->line('api_credentials_present_exp'); ?></td>
+				<td style="width:50%;"><?=lang('api_credentials_present_exp'); ?></td>
 			</tr>
 			<!-- Facebook API credentials present -->
-			
+
 			<tr class="even">
-				<td><?=ee()->lang->line('logged_in_to_facebook'); ?></td>
+				<td><?=lang('logged_in_to_facebook'); ?></td>
 				<td>
 					<fb:login-button autologoutlink="true" onlogin="window.location.reload()"></fb:login-button>
 				</td>
-				<td><?=ee()->lang->line('logged_in_to_facebook_exp'); ?></td>
+				<td><?=lang('logged_in_to_facebook_exp'); ?></td>
 			</tr>
 			<!-- Facebook API login -->
-			
+
 			<tr class="odd">
-				<td><?=ee()->lang->line('api_successful_connect'); ?></td>
+				<td><?=lang('api_successful_connect'); ?></td>
 				<td>
 					<?=$api_successful_connect; ?>
 				</td>
-				<td><?=ee()->lang->line('api_successful_connect_exp'); ?></td>
+				<td><?=lang('api_successful_connect_exp'); ?></td>
 			</tr>
 			<!-- Facebook API successful connect -->
 		</tbody>

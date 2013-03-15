@@ -1,32 +1,21 @@
 <?php if ( ! defined('EXT')) exit('No direct script access allowed');
- 
- /**
- * Solspace - FBC
+
+/**
+ * Facebook Connect - Config
  *
- * @package 	Solspace:FBC
- * @author		Solspace DevTeam
- * @copyright	Copyright (c) 2010-2012, Solspace, Inc.
- * @link		http://www.solspace.com/docs/addon/c/Facebook_Connect/
- * @version		2.0.9
- * @filesource 	./system/expressionengine/third_party/fbc/
+ * NSM Addon Updater config file.
+ *
+ * @package		Solspace:Facebook Connect
+ * @author		Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @link		http://solspace.com/docs/facebook_connect
+ * @license		http://www.solspace.com/license_agreement
+ * @version		2.1.1
+ * @filesource	fbc/config.php
  */
 
- /**
- * FBC - Config
- *
- * NSM Addon Updater Config File
- *
- * @package 	Solspace:FBC
- * @author		Solspace DevTeam
- * @filesource 	./system/expressionengine/third_party/fbc/config.php
- */
+require_once 'constants.fbc.php';
 
-//since we are 1.x/2.x compatible, we only want this to run in 1.x just in case
-if (defined('APP_VER') AND APP_VER >= 2.0)
-{
-	require_once PATH_THIRD . '/fbc/constants.fbc.php';
-
-	$config['name']    								= 'Facebook Connect';
-	$config['version'] 								= FBC_VERSION;
-	$config['nsm_addon_updater']['versions_xml'] 	= 'http://www.solspace.com/software/nsm_addon_updater/facebook_connect';
-}
+$config['name']									= 'Facebook Connect';
+$config['version']								= FBC_VERSION;
+$config['nsm_addon_updater']['versions_xml'] 	= 'http://www.solspace.com/software/nsm_addon_updater/facebook_connect';

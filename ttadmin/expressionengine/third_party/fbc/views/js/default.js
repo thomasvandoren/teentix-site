@@ -8,12 +8,12 @@ jQuery(document).ready(function()
 	{
 		populate_select_field();
 	});
-	
+
 	jQuery("#prefs_form").submit(function(evt)
-	{		
+	{
 		if ( jQuery("select[name='fbc_member_group']").val() == '' )
 		{
-			alert('<?=ee()->lang->line("fbc_member_group_required"); ?>');
+			alert('<?=lang("fbc_member_group_required"); ?>');
 			return false;
 		}
 	});
@@ -23,10 +23,10 @@ function populate_select_field()
 {
 	//	Get value of pulldown
 	var fbc_member_group	= jQuery("select[name='fbc_member_group']").val();
-	
+
 	jQuery("select[name='fbc_member_group']").empty();
-	
-	jQuery("select[name='fbc_member_group']").append( '<option value=""><?=ee()->lang->line("select"); ?></option>' );
+
+	jQuery("select[name='fbc_member_group']").append( '<option value=""><?=lang("select"); ?></option>' );
 
 	jQuery(".fbc_eligible_member_groups").each(function(i,n)
 	{
