@@ -23,13 +23,17 @@ body {
 p, ul, ol, li,
 .button, input[type="text"], input[type="password"], input[type="date"], input[type="datetime"], input[type="email"], input[type="number"], input[type="search"], input[type="tel"], input[type="time"], input[type="url"], textarea {
 	font-family: "museo-sans", Helvetica, Arial, san-serif;
+	letter-spacing: .03em;
 }
-
+ul, ol, li, pre, p, blockquote {
+	font-size: 15px;
+}
 h1 {
   font-family: DharmaGothicM-Bold, sans-serif;
   color: #4D4D4D;
   font-weight: normal;
   font-style: normal;
+  letter-spacing: .03em;
 }
 h2, h3, h4, h5, h6 {
   font-family: "museo-sans",sans-serif;
@@ -39,12 +43,12 @@ h1, h2, h3, h4, h5, h6 {
 	margin-top: 0px;
 }
 p {
-	font-size: 14px;
+	font-size: 15px;
 }
 p.smaller { font-size: 12px; }
 a,
 a:visited {
-	color: #8FC73E;
+	color: #86B239;
 }
 a:hover {
 	color: #86B239;
@@ -57,16 +61,20 @@ a:hover {
 .button:hover {
 	background: #86B239;
 }
-.sans {
+.sans,
+.entry .sans {
   font-family: "museo-sans",sans-serif;
 }
-.slab {
+.slab,
+.entry slab {
   font-family: "quatro-slab",serif;
 }
-.condensed {
+.condensed,
+.entry .condensed {
   font-family: DharmaGothicM-Bold,sans-serif;
   font-weight: normal;
   font-style: normal;
+  letter-spacing: .03em;
 }
 .hidden {
 	display: none;
@@ -179,7 +187,7 @@ input.submit:hover {
 	color: #000;
 	text-transform: none;
 	letter-spacing: 0em;
-	font-size: 14px;
+	font-size: 15px;
 	margin-top: 6px;
 }
 
@@ -408,7 +416,7 @@ input.submit:hover {
 	margin-right: 15px;
 	font-family: "quatro-slab",serif;
 	font-size: 18px;
-	letter-spacing: .03em;
+	letter-spacing: .04em;
 	text-transform: capitalize;
 	border-right: 2px dotted #9BBCBD;
 }
@@ -449,9 +457,12 @@ input.submit:hover {
 	padding-right: 30px;
 }
 #main-nav .flyout h4 {
-	font-weight: 400;
-	color: #fff;	
-	font-size: 22px;
+	font-weight: 700;
+	color: #79CAC9;	
+	font-size: 18px;
+}
+#main-nav .section-head {
+	margin-bottom: 5px;
 }
 #main-nav #get-lost-pass {
 	width: 135px;
@@ -576,25 +587,25 @@ ul.breadcrumbs li.current a {
 .entry li {
 	list-style-position: outside;
 }
+.entry .entry-title {
+	font-family: "quatro-slab",serif;
+}
 .entry-date {
 	font-size: 12px;
 	margin-bottom: 0px;
 	text-transform: uppercase;
 	color: #999;
 }
-.entry-category {
-	font-size: 15px;
-	letter-spacing: .07em;
-  font-family: DharmaGothicM-Bold,sans-serif;
-  font-weight: normal;
-  text-transform: uppercase;
-	background: #8FC73E;
-	color: #fff;
-	border-radius: 5px;
-	margin: 10px 5px 10px 0px;
-	padding: 2px 5px 4px 5px;
-	display: block;
-	float: left;
+.entry .label {
+  font-family: "quatro-slab",serif;
+  font-size: 12px;
+  font-weight: 500;
+  color: #fff;
+  background: #8FC73E;
+}
+.entry .label.round {
+  border-radius: 7px 7px 7px 7px;
+  padding: 4px 7px;
 }
 .entry-category:visited {
 	color: #fff;
@@ -615,7 +626,16 @@ ul.breadcrumbs li.current a {
 .entry-category.weird-of-the-week {
 	background: #1E7577;
 }
-
+.entry .big_headline {
+	color: #00a7a0;
+	letter-spacing: .05em;
+	margin: 25px 0px 10px 0px;
+}
+.entry .medium_headline {
+	letter-spacing: .05em;
+	margin: 25px 0px 10px 0px;
+	font-size: 20px;
+}
 
 
 /* -----------------------------------------
@@ -716,7 +736,7 @@ ul.breadcrumbs li.current a {
 }
 .home #main-featured .slide-text {
 	position: absolute;
-	width: 550px;
+	width: 700px;
 	height: 360px;
 	padding: 30px 100px 30px 30px;
 	color: #fff;
@@ -725,20 +745,21 @@ ul.breadcrumbs li.current a {
 }
 .home #main-featured .event-name {
 	color: #fff;
-	font-size: 48px;
-	font-weight: 400;
-	margin-bottom: 10px;
+	font-size: 56px;
+	margin-bottom: 7px;
 }
 .home #main-featured .event-date {
 	color: #81AAAD;
-	font-size: 21px;
-	text-transform: uppercase;
+	font-size: 24px;
+	text-transform: capitalize;
 	margin-bottom: 5px;
+	letter-spacing: .03em;
 }
 .home #main-featured .event-venue {
-	font-size: 21px;
+	font-size: 18px;
 	text-transform: uppercase;
-	font-weight: 100;
+	font-weight: 400;
+	letter-spacing: .03em;
 }
 .home #main-featured a.slide-more {
 	display: block;
@@ -783,7 +804,7 @@ ul.breadcrumbs li.current a {
 	margin-left: 5px;
 	padding: 0px 10px 0px 4px;
 	border-radius: 3px;
-	font-size: 14px;
+	font-size: 15px;
 	font-weight: 400;
 	letter-spacing: .1em;
 	text-transform: uppercase;
@@ -901,7 +922,7 @@ ul.breadcrumbs li.current a {
 }
 .calendar .event-count {
 	font-weight: normal;
-	font-size: 14px;
+	font-size: 15px;
 }
 
 
@@ -1281,7 +1302,7 @@ ul.breadcrumbs li.current a {
 }
 #org-grid .org-name {
 	text-align: center;
-	font-size: 14px;
+	font-size: 15px;
 	margin-bottom: 10px;
 	color: #B3B3B3;
 	text-transform: uppercase;
@@ -1332,7 +1353,7 @@ ul.breadcrumbs li.current a {
 }
 .locations #location-sort h5 {
 	margin: 10px 0px;
-	font-size: 14px;
+	font-size: 15px;
 }
 .locations #location-sort a {
 	background: url(images/site/arrow-d-gray.png) no-repeat right center;
@@ -1397,27 +1418,32 @@ ul.breadcrumbs li.current a {
 }
 .blog .entry {
 	border-top: 2px dotted #9BBCBD;
-	padding-top: 10px;
+	padding-top: 20px;
 	padding-bottom: 50px;
 }
 .blog .entry-title  {
-  font-family: DharmaGothicM-Bold,sans-serif;
+  font-family: "quatro-slab",serif;
   font-weight: normal;
-	font-size: 48px;
-	margin-bottom: 3px;
+  font-style: normal;
+	font-size: 28px;
+	letter-spacing: .03em;
+	margin-bottom: 8px;
 }
 .blog #page-subhead + .entry-cat-list {
 	margin-top: -10px;
 }
+.blog #page-subhead,
 .blog #page-subhead p {
-	color: #87AEB0;
-	font-size: 24px;
+	color: #00a7a0;
+	font-size: 18px;
 	line-height: 1.2em;
-	margin-bottom: 5px;
+	margin-bottom: 8px;
 }
 .blog .entry-date {
+	color: #bbb;
 	margin-bottom: 20px;
-	font-size: 18px;
+	font-size: 15px;
+	letter-spacing: .05em;
 }
 .blog .entry-main-image {
 	text-align: center;
@@ -1434,6 +1460,8 @@ ul.breadcrumbs li.current a {
 }
 .blog.single #page-name {
 	margin-bottom: 3px;
+	font-family: "quatro-slab",serif;
+	font-size: 28px;
 }
 .blog.single .entry {
 	border: none;
@@ -1509,7 +1537,7 @@ ul.breadcrumbs li.current a {
 
 /* signup form */
 .application form p {
-	font-size: 14px;
+	font-size: 15px;
 	color: #4D4D4D;
 	font-weight: 500;
 }
@@ -1731,6 +1759,38 @@ ul.breadcrumbs li.current a {
 .search #pagination {
 	border-top: 2px dotted #9BBCBD;
 	padding-top: 5px;
+}
+
+
+
+
+
+/* -----------------------------------------
+   How To
+----------------------------------------- */
+#how-to .big_headline {
+	color: #00a7a0;
+	margin: 20px 0px;
+	text-transform: uppercase;
+}
+#how-to .graphic-number {
+	vertical-align: middle;
+	height: 45px;
+	width: auto;
+	margin-top: -6px;
+	margin-right: 5px;
+}
+#how-to .graphic-pass,
+#how-to .graphic-event,
+#how-to .graphic-go {
+	text-align: center;
+	margin-top: 30px;
+}
+#how-to .graphic-pass img,
+#how-to .graphic-event img,
+#how-to .graphic-go img {
+	max-width: 400px;
+	height: auto !important;
 }
 
 

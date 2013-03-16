@@ -17,3 +17,10 @@ img {
 	display: block;
 	margin: 10px auto;
 }
+.big_headline {
+	color: #00a7a0;
+	letter-spacing: .05em;
+}
+.medium_headline {
+	letter-spacing: .05em;
+}
