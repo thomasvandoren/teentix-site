@@ -26,9 +26,10 @@ p, ul, ol, li,
 }
 
 h1 {
-  font-family: "atrament-web",sans-serif;
-  font-stretch: narrower;
+  font-family: DharmaGothicM-Bold, sans-serif;
   color: #4D4D4D;
+  font-weight: normal;
+  font-style: normal;
 }
 h2, h3, h4, h5, h6 {
   font-family: "museo-sans",sans-serif;
@@ -63,7 +64,9 @@ a:hover {
   font-family: "quatro-slab",serif;
 }
 .condensed {
-  font-family: "atrament-web",sans-serif;
+  font-family: DharmaGothicM-Bold,sans-serif;
+  font-weight: normal;
+  font-style: normal;
 }
 .hidden {
 	display: none;
@@ -582,8 +585,8 @@ ul.breadcrumbs li.current a {
 .entry-category {
 	font-size: 15px;
 	letter-spacing: .07em;
-  font-family: "atrament-web",sans-serif;
-  font-weight: 700;
+  font-family: DharmaGothicM-Bold,sans-serif;
+  font-weight: normal;
   text-transform: uppercase;
 	background: #8FC73E;
 	color: #fff;
@@ -1398,8 +1401,8 @@ ul.breadcrumbs li.current a {
 	padding-bottom: 50px;
 }
 .blog .entry-title  {
-  font-family: "atrament-web",sans-serif;
-  font-stretch: narrower;
+  font-family: DharmaGothicM-Bold,sans-serif;
+  font-weight: normal;
 	font-size: 48px;
 	margin-bottom: 3px;
 }
@@ -1800,3 +1803,12 @@ ul.breadcrumbs li.current a {
 	vertical-align: middle;
 	margin: 0px 10px;
 }
+
+
+
+
+/* -----------------------------------------
+   Fonts
+----------------------------------------- */
+@font-face {font-family: 'DharmaGothicM-Bold';src: url('fonts/webfonts/263FDC_0_0.eot');src: url('fonts/webfonts/263FDC_0_0.eot?#iefix') format('embedded-opentype'),url('fonts/webfonts/263FDC_0_0.woff') format('woff'),url('fonts/webfonts/263FDC_0_0.ttf') format('truetype');}
+ 
