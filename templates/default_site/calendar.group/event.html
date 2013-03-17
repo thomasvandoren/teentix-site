@@ -24,8 +24,7 @@
 			
 			  <h1 id="page-name">{event_title}</h1>
 			  <div class="entry-cat-list clearfix">
-					{categories show_group="5"}<a href="{path='calendar/all'}" class="entry-category {category_url_title}">{category_name}</a>{/categories}
-					{categories show_group="1"}<a href="{path='calendar/all'}" class="entry-category">{category_name}</a>{/categories}
+					{categories show_group="5"}<a href="{path='calendar/all'}" class="label round {category_url_title}">{category_name}</a>{/categories}{categories show_group="1"}<a href="{path='calendar/all'}" class="label round">{category_name}</a>{/categories}
 				</div>
 			  <p class="event-date slab">
 			  {if event_last_date != 0}			  

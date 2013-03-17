@@ -5,6 +5,10 @@
   		{if segment_8 == category_id}active{/if}
   		{if segment_8 != category_id}inactive{/if}
     {/if}
+    {if segment_3 == 'category'}
+  		{if segment_5 == category_id}active{/if}
+  		{if segment_5 != category_id}inactive{/if}
+    {/if}
     "><a class="round label"
     {if segment_2 == "all"}
     	href="{site_url}{segment_1}/{segment_2}/category/{category_url_title}/{category_id}"
@@ -21,6 +25,10 @@
   		{if segment_8 == category_id}active{/if}
   		{if segment_8 != category_id}inactive{/if}
     {/if}
+    {if segment_3 == 'category'}
+  		{if segment_5 == category_id}active{/if}
+  		{if segment_5 != category_id}inactive{/if}
+    {/if}
     "><a class="round label"
     {if segment_2 == "all"}
     	href="{site_url}{segment_1}/{segment_2}/category/{category_url_title}/{category_id}"
@@ -33,8 +41,9 @@
 	{/exp:channel:categories}		
 	
 		<li class="cat-clear
-		{if segment_6 == 'category'}active{/if}
-		{if segment_6 != 'category'}inactive{/if}
+		{if segment_6 == 'category'}active
+		{if:elseif segment_3 == 'category'}active
+		{if:else}inactive{/if}
 		">
 	{if segment_2 == "all"}
 		<a class="round label" href="{site_url}{segment_1}/{segment_2}/">Clear</a>

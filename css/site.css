@@ -607,25 +607,6 @@ ul.breadcrumbs li.current a {
   border-radius: 7px 7px 7px 7px;
   padding: 4px 7px;
 }
-.entry-category:visited {
-	color: #fff;
-	background: #8FC73E;
-}
-.entry-category:hover {
-	color: #fff;
-	background: #86B239;
-}
-.entry-category.pick {
-	background: #1E7577 url(images/site/pick-star.png) no-repeat 3px 5px;
-	padding-left: 15px;
-}
-.entry-category.pick:hover,
-.entry-category.weird-of-the-week:hover {
-	background-color: #004C4C;
-}
-.entry-category.weird-of-the-week {
-	background: #1E7577;
-}
 .entry .big_headline {
 	color: #00a7a0;
 	letter-spacing: .05em;
@@ -868,7 +849,7 @@ ul.breadcrumbs li.current a {
 	top: -10px;
 }
 .calendar dl.tabs.five-up dd {
-	width: 20%;
+	width: 19%;
 }
 .calendar dl.tabs.five-up dd.tab-header {
 	width: 25%
@@ -894,7 +875,10 @@ ul.breadcrumbs li.current a {
 }
 .calendar dl.tabs dd.tab-search {
 	text-align: right;
+	width: 240px;
+	padding-left: 10px;
 }
+
 .calendar .header {
 	position: relative;
 	border-bottom: 1px solid #999;
@@ -1163,11 +1147,37 @@ ul.breadcrumbs li.current a {
 	border-bottom: 1px solid #ccc;
 	padding-bottom: 10px;
 }
-.event #event-genre {
-	margin-bottom: 3px;
-}
 .event #page-name {
-	margin-bottom: 0px;
+	margin-bottom: 10px;
+}
+.event .entry-cat-list {
+	height: 20px;
+	margin-bottom: 10px;
+}
+.event .round {
+	padding: 4px 7px 4px 7px;
+	border-radius: 7px;
+}
+.event .label {
+	font-weight: 500;
+	font-size: 12px;
+	font-family: "quatro-slab",serif;
+	background: #8FC73E;
+	color: #fff;
+	margin-right: 10px;
+}
+.event .label:hover {
+	color: #fff;
+	background: #86B239;
+}
+.event .label.pick,
+.event .label.weird {
+	background: #1E7577 url(images/site/pick-star.png) no-repeat 5px 6px;
+	padding-left: 18px;
+}
+.event .label.pick:hover,
+.event .label.weird:hover {
+	background-color: #004C4C;
 }
 .event .event-date {
 	font-size: 24px;
