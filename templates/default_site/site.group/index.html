@@ -23,7 +23,7 @@
 	      		<h3 class="event-name condensed">{title}</h3>
 	      		<p class="event-date slab">{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}</p>
 	      		<p class="event-venue">{related_entries id="event_venue"}{title}{/related_entries}</p>
-	      		<a class="slide-more" href="{url_title_path='calendar/event'}">More</a>
+	      		<a class="button medium yellow" href="{url_title_path='calendar/event'}">View Event</a>
       		</div>	      		
       	</div>
       {/exp:calendar:events}
@@ -63,7 +63,7 @@
     		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
 {!--     		<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p> --}
     		<p>
-    		{exp:trunchtml chars="240" inline="..." ending="<a href='{url_title_path=blog}' class='more condensed'>More</a>"}	    		
+    		{exp:trunchtml chars="240" inline="..." ending=" <a href='{url_title_path=blog}' class='button tiny'>More</a>"}	    		
 	    		{exp:strip_line_breaks}
 	    		{exp:strip_html keep='b|em'}
 					
@@ -84,7 +84,7 @@
 				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
     		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
     		<p>
-    		{exp:trunchtml chars="80" inline="..." ending="<a href='{url_title_path=blog}' class='more condensed'>More</a>"}	    		
+    		{exp:trunchtml chars="80" inline="..." ending=" <a href='{url_title_path=blog}' class='button tiny'>More</a>"}	    		
 	    		{exp:strip_html keep='b|em'}
 					{exp:strip_line_breaks}
 						{blog_body}
@@ -105,12 +105,23 @@
     	<hr />
       <div id ="home-contact">
 	      <div class="row">
-	      	<div id="contact-left" class="two columns">&nbsp;</div>
-          <div id="contact-center" class="six columns">
+	      	<div id="contact-left" class="one columns">&nbsp;</div>
+          <div id="contact-center" class="seven columns">
           	<img src="{site_url}css/images/site/something-to-say.png" />
           </div>
           <div id="contact-right" class="four columns">
-            <a href="{site_url}contact" class="button">Contact Us</a>
+          	<div id="contact-buttons">
+	            <a href="{site_url}contact" class="button large">Contact Us</a><br />
+            
+	            <img src="{site_url}css/images/site/contact-visit.png" class="contact-divider" /><br />
+	            <div class="social-buttons">
+								<a class="fb" target="_blank" href="http://www.facebook.com/theteentixpage"></a>
+								<a class="twitter" target="_blank" href="http://www.twitter.com/teentix"></a>
+								<a class="youtube" target="_blank" href="http://www.youtube.com/teentix"></a>
+								<a class="flickr" target="_blank" href="http://www.flickr.com/teentix"></a>
+							</div>
+	            
+            </div>
           </div>
         </div>
       </div>

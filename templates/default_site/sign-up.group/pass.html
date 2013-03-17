@@ -24,15 +24,18 @@
 		<div class="row">
 		
 	    <div id="left" class="five columns">
-	      <h4 class="sans">{application_confirm_pass_header}</h4>
+
+	      <div style="text-align: center; margin: 30px 0px 30px 0px;"><a href="{site_url}pass/new/{entry_id}/{entry_date}" class="button large yellow" target="_blank">Download Your<br />Temporary Pass</a></div>
+<!-- 	      <h4 class="sans">{application_confirm_pass_header}</h4> -->
 	      {application_confirm_pass_content}
-				<h4><a href="{site_url}pass/new/{entry_id}/{entry_date}" class="button large" target="_blank">Temporary Pass</a></h4>
+				
 			</div>
 			
 			<div id="right" class="five columns offset-by-one end">
+				
 				<h4 class="sans">{application_confirm_account_header}</h4>
 				{application_confirm_account_content}
-				<p><a href="{site_url}account/new" class="button medium">Create an Account &raquo;</a></>
+				<div style="text-align: center; margin: 25px 0px 50px 0px;"><a href="{site_url}account/new" class="button medium">Create an Account &raquo;</a></div>
 	    </div>
 	        
 	  </div>
