@@ -1907,10 +1907,10 @@ ul.breadcrumbs li.current a {
 	padding: 40px 0px;	
 }
 #credits p {
-	color: #9BBCBD;
+	color: #1E7577;
 	text-transform: uppercase;
 	font-size: 12px;
-	line-height: 1em;
+	line-height: 50px;
 	margin: 0px;
 	padding: 0px;
 }
@@ -1925,6 +1925,10 @@ ul.breadcrumbs li.current a {
 }
 #credits #so-logo {
 	text-align: right;
+}
+#credits #so-logo img {
+	height: 26px;
+	margin-left: 5px;
 }
 
 
