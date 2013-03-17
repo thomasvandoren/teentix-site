@@ -83,6 +83,9 @@ a:hover {
   box-shadow: none;
   outline: none;
   border: none;
+  padding: 6px 20px 7px;
+	font-size: 36px;
+	border-radius: 10px;
 }
 .button.tiny {
 	font-family: "museo-slab",serif;
@@ -94,7 +97,9 @@ a:hover {
   padding: 3px 6px;
 }
 .button.small {
-	
+	padding: 3px 6px;
+	border-radius: 7px;
+  font-size: 18px;
 }
 .button.medium {
   padding: 6px 20px 7px;
@@ -116,6 +121,9 @@ a:hover {
 	background: #FFC200
 }
 
+.centered {
+	text-align: center;
+}
 
 .edit-this,
 .edit-this:visited {
@@ -1866,13 +1874,14 @@ ul.breadcrumbs li.current a {
 	margin-right: 20px;
 }
 #footer #footer-links {
-	border-left: 2px dotted #999;
+	border-left: 2px dotted #004C4C;
 	padding-left: 20px;
 }
 #footer .section-head {
 	color: #fff;
 	line-height: 1em;
 	padding-bottom: 5px;
+	border-bottom: 1px solid #004C4C;
 }
 #footer ul {
 	margin-bottom: 0px;
@@ -1895,7 +1904,7 @@ ul.breadcrumbs li.current a {
 #credits {
 	background: #004c4c url(images/site/trans-texture.png) 0px -30px;
 	width: 100%;
-	padding: 20px 0px;	
+	padding: 40px 0px;	
 }
 #credits p {
 	color: #9BBCBD;
@@ -1907,7 +1916,15 @@ ul.breadcrumbs li.current a {
 }
 #credits img {
 	vertical-align: middle;
-	margin: 0px 10px;
+	margin: 0px 10px 0px 0px;
+	max-height: 45px;
+	width: auto;
+}
+#credits #sc-logo {
+	padding-left: 55px;
+}
+#credits #so-logo {
+	text-align: right;
 }
 
 
