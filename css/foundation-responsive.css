@@ -45,10 +45,10 @@ p a, p a:visited { line-height: inherit; }
 
 /* Misc ---------------------- */
 .left { float: left; }
-/* @media only screen and (max-width: 767px) { .left { float: none; } } */
+@media only screen and (max-width: 767px) { .left { float: none; } }
 
 .right { float: right; }
-/* @media only screen and (max-width: 767px) { .right { float: none; } } */
+@media only screen and (max-width: 767px) { .right { float: none; } }
 
 .text-left { text-align: left; }
 
@@ -168,7 +168,7 @@ label { font-size: 14px; color: #4d4d4d; cursor: pointer; display: block; font-w
 label.right { float: none; text-align: right; }
 label.inline { line-height: 32px; margin: 0 0 12px 0; }
 
-/* @media only screen and (max-width: 767px) { label.right { text-align: left; } } */
+@media only screen and (max-width: 767px) { label.right { text-align: left; } }
 .prefix, .postfix { display: block; position: relative; z-index: 2; text-align: center; width: 100%; padding-top: 0; padding-bottom: 0; height: 32px; line-height: 31px; }
 
 a.button.prefix, a.button.postfix { padding-left: 0; padding-right: 0; text-align: center; }
@@ -199,7 +199,6 @@ fieldset legend { font-weight: bold; background: white; padding: 0 3px; margin: 
 
 .error small, small.error { display: block; padding: 6px 4px; margin-top: -13px; margin-bottom: 12px; background: #c60f13; color: #fff; font-size: 12px; font-size: 1.2rem; font-weight: bold; -moz-border-radius-bottomleft: 2px; -webkit-border-bottom-left-radius: 2px; border-bottom-left-radius: 2px; -moz-border-radius-bottomright: 2px; -webkit-border-bottom-right-radius: 2px; border-bottom-right-radius: 2px; }
 
-/*
 @media only screen and (max-width: 767px) { input[type="text"].one, input[type="password"].one, input[type="date"].one, input[type="datetime"].one, input[type="email"].one, input[type="number"].one, input[type="search"].one, input[type="tel"].one, input[type="time"].one, input[type="url"].one, textarea.one, .row textarea.one { width: 100% !important; }
   input[type="text"].two, .row input[type="text"].two, input[type="password"].two, .row input[type="password"].two, input[type="date"].two, .row input[type="date"].two, input[type="datetime"].two, .row input[type="datetime"].two, input[type="email"].two, .row input[type="email"].two, input[type="number"].two, .row input[type="number"].two, input[type="search"].two, .row input[type="search"].two, input[type="tel"].two, .row input[type="tel"].two, input[type="time"].two, .row input[type="time"].two, input[type="url"].two, .row input[type="url"].two, textarea.two, .row textarea.two { width: 100% !important; }
   input[type="text"].three, .row input[type="text"].three, input[type="password"].three, .row input[type="password"].three, input[type="date"].three, .row input[type="date"].three, input[type="datetime"].three, .row input[type="datetime"].three, input[type="email"].three, .row input[type="email"].three, input[type="number"].three, .row input[type="number"].three, input[type="search"].three, .row input[type="search"].three, input[type="tel"].three, .row input[type="tel"].three, input[type="time"].three, .row input[type="time"].three, input[type="url"].three, .row input[type="url"].three, textarea.three, .row textarea.three { width: 100% !important; }
@@ -212,7 +211,6 @@ fieldset legend { font-weight: bold; background: white; padding: 0 3px; margin: 
   input[type="text"].ten, .row input[type="text"].ten, input[type="password"].ten, .row input[type="password"].ten, input[type="date"].ten, .row input[type="date"].ten, input[type="datetime"].ten, .row input[type="datetime"].ten, input[type="email"].ten, .row input[type="email"].ten, input[type="number"].ten, .row input[type="number"].ten, input[type="search"].ten, .row input[type="search"].ten, input[type="tel"].ten, .row input[type="tel"].ten, input[type="time"].ten, .row input[type="time"].ten, input[type="url"].ten, .row input[type="url"].ten, textarea.ten, .row textarea.ten { width: 100% !important; }
   input[type="text"].eleven, .row input[type="text"].eleven, input[type="password"].eleven, .row input[type="password"].eleven, input[type="date"].eleven, .row input[type="date"].eleven, input[type="datetime"].eleven, .row input[type="datetime"].eleven, input[type="email"].eleven, .row input[type="email"].eleven, input[type="number"].eleven, .row input[type="number"].eleven, input[type="search"].eleven, .row input[type="search"].eleven, input[type="tel"].eleven, .row input[type="tel"].eleven, input[type="time"].eleven, .row input[type="time"].eleven, input[type="url"].eleven, .row input[type="url"].eleven, textarea.eleven, .row textarea.eleven { width: 100% !important; }
   input[type="text"].twelve, .row input[type="text"].twelve, input[type="password"].twelve, .row input[type="password"].twelve, input[type="date"].twelve, .row input[type="date"].twelve, input[type="datetime"].twelve, .row input[type="datetime"].twelve, input[type="email"].twelve, .row input[type="email"].twelve, input[type="number"].twelve, .row input[type="number"].twelve, input[type="search"].twelve, .row input[type="search"].twelve, input[type="tel"].twelve, .row input[type="tel"].twelve, input[type="time"].twelve, .row input[type="time"].twelve, input[type="url"].twelve, .row input[type="url"].twelve, textarea.twelve, .row textarea.twelve { width: 100% !important; } }
-*/
 /* Custom Forms ---------------------- */
 form.custom { /* Custom input, disabled */ }
 form.custom span.custom { display: inline-block; width: 16px; height: 16px; position: relative; top: 2px; border: solid 1px #ccc; background: #fff; }
@@ -358,8 +356,7 @@ img { -ms-interpolation-mode: bicubic; }
 .row:after { clear: both; }
 
 /* Mobile Grid and Overrides ---------------------- */
-@media only screen and (max-width: 767px) { /*
-body { -webkit-text-size-adjust: none; -ms-text-size-adjust: none; width: 100%; min-width: 0; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
+@media only screen and (max-width: 767px) { body { -webkit-text-size-adjust: none; -ms-text-size-adjust: none; width: 100%; min-width: 0; margin-left: 0; margin-right: 0; padding-left: 0; padding-right: 0; }
   .row { width: auto; min-width: 0; margin-left: 0; margin-right: 0; }
   .column, .columns { width: auto !important; float: none; }
   .column:last-child, .columns:last-child { float: none; }
@@ -369,10 +366,8 @@ body { -webkit-text-size-adjust: none; -ms-text-size-adjust: none; width: 100%; 
   .offset-by-one, .offset-by-two, .offset-by-three, .offset-by-four, .offset-by-five, .offset-by-six, .offset-by-seven, .offset-by-eight, .offset-by-nine, .offset-by-ten { margin-left: 0 !important; }
   .push-two, .push-three, .push-four, .push-five, .push-six, .push-seven, .push-eight, .push-nine, .push-ten { left: auto; }
   .pull-two, .pull-three, .pull-four, .pull-five, .pull-six, .pull-seven, .pull-eight, .pull-nine, .pull-ten { right: auto; }
-*/
   /* Mobile 4-column Grid */
-  /*
-.row .mobile-one { width: 25% !important; float: left; padding: 0 10px; }
+  .row .mobile-one { width: 25% !important; float: left; padding: 0 10px; }
   .row .mobile-one:last-child { float: right; }
   .row.collapse .mobile-one { padding: 0; }
   .row .mobile-two { width: 50% !important; float: left; padding: 0 10px; }
@@ -389,8 +384,7 @@ body { -webkit-text-size-adjust: none; -ms-text-size-adjust: none; width: 100%; 
   .push-two-mobile { left: 50%; }
   .pull-two-mobile { right: 50%; }
   .push-three-mobile { left: 75%; }
-  .pull-three-mobile { right: 75%; }
-*/ }
+  .pull-three-mobile { right: 75%; } }
 /* Block Grids ---------------------- */
 /* These are 2-up, 3-up, 4-up and 5-up ULs, suited
 for repeating blocks of content. Add 'mobile' to
@@ -420,7 +414,6 @@ that IE7/8 do not support :nth-child.
 .block-grid.five-up > li:nth-child(5n+1) { clear: both; }
 
 /* Mobile Block Grids */
-/*
 @media only screen and (max-width: 767px) { .block-grid.mobile > li { float: none; width: 100%; margin-left: 0; }
   .block-grid > li { clear: none !important; }
   .block-grid.mobile-two-up > li { width: 50%; }
@@ -430,7 +423,6 @@ that IE7/8 do not support :nth-child.
   .block-grid.mobile-four-up > li { width: 25%; }
   .block-grid.mobile-four-up > li:nth-child(4n+1) { clear: both; }
   .block-grid.mobile-five-up > li:nth-child(5n+1) { clear: both; } }
-*/
 /* Requires globals.css */
 /* Normal Buttons ---------------------- */
 .button { width: auto; background: #2ba6cb; border: 1px solid #1e728c; -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset; -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset; color: white; cursor: pointer; display: inline-block; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; font-size: 14px; font-weight: bold; line-height: 1; margin: 0; outline: none; padding: 10px 20px 11px; position: relative; text-align: center; text-decoration: none; -webkit-transition: background-color 0.15s ease-in-out; -moz-transition: background-color 0.15s ease-in-out; -o-transition: background-color 0.15s ease-in-out; transition: background-color 0.15s ease-in-out; /* Hovers */ /* Sizes */ /* Colors */ /* Radii */ /* Layout */ /* Disabled ---------- */ }
@@ -470,8 +462,8 @@ that IE7/8 do not support :nth-child.
 /* Don't use native buttons on iOS */
 input[type=submit].button, button.button { -webkit-appearance: none; }
 
-/* @media only screen and (max-width: 767px) { .button { display: block; }
-  button.button, input[type="submit"].button { width: 100%; padding-left: 0; padding-right: 0; } } */
+@media only screen and (max-width: 767px) { .button { display: block; }
+  button.button, input[type="submit"].button { width: 100%; padding-left: 0; padding-right: 0; } }
 /* Correct FF button padding */
 @-moz-document url-prefix() { button::-moz-focus-inner, input[type="reset"]::-moz-focus-inner, input[type="button"]::-moz-focus-inner, input[type="submit"]::-moz-focus-inner, input[type="file"] > input[type="button"]::-moz-focus-inner { border: none; padding: 0; }
   input[type="submit"].tiny.button { padding: 3px 10px 4px; }
@@ -543,14 +535,12 @@ ul.button-group.even.three-up li:first-child { width: 33.4%; }
 ul.button-group.even.four-up li { width: 25%; }
 ul.button-group.even.five-up li { width: 20%; }
 
-/*
 @media only screen and (max-width: 767px) { .button-group button.button, .button-group input[type="submit"].button { width: auto; padding: 10px 20px 11px; }
   .button-group button.button.large, .button-group input[type="submit"].button.large { padding: 15px 30px 16px; }
   .button-group button.button.medium, .button-group input[type="submit"].button.medium { padding: 10px 20px 11px; }
   .button-group button.button.small, .button-group input[type="submit"].button.small { padding: 7px 14px 8px; }
   .button-group button.button.tiny, .button-group input[type="submit"].button.tiny { padding: 5px 10px 6px; }
   .button-group.even button.button, .button-group.even input[type="submit"].button { width: 100%; padding-left: 0; padding-right: 0; } }
-*/
 div.button-bar { overflow: hidden; }
 div.button-bar ul.button-group { float: left; margin-right: 8px; }
 div.button-bar ul.button-group:last-child { margin-left: 0; }
@@ -600,7 +590,6 @@ ul.flyout li.active, .nav-bar li ul li.active { margin-top: 0; border-top: 1px s
 ul.flyout li.active a, .nav-bar li ul li.active a { background: #4d4d4d; border: none; color: #fff; height: auto; margin: 0; position: static; top: 0; -webkit-box-shadow: 0 0 0; -moz-box-shadow: 0 0 0; box-shadow: 0 0 0; }
 
 /* Mobile Styles */
-/*
 @media only screen and (max-device-width: 1280px) { .touch .nav-bar li.has-flyout > a { padding-right: 36px !important; } }
 @media only screen and (max-width: 1279px) and (min-width: 768px) { .touch .nav-bar li a { font-size: 13px; font-size: 1.3rem; }
   .touch .nav-bar li.has-flyout > a.flyout-toggle { padding: 20px !important; }
@@ -617,7 +606,6 @@ ul.flyout li.active a, .nav-bar li ul li.active a { background: #4d4d4d; border:
   .flyout.right { float: none; right: auto; left: -1px; }
   .flyout.small, .flyout.large { width: 100% !important; }
   .flyout p:last-child { margin-bottom: 18px; } }
-*/
 /* CSS for jQuery Orbit Plugin 1.4.0 Maintained for Foundation. foundation.zurb.com Free to use under the MIT license. http://www.opensource.org/licenses/mit-license.php
 */
 /* Container ---------------------- */
@@ -715,10 +703,8 @@ ul.orbit-bullets li.active.has-thumb { background-position: 0 0; border-top: 2px
 .reveal-modal .row { min-width: 0; margin-bottom: 10px; }
 
 /* Mobile */
-/*
 @media only screen and (max-width: 767px) { .reveal-modal-bg { position: absolute; }
   .reveal-modal, .reveal-modal.small, .reveal-modal.medium, .reveal-modal.large, .reveal-modal.xlarge { width: 80%; top: 15px; left: 50%; margin-left: -40%; padding: 20px; height: auto; } }
-*/
   /* NOTES Close button entity is &#215;
  Example markup <div id="myModal" class="reveal-modal"> <h2>Awesome. I have it.</h2> <p class="lead">Your couch.  I it's mine.</p> <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In ultrices aliquet placerat. Duis pulvinar orci et nisi euismod vitae tempus lorem consectetur. Duis at magna quis turpis mattis venenatis eget id diam. </p> <a class="close-reveal-modal">&#215;</a> </div> */
 /* Requires -globals.css -app.js */
@@ -763,7 +749,6 @@ ul.tabs-content.contained.vertical > li { border-width: 1px 1px 1px 1px; }
 
 .no-js ul.tabs-content > li { display: block; }
 
-/*
 @media only screen and (max-width: 767px) { dl.tabs.mobile { width: auto; margin: 20px -20px 40px; height: auto; }
   dl.tabs.mobile dt, dl.tabs.mobile dd { float: none; height: auto; }
   dl.tabs.mobile dd a { display: block; width: auto; height: auto; padding: 18px 20px; line-height: 1; border: solid 0 #ccc; border-width: 1px 0 0; margin: 0; color: #555; background: #eee; font-size: 15px; font-size: 1.5rem; }
@@ -775,7 +760,6 @@ ul.tabs-content.contained.vertical > li { border-width: 1px 1px 1px 1px; }
   dl.contained.mobile { margin-bottom: 0; }
   dl.contained.tabs.mobile dd a { padding: 18px 20px; }
   dl.tabs.mobile + ul.contained { margin-left: -20px; margin-right: -20px; border-width: 0 0 1px 0; } }
-*/
 /* Requires: globals.css */
 /* Table of Contents
 
@@ -836,7 +820,7 @@ ul.tabs-content.contained.vertical > li { border-width: 1px 1px 1px 1px; }
 table.show-for-xlarge, table.show-for-large, table.hide-for-small, table.hide-for-medium { display: table !important; }
 
 @media only screen and (max-width: 1279px) and (min-width: 768px) { .touch table.hide-for-xlarge, .touch table.hide-for-large, .touch table.hide-for-small, .touch table.show-for-medium { display: table !important; } }
-/* @media only screen and (max-width: 767px) { table.hide-for-xlarge, table.hide-for-large, table.hide-for-medium, table.show-for-small { display: table !important; } } */
+@media only screen and (max-width: 767px) { table.hide-for-xlarge, table.hide-for-large, table.hide-for-medium, table.show-for-small { display: table !important; } }
 /* Alerts ---------------------- */
 div.alert-box { display: block; padding: 6px 7px 7px; font-weight: bold; font-size: 14px; color: white; background-color: #2ba6cb; border: 1px solid rgba(0, 0, 0, 0.1); margin-bottom: 12px; -webkit-border-radius: 3px; -moz-border-radius: 3px; -ms-border-radius: 3px; -o-border-radius: 3px; border-radius: 3px; text-shadow: 0 -1px rgba(0, 0, 0, 0.3); position: relative; }
 div.alert-box.success { background-color: #5da423; color: #fff; text-shadow: 0 -1px rgba(0, 0, 0, 0.3); }
@@ -870,10 +854,8 @@ div.alert-box a.close:hover, div.alert-box a.close:focus { opacity: 0.4; }
 
 .tap-to-close { display: block; font-size: 10px; font-size: 1rem; color: #888888; font-weight: normal; }
 
-/*
 @media only screen and (max-width: 767px) { .tooltip { font-size: 14px; font-size: 1.4rem; line-height: 1.4; padding: 7px 10px 9px 10px; }
   .tooltip > .nub, .tooltip.top > .nub, .tooltip.left > .nub, .tooltip.right > .nub { border-color: transparent transparent black transparent; border-color: transparent transparent rgba(0, 0, 0, 0.85) transparent; top: -12px; left: 10px; } }
-*/
 /* Panels ---------------------- */
 .panel { background: #f2f2f2; border: solid 1px #e6e6e6; margin: 0 0 22px 0; padding: 20px; }
 .panel > :first-child { margin-top: 0; }
@@ -1060,19 +1042,16 @@ div.progress.round .meter { -webkit-border-radius: 1000px; -moz-border-radius: 1
 .lt-ie9 .top-bar ul li.has-dropdown > ul li { padding-right: 0; }
 
 /* Mobile Styles */
-@media only screen and (max-width: 1000px) { /* .top-bar { margin-bottom: 0; overflow: hidden; */ /* Override contain to grid stuff for breakpoint */ /* Setting up the sliding area */ /* When the Small Nav is Showing */ }
-  /*
-.top-bar .js-generated { display: block; }
+@media only screen and (max-width: 1000px) { .top-bar { margin-bottom: 0; overflow: hidden; /* Override contain to grid stuff for breakpoint */ /* Setting up the sliding area */ /* When the Small Nav is Showing */ }
+  .top-bar .js-generated { display: block; }
   .top-bar.contain-to-grid { margin: 0 auto; width: auto; }
   .top-bar.contain-to-grid:before, .top-bar.contain-to-grid:after { display: none; }
   .top-bar.contain-to-grid.fixed { left: auto; margin-left: auto; position: static; }
   .top-bar.fixed.expanded { height: auto; }
   .top-bar section { left: 0; position: relative; width: auto; -webkit-transition: left 300ms; -moz-transition: left 300ms; -o-transition: left 300ms; transition: left 300ms; }
   .top-bar ul { width: 100%; min-height: 100%; height: 100%; margin-bottom: 0; display: block; }
-*/
-  .top-bar ul li { /* float: none;  *//* Branding and name */ /* Dropdown Toggle */ /* Divider for breakpoint */ /* Search Overrides for breakpoint size */ /* Dropdown Level 1 */ /* Dropdown Level 2 */ }
- /*
- .top-bar ul li.active, .top-bar ul li:hover { background: #151515; }
+  .top-bar ul li { float: none; /* Branding and name */ /* Dropdown Toggle */ /* Divider for breakpoint */ /* Search Overrides for breakpoint size */ /* Dropdown Level 1 */ /* Dropdown Level 2 */ }
+  .top-bar ul li.active, .top-bar ul li:hover { background: #151515; }
   .top-bar ul li.name { background: black; }
   .top-bar ul li.name h1 { line-height: 1; }
   .top-bar ul li.toggle-topbar { cursor: pointer; display: block; height: 45px; position: absolute; right: 0; top: 0; width: 50%; }
@@ -1114,5 +1093,4 @@ div.progress.round .meter { -webkit-border-radius: 1000px; -moz-border-radius: 1
   .top-bar.expanded { height: 100%; }
   .top-bar.expanded ul li.toggle-topbar a { content: ""; display: block; width: 0; height: 0; border: solid 8px; border-color: transparent transparent rgba(255, 255, 255, 0.5) transparent; top: auto; bottom: 50%; margin-bottom: -4px; }
   .top-bar ul li.has-button { padding: 0 20px 5px; }
-  .top-bar ul li .button.small { margin: 0 !important; display: inline-block; width: 100%; }
-*/ }
+  .top-bar ul li .button.small { margin: 0 !important; display: inline-block; width: 100%; } }
