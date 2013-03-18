@@ -89,19 +89,21 @@
 				    return="account/new_pass_confirm/%%entry_id%%"
 					}
 					 
-					    <input type="hidden" name="name" value="{first_name} {middle_initial} {last_name}" />
-					    <input type="hidden" name="email" value="{email}" />
-					    <input type="hidden" name="street1" value="{street_address}" />
-					    <input type="hidden" name="city" value="{city}" />
-					    <input type="hidden" name="state" value="{state}" />
-					    <input type="hidden" name="zip_code" value="{zip_code}" />
-					    <input type="hidden" name="country" value="{country}" />
-					    <input type="hidden" name="birthday" value="{bday_m}-{bday_d}-{bday_y}" />
-					    <input type="hidden" name="member" value="{member_id}" />
-					    
-
-					 
-					    <p><input type="submit" name="submit" value="Request a pass" class="button" /></p>
+				    <input type="hidden" name="first_name" value="{first_name}" />
+				    <input type="hidden" name="middle_initial" value="{middle_initial}" />
+				    <input type="hidden" name="last_name" value="{last_name}" />
+				    <input type="hidden" name="email" value="{email}" />
+				    <input type="hidden" name="street1" value="{street_address}" />
+				    <input type="hidden" name="city" value="{city}" />
+				    <input type="hidden" name="state" value="{state}" />
+				    <input type="hidden" name="zip_code" value="{zip_code}" />
+				    <input type="hidden" name="country" value="{country}" />
+				    <input type="hidden" name="birth_month" value="{bday_m}" />
+				    <input type="hidden" name="birth_day" value="{bday_d}" />
+				    <input type="hidden" name="birth_year" value="{bday_y}" />
+				    <input type="hidden" name="member" value="{member_id}" />
+				 
+				    <p><input type="submit" name="submit" value="Request a pass" class="button" /></p>
 					 
 					{/exp:freeform:form}
 					

@@ -195,6 +195,9 @@ label.error {
 	margin-top: -8px;
 	margin-bottom: 10px;
 }
+label + label.error {
+	margin-top: 0px;
+}
 label.field_return  {
   padding-top: 24px;
 }

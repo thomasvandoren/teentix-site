@@ -172,7 +172,29 @@
   
   $('#nav-bar-login form').validate();
   
-  $('#lost-pass-form').validate();
+  $('#lost-pass-form').validate({
+    rules: {
+     email : {
+     	email: true
+     }
+    },
+    messages: {
+     'birth_month': "Please select your birth month",
+     'birth_day': "Please select your birth day",
+     'birth_year': "Please select your birth year"
+    },
+    errorPlacement: function(error, element) {
+      if (element.attr("name") == "birth_month") {
+        error.insertBefore(element.parent());
+      } else if (element.attr("name") == "birth_day") {
+        error.insertBefore(element.parent());
+      } else if (element.attr("name") == "birth_year") {
+        error.insertBefore(element.parent());
+      } else {
+      	error.insertAfter(element);
+      }
+    }
+  });
   
   $('#contact-form').validate({
     rules: {
