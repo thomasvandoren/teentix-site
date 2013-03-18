@@ -799,18 +799,10 @@ ul.breadcrumbs li.current a {
 	background-position: right top;
 }
 .home #home-promo {
-
+	text-align: center;
 }
-.home #home-promo .promo-background {
-	height: 344px;
-	width: 300px;
-	background: #F1F7E8;
-	border-radius: 15px;
-}
-.home #home-promo a {
-	position: absolute;
-	left: -20px;
-	top: 0px;
+.home #home-promo img {
+	margin-bottom: 20px;
 }
 .home .entry {
 	padding-bottom: 10px;
