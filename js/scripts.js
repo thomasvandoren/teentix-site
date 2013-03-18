@@ -60,21 +60,22 @@
   
   $('#application_form').validate({
     rules: {
-     'app_birthdate[]': { 
-     	valueNotEquals: "0" 
-     },
-     app_email : {
+     email : {
      	email: true
      }
     },
     messages: {
-     'app_birthdate[]': {
-      valueNotEquals: "Please select your birthdate."
-     }
+     'birth_month': "Please select your birth month",
+     'birth_day': "Please select your birth day",
+     'birth_year': "Please select your birth year"
     },
     errorPlacement: function(error, element) {
-      if (element.attr("name") == "app_birthdate[]") {
-        error.insertAfter(element.parent());
+      if (element.attr("name") == "birth_month") {
+        error.insertBefore(element.parent());
+      } else if (element.attr("name") == "birth_day") {
+        error.insertBefore(element.parent());
+      } else if (element.attr("name") == "birth_year") {
+        error.insertBefore(element.parent());
       } else {
       	error.insertAfter(element);
       }

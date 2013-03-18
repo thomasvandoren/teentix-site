@@ -17,7 +17,265 @@
     </div>
     
     <div id="main" class="eight columns">
-    {exp:safecracker 
+    {exp:freeform:form
+	    form_name="pass_application"
+	    form:id ="application_form"
+	    return="sign-up/pass/%%entry_id%%"
+		}
+		
+			<fieldset id="app_info">
+        <legend>Applicant Info  <span class="notice-required">Required information*</span></legend>
+        <p>Please fill out the information for the TeenTix pass holder</p>
+        <div class="row">
+          <div class="five columns">
+            <label for="first_name" class="require">First Name*</label>
+            <input type="text" name="first_name" id="first_name" class="required">
+          </div>
+          
+          <div class="two columns">
+            <label for="middle_initial">Middle Initial</label>
+            <input type="text" name="middle_initial" id="middle_initial">
+          </div>
+          
+          <div class="five columns">
+            <label for="last_name" class="require">Last Name*</label>
+            <input type="text" name="last_name" id="last_name" class="required">
+          </div>
+        </div>
+        
+            
+        <label for="phone1" class="require">Best Contact Phone Number*</label>
+        <input type="text" name="phone1" id="phone1" class="required">
+      
+        
+        <label for="app_birthdate" class="require">Birthdate (Applicant must be between 13 and 19 years old)*<br />
+        	
+        </label>
+        <div class="birthdate_select">
+          
+					<select name="birth_month" class="required">
+						<option value="">Month</option>
+						<option value="1">January</option>
+						<option value="2">February</option>
+						<option value="3">March</option>
+						<option value="4">April</option>
+						<option value="5">May</option>
+						<option value="6">June</option>
+						<option value="7">July</option>
+						<option value="8">August</option>
+						<option value="9">September</option>
+						<option value="10">October</option>
+						<option value="11">November</option>
+						<option value="12">December</option>
+					</select>
+					<select name="birth_day" class="required">
+						<option value="">Day</option>
+						<option value="1">01</option>
+						<option value="2">02</option>
+						<option value="3">03</option>
+						<option value="4">04</option>
+						<option value="5">05</option>
+						<option value="6">06</option>
+						<option value="7">07</option>
+						<option value="8">08</option>
+						<option value="9">09</option>
+						<option value="10">10</option>
+						<option value="11">11</option>
+						<option value="12">12</option>
+						<option value="13">13</option>
+						<option value="14">14</option>
+						<option value="15">15</option>
+						<option value="16">16</option>
+						<option value="17">17</option>
+						<option value="18">18</option>
+						<option value="19">19</option>
+						<option value="20">20</option>
+						<option value="21">21</option>
+						<option value="22">22</option>
+						<option value="23">23</option>
+						<option value="24">24</option>
+						<option value="25">25</option>
+						<option value="26">26</option>
+						<option value="27">27</option>
+						<option value="28">28</option>
+						<option value="29">29</option>
+						<option value="30">30</option>
+						<option value="31">31</option>
+					</select>
+					<select name="birth_year" class="required">
+						<option value="">Year</option>
+						<option value="1990">1990</option>
+						<option value="1991">1991</option>
+						<option value="1992">1992</option>
+						<option value="1993">1993</option>
+						<option value="1994">1994</option>
+						<option value="1995">1995</option>
+						<option value="1996">1996</option>
+						<option value="1997">1997</option>
+						<option value="1998">1998</option>
+						<option value="1999">1999</option>
+						<option value="2000">2000</option>
+						<option value="2001">2001</option>
+						<option value="2002">2002</option>
+						<option value="2003">2003</option>
+						<option value="2004">2004</option>
+						<option value="2005">2005</option>
+						<option value="2006">2006</option>
+						<option value="2007">2007</option>
+						<option value="2008">2008</option>
+						<option value="2009">2009</option>
+						<option value="2010">2010</option>
+						<option value="2011">2011</option>
+						<option value="2012">2012</option>
+						<option value="2013">2013</option>
+						<option value="2014">2014</option>
+						<option value="2015">2015</option>
+						<option value="2016">2016</option>
+						<option value="2017">2017</option>
+						<option value="2018">2018</option>
+						<option value="2019">2019</option>
+						<option value="2020">2020</option>
+					</select>
+        </div>
+        
+        <label for="school">School</label>
+        <input type="text" name="school" id="school">
+      
+      	<div class="app_interests_list clearfix">
+          <p>Interests?</p>
+					<label><input type="checkbox" name="interests[]" value="dance" /> Dance</label> 
+					<label><input type="checkbox" name="interests[]" value="film" /> Film</label> 
+					<label><input type="checkbox" name="interests[]" value="literature" /> Literature</label> 
+					<label><input type="checkbox" name="interests[]" value="music" /> Music</label> 
+					<label><input type="checkbox" name="interests[]" value="opera" /> Opera</label> 
+					<label><input type="checkbox" name="interests[]" value="theater" /> Theater</label> 
+					<label><input type="checkbox" name="interests[]" value="visual arts" /> Visual Arts</label> 
+        </div>
+        
+      </fieldset>
+      
+      <fieldset id="app_email_address"> 
+        <legend>E-mail Address</legend>
+        <p>Please provide us with an email address to receive your temporary pass.</p>
+        <label for="email" class="require">Email Address*</label>
+        <input type="text" name="email" id="email" class="required">
+        <label for="newsletter" class="label_checkbox">
+          <input type="checkbox" name="newsletter" id="newsletter" value="yes" checked="checked">
+          I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
+        </label>
+      </fieldset>
+      
+      <fieldset id="app_mailing_address"> 
+        <legend>Mailing Address</legend>
+        <p>Please provide us with a mailing address to receive your permanent pass.</p>
+        <label for="street1" class="require">Address*</label>
+        <input type="text" name="street1" id="street1"  class="required">
+        
+        <label for="city" class="require">City*</label>
+        <input type="text" name="city" id="city" class="eight required">
+        
+        <label for="state" class="require">State*</label>
+        <input type="text" name="state" id="state" class="eight required">
+        
+        <label for="zip_code" class="require">Zip Code*</label>
+        <input type="text" name="zip_code" id="zip_code" class="four required">
+        
+        <label for="country">Country (If not US)</label>
+        <input type="text" name="country" id="country" class="eight">
+      </fieldset>
+      
+      <fieldset id="app_other">
+        <legend>Other Info</legend>
+
+        <div class="app_member_type_list">
+          <p>Which applies to you?</p>
+          <label><input type="radio" name="member_type" value="teen"  />&nbsp;I am a Teen (currently aged 13-19)</label>
+          <label><input type="radio" name="member_type" value="parent"  />&nbsp;I am a Parent or Guardian applying for a teen</label>
+          <label><input type="radio" name="member_type" value="other"  />&nbsp;Other</label>
+        </div>      
+        
+        <label for="hear_about">How did you hear about TeenTix?</label>
+        <select name="hear_about" class="six">
+          <option value="" selected="selected">Select One</option>
+          <option value="friend">Friend or Sibling</option>
+          <option value="teacher">Teacher or School Counselor</option>
+          <option value="youth_group">Community Center or Youth Group</option>        
+          <option value="link">Link from a website</option>
+          <option value="social_media">Social Media (Facebook, Twitter)</option>
+          <option value="poster">Poster</option>
+          <option value="presentation">Presentation at School</option>
+          <option value="parent">Parent / Guardian</option>
+          <option value="other">Other</option>
+        </select>
+        
+        <label for="referrer">Who referred you to TeenTix?</label>
+        <input type="text" name="referrer" id="referrer">
+        
+        {if captcha}
+          <label for="captcha">Please enter the word you see in the image below:</label>
+          {captcha}
+          <input type="text" name="captcha" value="{captcha_word}" maxlength="20">
+        {/if}
+        
+      </fieldset>
+      
+      <div class="form_submit">
+        <input type="submit" name="submit" value="Next" class="button">
+      </div>
+      		
+{!-- 		old 
+        
+      <fieldset id="app_info">
+        <legend>Pass Holder Info  <span class="notice-required">Required information*</span></legend>
+
+        <label for="name" class="require">Full Name</label>
+        <input type="text" name="name" id="name" class="required">
+        
+            
+        <label for="phone1" class="require">Best Contact Phone Number*</label>
+        <input type="text" name="phone1" id="phone1" class="required eight">      
+        
+        <label for="birthday" class="require">Birthdate* (MM/DD/YYYY)</label>
+        <input type="text" name="birthday" id="birthday" class="required eight">  
+        
+      </fieldset>
+      
+      <fieldset id="app_mailing_address"> 
+        <legend>E-mail Address</legend>
+        <p>Please provide us with an email address to receive your temporary pass.</p>
+        <label for="email" class="require">Email Address*</label>
+        <input type="text" name="email" id="email" class="required">
+
+      </fieldset>
+      
+      <fieldset id="app_mailing_address"> 
+        <legend>Mailing Address</legend>
+        <p>Please provide us with a mailing address to receive your permanent pass.</p>
+        <label for="street1" class="require">Address*</label>
+        <input type="text" name="street1" id="street1" class="required">
+        
+        <label for="city" class="require">City*</label>
+        <input type="text" name="city" id="city" class="eight required">
+        
+        <label for="state" class="require">State*</label>
+        <input type="text" name="state" id="state" class="eight required">
+        
+        <label for="zip_code" class="require">Zip Code*</label>
+        <input type="text" name="zip_code" id="zip_code" class="four required">
+        
+        <label for="country">Country (If not US)</label>
+        <input type="text" name="country" id="country" class="eight">
+      </fieldset>     
+      
+      <div class="form_submit">
+        <input type="submit" name="submit" value="Submit" class="button">
+      </div>
+      --}
+      
+      
+      
+		{/exp:freeform:form}
+    {!--exp:safecracker 
       channel="applications" 
       return="sign-up/pass/ENTRY_ID" 
       dynamic_title="[app_first_name] [app_last_name] Pass Application" 
@@ -51,8 +309,6 @@
               
           <label for="app_phone" class="require">Best Contact Phone Number*</label>
           <input type="text" name="app_phone" id="app_phone" value="{app_phone}" class="required">
-          {!--<label for="app_phone_alt">Alternative Phone Number</label>
-          <input type="text" name="app_phone_alt" id="app_phone_alt" value="{app_phone_alt}">--}
         
           
           <label for="app_birthdate" class="require">Birthdate (Applicant must be between 13 and 19 years old)*<br />
@@ -136,7 +392,7 @@
           <input type="submit" name="submit" value="Next" class="button">
         </div>
         
-    {/exp:safecracker}
+    {/exp:safecracker--}
     </div>
     
   </div>

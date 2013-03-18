@@ -11,13 +11,14 @@
 		end_title="Temporary Pass"
 	} 
 
-{exp:channel:entries 
+{exp:freeform:entries
   entry_id="{segment_3}" 
-  track_views="one" 
+  form_name="pass_application"
+  status="not closed"
 }		  
 	  <div class="row">
 	    <div class="twelve columns">
-	      <h1 id="page-name">Welcome to TeenTix {app_first_name}!</h1>
+	      <h1 id="page-name">Welcome to TeenTix {freeform:field:first_name}!</h1>
 	    </div>
 	  </div>
   
@@ -25,8 +26,8 @@
 		
 	    <div id="left" class="five columns">
 
-	      <div style="text-align: center; margin: 30px 0px 30px 0px;"><a href="{site_url}pass/new/{entry_id}/{entry_date}" class="button large yellow" target="_blank">Download Your<br />Temporary Pass</a></div>
-<!-- 	      <h4 class="sans">{application_confirm_pass_header}</h4> -->
+	      <div style="text-align: center; margin: 30px 0px 30px 0px;"><a href="{site_url}pass/new/{freeform:entry_id}/{freeform:entry_date}" class="button large yellow" target="_blank">Download Your<br />Temporary Pass</a></div>
+ 	      <h4 class="sans">{application_confirm_pass_header}</h4>
 	      {application_confirm_pass_content}
 				
 			</div>
@@ -39,34 +40,30 @@
 	    </div>
 	        
 	  </div>
-	  
-		{if app_newsletter == 'yes'}
+		{if freeform:field:newsletter == 'yes'}
 		  {exp:mailchimp_ee:subscribe 
 		  	api_key="{mailchimp_api}" 
 				list_id="{mailchimp_list_id}"  
-		  	email_address="{app_email}" 
-		  	merge_FNAME="{app_first_name}" 
-		  	merge_LNAME="{app_last_name}" 
-		  	merge_MINITIAL="{app_middle_initial}"
-		  	merge_BDATE='{app_birthdate format="%Y-%m-%d"}' 
-		  	merge_SCHOOL="{app_school}"
-		  	merge_STREET="{app_address}"
-		  	merge_CITY="{app_city}"
-		  	merge_STATE="{app_state}"
-		  	merge_ZIP="{app_zip}"
-		  	merge_COUNTRY="{app_country}"
-		  	merge_PHONE="{app_phone}"
-		  	merge_REFER="{app_hear_about}"
-		  	merge_INTEREST="{categories show_group="1" backspace="2"}{category_name}, {/categories}"
-				interest_groups="{app_member_type}" 
+		  	email_address="{freeform:field:email}" 
+		  	merge_FNAME="{freeform:field:first_name}" 
+		  	merge_LNAME="{freeform:field:last_name}" 
+		  	merge_MINITIAL="{freeform:field:middle_initial}"
+		  	merge_BDATE='{freeform:field:birth_year}-{freeform:field:birth_month}-{freeform:field:birth_day}' 
+		  	merge_SCHOOL="{freeform:field:school}"
+		  	merge_STREET="{freeform:field:street1}"
+		  	merge_CITY="{freeform:field:city}"
+		  	merge_STATE="{freeform:field:state}"
+		  	merge_ZIP="{freeform:field:zip_code}"
+		  	merge_COUNTRY="{freeform:field:country}"
+		  	merge_PHONE="{freeform:field:phone1}"
+		  	merge_REFER="{freeform:field:hear_about}"
+		  	merge_INTEREST="{freeform:field:interests}"
+				interest_groups="{freeform:field:member_type}" 
 		  	double_optin='no'
 		  }
 		{/if}
-		
-		{if view_count_one < 1}
-			{embed="sign-up/.email" entry_id="{segment_3}"}
-		{/if}
-	{/exp:channel:entries}  
+
+{/exp:freeform:entries}  
 	 
 	{embed="inc/.footer"}
 {/if}
