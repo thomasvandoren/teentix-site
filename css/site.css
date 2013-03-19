@@ -97,9 +97,10 @@ a:hover {
   padding: 3px 6px;
 }
 .button.small {
-	padding: 3px 6px;
+	padding: 5px 6px 4px 6px;
 	border-radius: 7px;
-  font-size: 18px;
+  font-size: 14px;
+  font-family: "museo-slab",sans-serif;
 }
 .button.medium {
   padding: 6px 20px 7px;
@@ -358,6 +359,10 @@ input.submit:hover {
 #utility-nav #nav-bar-login input[type=text] {
 	width: 200px;
 }
+#utility-nav #nav-bar-login .button {
+	font-size: 14px;
+  font-family: "museo-slab",sans-serif;
+}
 #utility-nav ul > li.has-dropdown .dropdown li a {
 	padding-left: 20px;
 	line-height: 1.3em;
@@ -561,7 +566,7 @@ ul.breadcrumbs li.current a {
 	background: #fff;
 	position: relative;
 	padding-bottom: 30px;
-	padding-top: 10px;
+	padding-top: 20px;
 }
 #main-content .edit-this {
 	position: absolute;
@@ -917,7 +922,11 @@ ul.breadcrumbs li.current a {
 	width: 240px;
 	padding-left: 10px;
 }
-
+.calendar #calendar-search .button {
+	border-radius: 0px;
+	font-size: 14px;
+  font-family: "museo-slab",sans-serif;
+}
 .calendar .header {
 	position: relative;
 	border-bottom: 1px solid #999;
@@ -1563,6 +1572,11 @@ ul.breadcrumbs li.current a {
 .blog #blog-search {
 	margin-top: 30px;
 }
+.blog #blog-search .button {
+	border-radius: 0px;
+	font-size: 14px;
+  font-family: "museo-slab",sans-serif;
+}
 .blog .draft-status {
 	font-size: 24px;
 	color: #999;
@@ -1675,7 +1689,7 @@ ul.breadcrumbs li.current a {
 	font-style: italic;
 }
 .account .edit-profile {
-	margin-top: -10px;
+	margin-top: -4px;
 	float: right;
 }
 .account p.require {

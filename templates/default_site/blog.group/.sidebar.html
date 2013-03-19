@@ -24,12 +24,12 @@
 
 <div id="blog-categories">
 	<h4 class="section-head sans">Articles</h4>
-	{exp:channel:categories channel="blog" category_group="4"}
+	{exp:channel:categories channel="blog" category_group="4" show_empty="no"}
   <a href="{path='blog'}">{category_name}</a>
 	{/exp:channel:categories}
 	
 	<h4 class="section-head sans">Genres</h4>
-	{exp:channel:categories channel="blog" category_group="1"}
+	{exp:channel:categories channel="blog" category_group="1" show_empty="no"}
   <a href="{path='blog'}">{category_name}</a>
 	{/exp:channel:categories}
 </div>
