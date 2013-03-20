@@ -1,132 +1,6 @@
-{exp:fbc:prepare_page}
-<!DOCTYPE html>
+{if logged_out}{redirect="sign-up"}{/if}
+{embed="applications/.inc_header"}	    
 
-<!-- paulirish.com/2008/conditional-stylesheets-vs-css-hacks-answer-neither/ -->
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en" xmlns:fb="http://ogp.me/ns/fb#"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en" xmlns:fb="http://ogp.me/ns/fb#"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en" xmlns:fb="http://ogp.me/ns/fb#"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en" xmlns:fb="http://ogp.me/ns/fb#"> <!--<![endif]-->
-<head>
-  <meta charset="utf-8" />
-
-  <!-- Set the viewport width to device width for mobile -->
-  <meta name="viewport" content="width=device-width" />
-
-  <title>Applications | {site_name}</title>
-
-	<link rel="stylesheet" href="{site_url}css/foundation.css">
-  <link rel="stylesheet" href="{site_url}css/site.css">
-  
-  <link href="{path=css/_ee_saef_css}" type="text/css" rel="stylesheet" media="screen">
-  <script src="{site_url}js/modernizr.foundation.js"></script>
-    
-  <!-- IE Fix for HTML5 Tags -->
-  <!--[if lt IE 9]>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
-  
-  <script type="text/javascript" src="//use.typekit.net/tnb1byz.js"></script>
-	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-
-</head>
-<body class="application admin">
-
-	<div id="utility-nav">
-		<nav class="top-bar contain-to-grid">
-		  <ul>
-		  	<li><a href="{site_url}applications">TeenTix Applications</a></li>
-		    <li class="toggle-topbar"><a href="#"></a></li>
-		  </ul>
-		  <section>
-		
-		    <ul class="right">
-			    {if logged_out}
-	        <li class="has-dropdown">
-	          <a href="{path='account/login'}">Login</a>
-	          <ul class="dropdown">
-			        <li id="nav-bar-login">
-			          
-		          {exp:member:login_form 
-		          	{if segment_1 == ""}
-			          	return="{site_url}index.php"
-		          	{/if}
-		          	{if segment_1 != ""}
-		          		return="{exp:currentlee type='url'}"
-		          	{/if}
-		          }
-		            <label for="username">Email Address:</label>
-		            <input type="text" name="username" />
-		            <label for="password">Password:</label>
-		            <input type="password" name="password" />
-		            <input type="submit" name="submit" value="Submit" class="submit button small" />
-		          {/exp:member:login_form}
-			        </li>							
-			      </ul>
-	        </li>
-	      {/if}
-	      {if logged_in}
-	        <li><a href="{path='account'}">My Account</a></li>
-	        <li class="right"><a href="{path='logout'}">Logout</a></li>
-	      {/if}
-		    </ul>
-		  </section>
-		</nav><!-- end .top-bar -->
-
-	</div><!-- end #utility-nav -->
-  
-  <div id="main-content">
-  	<div class="row">
-	    <div class="twelve columns">
-	      <h1 id="page-name">TeenTix Pass Applications</h1>
-	    </div>
-	  </div>
-
-	  <div class="row">
-	    <div id="sidebar" class="four columns">
-	      <h4 class="sans">Pending Applications</h4>
-	      <ul>
-	      	<li>
-	      	{exp:freeform:entries
-	      		form_name="pass_application"
-	      		status="pending" 
-	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">New Passes [{freeform:total_results}] {/if}</a>
-	      	{if freeform:no_results}New Passes [0]{/if} 
-	      	{/exp:freeform:entries} 
-	      	</li>
-	      	<li>{exp:freeform:entries
-	      		form_name="request_pass"
-	      		status="pending" 
-	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Lost Passes [{freeform:total_results}] {/if}</a>
-	      	{if freeform:no_results}Lost Passes [0]{/if} 
-	      	{/exp:freeform:entries} </li>
-	      </ul>
-	      <hr />
-	      <h4 class="sans">Processed Applications</h4>
-	      <ul>
-	      	<li>
-	      	{exp:freeform:entries
-	      		form_name="pass_application"
-	      		status="open" 
-	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">New Passes [{freeform:total_results}] {/if}</a>
-	      	{if freeform:no_results}New Passes [0]{/if} 
-	      	{/exp:freeform:entries} 
-	      	</li>
-	      	<li>{exp:freeform:entries
-	      		form_name="request_pass"
-	      		status="open" 
-	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Lost Passes [{freeform:total_results}] {/if}</a>
-	      	{if freeform:no_results}Lost Passes [0]{/if} 
-	      	{/exp:freeform:entries} </li>
-	      	
-	      </ul>
-	      <hr />
-	      <p><strong><a href="{path='applications'}">Add new application</a></strong></p>
-	    </div>
-	    
 	    <div id="main" class="eight columns">
 	    {exp:freeform:form
 		    form_name="pass_application"
@@ -260,8 +134,8 @@
 	        <label for="email">Email Address</label>
 	        <input type="text" name="email" id="email">
 	        <label for="newsletter" class="label_checkbox">
-	          <input type="checkbox" name="newsletter" id="newsletter" value="yes" checked="checked">
-	          I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
+	          <input type="checkbox" name="newsletter" id="newsletter" value="yes">
+	          Sign up for newsletter
 	        </label>
 	      </fieldset>
 	      
@@ -287,13 +161,13 @@
 	        <legend>Other Info</legend>
 	
 	        <div class="app_member_type_list">
-	          <p>Which applies to you?</p>
-	          <label><input type="radio" name="member_type" value="teen"  />&nbsp;I am a Teen (currently aged 13-19)</label>
-	          <label><input type="radio" name="member_type" value="parent"  />&nbsp;I am a Parent or Guardian applying for a teen</label>
+	          <p>Which applies to applicant?</p>
+	          <label><input type="radio" name="member_type" value="teen"  />&nbsp;Teen (currently aged 13-19)</label>
+	          <label><input type="radio" name="member_type" value="parent"  />&nbsp;Parent or Guardian applying for a teen</label>
 	          <label><input type="radio" name="member_type" value="other"  />&nbsp;Other</label>
 	        </div>      
 	        
-	        <label for="hear_about">How did you hear about TeenTix?</label>
+	        <label for="hear_about">How did they hear about TeenTix?</label>
 	        <select name="hear_about" class="six">
 	          <option value="" selected="selected">Select One</option>
 	          <option value="friend">Friend or Sibling</option>
@@ -307,7 +181,7 @@
 	          <option value="other">Other</option>
 	        </select>
 	        
-	        <label for="referrer">Who referred you to TeenTix?</label>
+	        <label for="referrer">Who referred them to TeenTix?</label>
 	        <input type="text" name="referrer" id="referrer">
 	        
 	        {if captcha}
@@ -325,25 +199,5 @@
 	  	{/exp:freeform:form}
 	  </div>
 		
-  </div><!-- end #main-content -->  	
 	
-  <!-- Footer -->
-  <div id="footer">
-	  <footer class="row">
-	    <div class="twelve columns">
-	      footer
-	    </div> 
-	  </footer>
-  </div><!-- end #footer -->
-
-  <!-- Included JS Files (Compressed) -->
-  <script src="{site_url}js/jquery.js"></script>
-  <script src="{site_url}js/foundation.min.js"></script>
-  <script src="{site_url}js/jquery.validate.js"></script>
-	<script src="{site_url}js/jquery.cycle.all.js"></script>
-	
-  <!-- Initialize JS Plugins -->
-  <script src="{site_url}js/scripts.js?1"></script>
-
-</body>
-</html>
+{embed="application/inc_footer"}
