@@ -40,27 +40,8 @@
 	    </div>
 	        
 	  </div>
-		{if freeform:field:newsletter == 'yes'}
-		  {exp:mailchimp_ee:subscribe 
-		  	api_key="{mailchimp_api}" 
-				list_id="{mailchimp_list_id}"  
-		  	email_address="{freeform:field:email}" 
-		  	merge_FNAME="{freeform:field:first_name}" 
-		  	merge_LNAME="{freeform:field:last_name}" 
-		  	merge_MINITIAL="{freeform:field:middle_initial}"
-		  	merge_BDATE='{freeform:field:birth_year}-{freeform:field:birth_month}-{freeform:field:birth_day}' 
-		  	merge_SCHOOL="{freeform:field:school}"
-		  	merge_STREET="{freeform:field:street1}"
-		  	merge_CITY="{freeform:field:city}"
-		  	merge_STATE="{freeform:field:state}"
-		  	merge_ZIP="{freeform:field:zip_code}"
-		  	merge_COUNTRY="{freeform:field:country}"
-		  	merge_PHONE="{freeform:field:phone1}"
-		  	merge_REFER="{freeform:field:hear_about}"
-		  	merge_INTEREST="{freeform:field:interests}"
-				interest_groups="{freeform:field:member_type}" 
-		  	double_optin='no'
-		  }
+		{if freeform:field:newsletter == "yes"}
+			{embed="inc/.mailchimp" entry_id="{segment_3}"}
 		{/if}
 
 {/exp:freeform:entries}  
