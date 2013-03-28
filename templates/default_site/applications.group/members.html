@@ -1,0 +1,40 @@
+{if logged_out}{redirect="sign-up"}{/if}
+{embed="applications/.inc_header"
+	page_name="TeenTix Member List"
+}	    
+
+    <div id="main" class="eight columns">
+			<div class="row">
+				<div class="four columns"><h4>Member Account</h4></div>
+				<div class="two columns"><h4>Type</h4></div>
+				<div class="two columns"><h4>Name</h4></div>
+				<div class="four columns"><h4>Email</h4></div>
+			</div>
+			<div id="memberlist">
+			{exp:user:users
+			    orderby="screen_name"
+			    sort="asc"
+			    limit="100"
+			    group_id="5|7"
+			}
+				
+				<div class="row">
+					<div class="four columns">{absolute_count}. <a href="{path='member'}/{member_id}" target="_blank">{screen_name}</a></div>
+					<div class="two columns">{group_title}</div>
+					<div class="two columns">{first_name} {last_name}</div>
+					<div class="four columns">{encode="{email}"}</div>
+				</div>
+			{if user_no_results}
+			<p>Sorry, no results were found.</p>
+			{user_paginate}
+		   <div class="pagination">Page {user_current_page} of {user_total_pages} pages
+			    {user_pagination_links}</div>
+			{/user_paginate}
+			{/if}
+			
+			 
+			{/exp:user:users}
+			</div>
+	  </div>
+	
+{embed="applications/.inc_footer"}

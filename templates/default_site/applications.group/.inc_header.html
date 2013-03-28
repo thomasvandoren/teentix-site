@@ -76,7 +76,7 @@
   <div id="main-content">
   	<div class="row">
 	    <div class="twelve columns">
-	      <h1 id="page-name">TeenTix Pass Applications</h1>
+	      <h1 id="page-name">{if embed:page_name}{embed:page_name}{if:else}TeenTix Pass Applications{/if}</h1>
 	    </div>
 	  </div>
 
@@ -122,9 +122,15 @@
 	      	{/exp:freeform:entries} </li>
 	      	
 	      </ul>
-	      <hr />
+	      {!--
+<hr />
 	      <p><strong><a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform" target="_blank">View all applications</a></strong></p>
+--}
 	      <hr />
 	      <p><strong><a href="{path='applications'}">Add new application</a></strong></p>
+	      <hr />
+	      <p><strong><a href="{path='applications/members'}">Member List</a></strong><br />
+	      	<strong><a href="{path='applications/events'}">Favorite Events List</a></strong>
+	      </p>
 	      
 	    </div>

@@ -1,0 +1,27 @@
+{if logged_out}{redirect="sign-up"}{/if}
+{embed="applications/.inc_header"
+	page_name="TeenTix Favorite Events"
+}	    
+
+    <div id="main" class="eight columns">
+			<ul>
+			{exp:favorites:rank
+			    channel="calendar_events"
+			    orderby="count"
+			    sort="desc"
+			    limit="100"
+			    pagination="bottom"
+			}
+			    <li>
+			        {absolute_count}.
+			        <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=favorites&method=entry&entry_id={entry_id}" target="_blank">{title}</a>
+			        ({exp:favorites:entry_count entry_id="{entry_id}"}{favorites_count_public}{/exp:favorites:entry_count})
+			    </li>
+			    {paginate}
+			        <li>Page {current_page} of {total_pages} pages {pagination_links}</li>
+			    {/paginate}
+			{/exp:favorites:rank}
+			</ul>
+	  </div>
+	
+{embed="applications/.inc_footer"}

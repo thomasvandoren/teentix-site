@@ -7,7 +7,6 @@
 		    entry_id="{segment_3}" 
 		    status="not closed"
 			}
-			
 				<fieldset id="app_info">
 	        <legend>Applicant Info</legend>
 	        
@@ -148,15 +147,11 @@
 	        <hr />
 					<h4><a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=edit_entry&form_id={freeform:form_id}&entry_id={freeform:entry_id}" target="_blank" class="button">Edit application</a></h4>
 	      </fieldset>
-	      
-	      
-	    </div>
-    {if freeform:field:newsletter == "yes"}
-			{embed="inc/.mailchimp" entry_id="{segment_3}"}
-		{/if}
+	      {if freeform:field:newsletter == "yes"}
+					{embed="inc/.mailchimp" entry_id="{segment_3}"}
+				{/if}
 	  	{/exp:freeform:entries}
-	  </div>
-		
-  </div><!-- end #main-content -->  	
+	      
+	    </div><!-- end #main-content -->  	
 	
-{embed="application/inc_footer"}
+{embed="applications/.inc_footer"}
