@@ -1964,6 +1964,9 @@ ul.breadcrumbs li.current a {
 	font-size: 12px;
 	color: #999;
 }
+.admin #favorites li {
+	list-style: none;
+}
 
 /* -----------------------------------------
    Fonts

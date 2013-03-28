@@ -4,13 +4,14 @@
 }	    
 
     <div id="main" class="eight columns">
-			<ul>
+			<ul id="favorites">
 			{exp:favorites:rank
 			    channel="calendar_events"
 			    orderby="count"
 			    sort="desc"
 			    limit="100"
 			    pagination="bottom"
+			    group_id="5|7"
 			}
 			    <li>
 			        {absolute_count}.
