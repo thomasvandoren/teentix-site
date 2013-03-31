@@ -89,7 +89,7 @@
 	      		form_name="pass_application"
 	      		status="pending" 
 	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">New Passes [{freeform:total_results}] {/if}</a>
+	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">New Passes [{freeform:absolute_results}] {/if}</a>
 	      	{if freeform:no_results}New Passes [0]{/if} 
 	      	{/exp:freeform:entries} 
 	      	</li>
@@ -97,7 +97,7 @@
 	      		form_name="request_pass"
 	      		status="pending" 
 	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Lost Passes [{freeform:total_results}] {/if}</a>
+	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Lost Passes [{freeform:absolute_results}] {/if}</a>
 	      	{if freeform:no_results}Lost Passes [0]{/if} 
 	      	{/exp:freeform:entries} </li>
 	      </ul>
@@ -109,7 +109,7 @@
 	      		form_name="pass_application"
 	      		status="open" 
 	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">New Passes [{freeform:total_results}] {/if}</a>
+	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">New Passes [{freeform:absolute_results}] {/if}</a>
 	      	{if freeform:no_results}New Passes [0]{/if} 
 	      	{/exp:freeform:entries} 
 	      	</li>
@@ -117,7 +117,7 @@
 	      		form_name="request_pass"
 	      		status="open" 
 	      	}
-	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Lost Passes [{freeform:total_results}] {/if}</a>
+	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Lost Passes [{freeform:absolute_results}] {/if}</a>
 	      	{if freeform:no_results}Lost Passes [0]{/if} 
 	      	{/exp:freeform:entries} </li>
 	      	
