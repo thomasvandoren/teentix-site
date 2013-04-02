@@ -121,7 +121,9 @@
 	      	{if freeform:no_results}Lost Passes [0]{/if} 
 	      	{/exp:freeform:entries} </li>
 	      	
-	      </ul>
+	      </ul>	      
+      	
+
 	      {!--
 <hr />
 	      <p><strong><a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform" target="_blank">View all applications</a></strong></p>
@@ -129,7 +131,16 @@
 	      <hr />
 	      <p><strong><a href="{path='applications'}">Add new application</a></strong></p>
 	      <hr />
-	      <p><strong><a href="{path='applications/members'}">Member List</a></strong><br />
+	      <p><strong>
+		      {exp:freeform:entries
+	      		form_name="contact"
+	      		status="open" 
+	      	}
+	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Contact Form [{freeform:absolute_results}] {/if}</a>
+	      	{if freeform:no_results}Contact Form [0]{/if} 
+	      	{/exp:freeform:entries} 
+	      	</strong><br />
+	      	<strong><a href="{path='applications/members'}">Member List</a></strong><br />
 	      	<strong><a href="{path='applications/events'}">Favorite Events List</a></strong>
 	      </p>
 	      
