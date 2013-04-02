@@ -1,0 +1,256 @@
+{exp:calendar:events 
+	orderby="title" sort="asc" 
+	event_id="{segment_3}" 
+	date_range_start="99 months ago" 
+	show_months="999" 
+	dynamic="off"
+	status="not closed"
+	require_entry="true"
+}
+{if logged_out}{redirect="calendar/event/{url_title}"}{/if}
+{embed="inc/.header"
+	title="{title} | Event"
+	body_class="event single"
+	og_image="{event_images limit='1'}{image}{/event_images}"
+}
+
+{embed="inc/.nav"
+	end_title="{title}"
+} 
+ 
+  <div class="row">
+    
+  	<div id="main" class="eight columns">
+			
+			<div class="event">
+			
+			  <h1 id="page-name">{event_title}</h1>
+			  <div class="entry-cat-list clearfix">
+					{categories show_group="5"}<a href="{path='calendar/all'}/{category_id}" class="label round {category_url_title}">{category_name}</a>{/categories}{categories show_group="1"}<a href="{path='calendar/all'}/{category_id}" class="label round">{category_name}</a>{/categories}
+				</div>
+			  <p class="event-date slab">
+			  {if event_last_date != 0}			  
+					{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
+				{/if}
+				{if event_availability =="n"}
+					<br /><span class="ticket-available">TeenTix tickets are no longer available</span>
+				{/if}
+				</p>
+			
+			  <div class="row">
+			  	<div id="event-info" class="six columns">
+			  		<h4 class="section-head sans">Partner Organization</h4>
+						<p>
+					  {related_entries id="event_organization"}
+					  	<a href="{url_title_path='partners'}">{title}</a><br />
+					  {/related_entries}
+					  </p>
+				  </div>
+				  <div id="event-location" class="six columns">
+				  	<h4 class="section-head sans">Location</h4>
+					  <p>
+					  {related_entries id="event_venue"}
+						  <a href="{url_title_path='locations'}">{title}</a><br />
+						  {location_address} 
+					  {/related_entries}
+					  </p>
+				  </div>
+			  </div>
+
+			{if event_video_embed}
+				<div class="flex-video widescreen">
+			  	{event_video_embed}
+			  </div>
+		  {/if}
+
+	  	{if event_images}
+		  	<div id="event-gallery" class="clearfix {if event_video_embed}has-video{/if}">
+		  		<div id="event-slideshow" class="clearfix">
+	  			{event_images}
+	  				<div class="slide">
+			  		{exp:ce_img:pair src="{image}" width="620" height="450"}
+							<img src="{made}" alt="" width="{width}" height="{height}" />
+							<div class="slide-caption">{caption}</div>
+						{/exp:ce_img:pair}
+						</div>
+			  	{/event_images}
+		  		</div>
+		  		<ul id="event-slideshow-pager">
+			  	{event_images}
+			  	{if total_results > 1}
+		  		{exp:ce_img:pair src="{image}" width="100" height="100" crop="yes"}
+						<li><a href="#"><img src="{made}" alt="" width="{width}" height="{height}" /></a></li>
+					{/exp:ce_img:pair}
+					{/if}
+			  	{/event_images}
+			  	</ul>
+			  </div>
+		  {/if}
+			  <div id="event-description">
+			  {event_description}
+			  </div>	
+			</div>
+			
+			
+		{reverse_related_entries channel="blog" sort="desc" orderby="date" limit="3"}
+			{if count == 1}
+			<div id="reviews">
+  			<h3>Reviews</h3>
+			{/if}
+		    <h4 class="entry-title"><a href="{url_title_path='blog'}">{title}</a></h4>
+		    <p class="entry-date">By <a href="{profile_path='member'}">{author}</a> | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}</p>
+		    {exp:trunchtml chars="600" inline="..." ending=" <a href='{url_title_path=blog}'>Read more</a>"}	    		
+	    		{exp:strip_html keep='p|b|em'}
+						{blog_body}
+					{/exp:strip_html}
+				{/exp:trunchtml} 
+		  {if total_results==count}
+		  </div>
+		  {/if}
+    {/reverse_related_entries}
+
+  		
+		{if no_results}
+			{redirect="site/404"}
+		{/if}
+		
+		{/exp:calendar:events}
+		
+
+		{embed="inc/.comments" channel="calendar_events" comment_total="{exp:channel:entries channel='calendar_events' limit='1' status='not closed'}{comment_total}{/exp:channel:entries}"}
+
+
+		</div>
+
+		<div id="sidebar" class="four columns">
+		{exp:calendar:events 
+			orderby="title" sort="asc" 
+			event_name="{segment_3}" 
+			date_range_start="99 months ago" 
+			show_months="999" 
+			dynamic="off"
+			status="not closed"
+		}
+		{edit_this}
+			<div class="event-favorite">
+			{if logged_in}
+		    {exp:favorites:saved}
+	        {if not_saved}
+            <div class="favorited">
+              <span class="Favorites_Status"></span>
+              <a class="Favorites_Save_Full" href="{path='_ajax/favorite_add'}/{entry_id}">Save this event</a>
+              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add'}">save</a>
+              <a class="Favorites_Delete Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add/delete/'}">delete</a>
+            </div>
+	        {/if}
+	        {if saved}
+            <div class="favorited">
+              <span class="Favorites_Status">Event saved</span>
+              <a class="Favorites_Save Favorites_Trigger" style="display:none;" href="{permalink='_ajax/favorite_add/'}">save</a>
+              <a class="Favorites_Delete Favorites_Trigger" href="{permalink='_ajax/favorite_add/delete/'}">delete</a>
+            </div>
+	        {/if}
+		    {/exp:favorites:saved}
+			{if:else}
+				<div class="favorited">
+          <span class="Favorites_Save_Disabled">Save this event</a>
+        </div>
+        <p><a href="#" data-reveal-id="login-modal" data-animation="fade">Login to save this event</a></p>
+			{/if}  
+			</div>
+		{/exp:calendar:events}
+		
+			{embed="inc/.social-buttons"}
+      
+		{exp:calendar:events 
+			orderby="title" sort="asc" 
+			event_name="{segment_3}" 
+			date_range_start="99 months ago" 
+			show_months="999" 
+			dynamic="off"
+			status="not closed"
+		}
+			<div id="event-links" class="social-icons">
+				<h4 class="section-head sans">Event Links</h4>
+				
+				
+				{if event_website}<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_website}{/exp:parse_url}">Event Website</a></p>{/if}
+				{if event_facebook}
+	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_facebook}{/exp:parse_url}"><img src="{site_url}css/images/social/fb_1.png" alt="" title="{event_facebook}" /></a>
+	  		{/if}
+	  		{if event_twitter}
+	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_twitter}{/exp:parse_url}"><img src="{site_url}css/images/social/twitter_1.png" alt="" title="{event_twitter}" /></a>
+	  		{/if}
+	  		{if event_youtube}
+	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_youtube}{/exp:parse_url}"><img src="{site_url}css/images/social/you_tube.png" alt="" title="{event_youtube}" /></a>
+	  		{/if}
+				
+			</div>
+
+			
+    {if event_age_restrictions} 
+			<div id="event-age-restrictions">
+				<h4 class="section-head sans">Age Recommendation</h4>
+				<p>{event_age_restrictions}</p>
+			</div>
+		{/if}
+		
+		{if event_ticket_info}
+			<div id="event-ticket-info">
+				<h4 class="section-head sans">Ticket Info</h4>
+				{event_ticket_info}
+			</div>
+		{/if}
+						
+			<div id="event-box-office-info">
+				<h4 class="section-head sans">Box Office Info</h4>
+			{related_entries id="event_organization"}
+			  {org_box_office} 
+		  {/related_entries}
+				{event_box_office_info}
+			</div>
+		{/exp:calendar:events}
+		
+		<div id="event-upcoming">
+	      <h4 class="section-head sans">Upcoming Dates</h4>
+	      <ul>
+				{exp:calendar:occurrences 
+	       	event_name="{segment_3}" 
+	       	date_range_start="today" 
+	       	date_range_end="6 months" 
+	       	upcoming_occurrences_limit="100" 
+	       	prior_occurrences_limit="30" 
+	       	dynamic="off"
+	       	status="not closed"
+				}
+				{if occurrence_count < "6"}
+					{if occurrence_all_day}
+						<li>{occurrence_start_date format="%D %F %j"}</li>
+					{if:else}
+						<li>{occurrence_start_date format="%D %F %j at %g:%i%a"}</li>
+					{/if}
+				{/if}
+				{if occurrence_count > "5"}
+					{if occurrence_count == "6"}
+					<div class="hidden">
+					{/if}
+					{if occurrence_all_day}
+						<li>{occurrence_start_date format="%D %F %j"}</li>
+					{if:else}
+						<li>{occurrence_start_date format="%D %F %j at %g:%i%a"}</li>
+					{/if}
+					{if occurrence_count == occurrence_total} 
+					</div>
+					<li class="view-more">View more &raquo;</li>
+					{/if}
+				{/if}
+				{if calendar_no_results}<li>There are no upcoming dates</li>{/if} 
+				{/exp:calendar:occurrences}
+	      </ul>
+	    </div>
+		
+		</div>
+		
+	</div>
+  
+{embed="inc/.footer" include_login="true"}
