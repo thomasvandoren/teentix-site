@@ -203,10 +203,13 @@
 						
 			<div id="event-box-office-info">
 				<h4 class="section-head sans">Box Office Info</h4>
-			{related_entries id="event_organization"}
-			  {org_box_office} 
-		  {/related_entries}
+			{if event_box_office_info}
 				{event_box_office_info}
+			{if:else}
+				{related_entries id="event_organization"}
+				  {org_box_office} 
+			  {/related_entries}
+			{/if}
 			</div>
 		{/exp:calendar:events}
 		

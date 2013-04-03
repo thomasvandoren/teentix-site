@@ -125,7 +125,7 @@
 		<div id="sidebar" class="four columns">
 		{exp:calendar:events 
 			orderby="title" sort="asc" 
-			event_name="{segment_3}" 
+			event_id="{segment_3}" 
 			date_range_start="99 months ago" 
 			show_months="999" 
 			dynamic="off"
@@ -164,7 +164,7 @@
       
 		{exp:calendar:events 
 			orderby="title" sort="asc" 
-			event_name="{segment_3}" 
+			event_id="{segment_3}" 
 			date_range_start="99 months ago" 
 			show_months="999" 
 			dynamic="off"
@@ -215,7 +215,7 @@
 	      <h4 class="section-head sans">Upcoming Dates</h4>
 	      <ul>
 				{exp:calendar:occurrences 
-	       	event_name="{segment_3}" 
+	       	event_id="{segment_3}"  
 	       	date_range_start="today" 
 	       	date_range_end="6 months" 
 	       	upcoming_occurrences_limit="100" 
