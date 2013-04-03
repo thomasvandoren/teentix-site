@@ -134,7 +134,7 @@
 	      <p><strong>
 		      {exp:freeform:entries
 	      		form_name="contact"
-	      		status="open" 
+	      		status="pending" 
 	      	}
 	      	{if "{freeform:count}" == 1} <a href="{cp_url}?S=0&D=cp&C=addons_modules&M=show_module_cp&module=freeform&method=moderate_entries&form_id={freeform:form_id}&search_status={freeform:status}" target="_blank">Contact Form [{freeform:absolute_results}] {/if}</a>
 	      	{if freeform:no_results}Contact Form [0]{/if} 
