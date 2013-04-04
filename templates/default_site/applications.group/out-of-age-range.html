@@ -1,0 +1,99 @@
+{if logged_out}{redirect="sign-up"}{/if}
+{embed="applications/.inc_header"
+	page_name="Applications Out of Age Range"
+}	    
+	    
+    <div id="main" class="eight columns">
+    	<div id="new-pass" class="out-of-range">
+		    <h3>New Applications</h3>
+		    <div class="row header">
+		    	<div class="one columns">Entry</div>
+		    	<div class="three columns">Birthdate</div>
+		    	<div class="three columns">Name</div>
+		    	
+		    	<div class="five columns">Email</div>
+		    </div>
+		    
+		    {exp:freeform:entries
+			    form_name="pass_application"
+			    orderby="entry_id" 
+			    sort="desc"
+			    status="pending"
+			    limit="1000"
+				}
+				
+				{exp:calendar:date
+				    base_date="today"
+				    output_date="20 years ago"
+				}
+					{if "{date format='%Y'}" > "{freeform:field:birth_year}"}
+				<div class="row">
+				   <div class="one columns">{freeform:absolute_count})</div>
+				   <div class="three columns error">{freeform:field:birth_month}-{freeform:field:birth_day}-{freeform:field:birth_year}</div>
+				   <div class="three columns">{freeform:field:first_name} {freeform:field:last_name}</div>
+				   <div class="five columns">{encode="{freeform:field:email}"}</div> 
+				</div>		    
+				  {if:elseif "{date format='%Y'}" == "{freeform:field:birth_year}"}
+						{if "{date format='%m'}" >= "{freeform:field:birth_month}"}
+				<div class="row">
+				   <div class="one columns">{freeform:absolute_count})</div>
+				   <div class="three columns error">{freeform:field:birth_month}-{freeform:field:birth_day}-{freeform:field:birth_year}</div>
+				   <div class="three columns">{freeform:field:first_name} {freeform:field:last_name}</div>
+				   <div class="five columns">{encode="{freeform:field:email}"}</div> 
+				</div>
+						{/if}
+				  {/if}
+				  
+				{/exp:calendar:date}
+	        	
+				
+		  	{/exp:freeform:entries}
+	  	</div>
+	  	
+	  	<div id="new-pass" class="out-of-range">
+		  	<h3>Lost Pass Applications</h3>
+		  	<div class="row header">
+		    	<div class="one columns">Entry</div>
+		    	<div class="three columns">Birthdate</div>
+		    	<div class="three columns">Name</div>
+		    	
+		    	<div class="five columns">Email</div>
+		    </div>
+		  	{exp:freeform:entries
+			    form_name="request_pass"
+			    status="pending"
+			    limit="1000"
+				}
+				
+				
+				{exp:calendar:date
+				    base_date="today"
+				    output_date="20 years ago"
+				}
+					{if "{date format='%Y'}" > "{freeform:field:birth_year}"}
+				<div class="row">
+				   <div class="one columns">{freeform:absolute_count})</div>
+				   <div class="three columns error">{freeform:field:birth_month}-{freeform:field:birth_day}-{freeform:field:birth_year}</div>
+				   <div class="three columns">{freeform:field:first_name} {freeform:field:last_name}</div>
+				   <div class="five columns">{encode="{freeform:field:email}"}</div> 
+				</div>		    
+				  {if:elseif "{date format='%Y'}" == "{freeform:field:birth_year}"}
+						{if "{date format='%m'}" >= "{freeform:field:birth_month}"}
+				<div class="row">
+				   <div class="one columns">{freeform:absolute_count})</div>
+				   <div class="three columns error">{freeform:field:birth_month}-{freeform:field:birth_day}-{freeform:field:birth_year}</div>
+				   <div class="three columns">{freeform:field:first_name} {freeform:field:last_name}</div>
+				   <div class="five columns">{encode="{freeform:field:email}"}</div> 
+				</div>
+						{/if}
+				  {/if}
+				  
+				{/exp:calendar:date}
+	        	
+		  	{/exp:freeform:entries}
+	  	</div>
+	  	
+	      
+    </div><!-- end #main-content -->  	
+	
+{embed="applications/.inc_footer"}

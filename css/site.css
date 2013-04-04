@@ -1967,6 +1967,29 @@ ul.breadcrumbs li.current a {
 .admin #favorites li {
 	list-style: none;
 }
+.admin .out-of-range {
+	margin-bottom: 30px;
+}
+.admin .out-of-range .header {
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	padding: 5px 0px;
+	font-weight: bold;
+}
+.admin .out-of-range .row {
+	font-size: 15px;
+	line-height: 1.5em;
+	padding-top: 3px;
+	padding-bottom: 3px; 
+}
+.admin .out-of-range .error {
+	color: #cc0000;
+}
+
+@media print {
+	.admin #sidebar { display: none; }
+	.admin #main { width: 100%; }
+}
 
 /* -----------------------------------------
    Fonts
