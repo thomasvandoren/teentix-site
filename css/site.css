@@ -51,7 +51,7 @@ a:visited {
 	color: #86B239;
 }
 a:hover {
-	color: #86B239;
+	color: #8FC73E;
 }
 .sans,
 .entry .sans {
@@ -340,6 +340,10 @@ input.submit:hover {
 	top: 36px;
 	background: #000;
 	padding-bottom: 5px;
+	display: none;
+}
+#utility-nav ul > li.has-dropdown:hover > .dropdown {
+	display: block;
 }
 #utility-nav #nav-bar-login {
 	padding: 10px 20px;
@@ -1878,16 +1882,21 @@ ul.breadcrumbs li.current a {
   font-family: "museo-sans",sans-serif;
   text-transform: uppercase;
   margin-bottom: 5px;
+  
 }
 #footer #footer-about {
 	padding-right: 20px;
+	color: #c9dede;
 }
 #footer #footer-about p {
-	font-size: 18px;
+	font-size: 24px;
 }
 #footer #footer-about img {
 	float: left;
 	margin-right: 20px;
+}
+#footer #footer-copyright {
+	color: #004C4C;
 }
 #footer #footer-links {
 	border-left: 2px dotted #004C4C;
@@ -1898,6 +1907,7 @@ ul.breadcrumbs li.current a {
 	line-height: 1em;
 	padding-bottom: 5px;
 	border-bottom: 1px solid #004C4C;
+	font-size: 16px;
 }
 #footer ul {
 	margin-bottom: 0px;
@@ -1905,7 +1915,10 @@ ul.breadcrumbs li.current a {
 #footer li {
 	list-style: none;
 	line-height: 1.3em;
+	font-size: 14px;
+	padding-bottom: 3px;
 }
+
 #footer #footer-utility-nav {
 	padding-bottom: 20px;
 }
