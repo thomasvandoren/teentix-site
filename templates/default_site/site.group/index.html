@@ -23,7 +23,7 @@
 	      		<h3 class="event-name condensed">{title}</h3>
 	      		<p class="event-date slab">{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}</p>
 	      		<p class="event-venue">{related_entries id="event_venue"}{title}{/related_entries}</p>
-	      		<a class="button medium yellow" href="{url_title_path='calendar/event'}">View Event &raquo;</a>
+	      		<a class="button medium yellow" href="{url_title_path='calendar/event'}">View Event <img src="/css/images/site/arrow-tall-white.png" class="arrow"></a>
       		</div>	      		
       	</div>
       {/exp:calendar:events}
