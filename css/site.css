@@ -971,10 +971,16 @@ ul.breadcrumbs li.current a {
 	width: 240px;
 	padding-left: 10px;
 }
-.calendar #calendar-search .button {
+.calendar #calendar-search .searchbutton {
 	border-radius: 0px;
 	font-size: 14px;
   font-family: "museo-slab",sans-serif;
+  border: none;
+  background: #8FC73E;
+  color: #fff;
+}
+.calendar #calendar-search .searchbutton:hover {
+	background: #86B239;
 }
 .calendar .header {
 	position: relative;
