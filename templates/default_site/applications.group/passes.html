@@ -1,6 +1,6 @@
 {if logged_out}{redirect="sign-up"}{/if}
 {embed="applications/.inc_header"
-	page_name="Temporary passes: {if freeform:form_name =="request_pass"}Replacement{/if}{if freeform:form_name =="pass_application"}New{/if}"
+	page_name="Temporary passes: {if segment_3 =="request_pass"}Replacement{/if}{if segment_3 =="pass_application"}New{/if}"
 }	    
 
 	    <div id="main" class="eight columns">
