@@ -1,0 +1,49 @@
+{if logged_out}{redirect="sign-up"}{/if}
+{embed="applications/.inc_header"}	    
+
+	    <div id="main" class="eight columns">
+		    <div class="row">
+					<div class="two columns"><h4>Date</h4></div>
+					<div class="four columns"><h4>Name</h4></div>
+					<div class="four columns"><h4>Name</h4></div>
+					<div class="two columns"><h4>Pass</h4></div>
+				</div>
+				<div id="memberlist">
+		    {exp:freeform:entries
+		    	form_name="pass_application|request_pass"
+		    	status="open|closed" 
+		    	orderby="entry_id"
+			    sort="desc"
+			    limit="100"
+			    paginate="both"
+		    } 
+			    <div class="row">
+						<div class="two columns">
+							{freeform:entry_date format="%m/%d/%y"}</div>
+						<div class="four columns">
+							{freeform:field:first_name} {freeform:field:last_name} </div>
+						<div class="four columns"><a href="mailto:{freeform:field:email}">{freeform:field:email}</a> </div>
+					{if freeform:form_name =="request_pass"}
+						<div class="four columns"><a href="{site_url}pass/temporary/{freeform:entry_id}/{freeform:entry_date}">Replacement pass</a> </div>
+					{/if}
+					{if freeform:form_name =="pass_application"}
+						<div class="two columns"><a href="{site_url}pass/new/{freeform:entry_id}/{freeform:entry_date}">New pass</a> </div>
+					{/if}
+					</div>
+    	    {freeform:paginate}
+	        <div class="pagination" style="text-align: center;">
+	            Page {freeform:current_page}
+	            of {freeform:total_pages}
+	            pages &nbsp;
+	            {freeform:pagination_links}
+	        </div>
+			    {/freeform:paginate}
+	    	
+		    {/exp:freeform:entries} 
+				</div>
+
+	    </div>
+	  	
+		
+	
+{embed="applications/.inc_footer"}
