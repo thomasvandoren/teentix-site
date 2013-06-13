@@ -7,7 +7,9 @@
 {embed="inc/.header"
 	title="{title} | Blog"
 	body_class="blog single"
+	og_description="{if blog_subhead}{exp:remove_html}{blog_subhead}{/exp:remove_html}{if:else}{exp:trunchtml chars='300'}{exp:remove_html}{blog_body}{/exp:remove_html}{/exp:trunchtml}{/if}"
 	og_image="{blog_image limit='1'}{blog_image}{/blog_image}"
+	canonical="{url_title_path='blog'}"
 }
 
 {embed="inc/.nav"

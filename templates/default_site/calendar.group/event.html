@@ -11,6 +11,8 @@
 	title="{title} | Event"
 	body_class="event single"
 	og_image="{event_images limit='1'}{image}{/event_images}"
+	og_description="{exp:trunchtml chars='300'}{exp:remove_html}{event_description}{/exp:remove_html}{/exp:trunchtml}"
+	canonical="{url_title_path='calendar/event'}"
 }
 
 {embed="inc/.nav"
