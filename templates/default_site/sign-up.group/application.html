@@ -210,180 +210,65 @@
         
       </fieldset>
       
+      <fieldset id="app_demographic">
+        <legend>Demographic Info</legend>
+				<p>These questions are optional. Your answers will help us make sure we are serving our whole community. To skip them, just hit the ‘Next’ button at the bottom of the page.</p>
+        <div class="app_ethnicity">
+          <p>What is your ethnic/racial background? (select all that apply)</p>
+          <label><input type="checkbox" name="ethnicity[]" value="African"  />&nbsp;African</label>
+          <label><input type="checkbox" name="ethnicity[]" value="Asian"  />&nbsp;Asian (including the Far East, Southeast Asia, South Asia, Central Asia, and the Middle East)</label>
+          <label><input type="checkbox" name="ethnicity[]" value="Caucasian"  />&nbsp;European/Caucasian</label>
+					<label><input type="checkbox" name="ethnicity[]" value="Latino"  />&nbsp;Latino/a</label>
+					<label><input type="checkbox" name="ethnicity[]" value="Native American"  />&nbsp;American Indian/Alaska Native</label>
+					<label><input type="checkbox" name="ethnicity[]" value="Pacific Islander"  />&nbsp;Pacific Islander</label>
+        </div>   
+           
+        <div class="app_language">
+          <p>What languages are spoken in your home? (select all that apply)</p>
+          <label><input type="checkbox" name="language[]" value="Amharic"  />&nbsp;Amharic</label>
+          <label><input type="checkbox" name="language[]" value="Chinese"  />&nbsp;Chinese</label>
+          <label><input type="checkbox" name="language[]" value="English"  />&nbsp;English</label>
+					<label><input type="checkbox" name="language[]" value="Oromo"  />&nbsp;Oromo</label>
+					<label><input type="checkbox" name="language[]" value="Spanish"  />&nbsp;Spanish</label>
+					<label><input type="checkbox" name="language[]" value="Somali"  />&nbsp;Somali</label>
+					<label><input type="checkbox" name="language[]" value="Tagalog"  />&nbsp;Tagalog</label>
+					<label><input type="checkbox" name="language[]" value="Tigrigna"  />&nbsp;Tigrigna</label>
+					<label><input type="checkbox" name="language[]" value="Vietnamese"  />&nbsp;Vietnamese</label>
+					<div class="row">
+						<div class="one columns">
+							<label class="inline right">Other</label>
+						</div>
+						<div class="four columns end">
+							<input type="text" name="language[]" />
+						</div>
+					</div>
+        </div>
+        
+        <div class="app_lgbtq">
+          <p>Do you identify as LGBTQ?</p>
+          <label><input type="radio" name="lgbtq" value="yes"  />&nbsp;Yes</label>
+          <label><input type="radio" name="lgbtq" value="no"  />&nbsp;No</label>
+        </div>
+        
+        <div class="app_gender">
+          <p>What is your gender?</p>
+          <label><input type="radio" name="gender" value="Female"  />&nbsp;Female</label>
+          <label><input type="radio" name="gender" value="Male"  />&nbsp;Male</label>
+          <label><input type="radio" name="gender" value="Trans"  />&nbsp;<a href="https://www.facebook.com/photo.php?fbid=370409919689210&set=a.341446412585561.79097.216393541757516&type=1&theater&notif_t=like" target="_blank">Trans*</a></label>
+        </div>
+
+                    
+      </fieldset>
+      
       <div class="form_submit">
         <input type="submit" name="submit" value="Next" class="button">
       </div>
       		
-{!-- 		old 
-        
-      <fieldset id="app_info">
-        <legend>Pass Holder Info  <span class="notice-required">Required information*</span></legend>
 
-        <label for="name" class="require">Full Name</label>
-        <input type="text" name="name" id="name" class="required">
-        
-            
-        <label for="phone1" class="require">Best Contact Phone Number*</label>
-        <input type="text" name="phone1" id="phone1" class="required eight">      
-        
-        <label for="birthday" class="require">Birthdate* (MM/DD/YYYY)</label>
-        <input type="text" name="birthday" id="birthday" class="required eight">  
-        
-      </fieldset>
-      
-      <fieldset id="app_mailing_address"> 
-        <legend>E-mail Address</legend>
-        <p>Please provide us with an email address to receive your temporary pass.</p>
-        <label for="email" class="require">Email Address*</label>
-        <input type="text" name="email" id="email" class="required">
-
-      </fieldset>
-      
-      <fieldset id="app_mailing_address"> 
-        <legend>Mailing Address</legend>
-        <p>Please provide us with a mailing address to receive your permanent pass.</p>
-        <label for="street1" class="require">Address*</label>
-        <input type="text" name="street1" id="street1" class="required">
-        
-        <label for="city" class="require">City*</label>
-        <input type="text" name="city" id="city" class="eight required">
-        
-        <label for="state" class="require">State*</label>
-        <input type="text" name="state" id="state" class="eight required">
-        
-        <label for="zip_code" class="require">Zip Code*</label>
-        <input type="text" name="zip_code" id="zip_code" class="four required">
-        
-        <label for="country">Country (If not US)</label>
-        <input type="text" name="country" id="country" class="eight">
-      </fieldset>     
-      
-      <div class="form_submit">
-        <input type="submit" name="submit" value="Submit" class="button">
-      </div>
-      --}
-      
       
       
 		{/exp:freeform:form}
-    {!--exp:safecracker 
-      channel="applications" 
-      return="sign-up/pass/ENTRY_ID" 
-      dynamic_title="[app_first_name] [app_last_name] Pass Application" 
-      error_handling="inline"
-      id="application_form"
-      include_jquery="no"
-      logged_out_member_id="2" 
-      safecracker_head="no"  
-    }
-        
-        <fieldset id="app_info">
-          <legend>Applicant Info  <span class="notice-required">Required information*</span></legend>
-          <p>Please fill out the information for the TeenTix pass holder</p>
-          <div class="row">
-            <div class="five columns">
-              <label for="app_first_name" class="require">First Name*</label>
-              <input type="text" name="app_first_name" id="app_first_name" value="{app_first_name}" class="required">
-            </div>
-            
-            <div class="two columns">
-              <label for="app_middle_initial">Middle Initial</label>
-              <input type="text" name="app_middle_initial" id="app_middle_initial" value="{app_middle_initial}">
-            </div>
-            
-            <div class="five columns">
-              <label for="app_last_name" class="require">Last Name*</label>
-              <input type="text" name="app_last_name" id="app_last_name" value="{app_last_name}" class="required">
-            </div>
-          </div>
-          
-              
-          <label for="app_phone" class="require">Best Contact Phone Number*</label>
-          <input type="text" name="app_phone" id="app_phone" value="{app_phone}" class="required">
-        
-          
-          <label for="app_birthdate" class="require">Birthdate (Applicant must be between 13 and 19 years old)*<br />
-          	
-          </label>
-          <div class="birthdate_select">
-            {field:app_birthdate}
-          </div>
-          
-          <label for="app_school">School</label>
-          <input type="text" name="app_school" id="app_school" value="{app_school}">
-        
-        	<div class="app_interests_list clearfix">
-	          <p>Interests?</p>
-	          {categories show_group="1"}
-						<label><input type="checkbox" name="category[]" value="{category_id}" /> {category_name}</label> 
-						{/categories}
-	        </div>
-	        
-        </fieldset>
-        
-        <fieldset id="app_mailing_address"> 
-          <legend>E-mail Address</legend>
-          <p>Please provide us with an email address to receive your temporary pass.</p>
-          <label for="app_email" class="require">Email Address*</label>
-	        <input type="text" name="app_email" id="app_email" value="{app_email}" class="required">
-	        <label for="app_newsletter" class="label_checkbox">
-	          <input type="checkbox" name="app_newsletter" id="app_newsletter" value="yes" checked="checked">
-	          I want to receive the weekly TeenTix newsletter with updates on recommended TeenTix eligible events.
-	        </label>
-        </fieldset>
-        
-        <fieldset id="app_mailing_address"> 
-          <legend>Mailing Address</legend>
-          <p>Please provide us with a mailing address to receive your permanent pass.</p>
-          <label for="app_address" class="require">Address*</label>
-          <input type="text" name="app_address" id="app_address" value="{app_address}" class="required">
-          
-          <label for="app_city" class="require">City*</label>
-          <input type="text" name="app_city" id="app_city" value="{app_city}" class="eight required">
-          
-          <label for="app_state" class="require">State*</label>
-          <input type="text" name="app_state" id="app_state" value="{app_state}" class="eight required">
-          
-          <label for="app_zip" class="require">Zip Code*</label>
-          <input type="text" name="app_zip" id="app_zip" value="{app_zip}" class="four required">
-          
-          <label for="app_country">Country (If not US)</label>
-          <input type="text" name="app_country" id="app_country" value="{app_country}" class="eight">
-        </fieldset>
-        
-        <fieldset id="app_other">
-          <legend>Other Info</legend>
-  
-	        <div class="app_member_type_list">
-	          <p>Which applies to you?</p>
-	          <label><input type="radio" name="app_member_type" value="teen"  />&nbsp;I am a Teen (currently aged 13-19)</label>
-	          <label><input type="radio" name="app_member_type" value="parent"  />&nbsp;I am a Parent or Guardian applying for a teen</label>
-	          <label><input type="radio" name="app_member_type" value="other"  />&nbsp;Other</label>
-	        </div>      
-          
-          <label for="app_hear_about">How did you hear about TeenTix?</label>
-          <select name="app_hear_about" class="six">
-            {options:app_hear_about}
-              <option value="{option_value}"{selected}>{option_name}</option>
-            {/options:app_hear_about}
-          </select>
-          
-          <label for="app_referred">Who referred you to TeenTix?</label>
-          <input type="text" name="app_referred" id="app_referred" value="{app_referred}">
-          
-          {if captcha}
-            <label for="captcha">Please enter the word you see in the image below:</label>
-            {captcha}
-            <input type="text" name="captcha" value="{captcha_word}" maxlength="20">
-          {/if}
-          
-        </fieldset>
-        
-        <div class="form_submit">
-          <input type="submit" name="submit" value="Next" class="button">
-        </div>
-        
-    {/exp:safecracker--}
+    
     </div>
     
   </div>
