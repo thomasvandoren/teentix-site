@@ -1685,8 +1685,10 @@ ul.breadcrumbs li.current a {
 .application .app_interests_list {
   margin: 20px 0px;
 }
-.application .app_interests_list p,
-.application .app_member_type_list p {
+.application fieldset div {
+	margin-bottom: 20px;
+}
+.application fieldset div p {
   margin-bottom: 5px;
 }
 .application .app_interests_list label {
