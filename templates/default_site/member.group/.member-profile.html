@@ -9,11 +9,7 @@
   {exp:fbc:member_data 
   	profile_pic_width="150"
   	profile_pic_size="normal" 
-	  {if segment_3 == ""}
-	  	member_id="{segment_2}" 
-	  {if:else}
-	  	member_id="{segment_3}" 
-	  {/if}
+  	member_id="{embed:member_id}" 
   	profile_pic_linked="false"
   }
 		{if avatar_filename}

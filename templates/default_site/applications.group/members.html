@@ -28,13 +28,21 @@
 					<div class="two columns">{first_name} {last_name}</div>
 					<div class="four columns">{encode="{email}"}</div>
 					<div class="one columns"><a href="{path='member'}/{member_id}" target="_blank"><span class="avatar">
+					{exp:fbc:member_data 
+				  	profile_pic_width="40"
+				  	profile_pic_size="normal" 
+				  	member_id="{member_id}" 
+				  	profile_pic_linked="false"
+				  }
 						{if avatar_filename}
 					  	<img src="{avatar_url}{avatar_filename}" width="150" />
 					  {if:elseif fbc_facebook_profile_pic}
 				      {fbc_facebook_profile_pic}
 				    {if:else}
-				    	<img src="{site_url}images/avatars/default.jpg" /></a> 
+				    	<img src="{site_url}images/avatars/default.jpg" />
 				    {/if}
+				  {/exp:fbc:member_data}
+				    </a> 
 				  </div>
 				</div>
 			{if user_no_results}
