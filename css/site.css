@@ -2002,8 +2002,11 @@ ul.breadcrumbs li.current a {
 }
 #credits img {
 	vertical-align: middle;
-	margin: 0px 15px 0px 0px;
+	margin: 0px 12px 0px 0px;
 	width: auto;
+}
+#credits a img {
+  margin: 0px;
 }
 
 
