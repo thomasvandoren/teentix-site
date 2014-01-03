@@ -1,6 +1,6 @@
 /* Artfully masterminded by ZURB  */
 
-/* -------------------------------------------------- 
+/* --------------------------------------------------
    Table of Contents
 -----------------------------------------------------
 :: Shared Styles
@@ -173,7 +173,7 @@ a:hover {
 }
 
 
-/* Contain floats: nicolasgallagher.com/micro-clearfix-hack/ */ 
+/* Contain floats: nicolasgallagher.com/micro-clearfix-hack/ */
 .clearfix:before, .clearfix:after { content: ""; display: table; }
 .clearfix:after { clear: both; }
 .clearfix { zoom: 1; }
@@ -209,7 +209,7 @@ fieldset {
   margin-bottom: 30px;
 }
 fieldset legend {
-  
+
   color: #487578;
 	border-bottom: 1px solid #87AEB0;
 	padding: 0px;
@@ -220,14 +220,14 @@ fieldset legend {
 	font-size: 20px;
 	width: 100%;
 }
-select { 
+select {
   font-size: 13px;
   font-family: Helvetica, Arial, san-serif;
   padding: 5px;
 }
 label {
 /*   color: #333; */
-} 
+}
 label.require {
   font-weight: bold;
   color: #000;
@@ -311,7 +311,7 @@ input.submit:hover {
 .top-bar ul > li a:not(.button) {
 	display: inline;
 }
-.top-bar.contain-to-grid:before, 
+.top-bar.contain-to-grid:before,
 .top-bar.contain-to-grid:after {
 	background: none;
 	height: 36px;
@@ -493,7 +493,7 @@ input.submit:hover {
 	height: 48px;
 	position: relative;
 }
-#main-nav > li {	
+#main-nav > li {
 	line-height: 24px;
 	padding: 12px 0px;
 	box-shadow: none;
@@ -554,7 +554,7 @@ input.submit:hover {
 }
 #main-nav .flyout h4 {
 	font-weight: 700;
-	color: #79CAC9;	
+	color: #79CAC9;
 	font-size: 18px;
 }
 #main-nav .section-head {
@@ -586,7 +586,7 @@ input.submit:hover {
 	width: 100%;
 	background: #f6f8f5;
 	padding-top: 5px;
-	padding-bottom: 5px;	
+	padding-bottom: 5px;
 }
 ul.breadcrumbs {
 	font-size: 11px;
@@ -677,7 +677,7 @@ ul.breadcrumbs li.current a {
 .entry h4,
 .entry h5,
 .entry h6 {
-  font-family: "museo-sans",sans-serif;	
+  font-family: "museo-sans",sans-serif;
 }
 .entry ul,
 .entry ol {
@@ -1039,7 +1039,7 @@ ul.breadcrumbs li.current a {
 }
 
 /* monthly */
-.calendar.month table thead tr th, 
+.calendar.month table thead tr th,
 .calendar.month table tfoot tr td {
 	padding: 3px;
 }
@@ -1078,7 +1078,7 @@ ul.breadcrumbs li.current a {
 	cursor: default;
 }
 .calendar.month #calendar-table .out_of_range .date {
-	
+
 }
 .calendar.month #calendar-table .current,
 .calendar.month #calendar-table .current:hover {
@@ -1092,7 +1092,7 @@ ul.breadcrumbs li.current a {
 	font-size: 11px;
 	line-height: 1.2em;
 	padding: 2px;
-	text-align: center;	
+	text-align: center;
 }
 .calendar.month #calendar-table .day_cell .event-count {
 	font-weight: bold;
@@ -1110,7 +1110,7 @@ ul.breadcrumbs li.current a {
 	border-radius: 3px;
 }
 .calendar.month .day-schedule {
-	display: none;	
+	display: none;
 	margin: 0px;
 	padding: 0px;
 }
@@ -1180,7 +1180,7 @@ ul.breadcrumbs li.current a {
 
 /* sidebar */
 .calendar #sidebar {
-	
+
 }
 .calendar #sidebar li {
 	list-style: none;
@@ -1339,7 +1339,7 @@ ul.breadcrumbs li.current a {
 .event .Favorites_Delete {
 	display: block;
 	width: 150px;
-	height: 52px; 
+	height: 52px;
 	background: url(images/site/button-saved-event.png) no-repeat left top;
 	font-size: 0px;
 	color: transparent;
@@ -1392,8 +1392,8 @@ ul.breadcrumbs li.current a {
 #org-grid {
 	margin: 10px -10px;
 }
-#org-grid > li { 
-	padding: 10px; 
+#org-grid > li {
+	padding: 10px;
 	margin: 0px;
 	border-top: 1px solid #ccc;
 }
@@ -1407,10 +1407,10 @@ ul.breadcrumbs li.current a {
 }
 #org-grid .org-logo a {
 	height: 150px;
-	display: table-cell;	
+	display: table-cell;
 	vertical-align: middle;
 }
-#org-grid .org-logo img {	
+#org-grid .org-logo img {
 	max-height: 150px;
 }
 #org-grid .org-name {
@@ -1872,7 +1872,7 @@ ul.breadcrumbs li.current a {
 /* -----------------------------------------
    Search
 ----------------------------------------- */
-.search .entry { 
+.search .entry {
 	padding: 10px 0px;
 	border-top: 2px dotted #9BBCBD;
 }
@@ -1935,7 +1935,7 @@ ul.breadcrumbs li.current a {
   font-family: "museo-sans",sans-serif;
   text-transform: uppercase;
   margin-bottom: 5px;
-  
+
 }
 #footer #footer-about {
 	padding-right: 20px;
@@ -1986,7 +1986,7 @@ ul.breadcrumbs li.current a {
 
 #credits {
 	background: #fff;
-	padding: 0px 0px;	
+	padding: 0px 0px;
 }
 #credit-bluebar {
 	background: #004c4c url(images/site/trans-texture.png) 0px -30px;
@@ -1997,21 +1997,41 @@ ul.breadcrumbs li.current a {
 	color: #1E7577;
 	text-transform: uppercase;
 	font-size: 12px;
-	margin: 0px;
 	padding: 40px 0px;
 }
 #credits img {
 	vertical-align: middle;
-	margin: 0px 12px 0px 0px;
+	margin: 0px 30px 0px 0px;
 	width: auto;
 }
 #credits a img {
   margin: 0px;
 }
+#credits a#so-logo {
+  float: right;
+  padding-top: 12px;
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+#credits a#so-logo img {
+  margin-left: 15px;
+}
+#credits #sc-logo {
+  text-align: center;
+}
+#credits #sc-logo p {
+  margin-top: 10px;
+  font-size: 10px;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
 
 
 /* -----------------------------------------
-   Admin	
+   Admin
 ----------------------------------------- */
 .admin #memberlist {
 	font-size: 15px;
@@ -2046,7 +2066,7 @@ ul.breadcrumbs li.current a {
 	font-size: 15px;
 	line-height: 1.5em;
 	padding-top: 3px;
-	padding-bottom: 3px; 
+	padding-bottom: 3px;
 }
 .admin .out-of-range .error {
 	color: #cc0000;
@@ -2061,4 +2081,3 @@ ul.breadcrumbs li.current a {
    Fonts
 ----------------------------------------- */
 @font-face {font-family: 'DharmaGothicM-Bold';src: url('fonts/webfonts/263FDC_0_0.eot');src: url('fonts/webfonts/263FDC_0_0.eot?#iefix') format('embedded-opentype'),url('fonts/webfonts/263FDC_0_0.woff') format('woff'),url('fonts/webfonts/263FDC_0_0.ttf') format('truetype');}
- 
