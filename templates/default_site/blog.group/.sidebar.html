@@ -1,9 +1,17 @@
+<div id="blog-sidebar-ad-space">
+  {if segment_2 ==""}
+  {embed="inc/.ad-300x600"}
+  {if:else}
+  {embed="inc/.ad-300x250"}
+  {/if}
+</div>
+
 <div id="become-reviewer">
 	<a href="/write-for-our-blog">Become a Teen Reviewer</a>
 </div>
 
 <div id="blog-search" class="row collapse">
-	{exp:search:simple_form 
+	{exp:search:simple_form
 		name="utility_search"
 		no_result_page="blog/noresults"
 		result_page="blog/results"
@@ -19,15 +27,17 @@
     <input type="submit" value="GO" class="submit button  expand postfix">
   </div>
 	{/exp:search:simple_form}
-	
+
 </div>
+
+
 
 <div id="blog-categories">
 	<h4 class="section-head sans">Articles</h4>
 	{exp:channel:categories channel="blog" category_group="4" show_empty="no"}
   <a href="{path='blog'}">{category_name}</a>
 	{/exp:channel:categories}
-	
+
 	<h4 class="section-head sans">Genres</h4>
 	{exp:channel:categories channel="blog" category_group="1" show_empty="no"}
   <a href="{path='blog'}">{category_name}</a>

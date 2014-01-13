@@ -1,8 +1,8 @@
-{exp:calendar:events 
-	orderby="title" sort="asc" 
-	event_name="{segment_3}" 
-	date_range_start="99 months ago" 
-	show_months="999" 
+{exp:calendar:events
+	orderby="title" sort="asc"
+	event_name="{segment_3}"
+	date_range_start="99 months ago"
+	show_months="999"
 	dynamic="off"
 	status="not closed"
 	require_entry="true"
@@ -17,27 +17,28 @@
 
 {embed="inc/.nav"
 	end_title="{title}"
-} 
-  
+}
+
   <div class="row">
-    
+
   	<div id="main" class="eight columns">
-			
+
 			<div class="event">
-			
+
 			  <h1 id="page-name">{event_title}</h1>
 			  <div class="entry-cat-list clearfix">
 					{categories show_group="5"}<a href="{path='calendar/all'}/{category_id}" class="label round {category_url_title}">{category_name}</a>{/categories}{categories show_group="1"}<a href="{path='calendar/all'}/{category_id}" class="label round">{category_name}</a>{/categories}
 				</div>
+				{embed="inc/.social-buttons"}
 			  <p class="event-date slab">
-			  {if event_last_date != 0}			  
+			  {if event_last_date != 0}
 					{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}
 				{/if}
 				{if event_availability =="n"}
 					<br /><span class="ticket-available">TeenTix tickets are no longer available</span>
 				{/if}
 				</p>
-			
+
 			  <div class="row">
 			  	<div id="event-info" class="six columns">
 			  		<h4 class="section-head sans">Partner Organization</h4>
@@ -52,7 +53,7 @@
 					  <p>
 					  {related_entries id="event_venue"}
 						  <a href="{url_title_path='locations'}">{title}</a><br />
-						  {location_address} 
+						  {location_address}
 					  {/related_entries}
 					  </p>
 				  </div>
@@ -89,10 +90,10 @@
 		  {/if}
 			  <div id="event-description">
 			  {event_description}
-			  </div>	
+			  </div>
 			</div>
-			
-			
+
+
 		{reverse_related_entries channel="blog" sort="desc" orderby="date" limit="3"}
 			{if count == 1}
 			<div id="reviews">
@@ -100,23 +101,23 @@
 			{/if}
 		    <h4 class="entry-title"><a href="{url_title_path='blog'}">{title}</a></h4>
 		    <p class="entry-date">By <a href="{profile_path='member'}">{author}</a> | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}</p>
-		    {exp:trunchtml chars="600" inline="..." ending=" <a href='{url_title_path=blog}'>Read more</a>"}	    		
+		    {exp:trunchtml chars="600" inline="..." ending=" <a href='{url_title_path=blog}'>Read more</a>"}
 	    		{exp:strip_html keep='p|b|em'}
 						{blog_body}
 					{/exp:strip_html}
-				{/exp:trunchtml} 
+				{/exp:trunchtml}
 		  {if total_results==count}
 		  </div>
 		  {/if}
     {/reverse_related_entries}
 
-  		
+
 		{if no_results}
 			{redirect="site/404"}
 		{/if}
-		
+
 		{/exp:calendar:events}
-		
+
 
 		{embed="inc/.comments" channel="calendar_events" comment_total="{exp:channel:entries channel='calendar_events' limit='1' status='not closed'}{comment_total}{/exp:channel:entries}"}
 
@@ -124,11 +125,11 @@
 		</div>
 
 		<div id="sidebar" class="four columns">
-		{exp:calendar:events 
-			orderby="title" sort="asc" 
-			event_name="{segment_3}" 
-			date_range_start="99 months ago" 
-			show_months="999" 
+		{exp:calendar:events
+			orderby="title" sort="asc"
+			event_name="{segment_3}"
+			date_range_start="99 months ago"
+			show_months="999"
 			dynamic="off"
 			status="not closed"
 		}
@@ -157,24 +158,24 @@
           <span class="Favorites_Save_Disabled">Save this event</a>
         </div>
         <p><a href="#" data-reveal-id="login-modal" data-animation="fade">Login to save this event</a></p>
-			{/if}  
+			{/if}
 			</div>
 		{/exp:calendar:events}
-		
-			{embed="inc/.social-buttons"}
-      
-		{exp:calendar:events 
-			orderby="title" sort="asc" 
-			event_name="{segment_3}" 
-			date_range_start="99 months ago" 
-			show_months="999" 
+
+
+
+		{exp:calendar:events
+			orderby="title" sort="asc"
+			event_name="{segment_3}"
+			date_range_start="99 months ago"
+			show_months="999"
 			dynamic="off"
 			status="not closed"
 		}
 			<div id="event-links" class="social-icons">
 				<h4 class="section-head sans">Event Links</h4>
-				
-				
+
+
 				{if event_website}<p><a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_website}{/exp:parse_url}">Event Website</a></p>{/if}
 				{if event_facebook}
 	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_facebook}{/exp:parse_url}"><img src="{site_url}css/images/social/fb_1.png" alt="" title="{event_facebook}" /></a>
@@ -185,45 +186,45 @@
 	  		{if event_youtube}
 	  			<a href="http://{exp:parse_url parts="host|path|query|fragment"}{event_youtube}{/exp:parse_url}"><img src="{site_url}css/images/social/you_tube.png" alt="" title="{event_youtube}" /></a>
 	  		{/if}
-				
+
 			</div>
 
-			
-    {if event_age_restrictions} 
+
+    {if event_age_restrictions}
 			<div id="event-age-restrictions">
 				<h4 class="section-head sans">Age Recommendation</h4>
 				<p>{event_age_restrictions}</p>
 			</div>
 		{/if}
-		
+
 		{if event_ticket_info}
 			<div id="event-ticket-info">
 				<h4 class="section-head sans">Ticket Info</h4>
 				{event_ticket_info}
 			</div>
 		{/if}
-						
+
 			<div id="event-box-office-info">
 				<h4 class="section-head sans">Box Office Info</h4>
 			{if event_box_office_info}
 				{event_box_office_info}
 			{if:else}
 				{related_entries id="event_organization"}
-				  {org_box_office} 
+				  {org_box_office}
 			  {/related_entries}
 			{/if}
 			</div>
 		{/exp:calendar:events}
-		
+
 		<div id="event-upcoming">
 	      <h4 class="section-head sans">Upcoming Dates</h4>
 	      <ul>
-				{exp:calendar:occurrences 
-	       	event_name="{segment_3}" 
-	       	date_range_start="today" 
-	       	date_range_end="6 months" 
-	       	upcoming_occurrences_limit="100" 
-	       	prior_occurrences_limit="30" 
+				{exp:calendar:occurrences
+	       	event_name="{segment_3}"
+	       	date_range_start="today"
+	       	date_range_end="6 months"
+	       	upcoming_occurrences_limit="100"
+	       	prior_occurrences_limit="30"
 	       	dynamic="off"
 	       	status="not closed"
 				}
@@ -243,18 +244,18 @@
 					{if:else}
 						<li>{occurrence_start_date format="%D %F %j at %g:%i%a"}</li>
 					{/if}
-					{if occurrence_count == occurrence_total} 
+					{if occurrence_count == occurrence_total}
 					</div>
 					<li class="view-more">View more &raquo;</li>
 					{/if}
 				{/if}
-				{if calendar_no_results}<li>There are no upcoming dates</li>{/if} 
+				{if calendar_no_results}<li>There are no upcoming dates</li>{/if}
 				{/exp:calendar:occurrences}
 	      </ul>
 	    </div>
-		
+
 		</div>
-		
+
 	</div>
-  
+
 {embed="inc/.footer" include_login="true"}

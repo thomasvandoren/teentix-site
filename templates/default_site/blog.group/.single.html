@@ -1,6 +1,6 @@
-{exp:channel:entries 
-	channel="blog" 
-	limit="1" 
+{exp:channel:entries
+	channel="blog"
+	limit="1"
 	status="not closed"
 	require_entry="yes"
 }
@@ -14,25 +14,26 @@
 
 {embed="inc/.nav"
 	end_title="{title}"
-} 
-    
+}
+
   <div class="row">
-  	
+
     <div id="main" class="eight columns">
-    	
+
     	<div class="entry">
-				
+
 				<h1 id="page-name">{title} {if status == "Draft"}<span class="draft-status">[Draft]</span>{/if}</h1>
 			{if blog_subhead}
-				<div id="page-subhead">{blog_subhead}</div>			  
+				<div id="page-subhead">{blog_subhead}</div>
 		  {/if}
-				
+
 				<p class="entry-date clearfix">
     			<span class="entry-cat-list">
 		    	{categories show_group="1"}<a href="{path='blog'}" class="round label">{category_name}</a>{/categories}
 	    		</span>
     			By <a href="{profile_path='member'}">{author}</a> | {entry_date format="%F %j, %Y"} | {entry_date format="%g:%i %a"}
     		</p>
+
 			{if blog_video}
 	  		<div class="flex-video widescreen">
 	  		{blog_video}
@@ -50,35 +51,35 @@
 	    	{/if}
     	{/if}
     		{blog_body}
-    		
+        {embed="inc/.social-buttons"}
     	</div>
-	  	
+
   	{if status != "Draft"}
     	{embed="blog/.single_entrynav"}
-			
+
 			{embed="inc/.comments" channel="blog" comment_total="{comment_total}" }
 		{/if}
-			
+
     </div>
 
   	<div id="sidebar" class="four columns">
 			{edit_this}
-			{embed="inc/.social-buttons"}
+
       {embed="blog/.sidebar"}
     </div>
-  
+
   </div>
-	
+
 	{if status=="Draft"}
 		{if logged_out || logged_in_group_id=="5"}
 			{redirect="blog"}
 		{/if}
-	{/if} 
-	
+	{/if}
+
 	{if no_results}
 		{redirect="blog"}
 	{/if}
-	
+
 {/exp:channel:entries}
 
 {embed="inc/.footer" include_login="true"}

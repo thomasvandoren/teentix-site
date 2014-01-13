@@ -8,27 +8,27 @@
 {embed="inc/.nav"
 	end_title="Monthly"
 }
-    
-    
-  <div class="row">		
-  		
+
+
+  <div class="row">
+
 		<div id="main" class="twelve columns">
-						
+
 			{embed="calendar/.calendar-nav"}
-  
+
 			<div id="monthly_calendar">
 		  {exp:calendar:cal
 			{if segment_3 == ''}
-				date_range_start="year-month-01" 
+				date_range_start="year-month-01"
 				date_range_end="year-month-last"
 			{/if}
 			{if segment_3 != ""}
-				date_range_start="{segment_3}-{segment_4}-01" 
+				date_range_start="{segment_3}-{segment_4}-01"
 				date_range_end="{segment_3}-{segment_4}-last"
 			{/if}
 				status="not closed"
 			}
-		    {display_each_month}	      
+		    {display_each_month}
 	      <div class="header">
 				  <div class="left">
 				     <a href="{path='calendar/month'}/{prev_month format='%Y/%m/%d'}/">&laquo; {prev_month format="%F"}</a>
@@ -38,81 +38,90 @@
 				  </div>
 				  <div class="center">
 				     <h4 class="slab">{month format="%F %Y"}{if segment_6 == "category"}: {exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading}{/if}</h4>
-				  </div>			  
+				  </div>
 				</div><!-- end .header -->
 				{/display_each_month}
 			{/exp:calendar:cal}
-				
+
 				<div class="row">
-					<div id="sidebar" class="two columns">
-				  	{embed="calendar/.sidebar"}
-			    </div><!-- end #sidebar -->
-			    
-					<div class="four columns">
-					{exp:calendar:cal
-					{if segment_3 == ''}
-						date_range_start="year-month-01" 
-						date_range_end="year-month-last"
-					{/if}
-					{if segment_3 != ""}
-						date_range_start="{segment_3}-{segment_4}-01" 
-						date_range_end="{segment_3}-{segment_4}-last"
-					{/if}
-					{if segment_6 == "category"}
-						category="{segment_8}"
-					{/if}
-						status="not closed"
-					}
-				    {display_each_month}
-			      <table id="calendar-table" cellspacing="0" cellpadding="0">
-							<thead>
-								<tr id="days_of_week">
-								   {display_each_day_of_week}
-								   <th class="day_of_week {day_of_week}">{day_of_week_short}</th>
-								   {/display_each_day_of_week}
-								</tr>
-		          </thead>
-		          <tbody>
-		          {display_each_week}
-		            <tr>
-		          	{display_each_day}
-		            {if day_in_current_month}
-		            	<td 
-		            		class="day_cell 
-			            	{if "{day format='%d'}" == segment_5}current{/if}
-			            	{if segment_3 == ""}{if day_is_today}current{/if}{/if}
-			            	" 
-		            		data-date="day-{date}"
-		            	>
-		            		<div class="date">{day format="%j"}</div>
-		            	{if day_event_total >0}
-		            		<div class="event"><span class="event-count">{day_event_total}</span> event{if day_event_total > "1"}s{/if}</div>
-		            	{/if}
-		            	</td>
-		            {if:else}
-		              <td class="day_cell out_of_range">
-		              	<div class="date"><span class="num">{day format="%j"}</span></div>
-		              </td>
-		            {/if}
-		            	
-		          	{/display_each_day}
-		            </tr>
-		          {/display_each_week}
-		          </tbody>
-		        </table>
-		        {/display_each_month}
-					{/exp:calendar:cal}
-	      	</div>
-	      	
+					<div id="sidebar" class="six columns">
+					  <div class="row">
+					    <div class="four columns">
+    				  	{embed="calendar/.sidebar"}
+					    </div>
+					    <div class="eight columns">
+      					{exp:calendar:cal
+      					{if segment_3 == ''}
+      						date_range_start="year-month-01"
+      						date_range_end="year-month-last"
+      					{/if}
+      					{if segment_3 != ""}
+      						date_range_start="{segment_3}-{segment_4}-01"
+      						date_range_end="{segment_3}-{segment_4}-last"
+      					{/if}
+      					{if segment_6 == "category"}
+      						category="{segment_8}"
+      					{/if}
+      						status="not closed"
+      					}
+      				    {display_each_month}
+      			      <table id="calendar-table" cellspacing="0" cellpadding="0">
+      							<thead>
+      								<tr id="days_of_week">
+      								   {display_each_day_of_week}
+      								   <th class="day_of_week {day_of_week}">{day_of_week_short}</th>
+      								   {/display_each_day_of_week}
+      								</tr>
+      		          </thead>
+      		          <tbody>
+      		          {display_each_week}
+      		            <tr>
+      		          	{display_each_day}
+      		            {if day_in_current_month}
+      		            	<td
+      		            		class="day_cell
+      			            	{if "{day format='%d'}" == segment_5}current{/if}
+      			            	{if segment_3 == ""}{if day_is_today}current{/if}{/if}
+      			            	"
+      		            		data-date="day-{date}"
+      		            	>
+      		            		<div class="date">{day format="%j"}</div>
+      		            	{if day_event_total >0}
+      		            		<div class="event"><span class="event-count">{day_event_total}</span> event{if day_event_total > "1"}s{/if}</div>
+      		            	{/if}
+      		            	</td>
+      		            {if:else}
+      		              <td class="day_cell out_of_range">
+      		              	<div class="date"><span class="num">{day format="%j"}</span></div>
+      		              </td>
+      		            {/if}
+
+      		          	{/display_each_day}
+      		            </tr>
+      		          {/display_each_week}
+      		          </tbody>
+      		        </table>
+      		        {/display_each_month}
+      					{/exp:calendar:cal}
+					    </div>
+					  </div>
+
+            <div id="calendar-month-ad-space">
+              {embed="inc/.ad-300x250" border="true"}
+            </div>
+
+
+	      	</div>{!-- end #sidebar --}
+
 	      	<div class="six columns">
       			<div id="month-schedule">
 	      		{exp:calendar:cal
 						{if segment_3 == ''}
-							date_range_start="year-month-01" 
+							date_range_start="year-month-01"
 							date_range_end="year-month-last"
 						{/if}
 						{if segment_3 != ""}
-							date_range_start="{segment_3}-{segment_4}-01" 
+							date_range_start="{segment_3}-{segment_4}-01"
 							date_range_end="{segment_3}-{segment_4}-last"
 						{/if}
 						{if segment_6 == "category"}
@@ -120,13 +129,13 @@
 						{/if}
 							status="not closed"
 						}
-	
+
 	          	{display_each_day}
 	            {if day_in_current_month}
 							<div class="day-schedule day-{date}
 								{if "{day format='%d'}" == segment_5}current{/if}
 	            	{if segment_3 == ""}{if day_is_today}current{/if}{/if}
-	            	" 
+	            	"
 							>
 		          	<h4 class="slab">{date format="%F %j, %Y"}</h4>
 		          	<h5>{day_event_total} {if segment_6 == "category"}{exp:channel:category_heading channel="calendar_events"}{category_name}{/exp:channel:category_heading} {/if} Event{if day_event_total !="1"}s{/if}</h5>
@@ -141,7 +150,7 @@
 						      		{event_start_date format="%g:%i%a"}
 						      	{/if}
 						      	</span>
-						      	<span class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></span> 
+						      	<span class="event-name"><a href="{url_title_path='calendar/event'}">{event_title}</a></span>
 									  <span class="event-category">{categories backspace="3" show_group="1"}{category_name} | {/categories}</span>
                   </li>
                   {/events}
@@ -154,14 +163,14 @@
 						</div><!-- end #month_schedule -->
 	      	</div>
 	      </div>
-				
+
 				{add_event}
-				
+
 			</div><!-- end #monthly_calendar -->
 		</div><!-- end #main -->
 
 
 
 	</div>
-		
+
 {embed="inc/.footer"}
