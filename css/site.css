@@ -2094,7 +2094,7 @@ ul.breadcrumbs li.current a {
 }
 #calendar-month-ad-space {
   max-width: 320px;
-  margin: 20px 0px;
+  margin: 20px auto;
 }
 #blog-sidebar-ad-space {
   margin-bottom: 30px;

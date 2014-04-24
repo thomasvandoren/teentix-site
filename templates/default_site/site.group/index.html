@@ -79,29 +79,14 @@
 		{/exp:channel:entries}
     </div>
 
+    {exp:channel:entries channel="advertising" dynamic="no"  category="39"  limit="1" orderby="random"}
     <div id="home-ad-space" class="four columns">
-      {embed="inc/.ad-300x250" border="true"}
+      {embed="inc/.ad-300" border="true" entry_id="{entry_id}"}
     </div>
-
-{!--}    <div id="home-recent-posts" class="four columns">
-    	<h4 class="section-head condensed">Recent Blog Posts</h4>
-    {exp:channel:entries channel="blog" limit="3" status="open"}
-    	<div class="entry">
-				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
-    		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
-    		<p>
-    		{exp:trunchtml chars="80" inline="..." ending=" <a href='{url_title_path=blog}' class='button tiny'>More</a>"}
-	    		{exp:strip_html keep='b|em'}
-					{exp:strip_line_breaks}
-						{blog_body}
-					{/exp:strip_line_breaks}
-					{/exp:strip_html}
-				{/exp:trunchtml}
-				</p>
-    	</div>
-		{/exp:channel:entries}
-    </div>
---}
+    {if no_results}
+      {embed="inc/.home-recent-blog-posts"}
+    {/if}
+    {/exp:channel:entries}
 
   </div>
 
