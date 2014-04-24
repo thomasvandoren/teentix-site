@@ -1,9 +1,15 @@
+{exp:channel:entries channel="advertising" dynamic="no"  category="40"  limit="1" orderby="random"}
+<div id="blog-sidebar-ad-space">
+  {embed="inc/.ad-300" border="false" entry_id="{entry_id}"}
+</div>
+{/exp:channel:entries}
+
 <div id="become-reviewer">
 	<a href="/write-for-our-blog">Become a Teen Reviewer</a>
 </div>
 
 <div id="blog-search" class="row collapse">
-	{exp:search:simple_form 
+	{exp:search:simple_form
 		name="utility_search"
 		no_result_page="blog/noresults"
 		result_page="blog/results"
@@ -19,15 +25,17 @@
     <input type="submit" value="GO" class="submit button  expand postfix">
   </div>
 	{/exp:search:simple_form}
-	
+
 </div>
+
+
 
 <div id="blog-categories">
 	<h4 class="section-head sans">Articles</h4>
 	{exp:channel:categories channel="blog" category_group="4" show_empty="no"}
   <a href="{path='blog'}">{category_name}</a>
 	{/exp:channel:categories}
-	
+
 	<h4 class="section-head sans">Genres</h4>
 	{exp:channel:categories channel="blog" category_group="1" show_empty="no"}
   <a href="{path='blog'}">{category_name}</a>

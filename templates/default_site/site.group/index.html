@@ -2,16 +2,16 @@
 	body_class="home"
 	og_description="{exp:remove_html}{exp:low_variables:single var='footer_about_teentix'}{/exp:remove_html}"
 }
-{embed="inc/.nav"}  
-  
-    
+{embed="inc/.nav"}
+
+
   <div class="row">
     <div class="twelve columns">
       <div id="main-featured">
-			{exp:calendar:events 
-				orderby="date" sort="asc" 
-				date_range_start="99 months ago" 
-				show_months="999" 
+			{exp:calendar:events
+				orderby="date" sort="asc"
+				date_range_start="99 months ago"
+				show_months="999"
 				status="featured"
 			}
  				<div class="slide">
@@ -25,82 +25,72 @@
 	      		<p class="event-date slab">{event_start_date format="%D %M %j, %Y"}{if event_recurs} &ndash; {event_last_date format="%D %M %j, %Y"}{/if}</p>
 	      		<p class="event-venue">{related_entries id="event_venue"}{title}{/related_entries}</p>
 	      		<a class="button medium yellow" href="{url_title_path='calendar/event'}">View Event <img src="/css/images/site/arrow-tall-white.png" class="arrow"></a>
-      		</div>	      		
+      		</div>
       	</div>
       {/exp:calendar:events}
       </div>
     </div>
   </div>
-  
-  
+
+
   <!-- Three-up Content Blocks -->
-  
-  <div class="row">  
+
+  <div class="row">
     <div id="home-promo" class="four columns">
   		<a href="{site_url}sign-up">
   			<img src="{site_url}css/images/site/fob-art.jpg" />
-  			
+
   		</a>
       <p class="centered"><a href=" {site_url}sign-up" class="button large yellow">Sign Up Now</a></p>
     </div>
-    
+
     <div id="home-featured-post" class="four columns">
     {exp:channel:entries channel="blog" limit="1" status="featured"}
-    	
+
     	<div class="entry">
   	{if blog_video}
   		<div class="flex-video widescreen">
   		{blog_video}
   		</div>
   	{if:else}
-    	
+
   		{if blog_image}
   			<a href="{url_title_path='blog'}">
   			{exp:ce_img:pair src="{blog_image}" width="300" height="200" crop="yes"}
 				<img src="{made}" alt="" width="{width}" height="{height}" />
 				{/exp:ce_img:pair}
   			</a>
-    	{/if} 
-    {/if}   	
+    	{/if}
+    {/if}
     		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
 {!--     		<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p> --}
     		<p>
-    		{exp:trunchtml chars="240" inline="..." ending=" <a href='{url_title_path=blog}' class='button tiny'>More</a>"}	    		
+    		{exp:trunchtml chars="240" inline="..." ending=" <a href='{url_title_path=blog}' class='button tiny'>More</a>"}
 	    		{exp:strip_line_breaks}
 	    		{exp:strip_html keep='b|em'}
-					
+
 						{blog_body}
-					
+
 					{/exp:strip_html}
 					{/exp:strip_line_breaks}
-				{/exp:trunchtml} 
-				</p> 		
-    	</div>
-		{/exp:channel:entries} 
-    </div>
-    
-    <div id="home-recent-posts" class="four columns">
-    	<h4 class="section-head condensed">Recent Blog Posts</h4>
-    {exp:channel:entries channel="blog" limit="3" status="open"}
-    	<div class="entry">
-				<p class="entry-date">Posted {entry_date format="%D %M %j, %Y"}</p>
-    		<h3 class="entry-title slab"><a href="{url_title_path='blog'}">{title}</a></h3>
-    		<p>
-    		{exp:trunchtml chars="80" inline="..." ending=" <a href='{url_title_path=blog}' class='button tiny'>More</a>"}	    		
-	    		{exp:strip_html keep='b|em'}
-					{exp:strip_line_breaks}
-						{blog_body}
-					{/exp:strip_line_breaks}
-					{/exp:strip_html}
-				{/exp:trunchtml} 
+				{/exp:trunchtml}
 				</p>
     	</div>
-		{/exp:channel:entries} 
+		{/exp:channel:entries}
     </div>
-    
+
+    {exp:channel:entries channel="advertising" dynamic="no"  category="39"  limit="1" orderby="random"}
+    <div id="home-ad-space" class="four columns">
+      {embed="inc/.ad-300" border="true" entry_id="{entry_id}"}
+    </div>
+    {if no_results}
+      {embed="inc/.home-recent-blog-posts"}
+    {/if}
+    {/exp:channel:entries}
+
   </div>
-  
-  
+
+
   <!-- Call to Action Panel -->
   <div class="row">
     <div class="twelve columns">
@@ -114,7 +104,7 @@
           <div id="contact-right" class="four columns">
           	<div id="contact-buttons">
 	            <a href="{site_url}contact" class="button large">Contact Us</a><br />
-            
+
 	            <img src="{site_url}css/images/site/contact-visit.png" class="contact-divider" /><br />
 	            <div class="social-buttons">
 								<a class="fb" target="_blank" href="http://www.facebook.com/theteentixpage"></a>
@@ -122,13 +112,13 @@
 								<a class="youtube" target="_blank" href="http://www.youtube.com/teentix"></a>
 								<a class="flickr" target="_blank" href="http://www.flickr.com/teentix"></a>
 							</div>
-	            
+
             </div>
           </div>
         </div>
       </div>
-      
+
     </div>
   </div>
-  
+
 {embed="inc/.footer"}
