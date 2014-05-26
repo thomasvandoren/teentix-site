@@ -1,12 +1,13 @@
 {exp:channel:entries channel="advertising" dynamic="no"  category="43"  limit="1" orderby="random"}
 <div id="blog-sidebar-ad-space">
-  {embed="inc/.ad-300" border="false" entry_id="{entry_id}"}
+  {embed="inc/.ad-300" border="false" entry_id="{entry_id}" zone="blog"}
 </div>
+{if no_results}
+  <div id="become-reviewer">
+  	<a href="/write-for-our-blog">Become a Teen Reviewer</a>
+  </div>
+{/if}
 {/exp:channel:entries}
-
-<div id="become-reviewer">
-	<a href="/write-for-our-blog">Become a Teen Reviewer</a>
-</div>
 
 <div id="blog-search" class="row collapse">
 	{exp:search:simple_form
@@ -27,6 +28,8 @@
 	{/exp:search:simple_form}
 
 </div>
+
+
 
 
 
