@@ -4,29 +4,29 @@
   var $doc = $(document),
       Modernizr = window.Modernizr;
 
-  
+
   $.fn.foundationAlerts           ? $doc.foundationAlerts() : null;
   $.fn.foundationAccordion        ? $doc.foundationAccordion() : null;
   $.fn.foundationTooltips         ? $doc.foundationTooltips() : null;
   $('input, textarea').placeholder();
-  
-  
+
+
   $.fn.foundationButtons          ? $doc.foundationButtons() : null;
-  
-  
+
+
   $.fn.foundationNavigation       ? $doc.foundationNavigation() : null;
-  
-  
+
+
   $.fn.foundationTopBar           ? $doc.foundationTopBar({breakPoint: 940}) : null;
-  
-  
+
+
   $.fn.foundationMediaQueryViewer ? $doc.foundationMediaQueryViewer() : null;
-  
-    
+
+
   $.fn.foundationTabs             ? $doc.foundationTabs() : null;
-    
-  
-  
+
+
+
 
 
   // UNCOMMENT THE LINE YOU WANT BELOW IF YOU WANT IE8 SUPPORT AND ARE USING .block-grids
@@ -34,8 +34,8 @@
   // $('.block-grid.three-up>li:nth-child(3n+1)').css({clear: 'both'});
   // $('.block-grid.four-up>li:nth-child(4n+1)').css({clear: 'both'});
   // $('.block-grid.five-up>li:nth-child(5n+1)').css({clear: 'both'});
-  
-  
+
+
   // Hide address bar on mobile devices
   if (Modernizr.touch) {
     $(window).load(function () {
@@ -44,11 +44,11 @@
       }, 0);
     });
   }
-  
 
-/////////////////////////////////////  
+
+/////////////////////////////////////
 //	Form Validations
-///////////////////////////////////// 
+/////////////////////////////////////
 
   $.validator.addMethod("valueNotEquals", function(value, element, arg){
     return arg != value;
@@ -57,7 +57,7 @@
   $("#application_form select[name='app_birthdate[]']").each(function() {
     $(this).addClass("required");
   });
-  
+
   $('#application_form').validate({
     rules: {
      email : {
@@ -81,17 +81,17 @@
       }
     }
   });
-  
+
   $('#account_form').validate({
     rules: {
-      username: { 
-        email: true 
+      username: {
+        email: true
       },
-      screen_name: { 
-        minlength: 5 
+      screen_name: {
+        minlength: 5
       },
-      password: { 
-        minlength: 5 
+      password: {
+        minlength: 5
       },
       password_confirm: {
         equalTo: "#password"
@@ -105,11 +105,11 @@
       }
     }
   });
-  
+
   $('#account_edit_profile').validate({
   	rules: {
-      screen_name: { 
-        minlength: 5 
+      screen_name: {
+        minlength: 5
       }
     },
     errorPlacement: function(error, element) {
@@ -120,58 +120,65 @@
       }
     }
   });
-  
+
+  $("#application_form .app_member_type_list input[value=parent]").click(function(){
+    $(".app_parent_info ").fadeIn();
+  })
+  $("#application_form .app_member_type_list input:not([value=parent])").click(function(){
+    $(".app_parent_info ").hide();
+  })
+
   $('#account_edit_profile #bday_m, #account_edit_profile #bday_d, #account_edit_profile #bday_y').change(function(){
   	if (($("#account_edit_profile #bday_m").val() != "") && ($("#account_edit_profile #bday_d").val() != "") && ($("#account_edit_profile #bday_y").val() != "")) {
   		$('.label_birthdate_error').html('');
   	}
   });
-  
+
   $('#account_edit_settings').validate({
     rules: {
-      password: { 
-        minlength: 5 
+      password: {
+        minlength: 5
       },
       password_confirm: {
         equalTo: "#password"
       }
     }
   });
-  
+
   $('#login-form').validate({
     rules: {
-      username: { 
-        email: true 
+      username: {
+        email: true
       },
-      password: { 
-        minlength: 5 
+      password: {
+        minlength: 5
       }
     }
   });
 
   $('#forgot_password_form').validate({
     rules: {
-      email: { 
-        email: true 
+      email: {
+        email: true
       }
     }
   });
-  
+
   $('#newsletter_form').validate({
     rules: {
-      app_email: { 
-        email: true 
+      app_email: {
+        email: true
       }
     }
   });
-  
+
   $('#app_newsletter').click(function() {
     $(this).parent().next().toggleClass('require');
     $(this).parent().next().next().toggleClass('required');
   });
-  
+
   $('#nav-bar-login form').validate();
-  
+
   $('#lost-pass-form').validate({
     rules: {
      email : {
@@ -195,23 +202,23 @@
       }
     }
   });
-  
+
   $('#contact-form').validate({
     rules: {
-      email: { 
-        email: true 
+      email: {
+        email: true
       },
-      message: { 
-        maxlength: 1000 
+      message: {
+        maxlength: 1000
       }
     }
   });
-  
-  
-  
-/////////////////////////////////////  
+
+
+
+/////////////////////////////////////
 //	Form Value Check
-///////////////////////////////////// 
+/////////////////////////////////////
 
 	function checkEmail() {
 		$.ajax({
@@ -222,10 +229,10 @@
 				if (data > 0) {
 					$("label.username_return").html("Not Available");
 					$("label.username_return").removeClass('available').addClass('unavailable');
-								
+
 				} else {
 					$("label.username_return").html("Available");
-					$("label.username_return").removeClass('unavailable').addClass('available');						
+					$("label.username_return").removeClass('unavailable').addClass('available');
 				}
 				if ($('#account_username').hasClass('error')) {
 					$("label.username_return").html("");
@@ -238,10 +245,10 @@
 				}
 			}
 		})
-		
+
 		return false;
 	};
-	
+
 	function checkScreenname() {
 		$.ajax({
 			type: 'GET',
@@ -250,7 +257,7 @@
 				if (data > 0) {
 					$("label.screen_name_return").html("Not Available")
 					$("label.screen_name_return").removeClass('available').addClass('unavailable');
-				} else {					
+				} else {
 					$("label.screen_name_return").html("Available")
 					$("label.screen_name_return").removeClass('unavailable').addClass('available');
 				}
@@ -267,17 +274,17 @@
 		})
 		return false;
 	};
-  
+
 	$("#account_username").bind('blur', checkEmail);
 	$("#account_screen_name").bind('blur', checkScreenname);
 	$("#account_form #account_username").focus();
-  
 
 
-/////////////////////////////////////  
+
+/////////////////////////////////////
 //	Favorites
-/////////////////////////////////////   
-  
+/////////////////////////////////////
+
   $('a.Favorites_Save') .click (function() {
       var link = $(this).attr('href')
       $('.Favorites_Status').load(link, function() {
@@ -294,7 +301,7 @@
       $(this).hide();
       return false;
   });
-  
+
   $('a.Favorites_Delete') .click (function() {
       var link = $(this).attr('href')
       $('.Favorites_Status').load(link, function() {
@@ -303,53 +310,53 @@
       $(this).hide();
       return false;
   });
-  
+
   $('a.Favorites_Delete_Account') .click (function() {
       var link = $(this).attr('href')
       $(this).load(link).hide().closest('.row').fadeOut();
       return false;
   });
-  
-  
+
+
 /*   view more */
-  
+
   $('.event .view-more').click(function() {
   	$(this).prev().toggleClass('hidden');
   });
-  
-  
+
+
 /*   galleries */
-  $("#gallery").orbit({ 
+  $("#gallery").orbit({
   	animation: 'fade',
   	startClockOnMouseOut: true,
   	timer: false,
   	bullets: true,
   	captions: true ,
   });
-  
+
   $('#main-featured').cycle();
   $('#event-slideshow').cycle({
   	timeout: 0,
   	pager: '#event-slideshow-pager',
-  	pagerAnchorBuilder: function(idx, slide) { 
-        // return selector string for existing anchor 
-        return '#event-slideshow-pager li:eq(' + idx + ') a'; 
+  	pagerAnchorBuilder: function(idx, slide) {
+        // return selector string for existing anchor
+        return '#event-slideshow-pager li:eq(' + idx + ') a';
     }
-  }); 
-  
+  });
+
   $('.event #event-slideshow-pager li').click(function(){
   	$('.event #event-slideshow').slideDown();
   })
-	
+
 	function hideSlideshow() {
 		if ($('#event-gallery').hasClass('has-video')) {
 			$('#event-slideshow').hide();
 		}
 	}
-	
+
 	hideSlideshow();
-	
-	
+
+
 /* calendar */
 	var month_day = '5';
 	$('#monthly_calendar .day_cell').click(function(){
@@ -359,5 +366,5 @@
 		var date = $(this).data('date');
 		$('.day-schedule.' + date).fadeIn();
 	})
-	
+
 })(jQuery, this);
