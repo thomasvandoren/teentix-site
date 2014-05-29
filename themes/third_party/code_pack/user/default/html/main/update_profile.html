@@ -4,9 +4,9 @@
 {embed="%prefix%inc/header"}
 
 		<div id="maincolumn">
-		
+
 			<h2>User</h2>
-			
+
 			<h3>Update My Profile</h3>
 
 			<p></p>
@@ -16,7 +16,7 @@
 {embed="%prefix%inc/login"}
 
 {if:else}
-		
+
 {embed="%prefix%inc/control_column"}
 
 			<div id="middlecolumn">
@@ -85,6 +85,14 @@
 
 <select name="bday_y" id="bday_y" style="width: 100px;">
 <option value="">--</option>
+<option value="2014" {if bday_y == "2014"}selected="selected"{/if}>2014</option>
+<option value="2013" {if bday_y == "2013"}selected="selected"{/if}>2013</option>
+<option value="2012" {if bday_y == "2012"}selected="selected"{/if}>2012</option>
+<option value="2011" {if bday_y == "2011"}selected="selected"{/if}>2011</option>
+<option value="2010" {if bday_y == "2010"}selected="selected"{/if}>2010</option>
+<option value="2009" {if bday_y == "2009"}selected="selected"{/if}>2009</option>
+<option value="2008" {if bday_y == "2008"}selected="selected"{/if}>2008</option>
+<option value="2007" {if bday_y == "2007"}selected="selected"{/if}>2007</option>
 <option value="2006" {if bday_y == "2006"}selected="selected"{/if}>2006</option>
 <option value="2005" {if bday_y == "2005"}selected="selected"{/if}>2005</option>
 <option value="2004" {if bday_y == "2004"}selected="selected"{/if}>2004</option>
@@ -195,17 +203,17 @@
 				<p><label for="interests">Interests:</label><input type="text" name="interests" id="interests" value="{interests}" style="width: 450px;" /></p>
 				<p><label for="bio">Bio:</label><textarea name="bio" id="bio" rows="10" cols="50" style="width: 450px; height: 200px;">{bio}</textarea></p>
 				<p><input type="submit" name="submit" value="Update" />
-				{/exp:user:edit}  
+				{/exp:user:edit}
 			</div>
-		
+
 {/if}
 
 		</div>
-		
+
 		<div id="sidecolumn">
-		
+
 			<h3>About This Page</h3>
-			
+
 			<p>The "Update Profile" page allows the currently logged in user to edit their basic profile information.</p>
 
 			<p>It makes use of the following function:</p>
@@ -213,6 +221,6 @@
 			<ul>
 				<li><a href="http://www.solspace.com/docs/detail/user_edit/">User:Edit</a> to edit profile information.</li>
 			</ul>
-		
+
 		</div>
 {embed="%prefix%inc/footer"}

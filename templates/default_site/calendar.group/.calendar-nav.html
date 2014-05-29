@@ -1,5 +1,14 @@
-	<h1 id="page-name">TeenTix Events Calendar</h1>	
-	
+{exp:channel:entries channel="advertising" dynamic="no"  category="41"  limit="1" orderby="random"}
+  <div id="calendar-ad-space-nav">
+    {embed="inc/.ad-1000x50" entry_id="{entry_id}" zone="calendar nav"}
+  </div>
+{/exp:channel:entries}
+
+
+	<h1 id="page-name">TeenTix Events Calendar</h1>
+
+
+
 	<div id="calendar-nav" class="row">
   	<div class="twelve columns">
    		<dl class="tabs five-up">
@@ -10,7 +19,7 @@
   			<dd class="{if segment_2=='all'} active{/if}"><a href="{path='calendar/all'}">All Events</a></dd>
   			<dd class="tab-search">
   				<div id="calendar-search" class="row collapse">
-						{exp:search:simple_form 
+						{exp:search:simple_form
 							name="utility_search"
 							no_result_page="calendar/noresults"
 							result_page="calendar/results"
@@ -26,7 +35,7 @@
 					    <input type="submit" value="GO" class="submit searchbutton expand postfix">
 					  </div>
 						{/exp:search:simple_form}
-						
+
 					</div>
   			</dd>
 			</dl>

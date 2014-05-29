@@ -5,11 +5,11 @@
 		    <li class="toggle-topbar"><a href="#"></a></li>
 		  </ul>
 		  <section>
-		
+
 		    <ul class="right">
 		    	<li>
 			  		<div id="utility-search" class="search-form">
-		  			{exp:search:simple_form 
+		  			{exp:search:simple_form
 		  				name="utility_search"
 		  				no_result_page="search/noresults"
 		  				result_page="search/results"
@@ -29,8 +29,8 @@
 	          <ul class="dropdown">
 			        <li id="fb-util-login">{embed="inc/.fbc_login" size="large"}</li>
 			        <li id="nav-bar-login">
-			          
-		          {exp:member:login_form 
+
+		          {exp:member:login_form
 		          	{if segment_1 == ""}
 			          	return="{site_url}index.php"
 		          	{/if}
@@ -44,13 +44,13 @@
 		            <input type="password" name="password" class="required" />
 		            <input type="submit" name="submit" value="Submit" class="submit button small" />
 		          {/exp:member:login_form}
-		              
+
 			        </li>
 			        <li id="util-new-account"><a href="{site_url}account/new">Create an account</a></li>
 							<li id="util-password"><a href="{path='account/password'}">Reset your password</a></li>
-							
+
 			      </ul>
-	          
+
 	        </li>
 	      {/if}
 	      {if logged_in}
@@ -62,7 +62,7 @@
 		</nav><!-- end .top-bar -->
 
 	</div><!-- end #utility-nav -->
-	
+
   <!-- Header and Nav -->
   <div id="header">
 	  <div class="row">
@@ -71,12 +71,12 @@
 		      <h1 id="logo"><a href="{site_url}"><img src="{site_url}css/images/site/teentix-logo.png" /></a></h1>
 		      <div id="get-pass"><a href="{path='sign-up'}">Get Your Pass</a></div>
 		      <div id="get-info"><a href="{path='how-to'}">More Info</a></div>
-					
+
 				</div>
 	    </div>
 	  </div>
   </div><!-- end #header -->
-  
+
   <div id="top-nav">
 	  <div class="row">
 	  	<div class="twelve columns">
@@ -110,7 +110,7 @@
 				    		<div class="four columns">
 				    			<h4 class="section-head">Get Involved</h4>
 				    			<ul>
-					    			<li><a href="/teen-steering-committee">Teen Steering Committee</a></li>
+					    			<li><a href="/the-new-guard">The New Guard</a></li>
 					    			<li><a href="/write-for-our-blog">Write for Our Blog</a></li>
 							      <li><a href="/support-teentix">Support TeenTix</a></li>
 							    </ul>
@@ -118,15 +118,15 @@
 				    	</div>
 					  </div>
 				  </li>
-				  
+
 		      <li class="last"><a href="{path='contact'}">Contact</a></li>
 		      <li class="last" id="get-lost-pass"><a href="{path='pass'}">Lost Pass</a></li>
 		    </ul>
-		    
+
 		  </div>
 	  </div>
   </div><!-- #top-nav -->
-  
+
   <div id="nav-breadcrumb">
 	  <div class="row">
 	  	<div class="twelve columns">
@@ -142,8 +142,8 @@
 			  	{if embed:end_title}
 			  		<li class="current"><a href="#">{embed:end_title}</a></li>
 			  	{/if}
-			  {/if}	
-  
+			  {/if}
+
 			  {if embed:end_title == "Error"}
 	  			<li><a href="{site_url}">Home</a></li>
 		  		<li><a href="{site_url}account">Account</a></li>
@@ -153,5 +153,5 @@
   		</div>
   	</div>
   </div><!-- end #nav-breadcrumb -->
-  
+
   <div id="main-content">
