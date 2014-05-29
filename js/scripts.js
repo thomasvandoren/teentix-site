@@ -121,12 +121,14 @@
     }
   });
 
+/*
   $("#application_form .app_member_type_list input[value=parent]").click(function(){
     $(".app_parent_info ").fadeIn();
   })
   $("#application_form .app_member_type_list input:not([value=parent])").click(function(){
     $(".app_parent_info ").hide();
   })
+*/
 
   $('#account_edit_profile #bday_m, #account_edit_profile #bday_d, #account_edit_profile #bday_y').change(function(){
   	if (($("#account_edit_profile #bday_m").val() != "") && ($("#account_edit_profile #bday_d").val() != "") && ($("#account_edit_profile #bday_y").val() != "")) {

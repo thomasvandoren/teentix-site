@@ -185,12 +185,7 @@
           <label><input type="radio" name="member_type" value="other"  />&nbsp;Other</label>
         </div>
 
-        <div class="app_parent_info hidden">
-          <label for="parent_name" class="">Parent/Guardian Name</label>
-          <input type="text" name="parent_name" id="parent_name" class="">
-          <label for="parent_email" class="">Parent/Guardian Email Address</label>
-          <input type="text" name="parent_email" id="parent_email" class="">
-        </div>
+
 
         <label for="hear_about">How did you hear about TeenTix?</label>
         <select name="hear_about" class="six">
@@ -215,6 +210,15 @@
           <input type="text" name="captcha" value="{captcha_word}" maxlength="20">
         {/if}
 
+      </fieldset>
+
+      <fieldset id="parent_info">
+        <legend>Parent/Guardian Info</legend>
+          <p>If you are a parent or guardian, applying on behalf of a teen, please provide us with your name and email address. If you are a teen, please provide us with your parent/guardian's name and email address (if you know it).</p>
+          <label for="parent_name" class="">Parent/Guardian Name</label>
+          <input type="text" name="parent_name" id="parent_name" class="">
+          <label for="parent_email" class="">Parent/Guardian Email Address</label>
+          <input type="text" name="parent_email" id="parent_email" class="">
       </fieldset>
 
       <fieldset id="app_demographic">
