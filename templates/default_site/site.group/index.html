@@ -107,10 +107,12 @@
 
 	            <img src="{site_url}css/images/site/contact-visit.png" class="contact-divider" /><br />
 	            <div class="social-buttons">
-								<a class="fb" target="_blank" href="http://www.facebook.com/theteentixpage"></a>
-								<a class="twitter" target="_blank" href="http://www.twitter.com/teentix"></a>
-								<a class="youtube" target="_blank" href="http://www.youtube.com/teentix"></a>
-								<a class="flickr" target="_blank" href="http://www.flickr.com/teentix"></a>
+	            {exp:low_variables:pair var="footer_social_links"}
+	              {if link=='Facebook'}<a class="fb" target="_blank" href="{url}"></a>{/if}
+	              {if link=='Twitter'}<a class="twitter" target="_blank" href="{url}"></a>{/if}
+	              {if link=='YouTube'}<a class="youtube" target="_blank" href="{url}"></a>{/if}
+	              {if link=='Flickr'}<a class="flickr" target="_blank" href="{url}"></a>{/if}
+							{/exp:low_variables:pair}
 							</div>
 
             </div>
