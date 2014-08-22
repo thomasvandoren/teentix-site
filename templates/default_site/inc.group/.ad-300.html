@@ -1,6 +1,6 @@
 {exp:channel:entries entry_id="{embed:entry_id}" dynamic="no"}
 <div class="adspace {if embed:border == "true"}adspace-border{/if}">
-  <a href="{banner_link}?referrer=teentix&campaign={url_title}&location={segment_1}-{segment_2}" target="_blank" onClick="ga('send', 'event', 'banner', 'click','{banner_advertiser_name}: {title} ({embed:zone})',1.00, {'nonInteraction': 1});">
+  <a href="{banner_link}?referrer=teentix" target="_blank" onClick="ga('send', 'event', 'banner', 'click','{banner_advertiser_name}: {title} ({embed:zone})',1.00, {'nonInteraction': 1});">
   {if embed:zone == "blog"}
     {if banner_artwork_300x600}
       <img src="{banner_artwork_300x600}" alt="" onload="ga('send', 'event', 'banner', 'impression','{banner_advertiser_name}: {title} ({embed:zone} large)',2.00, {'nonInteraction': 1});" >
