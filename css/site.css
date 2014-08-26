@@ -585,8 +585,7 @@ input.submit:hover {
 #nav-breadcrumb {
 	width: 100%;
 	background: #f6f8f5;
-	padding-top: 5px;
-	padding-bottom: 5px;
+	padding: 0px;
 }
 ul.breadcrumbs {
 	font-size: 11px;
@@ -594,6 +593,9 @@ ul.breadcrumbs {
 	margin-bottom: 0px;
 	background: none;
 	border: none;
+}
+ul.breadcrumbs li {
+  padding: 5px 0px;
 }
 ul.breadcrumbs li a,
 ul.breadcrumbs li.current a {
@@ -2088,6 +2090,9 @@ margin-bottom: 20px;
 /* -----------------------------------------
    Adspace
 ----------------------------------------- */
+.adspace-home {
+  margin-bottom: 10px;
+}
 .adspace-border {
   border: 1px solid #ccc;
   padding: 9px;
