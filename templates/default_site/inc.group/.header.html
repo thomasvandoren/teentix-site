@@ -12,43 +12,51 @@
   <!-- Set the viewport width to device width for mobile -->
   <meta name="viewport" content="width=device-width" />
 
-  <title>{if embed:title}{embed:title} | {/if}{site_name}</title> 
+  <title>{if embed:title}{embed:title} | {/if}{site_name}</title>
   <meta name="description" content="{embed:og_description}">
-  
+
   {if embed:canonical}
-  <link rel="canonical" href="{embed:canonical}" /> 
+  <link rel="canonical" href="{embed:canonical}" />
   {/if}
-  
+
   {if embed:noindex == "true"}
   <meta name="robots" content="noindex">
   {/if}
-  
+
   <!-- Included CSS Files (Uncompressed) -->
   <!--
   <link rel="stylesheet" href="{site_url}css/foundation.css">
   -->
-  
+
   <!-- Included CSS Files (Compressed) -->
 <!--   <link rel="stylesheet" href="{site_url}css/foundation.min.css"> -->
 	<link rel="stylesheet" href="{site_url}css/foundation.css">
   <link rel="stylesheet" href="{site_url}css/site.css">
-  
+
   {if segment_1 == 'application'}
   <link href="{path=css/_ee_saef_css}" type="text/css" rel="stylesheet" media="screen">
   {/if}
 
   <script src="{site_url}js/modernizr.foundation.js"></script>
-  
-  
+
+
   <!-- IE Fix for HTML5 Tags -->
   <!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  
+
   <script type="text/javascript" src="//use.typekit.net/tnb1byz.js"></script>
 	<script type="text/javascript">try{Typekit.load();}catch(e){}</script>
-	
-	
+
+  <link rel="icon" href="{site_url}favicon.png" type="image/x-icon">
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="{site_url}apple-touch-icon-144x144-precomposed.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="120x120" href="{site_url}apple-touch-icon-120x120-precomposed.png">
+  <link rel="apple-touch-icon-precomposed" sizes="114x114" href="{site_url}apple-touch-icon-114x114-precomposed.png" />
+  <link rel="apple-touch-icon-precomposed" sizes="72x72" href="{site_url}apple-touch-icon-72x72-precomposed.png" />
+  <link rel="apple-touch-icon-precomposed" href="{site_url}apple-touch-icon-precomposed.png" />
+  <meta name="apple-mobile-web-app-title" content="TeenTix" />
+
+
 	<meta property="fb:app_id" content="{facebook_app_id}"/>
 	<meta property="og:url" content="{exp:currentlee type='url'}"/>
 	<meta property="og:title" content="{if embed:title}{embed:title}{if:else}{site_name}{/if}"/>
