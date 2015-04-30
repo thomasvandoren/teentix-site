@@ -1,7 +1,7 @@
 {if logged_out}{redirect="sign-up"}{/if}
 {embed="applications/.inc_header"
 	page_name="TeenTix Member List"
-}	    
+}
 
     <div id="main" class="eight columns">
 			<div class="row">
@@ -17,21 +17,21 @@
 			    sort="asc"
 			    limit="100"
 			    group_id="not 1|3"
-			}				
+			}
 				<div class="row">
 					<div class="three columns">{absolute_count}. <a href="{path='member'}/{member_id}" target="_blank">
-				    
-				    {screen_name}</a> 
+
+				    {screen_name}</a>
 				  </div>
-				 	
+
 					<div class="two columns">{group_title} <small>[<a href="{cp_url}?S=0&D=cp&C=myaccount&id={member_id}" target="_blank">admin</a>]</small></div>
 					<div class="two columns">{first_name} {last_name}</div>
 					<div class="four columns">{encode="{email}"}</div>
 					<div class="one columns"><a href="{path='member'}/{member_id}" target="_blank"><span class="avatar">
-					{exp:fbc:member_data 
+					{exp:fbc:member_data
 				  	profile_pic_width="40"
-				  	profile_pic_size="normal" 
-				  	member_id="{member_id}" 
+				  	profile_pic_type="normal"
+				  	member_id="{member_id}"
 				  	profile_pic_linked="false"
 				  }
 						{if avatar_filename}
@@ -42,7 +42,7 @@
 				    	<img src="{site_url}images/avatars/default.jpg" />
 				    {/if}
 				  {/exp:fbc:member_data}
-				    </a> 
+				    </a>
 				  </div>
 				</div>
 			{if user_no_results}
@@ -52,10 +52,10 @@
 			    {user_pagination_links}</div>
 			{/user_paginate}
 			{/if}
-			
-			 
+
+
 			{/exp:user:users}
 			</div>
 	  </div>
-	
+
 {embed="applications/.inc_footer"}

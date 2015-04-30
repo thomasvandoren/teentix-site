@@ -7,10 +7,10 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/act.fbc.php
  */
 
@@ -19,31 +19,6 @@ require_once 'addon_builder/module_builder.php';
 class Fbc_actions extends Addon_builder_fbc
 {
 	public $api;
-
-	// -------------------------------------------------------
-
-	/**
-	 * Constructor
-	 *
-	 * @access	public
-	 * @return	null
-	 */
-
-	public function __construct()
-	{
-		parent::__construct();
-
-		// --------------------------------------------
-		//  Module Installed and What Version?
-		// --------------------------------------------
-
-		if ($this->database_version() == FALSE OR
-			$this->version_compare($this->database_version(), '<', FBC_VERSION))
-		{
-			return;
-		}
-	}
-	/* END */
 
 	// -------------------------------------------------------
 
@@ -117,10 +92,10 @@ class Fbc_actions extends Addon_builder_fbc
 		//	'fbc_create_member_account_start' hook.
 		// --------------------------------------------
 
-		if ( $this->EE->extensions->active_hook('fbc_create_member_account_start') === TRUE )
+		if ( ee()->extensions->active_hook('fbc_create_member_account_start') === TRUE )
 		{
-			$edata = $this->EE->extensions->universal_call( 'fbc_create_member_account_start', $uid,  $member_data );
-			if ($this->EE->extensions->end_script === TRUE) return FALSE;
+			$edata = ee()->extensions->universal_call( 'fbc_create_member_account_start', $uid,  $member_data );
+			if (ee()->extensions->end_script === TRUE) return FALSE;
 		}
 
 		// --------------------------------------------
@@ -141,18 +116,18 @@ class Fbc_actions extends Addon_builder_fbc
 			'screen_name'				=> $member_data['screen_name'],
 			'username'					=> $member_data['username'],
 			'facebook_connect_user_id'	=> $uid,
-			'password'					=> $this->EE->functions->random('encrypt'),
-			'unique_id'					=> $this->EE->functions->random('encrypt'),
-			'ip_address'				=> $this->EE->input->ip_address(),
-			'join_date'					=> $this->EE->localize->now,
-			'last_visit'				=> $this->EE->localize->now
+			'password'					=> ee()->functions->random('encrypt'),
+			'unique_id'					=> ee()->functions->random('encrypt'),
+			'ip_address'				=> ee()->input->ip_address(),
+			'join_date'					=> ee()->localize->now,
+			'last_visit'				=> ee()->localize->now
 		);
 
 		if ( ! empty( $member_data['password'] ) )
 		{
-			//$data['password']	= $this->EE->functions->hash( stripslashes( $member_data['password'] ) );
+			//$data['password']	= ee()->functions->hash( stripslashes( $member_data['password'] ) );
 
-			$pass_data = $this->EE->auth->hash_password(stripslashes( $member_data['password']));
+			$pass_data = ee()->auth->hash_password(stripslashes( $member_data['password']));
 
 			$data['password']    	= $pass_data['password'];
 			$data['salt']    		= $pass_data['salt'];
@@ -162,15 +137,15 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Set member group
 		// --------------------------------------------
 
-		$data['group_id'] = ( ! empty( $member_data['group_id'] ) ) ? $member_data['group_id']: $this->EE->config->item('fbc_member_group');
+		$data['group_id'] = ( ! empty( $member_data['group_id'] ) ) ? $member_data['group_id']: ee()->config->item('fbc_member_group');
 
 		// --------------------------------------------
 		//	We generate an authorization code if the member needs to self-activate
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('fbc_account_activation') == 'fbc_email_activation' )
+		if ( ee()->config->item('fbc_account_activation') == 'fbc_email_activation' )
 		{
-			$data['authcode'] = $this->EE->functions->random('alpha', 10);
+			$data['authcode'] = ee()->functions->random('alpha', 10);
 		}
 
 		// --------------------------------------------
@@ -186,9 +161,9 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Insert basic member data
 		// --------------------------------------------
 
-		$this->EE->db->query( $this->EE->db->insert_string('exp_members', $data) );
+		ee()->db->query( ee()->db->insert_string('exp_members', $data) );
 
-		$data['member_id'] = $this->EE->db->insert_id();
+		$data['member_id'] = ee()->db->insert_id();
 
 		// --------------------------------------------
 		//	Prepare custom fields
@@ -214,32 +189,32 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Insert custom fields
 		// --------------------------------------------
 
-		$this->EE->db->query( $this->EE->db->insert_string('exp_member_data', $cust_fields) );
+		ee()->db->query( ee()->db->insert_string('exp_member_data', $cust_fields) );
 
 		// --------------------------------------------
 		//	Create a record in the member
 		//	homepage table
 		// --------------------------------------------
 
-		$this->EE->db->query( $this->EE->db->insert_string('exp_member_homepage', array( 'member_id' => $data['member_id'] ) ) );
+		ee()->db->query( ee()->db->insert_string('exp_member_homepage', array( 'member_id' => $data['member_id'] ) ) );
 
 		// --------------------------------------------
 		//	Update global member stats
 		// --------------------------------------------
 
-		if ($this->EE->config->item('req_mbr_activation') == 'none')
+		if (ee()->config->item('req_mbr_activation') == 'none')
 		{
-			$this->EE->stats->update_member_stats();
+			ee()->stats->update_member_stats();
 		}
 
 		// --------------------------------------------
 		//	'fbc_member_member_register' hook.
 		// --------------------------------------------
 
-		if ( $this->EE->extensions->active_hook('fbc_member_member_register') === TRUE )
+		if ( ee()->extensions->active_hook('fbc_member_member_register') === TRUE )
 		{
-			$edata = $this->EE->extensions->universal_call('fbc_member_member_register', $data);
-			if ($this->EE->extensions->end_script === TRUE) return FALSE;
+			$edata = ee()->extensions->universal_call('fbc_member_member_register', $data);
+			if (ee()->extensions->end_script === TRUE) return FALSE;
 		}
 
 		// --------------------------------------------
@@ -277,10 +252,10 @@ class Fbc_actions extends Addon_builder_fbc
 		//	2.2.0 Auth lib
 		//--------------------------------------------
 
-		$this->EE->load->library('auth');
+		ee()->load->library('auth');
 
 		// This should go in the auth lib.
-		if ( ! $this->EE->auth->check_require_ip())
+		if ( ! ee()->auth->check_require_ip())
 		{
 			$this->error[]	= lang('not_authorized');
 			return FALSE;
@@ -291,19 +266,19 @@ class Fbc_actions extends Addon_builder_fbc
 		//	'fbc_member_login_start' hook.
 		// --------------------------------------------
 
-		if ( $this->EE->extensions->active_hook('fbc_member_login_start') === TRUE )
+		if ( ee()->extensions->active_hook('fbc_member_login_start') === TRUE )
 		{
-			$edata = $this->EE->extensions->universal_call('fbc_member_login_start');
-			if ($this->EE->extensions->end_script === TRUE) return FALSE;
+			$edata = ee()->extensions->universal_call('fbc_member_login_start');
+			if (ee()->extensions->end_script === TRUE) return FALSE;
 		}
 
 		// --------------------------------------------
 		//	Kill old sessions first
 		// --------------------------------------------
 
-		$this->EE->session->gc_probability = 100;
+		ee()->session->gc_probability = 100;
 
-		$this->EE->session->delete_old_sessions();
+		ee()->session->delete_old_sessions();
 
 		// --------------------------------------------
 		//	Use Facebook's session expiration as our own, or set to one day if there's any trouble.
@@ -332,24 +307,23 @@ class Fbc_actions extends Addon_builder_fbc
 
 		if ( $member_data['group_id'] == 4 )
 		{
-			$this->EE->output->show_user_error('general', array(lang('mbr_account_not_active')));
+			$this->show_error(array(lang('mbr_account_not_active')));
 		}
 
 		// --------------------------------------------
 		//  Do we allow multiple logins on the same account?
 		// --------------------------------------------
 
-		if ($this->EE->config->item('allow_multi_logins') == 'n')
+		if (ee()->config->item('allow_multi_logins') == 'n')
 		{
-			$expire = time() - $this->EE->session->session_length;
+			$expire = time() - ee()->session->session_length;
 
 			// See if there is a current session
 
-			$result = $this->EE->db->query("SELECT ip_address, user_agent
+			$result = ee()->db->query("SELECT ip_address, user_agent
 								  FROM   exp_sessions
 								  WHERE  member_id  = '".$member_data['member_id']."'
-								  AND    last_activity > " . $this->EE->db->escape_str( $expire ) . "
-								  AND	 site_id = '" . $this->EE->db->escape_str( $this->EE->config->item('site_id') ) . "'");
+								  AND    last_activity > " . ee()->db->escape_str( $expire ) . "");
 
 			// If a session exists, trigger the error message
 
@@ -357,7 +331,7 @@ class Fbc_actions extends Addon_builder_fbc
 			{
 				$row	= $result->row_array();
 
-				if ( $this->EE->session->userdata('ip_address') != $row['ip_address'] OR $this->EE->session->userdata('user_agent') != $row['user_agent'] )
+				if ( ee()->session->userdata('ip_address') != $row['ip_address'] OR ee()->session->userdata('user_agent') != $row['user_agent'] )
 				{
 					$errors[] = lang('multi_login_warning');
 				}
@@ -369,7 +343,7 @@ class Fbc_actions extends Addon_builder_fbc
 		// --------------------------------------------
 
 
-		$member	= $this->EE->db->get_where(
+		$member	= ee()->db->get_where(
 			'members',
 			array('member_id' => $member_data['member_id'])
 		);
@@ -384,11 +358,11 @@ class Fbc_actions extends Addon_builder_fbc
 		$session->start_session();
 
 		// Update system stats
-		$this->EE->load->library('stats');
+		ee()->load->library('stats');
 
-		if ( ! $this->check_no($this->EE->config->item('enable_online_user_tracking')))
+		if ( ! $this->check_no(ee()->config->item('enable_online_user_tracking')))
 		{
-			$this->EE->stats->update_stats();
+			ee()->stats->update_stats();
 		}
 
 
@@ -402,10 +376,10 @@ class Fbc_actions extends Addon_builder_fbc
 		//	'fbc_member_login_single' hook.
 		// --------------------------------------------
 
-		if ( $this->EE->extensions->active_hook('fbc_member_login_single') === TRUE )
+		if ( ee()->extensions->active_hook('fbc_member_login_single') === TRUE )
 		{
-			$edata = $this->EE->extensions->universal_call('fbc_member_login_single', $member_data);
-			if ($this->EE->extensions->end_script === TRUE) return FALSE;
+			$edata = ee()->extensions->universal_call('fbc_member_login_single', $member_data);
+			if (ee()->extensions->end_script === TRUE) return FALSE;
 		}
 
 		// --------------------------------------------
@@ -439,12 +413,12 @@ class Fbc_actions extends Addon_builder_fbc
 			'id'         => '',
 			'member_id'  => ( empty( $member_data['member_id'] ) ) ? '1': $member_data['member_id'],
 			'username'   => ( empty( $member_data['username'] ) ) ? 'Solspace Facebook Connect Module': $member_data['username'],
-			'ip_address' => $this->EE->input->ip_address(),
-			'act_date'   => $this->EE->localize->now,
+			'ip_address' => ee()->input->ip_address(),
+			'act_date'   => ee()->localize->now,
 			'action'     => 'Facebook: ' . $msg
 		 );
 
-		$this->EE->db->insert('exp_cp_log', $data);
+		ee()->db->insert('exp_cp_log', $data);
 	}
 
 	/*	End log to CP */
@@ -464,7 +438,7 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Do we allow new member registrations?
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('allow_member_registration') == 'n' )
+		if ( ee()->config->item('allow_member_registration') == 'n' )
 		{
 			$this->error[]	= lang('registration_not_enabled');
 			return FALSE;
@@ -474,10 +448,10 @@ class Fbc_actions extends Addon_builder_fbc
 		//	2.2.0 Auth lib
 		//--------------------------------------------
 
-		$this->EE->load->library('auth');
+		ee()->load->library('auth');
 
 		// This should go in the auth lib.
-		if ( ! $this->EE->auth->check_require_ip())
+		if ( ! ee()->auth->check_require_ip())
 		{
 			$this->error[]	= lang('not_authorized');
 			return FALSE;
@@ -538,42 +512,42 @@ class Fbc_actions extends Addon_builder_fbc
 			'email'			=> $member_data['email']
 		 );
 
-		$this->EE->load->library('validate', $validate, 'validate');
+		ee()->load->library('validate', $validate, 'validate');
 
 		// --------------------------------------------
 		//	Compensate for email
 		// --------------------------------------------
 
-		$this->EE->validate->validate_email();
+		ee()->validate->validate_email();
 
-		if ( count( $this->EE->validate->errors ) > 0 )
+		if ( count( ee()->validate->errors ) > 0 )
 		{
 			$member_data['email']	= $default_member_data['email'];
-			$this->EE->validate->errors	= array();
+			ee()->validate->errors	= array();
 		}
 
 		// --------------------------------------------
 		//	Compensate for screen name
 		// --------------------------------------------
 
-		$this->EE->validate->validate_screen_name();
+		ee()->validate->validate_screen_name();
 
-		if ( count( $this->EE->validate->errors ) > 0 )
+		if ( count( ee()->validate->errors ) > 0 )
 		{
 			// --------------------------------------------
 			//	Try once more
 			// --------------------------------------------
 
 			$member_data['screen_name']	= $member_data['screen_name'] . ' ' . $random_number;
-			$this->EE->validate->screen_name	= $member_data['screen_name'];
-			$this->EE->validate->errors	= array();
+			ee()->validate->screen_name	= $member_data['screen_name'];
+			ee()->validate->errors	= array();
 
-			$this->EE->validate->validate_screen_name();
+			ee()->validate->validate_screen_name();
 
-			if ( count( $this->EE->validate->errors ) > 0 )
+			if ( count( ee()->validate->errors ) > 0 )
 			{
 				$member_data['screen_name']	= $default_member_data['screen_name'];
-				$this->EE->validate->errors	= array();
+				ee()->validate->errors	= array();
 			}
 		}
 
@@ -581,24 +555,24 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Compensate for username
 		// --------------------------------------------
 
-		$this->EE->validate->validate_username();
+		ee()->validate->validate_username();
 
-		if ( count( $this->EE->validate->errors ) > 0 )
+		if ( count( ee()->validate->errors ) > 0 )
 		{
 			// --------------------------------------------
 			//	Try once more
 			// --------------------------------------------
 
 			$member_data['username']	= $member_data['username'] . '_' . $random_number;
-			$this->EE->validate->username	= $member_data['username'];
-			$this->EE->validate->errors	= array();
+			ee()->validate->username	= $member_data['username'];
+			ee()->validate->errors	= array();
 
-			$this->EE->validate->validate_username();
+			ee()->validate->validate_username();
 
-			if ( count( $this->EE->validate->errors ) > 0 )
+			if ( count( ee()->validate->errors ) > 0 )
 			{
 				$member_data['username']	= $default_member_data['username'];
-				$this->EE->validate->errors	= array();
+				ee()->validate->errors	= array();
 			}
 		}
 
@@ -623,10 +597,10 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Additional processing when a member is created through the User Side
 		// --------------------------------------------
 
-		if ( $this->EE->extensions->active_hook('fbc_passive_register_end') === TRUE )
+		if ( ee()->extensions->active_hook('fbc_passive_register_end') === TRUE )
 		{
-			$edata = $this->EE->extensions->universal_call('fbc_passive_register_end', $this, $member_id);
-			if ($this->EE->extensions->end_script === TRUE) return;
+			$edata = ee()->extensions->universal_call('fbc_passive_register_end', $this, $member_id_data['member_id']);
+			if (ee()->extensions->end_script === TRUE) return;
 		}
 
 		// --------------------------------------------
@@ -662,20 +636,20 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Is the user banned?
 		// --------------------------------------------
 
-		if ( $this->EE->session->userdata['is_banned'] === TRUE )
+		if ( ee()->session->userdata['is_banned'] === TRUE )
 		{
-			return $this->EE->output->show_user_error('general', lang('not_authorized'));
+			return $this->show_error(lang('not_authorized'));
 		}
 
 		// --------------------------------------------
 		//	Is the IP address and User Agent required?
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('require_ip_for_posting') == 'y' )
+		if ( ee()->config->item('require_ip_for_posting') == 'y' )
 		{
-			if ( ( $this->EE->input->ip_address() == '0.0.0.0' OR $this->EE->session->userdata['user_agent'] == '' ) AND $this->EE->session->userdata['group_id'] != 1 )
+			if ( ( ee()->input->ip_address() == '0.0.0.0' OR ee()->session->userdata['user_agent'] == '' ) AND ee()->session->userdata['group_id'] != 1 )
 			{
-				return $this->EE->output->show_user_error('general', lang('not_authorized'));
+				return $this->show_error(lang('not_authorized'));
 			}
 		}
 
@@ -683,15 +657,15 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Is the nation of the user banned?
 		// --------------------------------------------
 
-		$this->EE->session->nation_ban_check();
+		ee()->session->nation_ban_check();
 
 		// --------------------------------------------
 		//	Blacklist / Whitelist Check
 		// --------------------------------------------
 
-		if ( $this->EE->blacklist->blacklisted == 'y' && $this->EE->blacklist->whitelisted == 'n' )
+		if ( ee()->blacklist->blacklisted == 'y' && ee()->blacklist->whitelisted == 'n' )
 		{
-			return $this->EE->output->show_user_error('general', lang('not_authorized'));
+			return $this->show_error(lang('not_authorized'));
 		}
 
 		// --------------------------------------------
@@ -716,26 +690,26 @@ class Fbc_actions extends Addon_builder_fbc
 
 	public function send_admin_notification_of_registration( $member_data = array() )
 	{
-		if ( $this->EE->config->item('new_member_notification') == 'y' AND $this->EE->config->item('mbr_notification_emails') != '' )
+		if ( ee()->config->item('new_member_notification') == 'y' AND ee()->config->item('mbr_notification_emails') != '' )
 		{
 			$name = ( $member_data['screen_name'] != '' ) ? $member_data['screen_name'] : $member_data['username'];
 
 			$swap = array(
 				'name'					=> $name,
-				'site_name'				=> stripslashes( $this->EE->config->item('site_name') ),
-				'control_panel_url'		=> $this->EE->config->item('cp_url'),
+				'site_name'				=> stripslashes( ee()->config->item('site_name') ),
+				'control_panel_url'		=> ee()->config->item('cp_url'),
 				'username'				=> $member_data['username'],
 				'email'					=> $member_data['email']
 			 );
 
-			$template	= $this->EE->functions->fetch_email_template('admin_notify_reg');
+			$template	= ee()->functions->fetch_email_template('admin_notify_reg');
 			$email_tit	= $this->_var_swap($template['title'], $swap);
 			$email_msg	= $this->_var_swap($template['data'], $swap);
 
-			$notify_address = $this->EE->config->item('mbr_notification_emails');
+			$notify_address = ee()->config->item('mbr_notification_emails');
 
-			$this->EE->load->helper('string');
-			$this->EE->load->helper('text');
+			ee()->load->helper('string');
+			ee()->load->helper('text');
 
 			$notify_address	= reduce_multiples( $notify_address );
 
@@ -743,17 +717,17 @@ class Fbc_actions extends Addon_builder_fbc
 			//	Send email
 			// --------------------------------------------
 
-			$this->EE->load->library('email');
+			ee()->load->library('email');
 
-			$this->EE->email->initialize();
-			$this->EE->email->wordwrap = true;
-			$this->EE->email->mailtype = 'plain';
-			$this->EE->email->priority = '3';
-			$this->EE->email->from( $this->EE->config->item('webmaster_email'), $this->EE->config->item('webmaster_name') );
-			$this->EE->email->to( $notify_address );
-			$this->EE->email->subject( $email_tit );
-			$this->EE->email->message( entities_to_ascii($email_msg) );
-			$this->EE->email->Send();
+			ee()->email->initialize();
+			ee()->email->wordwrap = true;
+			ee()->email->mailtype = 'plain';
+			ee()->email->priority = '3';
+			ee()->email->from( ee()->config->item('webmaster_email'), ee()->config->item('webmaster_name') );
+			ee()->email->to( $notify_address );
+			ee()->email->subject( $email_tit );
+			ee()->email->message( entities_to_ascii($email_msg) );
+			ee()->email->Send();
 		}
 	}
 
@@ -772,22 +746,22 @@ class Fbc_actions extends Addon_builder_fbc
 
 	public function send_user_activation_email( $member_data = array() )
 	{
-		$qs = ( $this->EE->config->item('force_query_string') == 'y' ) ? '' : '?';
+		$qs = ( ee()->config->item('force_query_string') == 'y' ) ? '' : '?';
 
-		$action_id  = $this->EE->functions->fetch_action_id('Fbc', 'activate_member');
+		$action_id  = ee()->functions->fetch_action_id('Fbc', 'activate_member');
 
 		$name = ( ! empty( $member_data['screen_name'] ) ) ? $member_data['screen_name']: $member_data['username'];
 
 		$swap = array(
 						'name'				=> $name,
-						'activation_url'	=> $this->EE->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $action_id . '&id=' . $member_data['authcode'],
-						'site_name'			=> stripslashes($this->EE->config->item('site_name')),
-						'site_url'			=> $this->EE->config->item('site_url'),
+						'activation_url'	=> ee()->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $action_id . '&id=' . $member_data['authcode'],
+						'site_name'			=> stripslashes(ee()->config->item('site_name')),
+						'site_url'			=> ee()->config->item('site_url'),
 						'username'			=> $member_data['username'],
 						'email'				=> $member_data['email']
 					 );
 
-		$template = $this->EE->functions->fetch_email_template('mbr_activation_instructions');
+		$template = ee()->functions->fetch_email_template('mbr_activation_instructions');
 		$email_tit = $this->_var_swap($template['title'], $swap);
 		$email_msg = $this->_var_swap($template['data'], $swap);
 
@@ -795,16 +769,16 @@ class Fbc_actions extends Addon_builder_fbc
 		//	Send email
 		// --------------------------------------------
 
-		$this->EE->load->library('email');
-		$this->EE->load->helper('text');
+		ee()->load->library('email');
+		ee()->load->helper('text');
 
-		$this->EE->email->initialize();
-		$this->EE->email->wordwrap = true;
-		$this->EE->email->from( $this->EE->config->item('webmaster_email'), $this->EE->config->item('webmaster_name') );
-		$this->EE->email->to( $member_data['email'] );
-		$this->EE->email->subject( $email_tit );
-		$this->EE->email->message( entities_to_ascii( $email_msg ) );
-		$this->EE->email->Send();
+		ee()->email->initialize();
+		ee()->email->wordwrap = true;
+		ee()->email->from( ee()->config->item('webmaster_email'), ee()->config->item('webmaster_name') );
+		ee()->email->to( $member_data['email'] );
+		ee()->email->subject( $email_tit );
+		ee()->email->message( entities_to_ascii( $email_msg ) );
+		ee()->email->Send();
 	}
 
 	/* End send user activation email */

@@ -7,10 +7,10 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/mcp.fbc.php
  */
 
@@ -149,9 +149,9 @@ class Fbc_mcp extends Module_builder_fbc
 		//	message
 		//--------------------------------------------
 
-		if ($message == '' AND $this->EE->input->get_post('msg') !== FALSE)
+		if ($message == '' AND ee()->input->get_post('msg') !== FALSE)
 		{
-			$message = lang($this->EE->input->get_post('msg'));
+			$message = lang(ee()->input->get_post('msg'));
 		}
 
 		$this->cached_vars['message'] = $message;
@@ -163,15 +163,15 @@ class Fbc_mcp extends Module_builder_fbc
 		$lib_name = str_replace('_', '', $this->lower_name) . 'codepack';
 		$load_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->lower_name))) . 'CodePack';
 
-		$this->EE->load->library($load_name, $lib_name);
+		ee()->load->library($load_name, $lib_name);
 
-		$this->EE->$lib_name->autoSetLang = true;
+		ee()->$lib_name->autoSetLang = true;
 
-		$cpt = $this->EE->$lib_name->getTemplateDirectoryArray(
+		$cpt = ee()->$lib_name->getTemplateDirectoryArray(
 			$this->addon_path . 'code_pack/'
 		);
 
-		$screenshot = $this->EE->$lib_name->getCodePackImage(
+		$screenshot = ee()->$lib_name->getCodePackImage(
 			$this->sc->addon_theme_path . 'code_pack/',
 			$this->sc->addon_theme_url . 'code_pack/'
 		);
@@ -215,11 +215,11 @@ class Fbc_mcp extends Module_builder_fbc
 
 	public function code_pack_install()
 	{
-		$prefix = trim((string) $this->EE->input->get_post('prefix'));
+		$prefix = trim((string) ee()->input->get_post('prefix'));
 
 		if ($prefix === '')
 		{
-			$this->EE->functions->redirect($this->base . '&method=code_pack');
+			ee()->functions->redirect($this->base . '&method=code_pack');
 		}
 
 		// -------------------------------------
@@ -229,8 +229,8 @@ class Fbc_mcp extends Module_builder_fbc
 		$lib_name = str_replace('_', '', $this->lower_name) . 'codepack';
 		$load_name = str_replace(' ', '', ucwords(str_replace('_', ' ', $this->lower_name))) . 'CodePack';
 
-		$this->EE->load->library($load_name, $lib_name);
-		$this->EE->$lib_name->autoSetLang = true;
+		ee()->load->library($load_name, $lib_name);
+		ee()->$lib_name->autoSetLang = true;
 
 		// -------------------------------------
 		//	¡Las Variables en vivo! ¡Que divertido!
@@ -246,12 +246,12 @@ class Fbc_mcp extends Module_builder_fbc
 		//	install
 		// -------------------------------------
 
-		$details = $this->EE->$lib_name->getCodePackDetails($this->addon_path . 'code_pack/');
+		$details = ee()->$lib_name->getCodePackDetails($this->addon_path . 'code_pack/');
 
 		$this->cached_vars['code_pack_name'] = $details['code_pack_name'];
 		$this->cached_vars['code_pack_label'] = $details['code_pack_label'];
 
-		$return = $this->EE->$lib_name->installCodePack($variables);
+		$return = ee()->$lib_name->installCodePack($variables);
 
 		$this->cached_vars = array_merge($this->cached_vars, $return);
 
@@ -307,9 +307,9 @@ class Fbc_mcp extends Module_builder_fbc
 
 		foreach ( $this->cached_vars['prefs'] as $key => $val )
 		{
-			if ( $this->EE->config->item( $key ) !== FALSE )
+			if ( ee()->config->item( $key ) !== FALSE )
 			{
-				$this->cached_vars['prefs'][$key]	= $this->EE->config->item( $key );
+				$this->cached_vars['prefs'][$key]	= ee()->config->item( $key );
 			}
 		}
 
@@ -317,7 +317,7 @@ class Fbc_mcp extends Module_builder_fbc
 		//	Are we updating / inserting?
 		// --------------------------------------------
 
-		if ( $this->EE->input->post('fbc_app_id') !== FALSE )
+		if ( ee()->input->post('fbc_app_id') !== FALSE )
 		{
 			// --------------------------------------------
 			//	Prep vars
@@ -325,9 +325,9 @@ class Fbc_mcp extends Module_builder_fbc
 
 			foreach ( $this->cached_vars['prefs'] as $key => $val )
 			{
-				if ( $this->EE->input->post($key) !== FALSE )
+				if ( ee()->input->post($key) !== FALSE )
 				{
-					$this->cached_vars['prefs'][$key]	= $this->EE->input->post($key);
+					$this->cached_vars['prefs'][$key]	= ee()->input->post($key);
 				}
 			}
 
@@ -357,7 +357,7 @@ class Fbc_mcp extends Module_builder_fbc
 
 			$message	= '';
 
-			if ( $this->data->set_preference( $this->cached_vars['prefs'], $this->EE->config->item('site_id') ) !== FALSE )
+			if ( $this->data->set_preference( $this->cached_vars['prefs'], ee()->config->item('site_id') ) !== FALSE )
 			{
 				$message	= lang( 'preferences_updated' );
 			}
@@ -433,7 +433,7 @@ class Fbc_mcp extends Module_builder_fbc
 
 		$this->cached_vars['api_credentials_present']	= lang('api_credentials_are_present');
 
-		if ( $this->EE->config->item('fbc_app_id') === FALSE OR $this->EE->config->item('fbc_app_id') == '' OR $this->EE->config->item('fbc_secret') === FALSE OR $this->EE->config->item('fbc_secret') == '' )
+		if ( ee()->config->item('fbc_app_id') === FALSE OR ee()->config->item('fbc_app_id') == '' OR ee()->config->item('fbc_secret') === FALSE OR ee()->config->item('fbc_secret') == '' )
 		{
 			$this->cached_vars['api_credentials_present']	= lang('api_credentials_are_not_present');
 		}
@@ -461,7 +461,7 @@ class Fbc_mcp extends Module_builder_fbc
 
 		$this->cached_vars['api_successful_login']	= lang('api_login_was_successful');
 
-		$this->cached_vars['fbc_app_id']	= $this->EE->config->item('fbc_app_id');
+		$this->cached_vars['fbc_app_id']	= ee()->config->item('fbc_app_id');
 
 		// --------------------------------------------
 		//	Try login
@@ -469,7 +469,7 @@ class Fbc_mcp extends Module_builder_fbc
 
 		try
 		{
-			$appobj = $this->api->FB->api( $this->EE->config->item('fbc_app_id') );
+			$appobj = $this->api->FB->api( ee()->config->item('fbc_app_id') );
 
 			$app	= array();
 
@@ -560,11 +560,11 @@ class Fbc_mcp extends Module_builder_fbc
 
 		if ($U->update() !== TRUE)
 		{
-			return $this->EE->functions->redirect($this->base . AMP . 'msg=update_failure');
+			return ee()->functions->redirect($this->base . AMP . 'msg=update_failure');
 		}
 		else
 		{
-			return $this->EE->functions->redirect($this->base . AMP . 'msg=update_successful');
+			return ee()->functions->redirect($this->base . AMP . 'msg=update_successful');
 		}
 	}
 	// END fbc_module_update

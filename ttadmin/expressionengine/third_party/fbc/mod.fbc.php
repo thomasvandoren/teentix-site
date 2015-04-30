@@ -5,14 +5,12 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/mod.fbc.php
  */
-
-if ( ! defined('APP_VER')) define('APP_VER', '2.0'); // EE 2.0's Wizard doesn't like CONSTANTs
 
 require_once 'addon_builder/module_builder.php';
 
@@ -76,15 +74,15 @@ class Fbc extends Module_builder_fbc
 		//  Fetch the site name and URL
 		// --------------------------------------------
 
-		if ($this->EE->input->get_post('r') == 'f')
+		if (ee()->input->get_post('r') == 'f')
 		{
-			if ($this->EE->input->get_post('board_id') !== FALSE && is_numeric($this->EE->input->get_post('board_id')))
+			if (ee()->input->get_post('board_id') !== FALSE && is_numeric(ee()->input->get_post('board_id')))
 			{
-				$query	= $this->EE->db->query("SELECT board_forum_url, board_id, board_label FROM exp_forum_boards WHERE board_id = '".$this->EE->db->escape_str($this->EE->input->get_post('board_id'))."'");
+				$query	= ee()->db->query("SELECT board_forum_url, board_id, board_label FROM exp_forum_boards WHERE board_id = '".ee()->db->escape_str(ee()->input->get_post('board_id'))."'");
 			}
 			else
 			{
-				$query	= $this->EE->db->query("SELECT board_forum_url, board_id, board_label FROM exp_forum_boards WHERE board_id = '1'");
+				$query	= ee()->db->query("SELECT board_forum_url, board_id, board_label FROM exp_forum_boards WHERE board_id = '1'");
 			}
 
 			$site_name	= $query->row('board_label');
@@ -92,15 +90,15 @@ class Fbc extends Module_builder_fbc
 		}
 		else
 		{
-			$return 	= $this->EE->functions->fetch_site_index();
-			$site_name 	= ( $this->EE->config->item('site_name') == '' ) ? lang('back') : stripslashes( $this->EE->config->item('site_name') );
+			$return 	= ee()->functions->fetch_site_index();
+			$site_name 	= ( ee()->config->item('site_name') == '' ) ? lang('back') : stripslashes( ee()->config->item('site_name') );
 		}
 
 		// --------------------------------------------
 		//  No ID?  Tisk tisk...
 		// --------------------------------------------
 
-		$id  = $this->EE->input->get_post('id');
+		$id  = ee()->input->get_post('id');
 
 		if ($id == FALSE)
 		{
@@ -110,20 +108,20 @@ class Fbc extends Module_builder_fbc
 							'link'		=> array($return, $site_name)
 						 );
 
-			$this->EE->output->show_message($data);
+			ee()->output->show_message($data);
 		}
 
 		// --------------------------------------------
 		//  Set the member group
 		// --------------------------------------------
 
-		$group_id = $this->EE->config->item('fbc_member_group');
+		$group_id = ee()->config->item('fbc_member_group');
 
 		// --------------------------------------------
 		//	Is there even an account for this particular user?
 		// --------------------------------------------
 
-		$query = $this->EE->db->query("SELECT member_id, group_id, email, screen_name, username FROM exp_members WHERE authcode = '" . $this->EE->db->escape_str( $id ) . "'");
+		$query = ee()->db->query("SELECT member_id, group_id, email, screen_name, username FROM exp_members WHERE authcode = '" . ee()->db->escape_str( $id ) . "'");
 
 		if ( $query->num_rows() == 0 )
 		{
@@ -133,7 +131,7 @@ class Fbc extends Module_builder_fbc
 							'link'		=> array($return, $site_name)
 						 );
 
-			$this->EE->output->show_message($data);
+			ee()->output->show_message($data);
 		}
 
 		$member_id = $query->row('member_id');
@@ -144,25 +142,25 @@ class Fbc extends Module_builder_fbc
 
 		if ($query->row('group_id') != $group_id)
 		{
-			$this->EE->db->query( "UPDATE exp_members SET group_id = '".$this->EE->db->escape_str( $group_id )."' WHERE authcode = '".$this->EE->db->escape_str( $id )."'" );
+			ee()->db->query( "UPDATE exp_members SET group_id = '".ee()->db->escape_str( $group_id )."' WHERE authcode = '".ee()->db->escape_str( $id )."'" );
 		}
 
-		$this->EE->db->query("UPDATE exp_members SET authcode = '' WHERE authcode = '" . $this->EE->db->escape_str( $id ) . "'");
+		ee()->db->query("UPDATE exp_members SET authcode = '' WHERE authcode = '" . ee()->db->escape_str( $id ) . "'");
 
 		// --------------------------------------------
 		//	'fbc_activate_member_account_end' hook.
 		// --------------------------------------------
 
-		if ( $this->EE->extensions->active_hook('fbc_activate_member_account_end') === TRUE )
+		if ( ee()->extensions->active_hook('fbc_activate_member_account_end') === TRUE )
 		{
-			$edata = $this->EE->extensions->universal_call( 'fbc_activate_member_account_end', $member_id );
-			if ($this->EE->extensions->end_script === TRUE) return FALSE;
+			$edata = ee()->extensions->universal_call( 'fbc_activate_member_account_end', $member_id );
+			if (ee()->extensions->end_script === TRUE) return FALSE;
 		}
 		// --------------------------------------------
 		//	Upate Stats
 		// --------------------------------------------
 
-		$this->EE->stats->update_member_stats();
+		ee()->stats->update_member_stats();
 
 		// --------------------------------------------
 		//  Show success message
@@ -174,7 +172,7 @@ class Fbc extends Module_builder_fbc
 						'link'		=> array($return, $site_name)
 					 );
 
-		$this->EE->output->show_message($data);
+		ee()->output->show_message($data);
 	}
 
 	/* End activate member */
@@ -205,17 +203,54 @@ class Fbc extends Module_builder_fbc
 		//	Parse conditionals
 		// --------------------------------------------
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		return $tagdata;
 	}
 
 	/*	End allow email */
+	
+	// -------------------------------------------------------------
+
+	/**
+	 * Allow user friends
+	 *
+	 * Facebook provides access the list of friends that also use your app. These friends can
+	 * be found on the friends edge on the user object. In order for a person to show up in one
+	 * person's friend list, both people must have decided to share their list of friends with
+	 * your app and not disabled that permission during login. Also both friends must have been
+	 * asked for user_friends during the login process.
+	 *
+	 * @access	public
+	 * @return	boolean
+	 */
+
+	public function allow_user_friends()
+	{
+		$cond['fbc_allow_user_friends']	= 'n';
+
+		$this->api();
+
+		if ( $this->api->has_app_permission( 'user_friends' ) === TRUE )
+		{
+			$cond['fbc_allow_user_friends']	= 'y';
+		}
+
+		// --------------------------------------------
+		//	Parse conditionals
+		// --------------------------------------------
+
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
+
+		return $tagdata;
+	}
+
+	/*	End allow user friends */
 
 	// -------------------------------------------------------------
 
 	/**
-	 * Allow stream publish
+	 * Allow publish actions
 	 *
 	 * Facebook allows a site to publish user submitted data to Facebook on a user's behalf. The user must first grant the permission to do so. This method prepares a conditional to wrap content in a template to evaluate the permission settings.
 	 *
@@ -223,27 +258,27 @@ class Fbc extends Module_builder_fbc
 	 * @return	boolean
 	 */
 
-	public function allow_stream_publish()
+	public function allow_publish_actions()
 	{
-		$cond['fbc_allow_stream_publish']	= 'n';
+		$cond['fbc_allow_publish_actions']	= 'n';
 
 		$this->api();
 
-		if ( $this->api->has_app_permission( 'publish_stream' ) === TRUE )
+		if ( $this->api->has_app_permission( 'publish_actions' ) === TRUE )
 		{
-			$cond['fbc_allow_stream_publish']	= 'y';
+			$cond['fbc_allow_publish_actions']	= 'y';
 		}
 
 		// --------------------------------------------
 		//	Parse conditionals
 		// --------------------------------------------
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		return $tagdata;
 	}
 
-	/*	End allow stream publish */
+	/*	End allow publish_actions */
 
 	// -------------------------------------------------------------
 
@@ -320,8 +355,7 @@ class Fbc extends Module_builder_fbc
 	{
 		if ( ! $this->check_secure_forms())
 		{
-			return $this->EE->output->show_user_error(
-				'general',
+			return $this->show_error(
 				lang('not_authorized')
 			);
 		}
@@ -359,9 +393,9 @@ class Fbc extends Module_builder_fbc
 		//	You have to be logged in to an EE account to sync
 		// --------------------------------------------
 
-		if ( $this->EE->session->userdata('member_id') == 0 )
+		if ( ee()->session->userdata('member_id') == 0 )
 		{
-			return $this->EE->output->show_user_error( 'general', lang('not_logged_in' ) );
+			return $this->show_error(lang('not_logged_in' ) );
 		}
 
 		// --------------------------------------------
@@ -376,9 +410,9 @@ class Fbc extends Module_builder_fbc
 
 		foreach ( $returns as $key => $val )
 		{
-			if ( $this->EE->input->post($key) !== FALSE AND $this->EE->input->post($key) != '' )
+			if ( ee()->input->post($key) !== FALSE AND ee()->input->post($key) != '' )
 			{
-				$val	= $this->_chars_decode( $this->EE->input->post($key) );
+				$val	= $this->_chars_decode( ee()->input->post($key) );
 			}
 
 			$returns[$key]	= $val;
@@ -390,24 +424,24 @@ class Fbc extends Module_builder_fbc
 		//	People can basically reset their FB Connect sync. We don't care if they are logged in to an FB account when they submit this form. We care only to set their FB Connect id to 0 in the DB. It's just a clean reset as far as we're concerned.
 		// --------------------------------------------
 
-		if ( $this->EE->input->post('unsync') !== FALSE AND $this->EE->input->post('unsync') == 'yes' )
+		if ( ee()->input->post('unsync') !== FALSE AND ee()->input->post('unsync') == 'yes' )
 		{
 			// --------------------------------------------
 			//	Return an error if their EE account is synced to no FB account
 			// --------------------------------------------
 
-			if ( $this->data->get_facebook_user_id_from_member_id( $this->EE->session->userdata('member_id') ) === FALSE OR $this->data->get_facebook_user_id_from_member_id( $this->EE->session->userdata('member_id') ) == 0 )
+			if ( $this->data->get_facebook_user_id_from_member_id( ee()->session->userdata('member_id') ) === FALSE OR $this->data->get_facebook_user_id_from_member_id( ee()->session->userdata('member_id') ) == 0 )
 			{
-				return $this->EE->output->show_user_error( 'general', lang('not_fb_synced' ) );
+				return $this->show_error(lang('not_fb_synced' ) );
 			}
 
 			// --------------------------------------------
 			//	Set the FB user id to 0
 			// --------------------------------------------
 
-			if ( $this->data->set_facebook_user_id_for_member_id( 0, $this->EE->session->userdata('member_id'), 'unsync' ) === FALSE )
+			if ( $this->data->set_facebook_user_id_for_member_id( 0, ee()->session->userdata('member_id'), 'unsync' ) === FALSE )
 			{
-				return $this->EE->output->show_user_error( 'general', lang('unsync_error' ) );
+				return $this->show_error(lang('unsync_error' ) );
 			}
 
 			// --------------------------------------------
@@ -428,7 +462,7 @@ class Fbc extends Module_builder_fbc
 		//	Do we bother trying to sync?
 		// --------------------------------------------
 
-		if ( $this->EE->input->post('sync') === FALSE OR $this->EE->input->post('sync') != 'yes' )
+		if ( ee()->input->post('sync') === FALSE OR ee()->input->post('sync') != 'yes' )
 		{
 			$this->_redirect( $returns['return_when_sync_fails'] );
 			exit();
@@ -438,9 +472,9 @@ class Fbc extends Module_builder_fbc
 		//	Is this member in an eligible group?
 		// --------------------------------------------
 
-		$groups	= explode( "|", $this->EE->config->item('fbc_eligible_member_groups') );
+		$groups	= explode( "|", ee()->config->item('fbc_eligible_member_groups') );
 
-		if ( in_array( $this->EE->session->userdata('group_id'), $groups ) === FALSE )
+		if ( in_array( ee()->session->userdata('group_id'), $groups ) === FALSE )
 		{
 			$this->error[]	= lang( 'member_group_not_eligible' );
 		}
@@ -471,7 +505,7 @@ class Fbc extends Module_builder_fbc
 
 		if ( count( $this->error ) > 0 )
 		{
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
@@ -486,14 +520,14 @@ class Fbc extends Module_builder_fbc
 
 		if ( count( $this->error ) > 0 )
 		{
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
 		//	Connect FB UID to local member id
 		// --------------------------------------------
 
-		if ( $this->data->set_facebook_user_id_for_member_id( $uid, $this->EE->session->userdata('member_id') ) === TRUE )
+		if ( $this->data->set_facebook_user_id_for_member_id( $uid, ee()->session->userdata('member_id') ) === TRUE )
 		{
 			// --------------------------------------------
 			//	Synch FB email
@@ -534,7 +568,7 @@ class Fbc extends Module_builder_fbc
 		//	Prepare action
 		// --------------------------------------------
 
-		$act	= $this->EE->functions->fetch_action_id('Fbc', 'account_sync');
+		$act	= ee()->functions->fetch_action_id('Fbc', 'account_sync');
 
 		$params	= array( 'ACT' => $act );
 
@@ -543,16 +577,16 @@ class Fbc extends Module_builder_fbc
 		// --------------------------------------------
 
 		$returns		= array(
-			'return_when_synced'		=> $this->EE->uri->uri_string,
-			'return_when_unsynced'		=> $this->EE->uri->uri_string,
-			'return_when_sync_fails'	=> $this->EE->uri->uri_string
+			'return_when_synced'		=> ee()->uri->uri_string,
+			'return_when_unsynced'		=> ee()->uri->uri_string,
+			'return_when_sync_fails'	=> ee()->uri->uri_string
 		);
 
 		foreach ( $returns as $key => $val )
 		{
-			if ( $this->EE->TMPL->fetch_param($key) !== FALSE AND $this->EE->TMPL->fetch_param($key) != '' )
+			if ( ee()->TMPL->fetch_param($key) !== FALSE AND ee()->TMPL->fetch_param($key) != '' )
 			{
-				$val	= $this->_chars_decode( $this->EE->TMPL->fetch_param($key) );
+				$val	= $this->_chars_decode( ee()->TMPL->fetch_param($key) );
 			}
 
 			$params[$key]	= $val;
@@ -568,9 +602,9 @@ class Fbc extends Module_builder_fbc
 
 		foreach ( $extra as $key => $val )
 		{
-			if ( $this->EE->TMPL->fetch_param($key) !== FALSE AND $this->EE->TMPL->fetch_param($key) == 'yes' )
+			if ( ee()->TMPL->fetch_param($key) !== FALSE AND ee()->TMPL->fetch_param($key) == 'yes' )
 			{
-				$val	= $this->EE->TMPL->fetch_param($key);
+				$val	= ee()->TMPL->fetch_param($key);
 			}
 
 			$params[$key]	= $val;
@@ -580,7 +614,7 @@ class Fbc extends Module_builder_fbc
 		//	Scraps
 		// --------------------------------------------
 
-		$params['RET']	= $this->EE->functions->create_url( $this->EE->uri->uri_string );
+		$params['RET']	= ee()->functions->create_url( ee()->uri->uri_string );
 
 		// --------------------------------------------
 		//	Return
@@ -621,12 +655,12 @@ class Fbc extends Module_builder_fbc
 
 		if ( empty( $_GET['params'] ) )
 		{
-			$this->_redirect( $this->EE->functions->create_url( '' ) );
+			$this->_redirect( ee()->functions->create_url( '' ) );
 			exit();
 		}
 		else
 		{
-			$_GET['params']	= $this->EE->security->xss_clean( rtrim( $_GET['params'], '/' ) );
+			$_GET['params']	= ee()->security->xss_clean( rtrim( $_GET['params'], '/' ) );
 		}
 
 		// --------------------------------------------
@@ -661,7 +695,7 @@ class Fbc extends Module_builder_fbc
 				//	Is this person already logged in locally?
 				// --------------------------------------------
 
-				if ( $this->EE->session->userdata('member_id') != 0 )
+				if ( ee()->session->userdata('member_id') != 0 )
 				{
 					// --------------------------------------------
 					//	Synch FB email
@@ -703,7 +737,7 @@ class Fbc extends Module_builder_fbc
 
 				else
 				{
-					return $this->EE->output->show_user_error('general', lang('unable_to_login'));
+					return $this->show_error(lang('unable_to_login'));
 				}
 			}
 
@@ -713,9 +747,9 @@ class Fbc extends Module_builder_fbc
 			//	This user does not have an FB account connected to their local member id. If they are logged in, try and make that connection. Note that we prevent people from logging in using Facebook if they do not belong to an eligible member group. We do, however, connect someone's member id to their Facebook id without concern for that restriction. Someone's member group could change which would allow for Facebook login in the future or it could change to prevent Facebook login in the future. The security provision needs to be on the login routine, not here.
 			// --------------------------------------------
 
-			elseif ( $this->EE->session->userdata('member_id') != 0 )
+			elseif ( ee()->session->userdata('member_id') != 0 )
 			{
-				if ( $this->EE->config->item('fbc_confirm_account_sync') == 'y' )
+				if ( ee()->config->item('fbc_confirm_account_sync') == 'y' )
 				{
 					// --------------------------------------------
 					//	Redirect
@@ -729,7 +763,7 @@ class Fbc extends Module_builder_fbc
 				//	Connect FB UID to local member id
 				// --------------------------------------------
 
-				elseif ( $this->data->set_facebook_user_id_for_member_id( $uid, $this->EE->session->userdata('member_id') ) === TRUE )
+				elseif ( $this->data->set_facebook_user_id_for_member_id( $uid, ee()->session->userdata('member_id') ) === TRUE )
 				{
 					// --------------------------------------------
 					//	Synch FB email
@@ -752,7 +786,7 @@ class Fbc extends Module_builder_fbc
 			//	A parameter attached to the fbc login button can be passed across to the ACT that executes facebook_login. This parameter, called passive_registration, tells this method to create a strawman member account for the FB user and log them into EE with it. It's the nuclear option. It's dangerous. But it's in demand so I include it here and hide my face in my hands.
 			// --------------------------------------------
 
-			elseif ( $this->EE->config->item('fbc_passive_registration') != 'n' )
+			elseif ( ee()->config->item('fbc_passive_registration') != 'n' )
 			{
 				if ( $this->actions->passive_registration( $uid ) !== FALSE )
 				{
@@ -761,7 +795,7 @@ class Fbc extends Module_builder_fbc
 				}
 				else
 				{
-					return $this->EE->output->show_user_error( 'general', $this->actions->error );
+					return $this->show_error($this->actions->error );
 				}
 			}
 
@@ -810,7 +844,7 @@ class Fbc extends Module_builder_fbc
 
 		if ( ! empty( $_GET['return_when_logged_out'] ) )
 		{
-			$return	= $this->EE->security->xss_clean( rtrim( base64_decode( $_GET['return_when_logged_out'] ), '/' ) );
+			$return	= ee()->security->xss_clean( rtrim( base64_decode( $_GET['return_when_logged_out'] ), '/' ) );
 		}
 
 		// --------------------------------------------
@@ -819,7 +853,7 @@ class Fbc extends Module_builder_fbc
 
 		if ( ! empty( $_GET['params'] ) )
 		{
-			$_GET['params']	= $this->EE->security->xss_clean( rtrim( $_GET['params'], '/' ) );
+			$_GET['params']	= ee()->security->xss_clean( rtrim( $_GET['params'], '/' ) );
 
 			// --------------------------------------------
 			//	Prep for fun
@@ -838,7 +872,7 @@ class Fbc extends Module_builder_fbc
 
 			if ( $params['return_when_logged_out'] == '' AND $return == '' )
 			{
-				$this->_redirect( $this->EE->functions->create_url( '' ) );
+				$this->_redirect( ee()->functions->create_url( '' ) );
 				exit();
 			}
 
@@ -867,7 +901,7 @@ class Fbc extends Module_builder_fbc
 
 		if ( ! empty( $_GET['is_ee_member'] ) )
 		{
-			$is_ee_member	= $this->EE->security->xss_clean( base64_decode( $_GET['is_ee_member'] ) );
+			$is_ee_member	= ee()->security->xss_clean( base64_decode( $_GET['is_ee_member'] ) );
 
 			if ( $is_ee_member != 'y' )
 			{
@@ -893,34 +927,15 @@ class Fbc extends Module_builder_fbc
 		//	Let's logout then
 		// --------------------------------------------
 
-		$this->EE->db->query(
-			"DELETE FROM exp_online_users
-			WHERE site_id = '" . $this->EE->db->escape_str( $this->EE->config->item('site_id') ) . "'
-			AND ip_address = '" . $this->EE->db->escape_str( $this->EE->input->ip_address() ) . "'
-			AND member_id = '" . $this->EE->session->userdata('member_id') . "'"
-		);
+		// Kill the session and cookies
+		ee()->db->where('site_id', ee()->config->item('site_id'));
+		ee()->db->where('ip_address', ee()->input->ip_address());
+		ee()->db->where('member_id', ee()->session->userdata('member_id'));
+		ee()->db->delete('online_users');
 
-		$this->EE->db->query(
-			"DELETE FROM exp_sessions
-			WHERE session_id = '" . $this->EE->session->userdata('session_id') . "'"
-		);
+		ee()->session->destroy();
 
-		$this->EE->functions->set_cookie($this->EE->session->c_uniqueid);
-		$this->EE->functions->set_cookie($this->EE->session->c_session);
-		$this->EE->functions->set_cookie($this->EE->session->c_expire);
-		$this->EE->functions->set_cookie($this->EE->session->c_anon);
-		$this->EE->functions->set_cookie('read_topics');
-		$this->EE->functions->set_cookie('tracker');
-
-		// --------------------------------------------
-		//	'fbc_member_logout' hook
-		// --------------------------------------------
-
-		if ( $this->EE->extensions->active_hook('fbc_member_logout') === TRUE )
-		{
-			$edata = $this->EE->extensions->universal_call('fbc_member_logout');
-			if ($this->EE->extensions->end_script === TRUE) return;
-		}
+		ee()->input->delete_cookie('read_topics');
 
 		// --------------------------------------------
 		//	Redirect
@@ -929,8 +944,8 @@ class Fbc extends Module_builder_fbc
 		$this->_redirect( $return );
 		exit();
 	}
+	//	End Facebook logout
 
-	/*	End Facebook logout */
 
 	// -------------------------------------------------------------
 
@@ -943,7 +958,7 @@ class Fbc extends Module_builder_fbc
 
 	 function _facebook_member_is_ee_member()
 	 {
-		if ( $this->EE->session->userdata('member_id') == 0 )
+		if ( ee()->session->userdata('member_id') == 0 )
 		{
 			return FALSE;
 		}
@@ -962,7 +977,7 @@ class Fbc extends Module_builder_fbc
 			return FALSE;
 		}
 
-		if ( $this->EE->session->userdata('member_id') != $member_id )
+		if ( ee()->session->userdata('member_id') != $member_id )
 		{
 			return FALSE;
 		}
@@ -1060,11 +1075,11 @@ class Fbc extends Module_builder_fbc
 		//  Prep href
 		// --------------------------------------------
 
-		$href	= $this->EE->uri->uri_string;
+		$href	= ee()->uri->uri_string;
 
-		if ( $this->EE->TMPL->fetch_param('href') !== FALSE AND $this->EE->TMPL->fetch_param('href') != '' )
+		if ( ee()->TMPL->fetch_param('href') !== FALSE AND ee()->TMPL->fetch_param('href') != '' )
 		{
-			$href	= $this->EE->TMPL->fetch_param('href');
+			$href	= ee()->TMPL->fetch_param('href');
 		}
 
 		// --------------------------------------------
@@ -1074,14 +1089,15 @@ class Fbc extends Module_builder_fbc
 		$methods	= array(
 			'activity'	=> array(
 				'template_params'		=> array(
-					'border_color'		=> '',
 					'colorscheme'		=> 'light',
 					'filter'			=> '',
+					'header'			=> 'true',
+					'height'			=> 300,
+					'linktarget'		=> '',
+					'max_age'			=> '0',
 					'recommendations'	=> 'true',
 					'ref'				=> '',
 					'site'				=> '',
-					'header'			=> 'true',
-					'height'			=> 300,
 					'width'				=> 300
 				)
 			),
@@ -1091,15 +1107,19 @@ class Fbc extends Module_builder_fbc
 			'comments'	=> array(
 				'template_params'	=> array(
 					'colorscheme'	=> 'light',
-					'href'			=> $this->_prep_return( $this->EE->uri->uri_string ),
+					'href'			=> $this->_prep_return( ee()->uri->uri_string ),
+					'mobile'		=> 'false',
 					'num_posts'		=> 5,
-					'width'			=> 400
+					'order_by'		=> '',
+					'width'			=> '100%'
 				)
 			),
 			'facepile'	=> array(
 				'template_params'	=> array(
-					'href'			=> $this->_prep_return( $this->EE->uri->uri_string ),
+					'colorscheme'	=> 'light',
+					'href'			=> $this->_prep_return( ee()->uri->uri_string ),
 					'max_rows'		=> 1,
+					'size'			=> 'medium',
 					'width'			=> 200
 				)
 			),
@@ -1108,11 +1128,11 @@ class Fbc extends Module_builder_fbc
 					'action'		=> '',
 					'colorscheme'	=> 'light',
 					'font'			=> '',
-					'href'			=> $this->_prep_return( $this->EE->uri->uri_string ),
+					'href'			=> $this->_prep_return( ee()->uri->uri_string ),
 					'ref'			=> '',
-					'send'			=> 'true',
+					'share'			=> '',
 					'layout'		=> 'standard',
-					'show_faces'	=> 'true',
+					'show_faces'	=> '',
 					'width'			=> 200
 				)
 			),
@@ -1120,10 +1140,13 @@ class Fbc extends Module_builder_fbc
 				'tag'				=> 'like-box',
 				'template_params'	=> array(
 					'colorscheme'	=> 'light',
+					'force_wall'	=> 'false',
+					'header'		=> 'true',
 					'height'		=> 63,
-					'href'			=> $this->_prep_return( $this->EE->uri->uri_string ),
-					'layout'		=> 'standard',
+					'href'			=> $this->_prep_return( ee()->uri->uri_string ),
+					'show_border'	=> 'true',
 					'show_faces'	=> 'true',
+					'stream'		=> 'false',
 					'width'			=> 200
 				)
 			),
@@ -1132,7 +1155,7 @@ class Fbc extends Module_builder_fbc
 				'template_params'				=> array(
 					'always_post_to_friends'	=> 'true',
 					'height'					=> 500,
-					'via_url'					=> $this->_prep_return( $this->EE->uri->uri_string ),
+					'via_url'					=> $this->_prep_return( ee()->uri->uri_string ),
 					'width'						=> 400,
 					'xid'						=> ''
 				)
@@ -1154,21 +1177,20 @@ class Fbc extends Module_builder_fbc
 					'border_color'		=> '',
 					'colorscheme'		=> 'light',
 					'font'				=> '',
-					'ref'				=> '',
-					'site'				=> '',
 					'header'			=> 'true',
 					'height'			=> 300,
+					'linktarget'		=> '_blank',
+					'max_age'			=> '0',
+					'ref'				=> '',
+					'site'				=> '',
 					'width'				=> 300
 				)
 			),
 			'profile_pic'	=> array(
 				'tag'				=> 'profile-pic',
 				'template_params'	=> array(
-					'facebook-logo'		=> 'true',
 					'height'			=> '',
-					'linked'			=> 'true',
-					'size'				=> 'thumb',
-					'uid'				=> '',
+					'type'				=> 'small',
 					'width'				=> ''
 				)
 			),
@@ -1200,19 +1222,23 @@ class Fbc extends Module_builder_fbc
 		{
 			foreach ( $methods[ $method ][ 'template_params' ] as $param => $default )
 			{
-				if ( $this->EE->TMPL->fetch_param($param) !== FALSE )
+				if ( ee()->TMPL->fetch_param($param) !== FALSE )
 				{
-					if ( in_array( $param, array( 'href', 'via_url' ) ) === TRUE )
+					if ($method == 'profile_pic')
 					{
-						$fb_arguments[]	= $param . '="' . $this->_prep_return( $this->_chars_decode( $this->EE->TMPL->fetch_param($param) ) ) . '"';
+						$fb_arguments[]	= $param . '=' . $this->_chars_decode( ee()->TMPL->fetch_param($param) );
 					}
-					elseif ( is_numeric( $default ) === TRUE AND is_numeric( $this->EE->TMPL->fetch_param($param) ) === TRUE )
+					elseif ( in_array( $param, array( 'href', 'via_url' ) ) === TRUE )
 					{
-						$fb_arguments[]	= $param . '="' . $this->_chars_decode( $this->EE->TMPL->fetch_param($param) ) . '"';
+						$fb_arguments[]	= $param . '="' . $this->_prep_return( $this->_chars_decode( ee()->TMPL->fetch_param($param) ) ) . '"';
 					}
-					elseif ( is_string( $default ) === TRUE AND is_string( $this->EE->TMPL->fetch_param($param) ) === TRUE  )
+					elseif ( is_numeric( $default ) === TRUE AND is_numeric( ee()->TMPL->fetch_param($param) ) === TRUE )
 					{
-						$fb_arguments[]	= $param . '="' . $this->_chars_decode( $this->EE->TMPL->fetch_param($param) ) . '"';
+						$fb_arguments[]	= $param . '="' . $this->_chars_decode( ee()->TMPL->fetch_param($param) ) . '"';
+					}
+					elseif ( is_string( $default ) === TRUE AND is_string( ee()->TMPL->fetch_param($param) ) === TRUE  )
+					{
+						$fb_arguments[]	= $param . '="' . $this->_chars_decode( ee()->TMPL->fetch_param($param) ) . '"';
 					}
 				}
 				elseif ( ! empty( $default ) )
@@ -1224,6 +1250,15 @@ class Fbc extends Module_builder_fbc
 					$fb_arguments[]	= $param . '="' . $this->api->get_user_id() . '"';
 				}
 			}
+		}
+
+		// --------------------------------------------
+		//  Profile pic
+		// --------------------------------------------
+		
+		if ($method == 'profile_pic')
+		{
+			return '<img src="//graph.facebook.com/' . $this->api->get_user_id() . '/picture?' . implode('&', $fb_arguments) . '" />';
 		}
 
 		// --------------------------------------------
@@ -1270,7 +1305,7 @@ class Fbc extends Module_builder_fbc
 
 		if ( empty( $arr['tagdata'] ) )
 		{
-			$tagdata	=	$this->EE->TMPL->tagdata;
+			$tagdata	=	ee()->TMPL->tagdata;
 		}
 		else
 		{
@@ -1283,7 +1318,7 @@ class Fbc extends Module_builder_fbc
 			'action'		=> $arr['RET'],
 			'name'			=> ( ! empty( $arr['form_name'] ) ) ? $arr['form_name']: '',
 			'id'			=> ( ! empty( $arr['form_id'] ) ) ? $arr['form_id']: '',
-			'onsubmit'		=> ( $this->EE->TMPL->fetch_param('onsubmit') ) ? $this->EE->TMPL->fetch_param('onsubmit'): ''
+			'onsubmit'		=> ( ee()->TMPL->fetch_param('onsubmit') ) ? ee()->TMPL->fetch_param('onsubmit'): ''
 		);
 
 		// --------------------------------------------
@@ -1292,9 +1327,9 @@ class Fbc extends Module_builder_fbc
 
 		$extra_attributes = array();
 
-		if (is_object($this->EE->TMPL) AND ! empty($this->EE->TMPL->tagparams))
+		if (is_object(ee()->TMPL) AND ! empty(ee()->TMPL->tagparams))
 		{
-			foreach($this->EE->TMPL->tagparams as $key => $value)
+			foreach(ee()->TMPL->tagparams as $key => $value)
 			{
 				if (strncmp($key, 'form:', 5) == 0)
 				{
@@ -1314,7 +1349,7 @@ class Fbc extends Module_builder_fbc
 		//	Generate form
 		// --------------------------------------------
 
-		$r	= $this->EE->functions->form_declaration( $arr );
+		$r	= ee()->functions->form_declaration( $arr );
 
 		$r	.= stripslashes($tagdata);
 
@@ -1362,7 +1397,7 @@ class Fbc extends Module_builder_fbc
 		{
 			$cond['fbc_allow_' . $val]	= 'n';
 
-			if ( ! empty( $permissions[$val] ) )
+			if (is_array($permissions) AND in_array($val, $permissions))
 			{
 				$cond['fbc_allow_' . $val]	= 'y';
 			}
@@ -1372,7 +1407,7 @@ class Fbc extends Module_builder_fbc
 		//	Parse conditionals
 		// --------------------------------------------
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		return $tagdata;
 	}
@@ -1503,36 +1538,14 @@ class Fbc extends Module_builder_fbc
 		$params_string	= base64_encode( $this->_implode_explode_params( $params ) );
 
 		// --------------------------------------------
-		//	Button label
-		// --------------------------------------------
-
-		$button_label	= '';
-
-		if ( $this->EE->TMPL->fetch_param('button_label') !== FALSE AND $this->EE->TMPL->fetch_param('button_label') != '' )
-		{
-			$button_label	= $this->EE->TMPL->fetch_param('button_label');
-		}
-
-		// --------------------------------------------
-		//	Button version number
-		// --------------------------------------------
-
-		$button_version	= ' v="1"';
-
-		if ( $this->EE->TMPL->fetch_param('button_version') !== FALSE AND in_array( $this->EE->TMPL->fetch_param('button_version'), array(1,2,3) ) === TRUE )
-		{
-			$button_version	= ' v="' . $this->EE->TMPL->fetch_param('button_version') . '"';
-		}
-
-		// --------------------------------------------
 		//	Button size
 		// --------------------------------------------
 
-		$button_size	= ' size="medium"';
+		$button_size	= ' data-size="medium"';
 
-		if ( $this->EE->TMPL->fetch_param('button_size') !== FALSE AND in_array( $this->EE->TMPL->fetch_param('button_size'), array( 'icon', 'small', 'medium', 'large', 'xlarge' ) ) === TRUE )
+		if ( ee()->TMPL->fetch_param('button_size') !== FALSE AND in_array( ee()->TMPL->fetch_param('button_size'), array( 'small', 'medium', 'large', 'xlarge' ) ) === TRUE )
 		{
-			$button_size	= ' size="' . $this->EE->TMPL->fetch_param('button_size') . '"';
+			$button_size	= ' data-size="' . ee()->TMPL->fetch_param('button_size') . '"';
 		}
 
 		// --------------------------------------------
@@ -1545,56 +1558,45 @@ class Fbc extends Module_builder_fbc
 			//	Prepare JS call.
 			// --------------------------------------------
 
-			$act		= $this->EE->functions->fetch_action_id('Fbc', 'facebook_login');
+			$act		= ee()->functions->fetch_action_id('Fbc', 'facebook_login');
 
-			$qs			= ( $this->EE->config->item('force_query_string') == 'y' ) ? '' : '?';
+			$qs			= ( ee()->config->item('force_query_string') == 'y' ) ? '' : '?';
 
-			$url		= $this->EE->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&params=' . $params_string;
+			$url		= ee()->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&params=' . $params_string;
 
 			$onlogin	= ' onlogin="window.location=\'' . $url . '\';"';
-
-			// --------------------------------------------
-			//	Login button label
-			// --------------------------------------------
-
-			$login_button_label	= $button_label;
-
-			if ( $this->EE->TMPL->fetch_param('login_button_label') !== FALSE AND $this->EE->TMPL->fetch_param('login_button_label') != '' )
-			{
-				$login_button_label	= $this->EE->TMPL->fetch_param('login_button_label');
-			}
 
 			// --------------------------------------------
 			//	Show faces
 			// --------------------------------------------
 
-			$show_faces	= ' show-faces="false"';
+			$show_faces	= ' data-show-faces="false"';
 
-			if ( $this->EE->TMPL->fetch_param('show_faces') !== FALSE AND in_array( $this->EE->TMPL->fetch_param('show_faces'), array( 'true', 'false' ) ) === TRUE )
+			if ( ee()->TMPL->fetch_param('show_faces') !== FALSE AND in_array( ee()->TMPL->fetch_param('show_faces'), array( 'true', 'false' ) ) === TRUE )
 			{
-				$show_faces	= ' show-faces="' . $this->EE->TMPL->fetch_param('show_faces') . '"';
+				$show_faces	= ' data-show-faces="' . ee()->TMPL->fetch_param('show_faces') . '"';
 			}
 
 			// --------------------------------------------
-			//	Plugin width
+			//	Default Audience
 			// --------------------------------------------
 
-			$plugin_width	= ' width="200"';
+			$default_audience	= ' data-default-audience="everyone"';
 
-			if ( $this->EE->TMPL->fetch_param('plugin_width') !== FALSE AND is_numeric( $this->EE->TMPL->fetch_param('plugin_width') ) === TRUE )
+			if (ee()->TMPL->fetch_param('default_audience'))
 			{
-				$plugin_width	= ' width="' . $this->EE->TMPL->fetch_param('plugin_width') . '"';
+				$default_audience	= ' data-default-audience="' . ee()->TMPL->fetch_param('default_audience') . '"';
 			}
 
 			// --------------------------------------------
 			//	Max rows
 			// --------------------------------------------
 
-			$max_rows	= ' max-rows="1"';
+			$max_rows	= ' data-max-rows="1"';
 
-			if ( $this->EE->TMPL->fetch_param('max_rows') !== FALSE AND is_numeric( $this->EE->TMPL->fetch_param('max_rows') ) === TRUE )
+			if ( ee()->TMPL->fetch_param('max_rows') !== FALSE AND is_numeric( ee()->TMPL->fetch_param('max_rows') ) === TRUE )
 			{
-				$max_rows	= ' max-rows="' . $this->EE->TMPL->fetch_param('max_rows') . '"';
+				$max_rows	= ' data-max-rows="' . ee()->TMPL->fetch_param('max_rows') . '"';
 			}
 
 			// --------------------------------------------
@@ -1603,21 +1605,27 @@ class Fbc extends Module_builder_fbc
 			//	http://developers.facebook.com/docs/authentication/permissions/
 			// --------------------------------------------
 
-			$permissions	= ' scope="email,publish_stream,read_stream"';
+			$permissions	= ' data-scope="public_profile"';
 
-			if ( $this->EE->TMPL->fetch_param('permissions') !== FALSE )
+			if ( ee()->TMPL->fetch_param('permissions') !== FALSE )
 			{
-				$scope	= array_intersect( $this->data->get_possible_permissions(), explode( '|', $this->EE->TMPL->fetch_param('permissions') ) );
+				$scope	= array_intersect( $this->data->get_possible_permissions(), explode( '|', ee()->TMPL->fetch_param('permissions') ) );
 
-				$permissions	= ' scope="' . implode( ',', $scope ) . '"';
+				$permissions	= ' data-scope="' . implode( ',', $scope ) . '"';
+			}
+
+			$login_button_label	= '';
+
+			if ( ee()->TMPL->fetch_param('login_button_label') !== FALSE AND ee()->TMPL->fetch_param('login_button_label') != '' )
+			{
+				$login_button_label	= ee()->TMPL->fetch_param('login_button_label');
 			}
 
 			// --------------------------------------------
 			//	Parse
 			// --------------------------------------------
-
-			$cond['fbc_login_button'] = $cond['fbc_login_logout_button'] = '
-<fb:login-button autologoutlink="false"' . $button_size . $button_version . $onlogin . $show_faces . $plugin_width . $max_rows . $permissions . '>' . $login_button_label . '</fb:login-button>';
+			
+			$cond['fbc_login_button'] = $cond['fbc_login_logout_button'] = '<div class="fb-login-button"' . $onlogin . $max_rows . $button_size . $default_audience . $show_faces . $permissions . ' data-auto-logout-link="false">' . $login_button_label . '</div>';
 		}
 
 		// --------------------------------------------
@@ -1630,27 +1638,27 @@ class Fbc extends Module_builder_fbc
 			//	Prepare JS call.
 			// --------------------------------------------
 
-			$qs		= ( $this->EE->config->item('force_query_string') == 'y' ) ? '' : '?';
+			$qs		= ( ee()->config->item('force_query_string') == 'y' ) ? '' : '?';
 
-			$act	= $this->EE->functions->fetch_action_id('Fbc', 'facebook_logout');
+			$act	= ee()->functions->fetch_action_id('Fbc', 'facebook_logout');
 
-			$url	= $this->EE->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&params=' . $params_string;
+			$url	= ee()->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&params=' . $params_string;
 
 			$onlogout	= ' onlogin="window.location=\'' . $url . '\';"';
 
 			// --------------------------------------------
-			//	Logout button label
+			//	Cond
 			// --------------------------------------------
 
 			$logout_button_label	= '';
 
-			if ( $this->EE->TMPL->fetch_param('logout_button_label') !== FALSE AND $this->EE->TMPL->fetch_param('logout_button_label') != '' )
+			if ( ee()->TMPL->fetch_param('logout_button_label') !== FALSE AND ee()->TMPL->fetch_param('logout_button_label') != '' )
 			{
-				$logout_button_label	= $this->EE->TMPL->fetch_param('logout_button_label');
+				$logout_button_label	= ee()->TMPL->fetch_param('logout_button_label');
 			}
 
 			$cond['fbc_logout_button'] = $cond['fbc_login_logout_button'] = '
-<fb:login-button autologoutlink="true"' . $button_size . $button_version . $onlogout . '>' . $logout_button_label . '</fb:login-button>';
+<div class="fb-login-button" data-auto-logout-link="true"' . $button_size . $onlogout . '>' . $logout_button_label . '</div>';
 
 			$cond['fbc_logged_in']	= 'y';
 			$cond['fbc_logged_out']	= 'n';
@@ -1660,7 +1668,7 @@ class Fbc extends Module_builder_fbc
 		//	Parse and return
 		// --------------------------------------------
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		foreach ( $cond as $key => $val )
 		{
@@ -1690,7 +1698,7 @@ class Fbc extends Module_builder_fbc
 		//	Prepare action
 		// --------------------------------------------
 
-		$act		= $this->EE->functions->fetch_action_id('Fbc', 'facebook_login');
+		$act		= ee()->functions->fetch_action_id('Fbc', 'facebook_login');
 		$onlogin	= '';
 
 		// --------------------------------------------
@@ -1719,64 +1727,53 @@ class Fbc extends Module_builder_fbc
 
 		$button_label	= ( empty( $label ) ) ? '': $label;
 
-		if ( $this->EE->TMPL->fetch_param('button_label') !== FALSE AND $this->EE->TMPL->fetch_param('button_label') != '' )
+		if ( ee()->TMPL->fetch_param('button_label') !== FALSE AND ee()->TMPL->fetch_param('button_label') != '' )
 		{
-			$button_label	= $this->EE->TMPL->fetch_param('button_label');
-		}
-
-		// --------------------------------------------
-		//	Button version number
-		// --------------------------------------------
-
-		$button_version	= ' v="1"';
-
-		if ( $this->EE->TMPL->fetch_param('button_version') !== FALSE AND in_array( $this->EE->TMPL->fetch_param('button_version'), array(1,2,3) ) === TRUE )
-		{
-			$button_version	= ' v="' . $this->EE->TMPL->fetch_param('button_version') . '"';
+			$button_label	= ee()->TMPL->fetch_param('button_label');
 		}
 
 		// --------------------------------------------
 		//	Button size
 		// --------------------------------------------
 
-		$button_size	= ' size="medium"';
+		$button_size	= ' data-size="medium"';
 
-		if ( $this->EE->TMPL->fetch_param('button_size') !== FALSE AND in_array( $this->EE->TMPL->fetch_param('button_size'), array( 'icon', 'small', 'medium', 'large', 'xlarge' ) ) === TRUE )
+		if ( ee()->TMPL->fetch_param('button_size') !== FALSE AND in_array( ee()->TMPL->fetch_param('button_size'), array( 'small', 'medium', 'large', 'xlarge' ) ) === TRUE )
 		{
-			$button_size	= ' size="' . $this->EE->TMPL->fetch_param('button_size') . '"';
+			$button_size	= ' data-size="' . ee()->TMPL->fetch_param('button_size') . '"';
 		}
 
 		// --------------------------------------------
 		//	Show faces
 		// --------------------------------------------
 
-		$show_faces	= ' show-faces="false"';
+		$show_faces	= ' data-show-faces="false"';
 
-		if ( $this->EE->TMPL->fetch_param('show_faces') !== FALSE AND in_array( $this->EE->TMPL->fetch_param('show_faces'), array( 'true', 'false' ) ) === TRUE )
+		if ( ee()->TMPL->fetch_param('show_faces') !== FALSE AND in_array( ee()->TMPL->fetch_param('show_faces'), array( 'true', 'false' ) ) === TRUE )
 		{
-			$show_faces	= ' show-faces="' . $this->EE->TMPL->fetch_param('show_faces') . '"';
+			$show_faces	= ' data-show-faces="' . ee()->TMPL->fetch_param('show_faces') . '"';
 		}
 
 		// --------------------------------------------
-		//	Plugin width
+		//	Default Audience
 		// --------------------------------------------
 
-		$plugin_width	= ' width="200"';
+		$default_audience	= ' data-default-audience="everyone"';
 
-		if ( $this->EE->TMPL->fetch_param('plugin_width') !== FALSE AND is_numeric( $this->EE->TMPL->fetch_param('plugin_width') ) === TRUE )
+		if (ee()->TMPL->fetch_param('default_audience'))
 		{
-			$plugin_width	= ' width="' . $this->EE->TMPL->fetch_param('plugin_width') . '"';
+			$default_audience	= ' data-default-audience="' . ee()->TMPL->fetch_param('default_audience') . '"';
 		}
 
 		// --------------------------------------------
 		//	Max rows
 		// --------------------------------------------
 
-		$max_rows	= ' max-rows="1"';
+		$max_rows	= ' data-max-rows="1"';
 
-		if ( $this->EE->TMPL->fetch_param('max_rows') !== FALSE AND is_numeric( $this->EE->TMPL->fetch_param('max_rows') ) === TRUE )
+		if ( ee()->TMPL->fetch_param('max_rows') !== FALSE AND is_numeric( ee()->TMPL->fetch_param('max_rows') ) === TRUE )
 		{
-			$max_rows	= ' max-rows="' . $this->EE->TMPL->fetch_param('max_rows') . '"';
+			$max_rows	= ' data-max-rows="' . ee()->TMPL->fetch_param('max_rows') . '"';
 		}
 
 		// --------------------------------------------
@@ -1785,22 +1782,22 @@ class Fbc extends Module_builder_fbc
 		//	http://developers.facebook.com/docs/authentication/permissions/
 		// --------------------------------------------
 
-		$permissions			= ' scope="email,publish_stream,read_stream"';
+		$permissions	= ' data-scope="public_profile"';
 
-		if ( $this->EE->TMPL->fetch_param('permissions') !== FALSE )
+		if ( ee()->TMPL->fetch_param('permissions') !== FALSE )
 		{
-			$scope			= array_intersect( $this->data->get_possible_permissions(), explode( '|', $this->EE->TMPL->fetch_param('permissions') ) );
+			$scope	= array_intersect( $this->data->get_possible_permissions(), explode( '|', ee()->TMPL->fetch_param('permissions') ) );
 
-			$permissions	= ' scope="' . implode( ',', $scope ) . '"';
+			$permissions	= ' data-scope="' . implode( ',', $scope ) . '"';
 		}
 
 		// --------------------------------------------
 		//	Prepare JS call.
 		// --------------------------------------------
 
-		$qs		= ( $this->EE->config->item('force_query_string') == 'y' ) ? '' : '?';
+		$qs		= ( ee()->config->item('force_query_string') == 'y' ) ? '' : '?';
 
-		$url	= $this->EE->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&params=' . $params_string;
+		$url	= ee()->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&params=' . $params_string;
 
 		$onlogin	= ' onlogin="window.location=\'' . $url . '\';"';
 
@@ -1808,8 +1805,7 @@ class Fbc extends Module_builder_fbc
 		//	Parse
 		// --------------------------------------------
 
-		$cond['fbc_login_button']	= '
-<fb:login-button autologoutlink="false"' . $button_size . $button_version . $onlogin . $show_faces . $plugin_width . $max_rows . $permissions . '>' . $button_label . '</fb:login-button>';
+		$cond['fbc_login_button']	= '<div class="fb-login-button"' . $button_size . $onlogin . $default_audience . $show_faces . $max_rows . $permissions . '>' . $button_label . '</div>';
 
 		// --------------------------------------------
 		//	Just return the button and get out?
@@ -1830,9 +1826,9 @@ class Fbc extends Module_builder_fbc
 			$cond['fbc_logged_out']	= 'n';
 		}
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
-		if ( $label != '' OR strpos( $this->EE->TMPL->tagdata, '{fbc_' ) === FALSE ) return $cond['fbc_login_button'];
+		if ( $label != '' OR strpos( ee()->TMPL->tagdata, '{fbc_' ) === FALSE ) return $cond['fbc_login_button'];
 
 		return str_replace( LD . 'fbc_login_button' . RD, $cond['fbc_login_button'], $tagdata );
 	}
@@ -1872,7 +1868,7 @@ class Fbc extends Module_builder_fbc
 		//	Prep initial vars
 		// --------------------------------------------
 
-		$cond['fbc_logged_into_ee']					= ( $this->EE->session->userdata('member_id') == '0' ) ? 'n': 'y';
+		$cond['fbc_logged_into_ee']					= ( ee()->session->userdata('member_id') == '0' ) ? 'n': 'y';
 		$cond['fbc_logged_into_facebook']			= 'n';
 		$cond['fbc_logged_into_facebook_and_ee']	= 'n';
 		$cond['fbc_logged_into_ee_and_facebook']	= 'n';
@@ -1882,10 +1878,15 @@ class Fbc extends Module_builder_fbc
 		// --------------------------------------------
 
 		$this->api();
+		
+		//$info = $this->api->get_user_info();
+		//print_r($info);
+		
+		$force_refresh	= (ee()->session->userdata('member_id') == '0') ? TRUE: FALSE;
 
 		// By sending TRUE, we force a refresh of login status from the API,
 		// insuring it is always valid and up to date.
-		if ( ( $uid = $this->api->get_user_id()) !== FALSE )
+		if ( ( $uid = $this->api->get_user_id($force_refresh)) !== FALSE )
 		{
 			$cond['fbc_logged_into_facebook']	= 'y';
 		}
@@ -1900,7 +1901,7 @@ class Fbc extends Module_builder_fbc
 			$cond['fbc_logged_into_ee_and_facebook']	= 'y';
 		}
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 		return $tagdata;
 	}
 
@@ -1926,7 +1927,7 @@ class Fbc extends Module_builder_fbc
 			$cond['fbc_logout_button']	= '';
 			$cond['fbc_logged_in']		= 'n';
 			$cond['fbc_logged_out']	= 'y';
-			$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+			$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 			return str_replace( LD . 'fbc_logout_button' . RD, '', $tagdata );
 		}
 
@@ -1934,18 +1935,18 @@ class Fbc extends Module_builder_fbc
 		//	Fetch action
 		// --------------------------------------------
 
-		$act		= $this->EE->functions->fetch_action_id('Fbc', 'facebook_logout');
+		$act		= ee()->functions->fetch_action_id('Fbc', 'facebook_logout');
 		$onlogin	= '';
 
 		$params		= array(
-			'return_when_logged_out'	=> $this->EE->uri->uri_string
+			'return_when_logged_out'	=> ee()->uri->uri_string
 		);
 
 		foreach ( $params as $key => $val )
 		{
-			if ( $this->EE->TMPL->fetch_param($key) !== FALSE AND $this->EE->TMPL->fetch_param($key) != '' )
+			if ( ee()->TMPL->fetch_param($key) !== FALSE AND ee()->TMPL->fetch_param($key) != '' )
 			{
-				$val	= $this->_chars_decode( $this->EE->TMPL->fetch_param($key) );
+				$val	= $this->_chars_decode( ee()->TMPL->fetch_param($key) );
 			}
 
 			$params[$key]	= $val;
@@ -1966,9 +1967,9 @@ class Fbc extends Module_builder_fbc
 		//	Prepare JS call.
 		// --------------------------------------------
 
-		$qs		= ( $this->EE->config->item('force_query_string') == 'y' ) ? '' : '?';
+		$qs		= ( ee()->config->item('force_query_string') == 'y' ) ? '' : '?';
 
-		$url	= $this->EE->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&return_when_logged_out=' . base64_encode( $params['return_when_logged_out'] ) . '&is_ee_member=' . base64_encode( $params['is_ee_member'] );
+		$url	= ee()->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&return_when_logged_out=' . base64_encode( $params['return_when_logged_out'] ) . '&is_ee_member=' . base64_encode( $params['is_ee_member'] );
 
 		$onlogout	= ' onclick="FB.logout(function(response){window.location=\'' . $url . '\'})"';
 
@@ -1978,7 +1979,7 @@ class Fbc extends Module_builder_fbc
 		$cond['fbc_logged_in']	= 'y';
 		$cond['fbc_logged_out']	= 'n';
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		return str_replace( LD . 'fbc_logout_button' . RD, $cond['fbc_logout_button'], $tagdata );
 	}
@@ -2005,7 +2006,7 @@ class Fbc extends Module_builder_fbc
 			$cond['fbc_logout_js']		= '';
 			$cond['fbc_logged_in']		= 'n';
 			$cond['fbc_logged_out']	= 'y';
-			$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+			$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 			return str_replace( LD . 'fbc_logout_js' . RD, '', $tagdata );
 		}
 
@@ -2013,18 +2014,18 @@ class Fbc extends Module_builder_fbc
 		//	Fetch action
 		// --------------------------------------------
 
-		$act		= $this->EE->functions->fetch_action_id('Fbc', 'facebook_logout');
+		$act		= ee()->functions->fetch_action_id('Fbc', 'facebook_logout');
 		$onlogin	= '';
 
 		$params		= array(
-			'return_when_logged_out'	=> $this->EE->uri->uri_string
+			'return_when_logged_out'	=> ee()->uri->uri_string
 		);
 
 		foreach ( $params as $key => $val )
 		{
-			if ( $this->EE->TMPL->fetch_param($key) !== FALSE AND $this->EE->TMPL->fetch_param($key) != '' )
+			if ( ee()->TMPL->fetch_param($key) !== FALSE AND ee()->TMPL->fetch_param($key) != '' )
 			{
-				$val	= $this->_chars_decode( $this->EE->TMPL->fetch_param($key) );
+				$val	= $this->_chars_decode( ee()->TMPL->fetch_param($key) );
 			}
 
 			$params[$key]	= $val;
@@ -2048,15 +2049,15 @@ class Fbc extends Module_builder_fbc
 		$cond['fbc_logged_in']	= 'y';
 		$cond['fbc_logged_out']	= 'n';
 
-		$qs		= ( $this->EE->config->item('force_query_string') == 'y' ) ? '' : '?';
+		$qs		= ( ee()->config->item('force_query_string') == 'y' ) ? '' : '?';
 
-		$act	= $this->EE->functions->fetch_action_id('Fbc', 'facebook_logout');
+		$act	= ee()->functions->fetch_action_id('Fbc', 'facebook_logout');
 
-		$url	= $this->EE->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&return_when_logged_out=' . base64_encode( $params['return_when_logged_out'] ) . '&is_ee_member=' . base64_encode( $params['is_ee_member'] );
+		$url	= ee()->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $act . '&return_when_logged_out=' . base64_encode( $params['return_when_logged_out'] ) . '&is_ee_member=' . base64_encode( $params['is_ee_member'] );
 
 		$cond['fbc_logout_js']	= 'FB.logout(function(response){window.location=\'' . $url . '\'})';
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		return str_replace( LD . 'fbc_logout_js' . RD, $cond['fbc_logout_js'], $tagdata );
 	}
@@ -2096,17 +2097,17 @@ class Fbc extends Module_builder_fbc
 
 		$member_id	= '';
 
-		if ( $this->EE->TMPL->fetch_param('member_id') !== FALSE AND is_numeric( $this->EE->TMPL->fetch_param('member_id') ) === TRUE )
+		if ( ee()->TMPL->fetch_param('member_id') !== FALSE AND is_numeric( ee()->TMPL->fetch_param('member_id') ) === TRUE )
 		{
-			$member_id	= $this->EE->TMPL->fetch_param('member_id');
+			$member_id	= ee()->TMPL->fetch_param('member_id');
 		}
-		elseif ( $this->EE->TMPL->fetch_param('member_id') !== FALSE AND $this->EE->TMPL->fetch_param('member_id') == 'CURRENT_USER' AND $this->EE->session->userdata('member_id') != 0 )
+		elseif ( ee()->TMPL->fetch_param('member_id') !== FALSE AND ee()->TMPL->fetch_param('member_id') == 'CURRENT_USER' AND ee()->session->userdata('member_id') != 0 )
 		{
-			$member_id	= $this->EE->session->userdata('member_id');
+			$member_id	= ee()->session->userdata('member_id');
 		}
-		elseif ( $this->EE->session->userdata('member_id') != 0 )
+		elseif ( ee()->session->userdata('member_id') != 0 )
 		{
-			$member_id	= $this->EE->session->userdata('member_id');
+			$member_id	= ee()->session->userdata('member_id');
 		}
 
 		// --------------------------------------------
@@ -2124,8 +2125,8 @@ class Fbc extends Module_builder_fbc
 				AND (
 					$this->_is_facebook_email( $member_data['email'] ) === TRUE
 					OR (
-						$this->EE->TMPL->fetch_param('use_facebook_data') !== FALSE
-						AND $this->check_yes( $this->EE->TMPL->fetch_param('use_facebook_data') ) === TRUE
+						ee()->TMPL->fetch_param('use_facebook_data') !== FALSE
+						AND $this->check_yes( ee()->TMPL->fetch_param('use_facebook_data') ) === TRUE
 						)
 					)
 				)
@@ -2152,62 +2153,47 @@ class Fbc extends Module_builder_fbc
 
 		if ( ! empty( $member_data['facebook_connect_user_id'] ) )
 		{
+			$profile_pic_args	= array();
+		
 			// --------------------------------------------
-			//	Profile pic size
+			//	Profile pic type
 			// --------------------------------------------
 
-			$profile_pic_size	= '';
-
-			if ( $this->EE->TMPL->fetch_param( 'profile_pic_size' ) !== FALSE AND in_array( $this->EE->TMPL->fetch_param( 'profile_pic_size' ), array( 'thumb', 'small', 'normal', 'square' ) ) === TRUE )
+			if ( ee()->TMPL->fetch_param( 'profile_pic_type' ) !== FALSE AND in_array( ee()->TMPL->fetch_param( 'profile_pic_type' ), array( 'square', 'small', 'normal', 'large' ) ) === TRUE )
 			{
-				$profile_pic_size	= ' size="' . $this->EE->TMPL->fetch_param( 'profile_pic_size' ) . '"';
+				$profile_pic_args[]	= 'type=' . ee()->TMPL->fetch_param( 'profile_pic_type' );
 			}
 
 			// --------------------------------------------
 			//	Profile pic width
 			// --------------------------------------------
 
-			$profile_pic_width	= '';
-
-			if ( $this->EE->TMPL->fetch_param( 'profile_pic_width' ) !== FALSE AND is_numeric( $this->EE->TMPL->fetch_param( 'profile_pic_width' )  ) === TRUE )
+			if ( ee()->TMPL->fetch_param( 'profile_pic_width' ) !== FALSE AND is_numeric( ee()->TMPL->fetch_param( 'profile_pic_width' )  ) === TRUE )
 			{
-				$profile_pic_width	= ' width="' . $this->EE->TMPL->fetch_param( 'profile_pic_width' ) . '"';
+				$profile_pic_args[]	= 'width=' . ee()->TMPL->fetch_param( 'profile_pic_width' );
 			}
 
 			// --------------------------------------------
 			//	Profile pic height
 			// --------------------------------------------
 
-			$profile_pic_height	= '';
-
-			if ( $this->EE->TMPL->fetch_param( 'profile_pic_height' ) !== FALSE AND is_numeric( $this->EE->TMPL->fetch_param( 'profile_pic_height' )  ) === TRUE )
+			if ( ee()->TMPL->fetch_param( 'profile_pic_height' ) !== FALSE AND is_numeric( ee()->TMPL->fetch_param( 'profile_pic_height' )  ) === TRUE )
 			{
-				$profile_pic_height	= ' height="' . $this->EE->TMPL->fetch_param( 'profile_pic_height' ) . '"';
-			}
-
-			// --------------------------------------------
-			//	Profile pic linked?
-			// --------------------------------------------
-
-			$profile_pic_linked	= 'true';
-
-			if ( $this->EE->TMPL->fetch_param( 'profile_pic_linked' ) !== FALSE AND $this->check_no( $this->EE->TMPL->fetch_param( 'profile_pic_linked' ) ) )
-			{
-				$profile_pic_linked	= 'false';
+				$profile_pic_args[]	= 'height=' . ee()->TMPL->fetch_param( 'profile_pic_height' );
 			}
 
 			// --------------------------------------------
 			//	Assemble var
 			// --------------------------------------------
 
-			$cond['fbc_facebook_profile_pic'] = $cond['fbc_profile_pic'] = '<fb:profile-pic ' . $profile_pic_size . $profile_pic_width . $profile_pic_height . ' uid="' . $member_data['facebook_connect_user_id'] . '" facebook-logo="true" linked="' . $profile_pic_linked . '"></fb:profile-pic>';
+			$cond['fbc_facebook_profile_pic'] = $cond['fbc_profile_pic'] = '<img src="//graph.facebook.com/' . $member_data['facebook_connect_user_id'] . '/picture?' . implode('&', $profile_pic_args) . '" />';
 		}
 
 		// --------------------------------------------
 		//	Add friends count if needed
 		// --------------------------------------------
 
-		if ( strpos( $this->EE->TMPL->tagdata, 'fbc_facebook_friends_count' ) !== FALSE )
+		if ( strpos( ee()->TMPL->tagdata, 'fbc_facebook_friends_count' ) !== FALSE )
 		{
 			$this->api();
 
@@ -2218,8 +2204,10 @@ class Fbc extends Module_builder_fbc
 		//	Add basic social graph data?
 		// --------------------------------------------
 
-		if ( strpos( $this->EE->TMPL->tagdata, LD . 'fbc_facebook_' ) !== FALSE )
+		if ( strpos( ee()->TMPL->tagdata, LD . 'fbc_facebook_' ) !== FALSE )
 		{
+			$out	= array();
+
 			// --------------------------------------------
 			//	Set defaults
 			// --------------------------------------------
@@ -2228,6 +2216,7 @@ class Fbc extends Module_builder_fbc
 				'id'			=> '',
 				'name'			=> '',
 				'first_name'	=> '',
+				'middle_name'	=> '',
 				'last_name'		=> '',
 				'link'			=> '',
 				'username'		=> '',
@@ -2241,28 +2230,32 @@ class Fbc extends Module_builder_fbc
 			// --------------------------------------------
 
 			$this->api();
+			
+			//$this->dd($this->api->get_graph( $member_data['facebook_connect_user_id'] ));
 
 			if ( ! empty( $member_data['facebook_connect_user_id'] ) AND ( $graph = $this->api->get_graph( $member_data['facebook_connect_user_id'] ) ) !== FALSE )
 			{
+				$out['fbc_facebook_username']	= '';
+				$out['fbc_facebook_education']	= '';
+				
 				foreach ( $graph as $key => $val )
 				{
-					if ( is_string( $val ) === TRUE )
-					{
-						$cond[ 'fbc_facebook_' . $key ]	= $val;
-					}
+					$out[ 'fbc_facebook_' . $key ]	= $val;
 				}
 			}
 			else
 			{
-				$cond	= array_merge( $cond, $default_user_data );
+				$out	= array_merge( $out, $default_user_data );
 			}
+
+			ee()->TMPL->tagdata	= ee()->TMPL->parse_variables( ee()->TMPL->tagdata, array( $out ));
 		}
 
 		// --------------------------------------------
 		//	Parse conditionals
 		// --------------------------------------------
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		// --------------------------------------------
 		//	Loop and parse
@@ -2299,9 +2292,9 @@ class Fbc extends Module_builder_fbc
 		//	By default we test both EE and FB login status, This can be overridden to only test FB login status.
 		// --------------------------------------------
 
-		if ( $this->EE->TMPL->fetch_param( 'ignore_ee_login' ) === FALSE OR $this->EE->TMPL->fetch_param( 'ignore_ee_login' ) != 'yes' )
+		if ( ee()->TMPL->fetch_param( 'ignore_ee_login' ) === FALSE OR ee()->TMPL->fetch_param( 'ignore_ee_login' ) != 'yes' )
 		{
-			if ( $this->EE->session->userdata('member_id') == 0 )
+			if ( ee()->session->userdata('member_id') == 0 )
 			{
 				return FALSE;
 			}
@@ -2316,13 +2309,13 @@ class Fbc extends Module_builder_fbc
 			return FALSE;
 		}
 
-		if ( $this->EE->TMPL->fetch_param( 'ignore_ee_login' ) === FALSE OR $this->EE->TMPL->fetch_param( 'ignore_ee_login' ) != 'yes' )
+		if ( ee()->TMPL->fetch_param( 'ignore_ee_login' ) === FALSE OR ee()->TMPL->fetch_param( 'ignore_ee_login' ) != 'yes' )
 		{
 			// --------------------------------------------
 			//	If they are logged in to FB and EE, the accounts have to be linked for us to really say they logged in.
 			// --------------------------------------------
 
-			if ( $this->data->get_member_id_from_facebook_user_id( $uid ) != $this->EE->session->userdata('member_id') )
+			if ( $this->data->get_member_id_from_facebook_user_id( $uid ) != ee()->session->userdata('member_id') )
 			{
 				return FALSE;
 			}
@@ -2348,9 +2341,9 @@ class Fbc extends Module_builder_fbc
 		//	We need to force session ids onto our urls, we have to set the template_type in order to do it.
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('user_session_type') != 'c' )
+		if ( ee()->config->item('user_session_type') != 'c' )
 		{
-			$this->EE->functions->template_type	= 'webpage';
+			ee()->functions->template_type	= 'webpage';
 		}
 
 		// --------------------------------------------
@@ -2359,20 +2352,20 @@ class Fbc extends Module_builder_fbc
 
 		if ( $return == '' )
 		{
-			// $return = $this->EE->functions->fetch_current_uri();	// Commented out by mitchell@solspace.com 2011 06 02. This causes people to be returned to ACT urls when the param provided is empty or points to a site's home page.
+			// $return = ee()->functions->fetch_current_uri();	// Commented out by mitchell@solspace.com 2011 06 02. This causes people to be returned to ACT urls when the param provided is empty or points to a site's home page.
 		}
 
 		if ( preg_match( "/".LD."\s*path=(.*?)".RD."/", $return, $match ) )
 		{
-			$return	= $this->EE->functions->create_url( $match['1'] );
+			$return	= ee()->functions->create_url( $match['1'] );
 		}
 		elseif ( $return == LD . 'site_url' . RD )
 		{
-			$return	= $this->EE->config->item( 'site_url' );
+			$return	= ee()->config->item( 'site_url' );
 		}
 		elseif ( stristr( $return, "http://" ) === FALSE && stristr( $return, "https://" ) === FALSE )
 		{
-			$return	= $this->EE->functions->create_url( $return );
+			$return	= ee()->functions->create_url( $return );
 		}
 
 		return $return;
@@ -2397,7 +2390,7 @@ class Fbc extends Module_builder_fbc
 		//	Should we execute?
 		// --------------------------------------------
 
-		if ( $this->EE->TMPL->fetch_param( 'execute' ) !== FALSE AND $this->EE->TMPL->fetch_param( 'execute' ) != 'yes' )
+		if ( ee()->TMPL->fetch_param( 'execute' ) !== FALSE AND ee()->TMPL->fetch_param( 'execute' ) != 'yes' )
 		{
 			return '';
 		}
@@ -2408,20 +2401,21 @@ class Fbc extends Module_builder_fbc
 
 		$language	= 'en_US';
 
-		if ( $this->EE->TMPL->fetch_param( 'language' ) !== FALSE AND $this->EE->TMPL->fetch_param( 'language' ) != '' )
+		if ( ee()->TMPL->fetch_param( 'language' ) !== FALSE AND ee()->TMPL->fetch_param( 'language' ) != '' )
 		{
-			$language	= $this->EE->TMPL->fetch_param( 'language' );
+			$language	= ee()->TMPL->fetch_param( 'language' );
 		}
 
 		// --------------------------------------------
 		//	Prepare <html> tag
 		// --------------------------------------------
+		//	Deprecate this by 20150601
 
-		if ( preg_match( '/<html(.*?)>/is', $this->EE->TMPL->template, $match ) )
+		if ( preg_match( '/<html(.*?)>/is', ee()->TMPL->template, $match ) )
 		{
 			if ( strpos( $match[1], 'http://www.facebook.com' ) === FALSE )
 			{
-				$this->EE->TMPL->template	= str_replace( $match[0], '<html' . $match[1] . ' ' . $this->facebook_xmlns_definition . '>', $this->EE->TMPL->template );
+				//ee()->TMPL->template	= str_replace( $match[0], '<html' . $match[1] . ' ' . $this->facebook_xmlns_definition . '>', ee()->TMPL->template );
 			}
 		}
 
@@ -2429,10 +2423,10 @@ class Fbc extends Module_builder_fbc
 		//	Add FB.init() just above </body>
 		// --------------------------------------------
 
-		if ($this->EE->config->item('fbc_app_id') !== '' &&
-			strpos( $this->EE->TMPL->template, $this->EE->config->item('fbc_app_id') ) === FALSE )
+		if (ee()->config->item('fbc_app_id') !== '' &&
+			strpos( ee()->TMPL->template, ee()->config->item('fbc_app_id') ) === FALSE )
 		{
-			$this->EE->TMPL->template	= preg_replace( '/(<\\' . T_SLASH . 'body>)/is', $this->data->get_facebook_loader_js( $language ) . NL . '$1', $this->EE->TMPL->template, 1 );
+			ee()->TMPL->template	= preg_replace( '/(<\\' . T_SLASH . 'body>)/is', $this->data->get_facebook_loader_js( $language ) . NL . '$1', ee()->TMPL->template, 1 );
 
 			$this->data->cached['facebook_loader_js']	= TRUE;
 		}
@@ -2590,7 +2584,7 @@ class Fbc extends Module_builder_fbc
 		$default	= FBC_URI . 'return_default';
 
 		$out		= array(
-			'return_default'	=> $this->EE->uri->uri_string
+			'return_default'	=> ee()->uri->uri_string
 		);
 
 		foreach ( $params as $key )
@@ -2599,9 +2593,9 @@ class Fbc extends Module_builder_fbc
 			//	Is this param set in the template?
 			// --------------------------------------------
 
-			if ( $this->EE->TMPL->fetch_param($key) !== FALSE AND $this->EE->TMPL->fetch_param($key) != '' )
+			if ( ee()->TMPL->fetch_param($key) !== FALSE AND ee()->TMPL->fetch_param($key) != '' )
 			{
-				$val	= $this->_chars_decode( $this->EE->TMPL->fetch_param($key) );
+				$val	= $this->_chars_decode( ee()->TMPL->fetch_param($key) );
 			}
 			else
 			{
@@ -2640,7 +2634,7 @@ class Fbc extends Module_builder_fbc
 	{
 		$url	= $this->_prep_return( $url );
 
-		$this->EE->functions->redirect( $url );
+		ee()->functions->redirect( $url );
 	}
 
 	/* End redirect */
@@ -2674,20 +2668,20 @@ class Fbc extends Module_builder_fbc
 		//	Already logged in?
 		// --------------------------------------------
 
-		if ( $this->EE->session->userdata('member_id') != 0 )
+		if ( ee()->session->userdata('member_id') != 0 )
 		{
 			$this->error[]	= lang('already_logged_in');
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
 		//	Do we allow new member registrations?
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('allow_member_registration') == 'n' )
+		if ( ee()->config->item('allow_member_registration') == 'n' )
 		{
 			$this->error[]	= lang('registration_not_enabled');
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
@@ -2709,7 +2703,7 @@ class Fbc extends Module_builder_fbc
 			if ( ( $fb_post = $this->api->convert_signed_request( $_POST['signed_request'] ) ) == FALSE )
 			{
 				$this->error[]	= lang('facebook_signed_request_failed');
-				return $this->EE->output->show_user_error( 'general', $this->error );
+				return $this->show_error($this->error );
 			}
 
 			// --------------------------------------------
@@ -2744,7 +2738,7 @@ class Fbc extends Module_builder_fbc
 			if ( empty( $fb_post['registration_metadata']['fields'] ) OR $params['fields'] != $fb_post['registration_metadata']['fields'] )
 			{
 				$this->error[]	= lang('facebook_field_metadata_failed');
-				return $this->EE->output->show_user_error( 'general', $this->error );
+				return $this->show_error($this->error );
 			}
 
 			// --------------------------------------------
@@ -2818,7 +2812,7 @@ class Fbc extends Module_builder_fbc
 			if ( ( $uid = $this->api->get_user_id() ) === FALSE )
 			{
 				$this->error[]	= lang('facebook_not_logged_in');
-				return $this->EE->output->show_user_error( 'general', $this->error );
+				return $this->show_error($this->error );
 			}
 		}
 
@@ -2829,22 +2823,22 @@ class Fbc extends Module_builder_fbc
 		if ( $this->data->get_member_id_from_facebook_user_id( $uid ) !== FALSE )
 		{
 			$this->error[]	= lang( 'fb_user_already_exists' );
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
 		//	Clean the post
 		// --------------------------------------------
 
-		$_POST	= $this->EE->security->xss_clean( $_POST );
+		$_POST	= ee()->security->xss_clean( $_POST );
 
 		// --------------------------------------------
 		//	Handle alternate username / screen name
 		// --------------------------------------------
 
-		if ( $this->EE->db->table_exists('exp_user_params') === TRUE )
+		if ( ee()->db->table_exists('exp_user_params') === TRUE )
 		{
-			$pref_query = $this->EE->db->query("SELECT COUNT(*) AS count FROM exp_user_preferences WHERE preference_name = 'email_is_username' AND preference_value = 'y'");
+			$pref_query = ee()->db->query("SELECT COUNT(*) AS count FROM exp_user_preferences WHERE preference_name = 'email_is_username' AND preference_value = 'y'");
 
 			if (
 				empty( $_POST['email'] )
@@ -2900,7 +2894,7 @@ class Fbc extends Module_builder_fbc
 		//	We observe activation protocols, but if no activation is required, we make sure that we have a default member group been designation.
 		// --------------------------------------------
 
-		if ( ( $member_data['group_id'] = $this->EE->config->item('fbc_member_group') ) === FALSE )
+		if ( ( $member_data['group_id'] = ee()->config->item('fbc_member_group') ) === FALSE )
 		{
 			$this->error[]	= lang('facebook_member_group_missing');
 		}
@@ -2909,7 +2903,7 @@ class Fbc extends Module_builder_fbc
 		//	If we are email activating or admin activating, we do some tricks with the group id
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('fbc_account_activation') == 'fbc_email_activation' OR $this->EE->config->item('fbc_account_activation') == 'fbc_admin_activation' )
+		if ( ee()->config->item('fbc_account_activation') == 'fbc_email_activation' OR ee()->config->item('fbc_account_activation') == 'fbc_admin_activation' )
 		{
 			$member_data['group_id']	= 4;
 		}
@@ -2941,7 +2935,7 @@ class Fbc extends Module_builder_fbc
 		//	Require terms?
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('require_terms_of_service') == 'y' AND empty( $_POST['accept_terms'] ) )
+		if ( ee()->config->item('require_terms_of_service') == 'y' AND empty( $_POST['accept_terms'] ) )
 		{
 			$this->error[] = lang('mbr_terms_of_service_required');
 		}
@@ -2969,7 +2963,7 @@ class Fbc extends Module_builder_fbc
 
 		if ( count( $this->error ) > 0 )
 		{
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
@@ -3001,64 +2995,64 @@ class Fbc extends Module_builder_fbc
 			$validate['password_confirm']	= $member_data['password_confirm'];
 		}
 
-		$this->EE->load->library('validate', $validate, 'validate');
+		ee()->load->library('validate', $validate, 'validate');
 
-		$this->EE->validate->validate_username();
-		$this->EE->validate->validate_screen_name();
-		$this->EE->validate->validate_email();
+		ee()->validate->validate_username();
+		ee()->validate->validate_screen_name();
+		ee()->validate->validate_email();
 
 		if ( ! empty( $member_data['password'] ) )
 		{
-			$this->EE->validate->validate_password();
+			ee()->validate->validate_password();
 		}
 
-		if ( $this->EE->db->table_exists('exp_user_params') === TRUE )
+		if ( ee()->db->table_exists('exp_user_params') === TRUE )
 		{
 			if (
-				$this->EE->config->item('user_email_is_username') != 'n'
-				AND ( $key = array_search( lang('username_password_too_long'), $this->EE->validate->errors ) ) !== FALSE
+				ee()->config->item('user_email_is_username') != 'n'
+				AND ( $key = array_search( lang('username_password_too_long'), ee()->validate->errors ) ) !== FALSE
 				)
 			{
-				if (strlen($this->EE->validate->username) <= 50)
+				if (strlen(ee()->validate->username) <= 50)
 				{
-					unset($this->EE->validate->errors[$key]);
+					unset(ee()->validate->errors[$key]);
 				}
 				else
 				{
-					$this->EE->validate->errors[$key] = str_replace('32', '50', $this->EE->validate->errors[$key]);
+					ee()->validate->errors[$key] = str_replace('32', '50', ee()->validate->errors[$key]);
 				}
 			}
 		}
 
-		if ( count( $this->EE->validate->errors ) > 0 )
+		if ( count( ee()->validate->errors ) > 0 )
 		{
-			$this->error	= array_merge( $this->error, $this->EE->validate->errors );
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			$this->error	= array_merge( $this->error, ee()->validate->errors );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
 		//	Do we require captcha? And are we not in from_fb mode?
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('use_membership_captcha') == 'y' AND $this->from_fb === FALSE )
+		if ( ee()->config->item('use_membership_captcha') == 'y' AND $this->from_fb === FALSE )
 		{
-			$query = $this->EE->db->query(
+			$query = ee()->db->query(
 				"SELECT COUNT(*) AS count
 				FROM exp_captcha
-				WHERE word='" . $this->EE->db->escape_str( $_POST['captcha'] ) . "'
-				AND ip_address = '" . $this->EE->db->escape_str( $this->EE->input->ip_address() ) . "'
+				WHERE word='" . ee()->db->escape_str( $_POST['captcha'] ) . "'
+				AND ip_address = '" . ee()->db->escape_str( ee()->input->ip_address() ) . "'
 				AND date > UNIX_TIMESTAMP()-7200"
 			);
 
 			if ( $query->row('count') == 0 )
 			{
-				return $this->EE->output->show_user_error( 'general', lang('captcha_incorrect') );
+				return $this->show_error(lang('captcha_incorrect') );
 			}
 
-			$this->EE->db->query(
+			ee()->db->query(
 				"DELETE FROM exp_captcha
-				WHERE (word='" . $this->EE->db->escape_str($_POST['captcha']) . "'
-				AND ip_address = '" . $this->EE->db->escape_str( $this->EE->input->ip_address() ) . "')
+				WHERE (word='" . ee()->db->escape_str($_POST['captcha']) . "'
+				AND ip_address = '" . ee()->db->escape_str( ee()->input->ip_address() ) . "')
 				OR date < UNIX_TIMESTAMP()-7200"
 			);
 		}
@@ -3069,9 +3063,12 @@ class Fbc extends Module_builder_fbc
 		//	If we are registering through Facebook's registration plugin, we have gone through the signed token validation which proves that the request originated from our domain.
 		// --------------------------------------------
 
-		if ( $this->_check_form_hash() === FALSE AND $this->from_fb === FALSE )
+		if ( $this->from_fb === FALSE )
 		{
-			return $this->EE->output->show_user_error( 'general', lang('not_authorized' ) );
+			if ($this->_check_form_hash() === FALSE)
+			{
+				return $this->show_error(lang('not_authorized'));
+			}
 		}
 
 		// --------------------------------------------
@@ -3080,7 +3077,7 @@ class Fbc extends Module_builder_fbc
 
 		if ( count( $this->error ) > 0 )
 		{
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
@@ -3090,7 +3087,7 @@ class Fbc extends Module_builder_fbc
 		if ( ( $member_data = $this->actions->create_member_account( $uid, $member_data ) ) === FALSE )
 		{
 			$this->error[]	= lang('could_not_create_account');
-			return $this->EE->output->show_user_error( 'general', $this->error );
+			return $this->show_error($this->error );
 		}
 
 		// --------------------------------------------
@@ -3105,10 +3102,10 @@ class Fbc extends Module_builder_fbc
 		//	Additional processing when a member is created through the User Side
 		// --------------------------------------------
 
-		if ($this->EE->extensions->active_hook('fbc_register_end') === TRUE)
+		if (ee()->extensions->active_hook('fbc_register_end') === TRUE)
 		{
-			$edata = $this->EE->extensions->universal_call( 'fbc_register_end', $this, $member_data['member_id'] );
-			if ($this->EE->extensions->end_script === TRUE) return;
+			$edata = ee()->extensions->universal_call( 'fbc_register_end', $this, $member_data['member_id'] );
+			if (ee()->extensions->end_script === TRUE) return;
 		}
 
 		// --------------------------------------------
@@ -3139,7 +3136,7 @@ class Fbc extends Module_builder_fbc
 			//	Send activation email?
 			// --------------------------------------------
 
-			if ( $this->EE->config->item('fbc_account_activation') == 'fbc_email_activation' )
+			if ( ee()->config->item('fbc_account_activation') == 'fbc_email_activation' )
 			{
 				// --------------------------------------------
 				//	Send admin notification
@@ -3161,14 +3158,14 @@ class Fbc extends Module_builder_fbc
 					'content'	=> lang('mbr_membership_instructions_email')
 				);
 
-				return $this->EE->output->show_message( $data, TRUE );
+				return ee()->output->show_message( $data, TRUE );
 			}
 
 			// --------------------------------------------
 			//	Indicate that an admin will activate account?
 			// --------------------------------------------
 
-			if ( $this->EE->config->item('fbc_account_activation') == 'fbc_admin_activation' )
+			if ( ee()->config->item('fbc_account_activation') == 'fbc_admin_activation' )
 			{
 				// --------------------------------------------
 				//	Show success message
@@ -3184,7 +3181,7 @@ class Fbc extends Module_builder_fbc
 					'content'	=> lang('mbr_admin_will_activate')
 				);
 
-				return $this->EE->output->show_message( $data, TRUE );
+				return ee()->output->show_message( $data, TRUE );
 			}
 		}
 
@@ -3196,7 +3193,7 @@ class Fbc extends Module_builder_fbc
 		{
 			if ( $this->actions->ee_login( $member_data['member_id'] ) === FALSE )
 			{
-				return $this->EE->output->show_user_error( 'general', $this->actions->error );
+				return $this->show_error($this->actions->error );
 			}
 		}
 
@@ -3227,7 +3224,7 @@ class Fbc extends Module_builder_fbc
 		//	Prepare action
 		// --------------------------------------------
 
-		$act	= $this->EE->functions->fetch_action_id('Fbc', 'register');
+		$act	= ee()->functions->fetch_action_id('Fbc', 'register');
 
 		$params	= array( 'ACT' => $act );
 
@@ -3236,15 +3233,15 @@ class Fbc extends Module_builder_fbc
 		// --------------------------------------------
 
 		$returns		= array(
-			'return'		=> $this->EE->uri->uri_string,
+			'return'		=> ee()->uri->uri_string,
 			'show_captcha'	=> ''
 		);
 
 		foreach ( $returns as $key => $val )
 		{
-			if ( $this->EE->TMPL->fetch_param($key) !== FALSE AND $this->EE->TMPL->fetch_param($key) != '' )
+			if ( ee()->TMPL->fetch_param($key) !== FALSE AND ee()->TMPL->fetch_param($key) != '' )
 			{
-				$val	= $this->_chars_decode( $this->EE->TMPL->fetch_param($key) );
+				$val	= $this->_chars_decode( ee()->TMPL->fetch_param($key) );
 			}
 
 			$params[$key]	= $val;
@@ -3260,11 +3257,11 @@ class Fbc extends Module_builder_fbc
 		// Prep captcha
 		// --------------------------------------------
 
-		$cond['captcha'] = ( $this->EE->config->item('use_membership_captcha') == 'y' ) ? 'TRUE': 'FALSE';
+		$cond['captcha'] = ( ee()->config->item('use_membership_captcha') == 'y' ) ? 'TRUE': 'FALSE';
 
-		if ( $this->EE->TMPL->fetch_param('show_captcha') !== FALSE )
+		if ( ee()->TMPL->fetch_param('show_captcha') !== FALSE )
 		{
-			if ( $this->check_yes( $this->EE->TMPL->fetch_param('show_captcha') ) === TRUE )
+			if ( $this->check_yes( ee()->TMPL->fetch_param('show_captcha') ) === TRUE )
 			{
 				$cond['captcha']	= TRUE;
 			}
@@ -3278,9 +3275,9 @@ class Fbc extends Module_builder_fbc
 		// Parse
 		// --------------------------------------------
 
-		$tagdata	= $this->EE->TMPL->tagdata;
+		$tagdata	= ee()->TMPL->tagdata;
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( $tagdata, $cond );
 
 		$params['tagdata']	= $tagdata;
 
@@ -3312,7 +3309,7 @@ class Fbc extends Module_builder_fbc
 		//	Do we allow new member registrations?
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('allow_member_registration') == 'n' )
+		if ( ee()->config->item('allow_member_registration') == 'n' )
 		{
 			return $this->no_results('fbc');
 		}
@@ -3322,7 +3319,7 @@ class Fbc extends Module_builder_fbc
 		// --------------------------------------------
 
 		$cond['fbc_login_button']					= '';
-		$cond['fbc_logged_into_ee']					= ( $this->EE->session->userdata('member_id') == '0' ) ? 'n': 'y';
+		$cond['fbc_logged_into_ee']					= ( ee()->session->userdata('member_id') == '0' ) ? 'n': 'y';
 		$cond['fbc_logged_into_facebook']			= 'n';
 		$cond['fbc_logged_into_facebook_and_ee']	= 'n';
 		$cond['fbc_logged_into_ee_and_facebook']	= 'n';
@@ -3362,15 +3359,15 @@ class Fbc extends Module_builder_fbc
 		// --------------------------------------------
 
 		$params		= array(
-			'return_on_success'	=> $this->EE->uri->uri_string,
-			'show_captcha'		=> $this->EE->config->item('use_membership_captcha')
+			'return_on_success'	=> ee()->uri->uri_string,
+			'show_captcha'		=> ee()->config->item('use_membership_captcha')
 		);
 
 		foreach ( $params as $key => $val )
 		{
-			if ( $this->EE->TMPL->fetch_param($key) !== FALSE AND $this->EE->TMPL->fetch_param($key) != '' )
+			if ( ee()->TMPL->fetch_param($key) !== FALSE AND ee()->TMPL->fetch_param($key) != '' )
 			{
-				$val	= $this->_chars_decode( $this->EE->TMPL->fetch_param($key) );
+				$val	= $this->_chars_decode( ee()->TMPL->fetch_param($key) );
 			}
 
 			$params[$key]	= $val;
@@ -3389,15 +3386,15 @@ class Fbc extends Module_builder_fbc
 
 		foreach ( $template_params as $param => $default )
 		{
-			if ( $this->EE->TMPL->fetch_param($param) !== FALSE )
+			if ( ee()->TMPL->fetch_param($param) !== FALSE )
 			{
-				if ( is_numeric( $default ) === TRUE AND is_numeric( $this->EE->TMPL->fetch_param($param) ) === TRUE )
+				if ( is_numeric( $default ) === TRUE AND is_numeric( ee()->TMPL->fetch_param($param) ) === TRUE )
 				{
-					$fb_arguments[]	= $param . '="' . $this->EE->TMPL->fetch_param($param) . '"';
+					$fb_arguments[]	= $param . '="' . ee()->TMPL->fetch_param($param) . '"';
 				}
-				elseif ( is_string( $default ) === TRUE AND is_string( $this->EE->TMPL->fetch_param($param) ) === TRUE  )
+				elseif ( is_string( $default ) === TRUE AND is_string( ee()->TMPL->fetch_param($param) ) === TRUE  )
 				{
-					$fb_arguments[]	= $param . '="' . $this->EE->TMPL->fetch_param($param) . '"';
+					$fb_arguments[]	= $param . '="' . ee()->TMPL->fetch_param($param) . '"';
 				}
 			}
 		}
@@ -3406,11 +3403,11 @@ class Fbc extends Module_builder_fbc
 		//  Captcha?
 		// --------------------------------------------
 
-		$prefs['captcha'] = ( $this->EE->config->item('use_membership_captcha') == 'y' ) ? 'y': 'n';
+		$prefs['captcha'] = ( ee()->config->item('use_membership_captcha') == 'y' ) ? 'y': 'n';
 
-		if ( $this->EE->TMPL->fetch_param('show_captcha') !== FALSE )
+		if ( ee()->TMPL->fetch_param('show_captcha') !== FALSE )
 		{
-			if ( $this->check_yes( $this->EE->TMPL->fetch_param('show_captcha') ) === TRUE )
+			if ( $this->check_yes( ee()->TMPL->fetch_param('show_captcha') ) === TRUE )
 			{
 				$prefs['captcha']	= 'y';
 			}
@@ -3478,7 +3475,7 @@ class Fbc extends Module_builder_fbc
 		//	We create a tag hash and save that with our cookie so that we can test and not generate one of these DB inserts for every page load per user.
 		// --------------------------------------------
 
-		$tag_hash	= md5( serialize( $params ) . $this->EE->input->ip_address() );
+		$tag_hash	= md5( serialize( $params ) . ee()->input->ip_address() );
 
 		if ( ( $hash = $this->data->set_params( $tag_hash, $params ) ) === FALSE )
 		{
@@ -3489,9 +3486,9 @@ class Fbc extends Module_builder_fbc
 		//  Load parameters to the tag
 		// --------------------------------------------
 
-		$qs		= ( $this->EE->config->item('force_query_string') == 'y' ) ? '' : '?';
+		$qs		= ( ee()->config->item('force_query_string') == 'y' ) ? '' : '?';
 
-		$fb_arguments[]	= 'fields=\'' . $fields . '\'' . ' fb_only="true"' . ' redirect-uri="' . $this->EE->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . $this->EE->functions->fetch_action_id('Fbc', 'register') . '&hash=' . $hash . '"';
+		$fb_arguments[]	= 'fields=\'' . $fields . '\'' . ' fb_only="true"' . ' redirect-uri="' . ee()->functions->fetch_site_index( 0, 0 ) . $qs . 'ACT=' . ee()->functions->fetch_action_id('Fbc', 'register') . '&hash=' . $hash . '"';
 
 		$cond['fbc_registration_form']	= '<fb:registration ' . implode( ' ', $fb_arguments ) . '></fb:registration>' . $js;
 
@@ -3508,7 +3505,7 @@ class Fbc extends Module_builder_fbc
 		//	Grab login button?
 		// --------------------------------------------
 
-		if ( strpos( $this->EE->TMPL->tagdata, LD . 'fbc_login_button' . RD ) !== FALSE )
+		if ( strpos( ee()->TMPL->tagdata, LD . 'fbc_login_button' . RD ) !== FALSE )
 		{
 			$cond['fbc_login_button']	= $this->login_button( '', 'gimme' );
 		}
@@ -3517,7 +3514,7 @@ class Fbc extends Module_builder_fbc
 		//	Is there tagdata?
 		// --------------------------------------------
 
-		if ( $this->EE->TMPL->tagdata == '' )
+		if ( ee()->TMPL->tagdata == '' )
 		{
 			return $cond['fbc_registration_form'];
 		}
@@ -3526,7 +3523,7 @@ class Fbc extends Module_builder_fbc
 		//	Parse and return
 		// --------------------------------------------
 
-		$tagdata	= $this->EE->functions->prep_conditionals( $this->EE->TMPL->tagdata, $cond );
+		$tagdata	= ee()->functions->prep_conditionals( ee()->TMPL->tagdata, $cond );
 
 		foreach ( $cond as $key => $val )
 		{

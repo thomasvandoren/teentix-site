@@ -7,10 +7,10 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/config.php
  */
 

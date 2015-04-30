@@ -5,10 +5,10 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/ext.fbc.php
  */
 
@@ -115,12 +115,12 @@ class Fbc_ext extends Extension_builder_fbc
 
 			$sql	= "SELECT search_excerpt
 			FROM exp_" . $weblog . "s
-			WHERE site_id = " . $this->EE->db->escape_str( $this->EE->config->item('site_id') ) . "
+			WHERE site_id = " . ee()->db->escape_str( ee()->config->item('site_id') ) . "
 			AND search_excerpt != 0
-			AND " . $weblog . "_id = " . $this->EE->db->escape_str( $data[ $weblog . '_id' ] ) . "
+			AND " . $weblog . "_id = " . ee()->db->escape_str( $data[ $weblog . '_id' ] ) . "
 			LIMIT 1";
 
-			$query	= $this->EE->db->query( $sql );
+			$query	= ee()->db->query( $sql );
 
 			// --------------------------------------------
 			//	Get weblog title and excerpt
@@ -140,11 +140,11 @@ class Fbc_ext extends Extension_builder_fbc
 				$sql	.= " LEFT JOIN exp_" . $weblog . "_data wd ON wd.entry_id = wt.entry_id";
 			}
 
-			$sql	.= " WHERE wt." . $weblog . "_id = " . $this->EE->db->escape_str( $data[ $weblog . '_id' ] ) . "
-				AND wt.entry_id = " . $this->EE->db->escape_str( $data['entry_id'] ) . "
+			$sql	.= " WHERE wt." . $weblog . "_id = " . ee()->db->escape_str( $data[ $weblog . '_id' ] ) . "
+				AND wt.entry_id = " . ee()->db->escape_str( $data['entry_id'] ) . "
 				LIMIT 1";
 
-			$query	= $this->EE->db->query( $sql );
+			$query	= ee()->db->query( $sql );
 
 			if ( $query->num_rows() == 0 ) return FALSE;
 
@@ -236,12 +236,12 @@ class Fbc_ext extends Extension_builder_fbc
 
 			$sql	= "SELECT search_excerpt
 			FROM exp_" . $weblog . "s
-			WHERE site_id = " . $this->EE->db->escape_str( $this->EE->config->item('site_id') ) . "
+			WHERE site_id = " . ee()->db->escape_str( ee()->config->item('site_id') ) . "
 			AND search_excerpt != 0
-			AND " . $weblog . "_id = " . $this->EE->db->escape_str( $data[ $weblog . '_id' ] ) . "
+			AND " . $weblog . "_id = " . ee()->db->escape_str( $data[ $weblog . '_id' ] ) . "
 			LIMIT 1";
 
-			$query	= $this->EE->db->query( $sql );
+			$query	= ee()->db->query( $sql );
 
 			// --------------------------------------------
 			//	Get weblog title and excerpt
@@ -261,11 +261,11 @@ class Fbc_ext extends Extension_builder_fbc
 				$sql	.= " LEFT JOIN exp_" . $weblog . "_data wd ON wd.entry_id = wt.entry_id";
 			}
 
-			$sql	.= " WHERE wt." . $weblog . "_id = " . $this->EE->db->escape_str( $data[ $weblog . '_id' ] ) . "
-				AND wt.entry_id = " . $this->EE->db->escape_str( $data['entry_id'] ) . "
+			$sql	.= " WHERE wt." . $weblog . "_id = " . ee()->db->escape_str( $data[ $weblog . '_id' ] ) . "
+				AND wt.entry_id = " . ee()->db->escape_str( $data['entry_id'] ) . "
 				LIMIT 1";
 
-			$query	= $this->EE->db->query( $sql );
+			$query	= ee()->db->query( $sql );
 
 			if ( $query->num_rows() == 0 ) return FALSE;
 
@@ -277,7 +277,7 @@ class Fbc_ext extends Extension_builder_fbc
 
 			if ( ! empty( $_POST['fbc_rating_comment_format'] ) )
 			{
-				$comment_format	= stripslashes( $_POST['fbc_rating_comment_format'] );
+				$comment_format	= $comment = stripslashes( $_POST['fbc_rating_comment_format'] );
 			}
 
 			// --------------------------------------------
@@ -315,11 +315,11 @@ class Fbc_ext extends Extension_builder_fbc
 				//	Parse
 				// --------------------------------------------
 
-				$this->EE->TMPL = $GLOBALS['TMPL'] = new Addon_builder_parser();
+				ee()->TMPL = $GLOBALS['TMPL'] = new Addon_builder_parser();
 
-				$this->EE->TMPL->encode_email = FALSE;
+				ee()->TMPL->encode_email = FALSE;
 
-				$this->EE->TMPL->global_vars	= array_merge($this->EE->TMPL->global_vars, $fbc_data, $fbc_post_data);
+				ee()->TMPL->global_vars	= array_merge(ee()->TMPL->global_vars, $fbc_data, $fbc_post_data);
 
 				$comment = $GLOBALS['TMPL']->process_string_as_template($comment_format);
 			}
@@ -398,12 +398,12 @@ class Fbc_ext extends Extension_builder_fbc
 			'id'         => '',
 			'member_id'  => '1',
 			'username'   => 'Facebook Connect Module',
-			'ip_address' => $this->EE->input->ip_address(),
-			'act_date'   => $this->EE->localize->now,
+			'ip_address' => ee()->input->ip_address(),
+			'act_date'   => ee()->localize->now,
 			'action'     => 'Facebook:' . $msg
 		 );
 
-		$this->EE->db->insert('exp_cp_log', $data);
+		ee()->db->insert('exp_cp_log', $data);
 	}
 
 	/*	End log to CP */
@@ -419,7 +419,7 @@ class Fbc_ext extends Extension_builder_fbc
 
 	 function status_update( &$ths, $data )
 	 {
-		$data	= ( ! empty( $this->EE->extensions->last_call ) AND is_array( $this->EE->extensions->last_call ) === TRUE ) ? $this->EE->extensions->last_call: $data;
+		$data	= ( ! empty( ee()->extensions->last_call ) AND is_array( ee()->extensions->last_call ) === TRUE ) ? ee()->extensions->last_call: $data;
 
 		// --------------------------------------------
 		//	Have they elected to publish to Facebook?

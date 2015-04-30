@@ -7,14 +7,12 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/upd.fbc.php
  */
-
-if ( ! defined('APP_VER')) define('APP_VER', '2.0'); // EE 2.0's Wizard doesn't like CONSTANTs
 
 require_once 'addon_builder/module_builder.php';
 
@@ -102,7 +100,7 @@ class Fbc_upd extends Module_builder_fbc
 
 	function _add_prefs( $mode = 'install' )
 	{
-		$this->EE->load->helper('string');
+		ee()->load->helper('string');
 
 		// --------------------------------------------
 		//	Grab prefs from DB
@@ -111,7 +109,7 @@ class Fbc_upd extends Module_builder_fbc
 		$sql	= "SELECT site_id, site_system_preferences
 					FROM exp_sites";
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		if ( $query->num_rows() == 0 ) return FALSE;
 
@@ -134,8 +132,8 @@ class Fbc_upd extends Module_builder_fbc
 
 				$prefs	= base64_encode( serialize( $prefs ) );
 
-				$this->EE->db->query(
-					$this->EE->db->update_string(
+				ee()->db->query(
+					ee()->db->update_string(
 						'exp_sites',
 						array(
 							'site_system_preferences' => $prefs
@@ -194,8 +192,8 @@ class Fbc_upd extends Module_builder_fbc
 
 				$prefs	= base64_encode( serialize( $prefs ) );
 
-				$this->EE->db->query(
-					$this->EE->db->update_string(
+				ee()->db->query(
+					ee()->db->update_string(
 						'exp_sites',
 						array(
 							'site_system_preferences' => $prefs
@@ -257,7 +255,7 @@ class Fbc_upd extends Module_builder_fbc
 		//  Module Install
 		// --------------------------------------------
 
-		$sql[] = $this->EE->db->insert_string(
+		$sql[] = ee()->db->insert_string(
 			'exp_modules', array(
 				'module_name'	=> $this->class_name,
 				'module_version'	=> FBC_VERSION,
@@ -267,7 +265,7 @@ class Fbc_upd extends Module_builder_fbc
 
 		foreach ($sql as $query)
 		{
-			$this->EE->db->query($query);
+			ee()->db->query($query);
 		}
 
 		return TRUE;
@@ -294,7 +292,7 @@ class Fbc_upd extends Module_builder_fbc
 			//	Alter email column to accommodate longer Facebook proxied email addresses
 			// --------------------------------------------
 
-			$query	= $this->EE->db->query( "DESCRIBE exp_comments email" );
+			$query	= ee()->db->query( "DESCRIBE exp_comments email" );
 
 			if ( $query->row('Type') !== 'varchar(100)' )
 			{
@@ -344,7 +342,7 @@ class Fbc_upd extends Module_builder_fbc
 		//	Alter email column to accommodate longer Facebook proxied email addresses
 		// --------------------------------------------
 
-		$query	= $this->EE->db->query( "DESCRIBE exp_members email" );
+		$query	= ee()->db->query( "DESCRIBE exp_members email" );
 
 		if ( $query->row('Type') !== 'varchar(100)' )
 		{
@@ -389,7 +387,7 @@ class Fbc_upd extends Module_builder_fbc
 
 		foreach ($sql as $query)
 		{
-			$this->EE->db->query($query);
+			ee()->db->query($query);
 		}
 
 		// --------------------------------------------
@@ -428,8 +426,6 @@ class Fbc_upd extends Module_builder_fbc
 
 		$this->default_module_update();
 
-		$this->actions();
-
 		// --------------------------------------------
 		//	Do DB work
 		// --------------------------------------------
@@ -441,7 +437,7 @@ class Fbc_upd extends Module_builder_fbc
 
 		$sql = preg_split("/;;\s*(\n+|$)/", file_get_contents($this->addon_path.strtolower($this->lower_name).'.sql'), -1, PREG_SPLIT_NO_EMPTY);
 
-		if (sizeof($sql) == 0)
+		if (count($sql) == 0)
 		{
 			return FALSE;
 		}
@@ -473,7 +469,7 @@ class Fbc_upd extends Module_builder_fbc
 		{
 			$sql	= 'ALTER TABLE exp_fbc_params CHANGE `hash` `hash` varchar(32) NOT NULL DEFAULT \'\'';
 
-			$this->EE->db->query( $sql );
+			ee()->db->query( $sql );
 		}
 
 		// --------------------------------------------
@@ -486,7 +482,7 @@ class Fbc_upd extends Module_builder_fbc
 		{
 			$sql	= 'TRUNCATE exp_fbc_params';
 
-			$this->EE->db->query( $sql );
+			ee()->db->query( $sql );
 		}
 
 		// --------------------------------------------
@@ -497,9 +493,9 @@ class Fbc_upd extends Module_builder_fbc
 
 		if ( $this->version_compare($this->database_version(), '<', '2.0.1') )
 		{
-			if ( $this->EE->db->table_exists( 'exp_fbc_member_fields_map' ) === TRUE )
+			if ( ee()->db->table_exists( 'exp_fbc_member_fields_map' ) === TRUE )
 			{
-				// $this->EE->db->query( "DROP TABLE exp_fbc_member_fields_map" );
+				// ee()->db->query( "DROP TABLE exp_fbc_member_fields_map" );
 			}
 		}
 
@@ -507,7 +503,7 @@ class Fbc_upd extends Module_builder_fbc
 		//  Version Number Update - LAST!
 		// --------------------------------------------
 
-		$this->EE->db->update(
+		ee()->db->update(
 			'exp_modules',
 			array('module_version'	=> FBC_VERSION),
 			array('module_name'		=> $this->class_name)

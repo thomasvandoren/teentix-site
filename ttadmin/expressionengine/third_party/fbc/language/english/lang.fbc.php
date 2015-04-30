@@ -5,10 +5,10 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/language/english/lang.fbc.php
  */
 
@@ -19,10 +19,10 @@ $lang = $L = array(
 //----------------------------------------
 
 "fbc_module_name" =>
-"FBC",
+"Facebook Connect",
 
 "fbc_module_description" =>
-"Integrate Facebook with your website",
+"Seamlessly integrate Facebook with your website",
 
 "fbc_module_version" =>
 "Facebook Connect",
@@ -60,7 +60,7 @@ $lang = $L = array(
 "API Credentials Present?",
 
 'api_credentials_present_exp' =>
-"In order to connect to Facebook you need to have registered your site as a Facebook application and have received an application ID and a secret hash string.<br /><a href='http://www.facebook.com/developers/createapp.php' target='_blank'>Establish your site as a Facebook application here.</a>",
+"In order to connect to Facebook you need to have created a Facebook App for your site (on Facebook) and have received an App ID and an App Secret key. <a href='https://developers.facebook.com/apps' target='_blank'>Create a Facebook App here.</a>",
 
 'api_credentials_are_present' =>
 "API credentials ARE present",
@@ -78,7 +78,7 @@ $lang = $L = array(
 "Successful API Connection?",
 
 'api_successful_connect_exp' =>
-"We attempt to connect to the Facebook API once you login with your account. If, after logging into Facebook using the button above, this connection is not established, confirm your APP ID and API Secret settings on the Facebook site.",
+"We attempt to connect to the Facebook API once you login with your account. If, after logging into Facebook using the button above, this connection is not established, confirm your App ID and App Secret settings on the Facebook site.",
 
 'api_connect_was_successful' =>
 "An API connection WAS established.",
@@ -112,22 +112,22 @@ $lang = $L = array(
 "Your preferences have been updated.",
 
 'fbc_app_id' =>
-"Facebook Application ID",
+"Facebook App ID",
 
 'fbc_app_id_exp' =>
-"The application ID is provided by Facebook when you register your website as a Facebook application. <a href='http://www.facebook.com/developers/createapp.php' target='_blank'>Establish your site as a Facebook application here.</a>",
+"The App ID is provided by Facebook when you create a Facebook App for your website. <a href='https://developers.facebook.com/apps' target='_blank'>Create a Facebook App here.</a>",
 
 'fbc_secret' =>
-"Facebook Application Secret",
+"Facebook App Secret",
 
 'fbc_secret_exp' =>
-"In addition to an application ID from Facebook, you will also receive a secret string. This provides an added layer of security for your Facebook integration.",
+"In addition to an App ID from Facebook, you will also receive a secret code. This provides an added layer of security for your Facebook integration.",
 
 'fbc_eligible_member_groups' =>
 "Eligible Member Groups",
 
 'fbc_eligible_member_groups_exp' =>
-"If someone is already logged in to your EE site and they login using the Facebook login button, their two accounts can be synched. In order for this to happen, they must belong to one of the member groups you indicate here.",
+"If someone is already logged in to your EE site and they login using the Facebook login button, their two accounts can be synced. In order for this to happen, they must belong to one of the member groups you indicate here.",
 
 'fbc_member_group' =>
 "FBC Member Group",
@@ -139,7 +139,7 @@ $lang = $L = array(
 "Require Member Account Activation of Facebook Users?",
 
 'fbc_require_member_account_activation_exp' =>
-"You can override your primary member registration preferences here. If someone registers for your site using the registration form included in this module, this setting will be respected. Note that if you use the passive registration option on your site, this setting will be ignored.",
+"You can override your primary member registration preferences here. Note that if you use the passive registration option on your site, this setting will be ignored.",
 
 'fbc_no_activation' =>
 "No activation required",
@@ -154,7 +154,7 @@ $lang = $L = array(
 "Confirm Before Syncing Accounts?",
 
 'fbc_confirm_account_sync_exp' =>
-"When set to yes, if someone is logged into EE and logs into Facebook on your site, they must first submit the account_sync_form before their Facebook account will be synced with their EE account.",
+"When set to YES, if someone is logged into EE and logs into Facebook on your site, they must first submit the FBC:Account_Sync_Form tag before their Facebook account will be synced with their EE account.",
 
 'fbc_passive_registration' =>
 "Enable Passive Registration?",
@@ -220,7 +220,7 @@ to the module's control panel in the ExpressionEngine Control Panel",
 "You are not authorized to access this website.",
 
 'mbr_account_not_active' =>
-"You have an account that has not yet been activated by this website's webmaster.",
+"You have an account that has not yet been activated by this website's administrator.",
 
 'multi_login_warning' =>
 "You have already logged into this site from another web browser.",

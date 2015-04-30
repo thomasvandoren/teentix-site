@@ -7,10 +7,10 @@
  *
  * @package		Solspace:Addon Builder
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2008-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2008-2014, Solspace, Inc.
  * @link		http://solspace.com/docs/
  * @license		http://www.solspace.com/license_agreement/
- * @version		1.3.2
+ * @version		1.5.7
  * @filesource 	addon_builder/module_builder.php
  */
 
@@ -49,20 +49,10 @@ class Module_builder_fbc extends Addon_builder_fbc
 
 		if (REQ == 'CP')
 		{
-			//BASE is not set until AFTER sessions_end,
-			//and we don't want to clobber it.
-			$base_const = defined('BASE') ? BASE :  SELF . '?S=0';
-
-			//2.x adds an extra param for base
-			if (substr($base_const, -4) != 'D=cp')
-			{
-				$base_const .= '&amp;D=cp';
-			}
-
 			// For 2.0, we have '&amp;D=cp' with BASE and
 			//	we want pure characters, so we convert it
-			$this->base	= str_replace('&amp;', '&', $base_const) .
-					'		&C=addons_modules&M=show_module_cp&module=' .
+			$this->base	= str_replace('&amp;', '&', $this->get_cp_url_base()) .
+							'&C=addons_modules&M=show_module_cp&module=' .
 							$this->lower_name;
 
 			$this->cached_vars['page_crumb']			= '';
@@ -76,10 +66,13 @@ class Module_builder_fbc extends Addon_builder_fbc
 			//  Default Crumbs for Module
 			// --------------------------------------------
 
-			$this->add_crumb(
-				lang($this->lower_name.'_module_name'),
-				$this->base
-			);
+			if (function_exists('lang'))
+			{
+				$this->add_crumb(
+					lang($this->lower_name.'_module_name'),
+					$this->base
+				);
+			}
 		}
 
 		// --------------------------------------------
@@ -99,7 +92,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 			$this->disabled = TRUE;
 
 			if (empty($this->cache['disabled_message']) AND
-				! empty($this->EE->lang->language[$this->lower_name.'_module_disabled']))
+				! empty(ee()->lang->language[$this->lower_name.'_module_disabled']))
 			{
 				trigger_error(lang($this->lower_name.'_module_disabled'), E_USER_NOTICE);
 
@@ -145,7 +138,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 	public function default_module_uninstall()
 	{
 		//get module id
-		$query = $this->EE->db
+		$query = ee()->db
 					->select('module_id')
 					->where('module_name', $this->class_name)
 					->get('modules');
@@ -155,7 +148,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 			$this->addon_path . 'db.'.$this->lower_name.'.sql'
 		);
 
-		$this->EE->load->dbforge();
+		ee()->load->dbforge();
 
 		foreach($files as $file)
 		{
@@ -169,9 +162,9 @@ class Module_builder_fbc extends Addon_builder_fbc
 				{
 					foreach($matches[1] as $table)
 					{
-						$this->EE->dbforge->drop_table(
+						ee()->dbforge->drop_table(
 							preg_replace(
-								"/^" . preg_quote($this->EE->db->dbprefix) . "/ims",
+								"/^" . preg_quote(ee()->db->dbprefix) . "/ims",
 								'',
 								trim($table)
 							)
@@ -183,15 +176,15 @@ class Module_builder_fbc extends Addon_builder_fbc
 			}
 		}
 
-		$this->EE->db
+		ee()->db
 				->where('module_id', $query->row('module_id'))
 				->delete('module_member_groups');
 
-		$this->EE->db
+		ee()->db
 				->where('module_name', $this->class_name)
 				->delete('modules');
 
-		$this->EE->db
+		ee()->db
 				->where('class', $this->class_name)
 				->delete('actions');
 
@@ -274,7 +267,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 
 		foreach ($sql as $query)
 		{
-			$this->EE->db->query($query);
+			ee()->db->query($query);
 		}
 	}
 	//END install_module_sql()
@@ -285,7 +278,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 	/**
 	 * Module Actions
 	 *
-	 * Insures that we have all of the correct
+	 * ensures that we have all of the correct
 	 * actions in the database for this module
 	 *
 	 * @access	public
@@ -294,66 +287,72 @@ class Module_builder_fbc extends Addon_builder_fbc
 
 	public function update_module_actions()
 	{
-		$exists	= array();
+		// -------------------------------------
+		//	delete actions
+		// -------------------------------------
 
-		$query	= $this->EE->db
-					->select('method')
-					->where('class', $this->class_name)
-					->get('actions');
-
-		foreach ( $query->result_array() AS $row )
-		{
-			$exists[] = $row['method'];
-		}
+		ee()->db
+			->where('class', $this->class_name)
+			->delete('actions');
 
 		// --------------------------------------------
 		//  Actions of Module Actions
 		// --------------------------------------------
 
-		$actions = ( is_array($this->module_actions) AND
-					 count($this->module_actions) > 0) ?
-						$this->module_actions :
-						array();
+		$actions = (
+			isset($this->module_actions) &&
+			is_array($this->module_actions) &&
+			count($this->module_actions) > 0
+		) ?
+			$this->module_actions :
+			array();
+
+		$csrf_exempt_actions = (
+			isset($this->csrf_exempt_actions) &&
+			is_array($this->csrf_exempt_actions) &&
+			count($this->csrf_exempt_actions) > 0
+		) ?
+			$this->csrf_exempt_actions :
+			array();
 
 		// --------------------------------------------
 		//  Add Missing Actions
 		// --------------------------------------------
 
-		foreach(array_diff($actions, $exists) as $method)
+		$batch = array();
+
+		foreach($actions as $method)
 		{
-			$this->EE->db->insert(
-				'exp_actions',
-				array(
-					'class'		=> $this->class_name,
-					'method'	=> $method
-				)
+			$data = array(
+				'class'		=> $this->class_name,
+				'method'	=> $method
 			);
+
+			//is this action xid exempt? (typically for non-essential ajax)
+			if (version_compare($this->ee_version, '2.7', '>='))
+			{
+				$data['csrf_exempt'] = in_array(
+					$method,
+					$csrf_exempt_actions
+				) ? 1 : 0;
+			}
+
+			$batch[] = $data;
 		}
 
-		// --------------------------------------------
-		//  Delete No Longer Existing Actions
-		// --------------------------------------------
-
-		$leftovers = array_diff($exists, $actions);
-
-		if( ! empty($leftovers))
+		if ( ! empty($batch))
 		{
-
-			$this->EE->db
-				->where('class', $this->class_name)
-				->where_in('method',$leftovers)
-				->delete('actions');
+			ee()->db->insert_batch('actions', $batch);
 		}
 	}
 	// END update_module_actions()
-
 
 	// --------------------------------------------------------------------
 
 	/**
 	 * Set Encryption Key
 	 *
-	 * Insures that we have an encryption key set in the EE 2.x Configuration File
+	 * ensures that we have an encryption key set in the EE 2.x Configuration File
 	 *
 	 * @access	public
 	 * @return	array
@@ -361,19 +360,19 @@ class Module_builder_fbc extends Addon_builder_fbc
 
 	public function set_encryption_key()
 	{
-		if ($this->EE->config->item('encryption_key') != '') return;
+		if (ee()->config->item('encryption_key') != '') return;
 
 		$config = array(
 			'encryption_key' => md5(
-				$this->EE->db->username .
-				$this->EE->db->password .
+				ee()->db->username .
+				ee()->db->password .
 				rand()
 			)
 		);
 
-		if (is_callable(array($this->EE->config, '_update_config')))
+		if (is_callable(array(ee()->config, '_update_config')))
 		{
-			return $this->EE->config->_update_config($config);
+			return ee()->config->_update_config($config);
 		}
 	}
 	// END set_encryption_key()
@@ -396,7 +395,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 		if ( preg_match(
 				"/".LD."if " .preg_quote($this->lower_name)."_no_results" .
 					RD."(.*?)".LD.preg_quote('/', '/')."if".RD."/s",
-				$this->EE->TMPL->tagdata,
+				ee()->TMPL->tagdata,
 				$match
 			)
 		)
@@ -405,7 +404,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 		}
 		else
 		{
-			return $this->EE->TMPL->no_results();
+			return ee()->TMPL->no_results();
 		}
 	}
 	// END no_results()
@@ -424,7 +423,7 @@ class Module_builder_fbc extends Addon_builder_fbc
 	 */
 	public function sanitize_search_terms($str)
 	{
-		$this->EE->load->helper('search');
+		ee()->load->helper('search');
 		return sanitize_search_terms($str);
 	}
 	// END sanitize_search_terms()

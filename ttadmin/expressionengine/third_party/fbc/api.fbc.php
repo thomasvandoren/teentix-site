@@ -5,14 +5,17 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/api.fbc.php
  */
 
 require_once 'addon_builder/module_builder.php';
+
+// define('FACEBOOK_SDK_V4_SRC_DIR', $this->addon_path . 'lib/fb400/src/Facebook/');
+// require_once $this->addon_path . 'lib/fb400/autoload.php';
 
 // -------------------------------------
 //	Facebook API requires json support
@@ -45,7 +48,7 @@ if ( ! function_exists('json_decode'))
 class Fbc_api extends Module_builder_fbc
 {
 	public $cached 	= array();
-	public $user		= null;
+	public $user	= null;
 
 	// --------------------------------------------------------------------
 
@@ -165,12 +168,12 @@ class Fbc_api extends Module_builder_fbc
 
 		require_once $this->addon_path . 'lib/facebook.php';
 
-		if ( isset( $this->FB->api ) === FALSE )
+		if (! isset($this->FB->api))
 		{
 			$this->FB = new Facebook(
 				array(
-				  'appId'  => $this->EE->config->item('fbc_app_id'),
-				  'secret' => $this->EE->config->item('fbc_secret'),
+				  'appId'  => ee()->config->item('fbc_app_id'),
+				  'secret' => ee()->config->item('fbc_secret'),
 				  'cookie' => true,
 				)
 			);
@@ -475,7 +478,7 @@ class Fbc_api extends Module_builder_fbc
 		//	Get user id
 		// --------------------------------------------
 
-		if ( ( $uid = $this->get_user_id() ) === FALSE )
+		if (($uid = $this->get_user_id()) === FALSE)
 		{
 			return FALSE;
 		}
@@ -486,18 +489,27 @@ class Fbc_api extends Module_builder_fbc
 
 		try
 		{
-			$info	= $this->FB->api( '/me/permissions' );
+			$info	= $this->FB->api('/me/permissions');
 
-			if ( is_object( $info ) === TRUE )
+			if (is_object($info) === TRUE)
 			{
 				$info	= (array) $info;
 			}
 
-			if ( isset( $info['data'][0] ) === TRUE )
+			if (isset($info['data']))
 			{
-				$info	= (array) $info['data'][0];
+				$info	= (array) $info['data'];
+				
+				$out	= array();
+				
+				foreach ($info as $val)
+				{
+					if ($val['status'] != 'granted') continue;
+					
+					$out[]	= $val['permission'];
+				}
 
-				return $this->cached[$cache_name][$cache_hash] = $info;
+				return $this->cached[$cache_name][$cache_hash] = $out;
 			}
 
 			return array();
@@ -505,6 +517,8 @@ class Fbc_api extends Module_builder_fbc
 		catch (Exception $e)
 		{
 			$this->error[]	= $e->getMessage();
+			
+			//$this->dd($this->error);
 
 			return array();
 		}
@@ -731,14 +745,14 @@ class Fbc_api extends Module_builder_fbc
 			// --------------------------------------------
 
 			if (
-				$this->EE->session->userdata('email') != ''
+				ee()->session->userdata('email') != ''
 				AND ! empty( $arr['email'] )
-				AND $this->_is_facebook_email( $this->EE->session->userdata('email') ) === TRUE
-				AND $this->EE->session->userdata('email') != $arr['email']
+				AND $this->_is_facebook_email( ee()->session->userdata('email') ) === TRUE
+				AND ee()->session->userdata('email') != $arr['email']
 			)
 			{
-				$this->EE->db->query(
-					$this->EE->db->update_string(
+				ee()->db->query(
+					ee()->db->update_string(
 						'exp_members',
 						array(
 							'email'	=> $arr['email']

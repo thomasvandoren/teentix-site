@@ -5,10 +5,10 @@
  *
  * @package		Solspace:Facebook Connect
  * @author		Solspace, Inc.
- * @copyright	Copyright (c) 2010-2013, Solspace, Inc.
+ * @copyright	Copyright (c) 2010-2015, Solspace, Inc.
  * @link		http://solspace.com/docs/facebook_connect
  * @license		http://www.solspace.com/license_agreement
- * @version		2.1.1
+ * @version		3.0.0
  * @filesource	fbc/data.fbc.php
  */
 
@@ -34,9 +34,9 @@ class Fbc_data extends Addon_builder_data_fbc
 	{
 		if ( $hash == '' ) return FALSE;
 
-		if ( $this->EE->input->cookie( 'fbc2_params_' . $hash ) !== FALSE )
+		if ( ee()->input->cookie( 'fbc2_params_' . $hash ) !== FALSE )
 		{
-			$this->EE->functions->set_cookie( 'fbc2_params_' . $hash, '', ( time() - 86400 ) );
+			$this->set_cookie( 'fbc2_params_' . $hash, '', ( time() - 86400 ) );
 		}
 
 		return TRUE;
@@ -65,15 +65,15 @@ class Fbc_data extends Addon_builder_data_fbc
 			'window.fbAsyncInit = function() {
 	FB._https = (window.location.protocol == "https:"); // Required because FB Javascript SDK tries to submit https to http
 	FB.init({' .
-			'appId:"' . $this->EE->config->item('fbc_app_id') . '", cookie:true, status:true, xfbml:true, oauth:true' .
+			'appId:"' . ee()->config->item('fbc_app_id') . '", version:"v2.1", cookie:true, status:true, xfbml:true, oauth:true' .
 			'});' . NL .
 		'};' . NL .
-			"(function(d){
-		   var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
-		   js = d.createElement('script'); js.id = id; js.async = true;
-		   js.src = \"//connect.facebook.net/en_US/all.js\";
-		   d.getElementsByTagName('head')[0].appendChild(js);
-		 }(document));" . NL .
+			"(function(d, s, id){
+		   var js, fjs = d.getElementsByTagName(s)[0]; if (d.getElementById(id)) {return;}
+		   js = d.createElement(s); js.id = id;
+		   js.src = \"//connect.facebook.net/" . $language . "/sdk.js\";
+		   fjs.parentNode.insertBefore(js, fjs);
+		 }(document, 'script', 'facebook-jssdk'));" . NL .
 		'</script>' . NL;
 
 		// --------------------------------------------
@@ -180,7 +180,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		{
 			//	This page intentionally left blank.
 		}
-		elseif ( $this->EE->config->item('use_membership_captcha') == 'n' )
+		elseif ( ee()->config->item('use_membership_captcha') == 'n' )
 		{
 			unset( $fields['captcha'] );
 		}
@@ -189,7 +189,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		//  Add accept terms if needed
 		// --------------------------------------------
 
-		if ( $this->EE->config->item('require_terms_of_service') == 'y' )
+		if ( ee()->config->item('require_terms_of_service') == 'y' )
 		{
 			$fields['accept_terms']	= array(
 				'name'			=> 'accept_terms',
@@ -292,7 +292,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		//	Get eligible member groups for current site
 		// --------------------------------------------
 
-		$groups	= explode( "|", $this->EE->config->item('fbc_eligible_member_groups') );
+		$groups	= explode( "|", ee()->config->item('fbc_eligible_member_groups') );
 
 		if ( empty( $groups ) AND $all_groups != 'all_groups' )
 		{
@@ -313,9 +313,9 @@ class Fbc_data extends Addon_builder_data_fbc
 			$sql	.= " AND group_id IN (" . implode( ',', $groups ) . ")";
 		}
 
-		$sql	.= " AND member_id = " . $this->EE->db->escape_str( $member_id );
+		$sql	.= " AND member_id = " . ee()->db->escape_str( $member_id );
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		// --------------------------------------------
 		//	Did we fail to find a member?
@@ -393,7 +393,7 @@ class Fbc_data extends Addon_builder_data_fbc
 			WHERE m_field_reg = 'y'
 			ORDER BY m_field_order, m_field_name";
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		if ( $query->num_rows() == 0 ) return array();
 
@@ -446,7 +446,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		//  Set site id
 		// --------------------------------------------
 
-		$site_id	= ( $site_id == '' ) ? $this->EE->config->item('site_id'): $site_id;
+		$site_id	= ( $site_id == '' ) ? ee()->config->item('site_id'): $site_id;
 
 		// --------------------------------------------
 		//  Prep Cache, Return if Set
@@ -469,7 +469,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		$sql	= "/* data.fbc.php " . __FUNCTION__ . " */
 			SELECT group_id, group_title
 			FROM exp_member_groups
-			WHERE site_id = " . $this->EE->db->escape_str( $site_id );
+			WHERE site_id = " . ee()->db->escape_str( $site_id );
 
 		if ( count( $this->prohibited_member_groups ) > 0 )
 		{
@@ -478,7 +478,7 @@ class Fbc_data extends Addon_builder_data_fbc
 
 		$sql	.= " ORDER BY group_title ASC";
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		if ( $query->num_rows() == 0 ) return FALSE;
 
@@ -527,7 +527,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		//	Get eligible member groups for current site
 		// --------------------------------------------
 
-		$groups	= explode( "|", $this->EE->config->item('fbc_eligible_member_groups') );
+		$groups	= explode( "|", ee()->config->item('fbc_eligible_member_groups') );
 
 		if ( empty( $groups ) )
 		{
@@ -542,9 +542,9 @@ class Fbc_data extends Addon_builder_data_fbc
 			SELECT member_id, group_id, username, screen_name, email, password, unique_id, facebook_connect_user_id
 			FROM exp_members
 			WHERE group_id IN (" . implode( ',', $groups ) . ")
-			AND facebook_connect_user_id = " . $this->EE->db->escape_str( $uid );
+			AND facebook_connect_user_id = " . ee()->db->escape_str( $uid );
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		// --------------------------------------------
 		//	Did we fail to find a member?
@@ -611,9 +611,9 @@ class Fbc_data extends Addon_builder_data_fbc
 			//	Has the hash already been set? If so, is it valid?
 			// --------------------------------------------
 
-			if ( $this->EE->input->cookie('fbc2_params_' . $tag_hash ) !== FALSE AND $this->EE->input->cookie('fbc2_params_' . $tag_hash ) != '' )
+			if ( ee()->input->cookie('fbc2_params_' . $tag_hash ) !== FALSE AND ee()->input->cookie('fbc2_params_' . $tag_hash ) != '' )
 			{
-				if ( ( $decoded = base64_decode( urldecode( $this->EE->input->cookie('fbc2_params_' . $tag_hash ) ) ) ) !== FALSE )
+				if ( ( $decoded = base64_decode( urldecode( ee()->input->cookie('fbc2_params_' . $tag_hash ) ) ) ) !== FALSE )
 				{
 					if ( ( $decoded_arr = @unserialize( $decoded ) ) !== FALSE )
 					{
@@ -647,9 +647,9 @@ class Fbc_data extends Addon_builder_data_fbc
 			$sql	= "/* data.fbc.php " . __FUNCTION__ . " */
 				SELECT data
 				FROM $this->params_tbl
-				WHERE hash = '" . $this->EE->db->escape_str( $tag_hash ) . "'";
+				WHERE hash = '" . ee()->db->escape_str( $tag_hash ) . "'";
 
-			$query	= $this->EE->db->query( $sql );
+			$query	= ee()->db->query( $sql );
 
 			// --------------------------------------------
 			//	Empty?
@@ -697,7 +697,7 @@ class Fbc_data extends Addon_builder_data_fbc
 
 				if ( FBC_PARAMS_LOCATION != 'cookie' AND empty( $this->cached['param_deleted'][$tag_hash] ) )
 				{
-					$this->EE->db->query( "DELETE FROM $this->params_tbl WHERE hash = '" . $this->EE->db->escape_str( $tag_hash ) . "'" );
+					ee()->db->query( "DELETE FROM $this->params_tbl WHERE hash = '" . ee()->db->escape_str( $tag_hash ) . "'" );
 
 					$this->cached['param_deleted'][$tag_hash]	= TRUE;
 				}
@@ -727,46 +727,39 @@ class Fbc_data extends Addon_builder_data_fbc
 		// --------------------------------------------
 
 		return $possible_permissions	= array(
+			'public_profile',
+			'email',
 			'user_about_me',
 			'user_activities',
 			'user_birthday',
-			'user_checkins',
 			'user_education_history',
 			'user_events',
+			'user_friends',
+			'user_game_activity',
 			'user_groups',
 			'user_hometown',
 			'user_interests',
 			'user_likes',
 			'user_location',
-			'user_notes',
-			'user_online_presence',
-			'user_photo_video_tags',
 			'user_photos',
+			'user_posts',
 			'user_relationships',
 			'user_relationship_details',
 			'user_religion_politics',
 			'user_status',
+			'user_tagged_places',
 			'user_videos',
 			'user_website',
 			'user_work_history',
-			'email',
 			'read_friendlists',
 			'read_insights',
 			'read_mailbox',
-			'read_requests',
+			'read_page_mailbox',
 			'read_stream',
-			'xmpp_login',
-			'ads_management',
-
-			'publish_stream',
-			'create_event',
-			'rsvp_event',
-			'sms',
-			'offline_access',
-			'publish_checkins',
-			'manage_friendlists',
-
+			'manage_notifications',
 			'manage_pages',
+			'publish_actions',
+			'rsvp_event',
 		);
 	}
 
@@ -787,7 +780,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		//  Set site id
 		// --------------------------------------------
 
-		$site_id	= ( $site_id == '' ) ? $this->EE->config->item('site_id'): $site_id;
+		$site_id	= ( $site_id == '' ) ? ee()->config->item('site_id'): $site_id;
 
 		// --------------------------------------------
 		//  Prep Cache, Return if Set
@@ -810,12 +803,12 @@ class Fbc_data extends Addon_builder_data_fbc
 		$sql	= "/* data.fbc.php " . __FUNCTION__ . " */
 			SELECT group_id, group_title
 			FROM exp_member_groups
-			WHERE site_id = " . $this->EE->db->escape_str( $site_id ) . "
+			WHERE site_id = " . ee()->db->escape_str( $site_id ) . "
 			AND can_view_offline_system = 'n'
 			AND can_access_cp = 'n'
 			ORDER BY group_title ASC";
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		if ( $query->num_rows() == 0 ) return FALSE;
 
@@ -869,10 +862,10 @@ class Fbc_data extends Addon_builder_data_fbc
 			$sql	= "/* data.fbc.php " . __FUNCTION__ . " */
 				SELECT COUNT(*) AS count
 				FROM exp_members
-				WHERE member_id = " . $this->EE->db->escape_str( $member_id ) . "
+				WHERE member_id = " . ee()->db->escape_str( $member_id ) . "
 				AND facebook_connect_user_id != ''";
 
-			$query	= $this->EE->db->query( $sql );
+			$query	= ee()->db->query( $sql );
 
 			if ( $query->row('count') > 0 ) return FALSE;
 		}
@@ -881,13 +874,13 @@ class Fbc_data extends Addon_builder_data_fbc
 		//	Update the DB
 		// --------------------------------------------
 
-		$sql	= $this->EE->db->update_string(
+		$sql	= ee()->db->update_string(
 			'exp_members',
 			array( 'facebook_connect_user_id' => $uid ),
 			array( 'member_id' => $member_id )
 		);
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		// --------------------------------------------
 		//  Return
@@ -930,9 +923,9 @@ class Fbc_data extends Addon_builder_data_fbc
 			//	Has the hash already been set? If so, is it valid?
 			// --------------------------------------------
 
-			if ( $this->EE->input->cookie('fbc2_params_' . $tag_hash ) !== FALSE AND $this->EE->input->cookie('fbc2_params_' . $tag_hash ) != '' )
+			if ( ee()->input->cookie('fbc2_params_' . $tag_hash ) !== FALSE AND ee()->input->cookie('fbc2_params_' . $tag_hash ) != '' )
 			{
-				if ( ( $decoded = base64_decode( urldecode( $this->EE->input->cookie('fbc2_params_' . $tag_hash ) ) ) ) !== FALSE )
+				if ( ( $decoded = base64_decode( urldecode( ee()->input->cookie('fbc2_params_' . $tag_hash ) ) ) ) !== FALSE )
 				{
 					if ( ( $decoded_arr = @unserialize( $decoded ) ) !== FALSE )
 					{
@@ -960,7 +953,7 @@ class Fbc_data extends Addon_builder_data_fbc
 			//	Save this to a cookie
 			// --------------------------------------------
 
-			$this->EE->functions->set_cookie( 'fbc2_params_' . $tag_hash, $hash );
+			$this->set_cookie( 'fbc2_params_' . $tag_hash, $hash );
 		}
 		else
 		{
@@ -970,9 +963,9 @@ class Fbc_data extends Addon_builder_data_fbc
 			//	Update: Though this is a good idea for avoiding performance problems, something about the way I am implementing this cookie thing is breaking the workflow. If you have settings from a previous version of a login / logout button and then change those settings in the template, the old version is used. Very confusing.
 			// --------------------------------------------
 
-			if ( $this->EE->input->cookie('fbc2_params_' . $tag_hash ) !== FALSE AND $this->EE->input->cookie('fbc2_params_' . $tag_hash ) != '' )
+			if ( ee()->input->cookie('fbc2_params_' . $tag_hash ) !== FALSE AND ee()->input->cookie('fbc2_params_' . $tag_hash ) != '' )
 			{
-				// return $this->EE->input->cookie('fbc2_params_' . $tag_hash );
+				// return ee()->input->cookie('fbc2_params_' . $tag_hash );
 				return $tag_hash;
 			}
 
@@ -987,7 +980,7 @@ class Fbc_data extends Addon_builder_data_fbc
 					DELETE FROM $this->params_tbl
 					WHERE entry_date < UNIX_TIMESTAMP()-7200";
 
-				$this->EE->db->query( $sql );
+				ee()->db->query( $sql );
 			}
 
 			// --------------------------------------------
@@ -996,7 +989,7 @@ class Fbc_data extends Addon_builder_data_fbc
 
 			$hash	= urlencode( base64_encode( serialize( $params ) ) );
 
-			$this->EE->db->query(
+			ee()->db->query(
 				"/* data.fbc.php " . __FUNCTION__ . " */
 				INSERT INTO `" . $this->params_tbl . "`
 				(
@@ -1017,7 +1010,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		//	Save this to a cookie
 		// --------------------------------------------
 
-		$this->EE->functions->set_cookie( 'fbc2_params_' . $tag_hash, $tag_hash, 7200 );
+		$this->set_cookie( 'fbc2_params_' . $tag_hash, $tag_hash, 7200 );
 
 		// --------------------------------------------
 		//	Return
@@ -1043,7 +1036,7 @@ class Fbc_data extends Addon_builder_data_fbc
 		//  Site id
 		// --------------------------------------------
 
-		$site_id	= ( $site_id == '' ) ? $this->EE->config->item('site_id'): $site_id;
+		$site_id	= ( $site_id == '' ) ? ee()->config->item('site_id'): $site_id;
 
 		// --------------------------------------------
 		//  Prep Cache, Return if Set
@@ -1063,14 +1056,14 @@ class Fbc_data extends Addon_builder_data_fbc
 		//	Grab prefs from DB
 		// --------------------------------------------
 
-		$this->EE->load->helper('string');
+		ee()->load->helper('string');
 
 		$sql	= "/* data.fbc.php " . __FUNCTION__ . " */
 			SELECT site_system_preferences
 			FROM exp_sites
-			WHERE site_id = " . $this->EE->db->escape_str( $site_id );
+			WHERE site_id = " . ee()->db->escape_str( $site_id );
 
-		$query	= $this->EE->db->query( $sql );
+		$query	= ee()->db->query( $sql );
 
 		if ( $query->num_rows() == 0 ) return FALSE;
 
@@ -1094,8 +1087,8 @@ class Fbc_data extends Addon_builder_data_fbc
 
 		$this->cached[$cache_name][$cache_hash]	= base64_encode( serialize( $this->cached[$cache_name][$cache_hash] ) );
 
-		$this->EE->db->query(
-			$this->EE->db->update_string(
+		ee()->db->query(
+			ee()->db->update_string(
 				'exp_sites',
 				array(
 					'site_system_preferences' => $this->cached[$cache_name][$cache_hash]
