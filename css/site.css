@@ -2001,11 +2001,14 @@ margin-bottom: 20px;
 	width: 100%;
 	height: 10px;
 }
-#credits #footer-logos {
+#credits .footer-logos {
 	color: #1E7577;
 	text-transform: uppercase;
 	font-size: 12px;
-	padding: 40px 0px;
+	padding: 40px 0px 0px 0px;
+}
+#credits .footer-logos img {
+  margin-bottom: 30px;
 }
 #credits img {
 	vertical-align: middle;
@@ -2015,13 +2018,16 @@ margin-bottom: 20px;
 #credits a img {
   margin: 0px;
 }
-#credits a#so-logo {
-  float: right;
-  padding-top: 20px;
+#credits #so-logo {
+  text-align: right;
+  padding-top: 60px;
   font-size: 10px;
-  color: #999;
+
   text-transform: uppercase;
   letter-spacing: .1em;
+}
+#credits #so-logo a {
+  color: #999;
 }
 #credits a#so-logo img {
   margin-left: 15px;
