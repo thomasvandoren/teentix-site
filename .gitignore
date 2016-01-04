@@ -2,5 +2,3 @@
 .DS_Store
 /images
 ttadmin/expressionengine/cache
-ttadmin/expressionengine/config/config.php
-ttadmin/expressionengine/config/database.php
