@@ -169,7 +169,7 @@ LoadModule php5_module libexec/apache2/libphp5.so
 ```
 
 * Restart apache and make sure everything is still working, by navigating to
-  http://localhost/ .
+  [http://localhost/](http://localhost/) .
 
 ```bash
 sudo apachectl restart
@@ -204,6 +204,6 @@ sudo cp teentix.conf /etc/apache2/other/teentix.conf
 sudo apachectl restart
 ```
 
-* The TeenTix site will be running at: http://localhost:9000/
+* The TeenTix site will be running at: [http://localhost:9000/](http://localhost:9000/)
 
-* You can access the admin console at: http://localhost:9000/admin.php
+* You can access the admin console at: [http://localhost:9000/admin.php](http://localhost:9000/admin.php)
