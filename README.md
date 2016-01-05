@@ -104,7 +104,8 @@ mkdir -p ttadmin/expressionengine/cache &&
 ### Mysql database setup
 
 * Download the teentix-db.sql.zip file from the [TeenTix Site Data][drivedir]
-  google drive folder. Decompress the file.
+  google drive folder. This file contains the table definitions and some data
+  that is useful while developing. Decompress the file.
 
 ```bash
 unzip path/to/teentix-db.sql.zip
