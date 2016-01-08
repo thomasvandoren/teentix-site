@@ -130,7 +130,7 @@ character set utf8 collate utf8_general_ci;
 
 ```mysql
 grant create, select, update, insert, delete on `teentix`.*
-to 'teentix_user'@'localhost' identified by 'teentix_pass'
+to 'teentix_user'@'localhost' identified by 'teentix_pass';
 ```
 
 * Use it to populate your new teentix database. **NOTE**: this might take a
