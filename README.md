@@ -137,6 +137,7 @@ to 'teentix_user'@'localhost' identified by 'teentix_pass';
   minute or two depending on your system.
 
 ```mysql
+use teentix;
 source teentix-db.sql;
 ```
 
