@@ -349,8 +349,10 @@ class Webservice_rest
                 }
 
                 //check if the cache need to be cleared
-                if ($method_is_clear_cache) {
+                if ($method_is_clear_cache && property_exists(ee(), "cache")) {
                     ee()->cache->delete('/webservice/rest/' . $api_name . '/');
+                } else {
+                    // Skipping the cache clear.
                 }
 
                 //unset the response txt
