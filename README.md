@@ -40,6 +40,18 @@ sudo mkdir -p /var/mysql &&
   sudo ln -sv /tmp/mysql.sock /var/mysql/mysql.sock
 ```
 
+* Check for this line in your `/etc/my.cnf` file:
+
+```
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES 
+```
+
+* If that line is there, remove the `STRICT_TRANS_TABLES` part so it looks like:
+
+```
+sql_mode=NO_ENGINE_SUBSTITUTION
+```
+
 ### Setup workspace
 
 * Create a workspace directory and clone the [teentix/site][repo] repository
@@ -129,7 +141,7 @@ character set utf8 collate utf8_general_ci;
   simplicity):
 
 ```mysql
-grant create, select, update, insert, delete on `teentix`.*
+grant all privileges on `teentix`.*
 to 'teentix_user'@'localhost' identified by 'teentix_pass';
 ```
 

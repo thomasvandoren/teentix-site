@@ -1,0 +1,167 @@
+{
+    "name" : "member",
+    "label": "Member",
+	"version" : "1.3",
+    "auth": true,
+    "public": false,
+    "enabled": true,
+    "methods": [
+        {
+            "method": "create_member",
+            "name": "Create Member",
+		  	"clear_cache" : true,
+            "soap": [
+                {
+                    "name": "id",
+                    "type": "xsd:string"
+                }
+            ]
+        },
+        {
+            "method": "read_member",
+            "name": "Read Member",
+		  	"cachable" : true,
+            "soap": [
+                 {
+                    "name": "data",
+                    "type": "tns:ObjectList"
+                },
+                {
+                    "name": "id",
+                    "type": "xsd:string"
+                }
+            ]
+        },
+        {
+            "method": "update_member",
+            "name": "Update Member",
+		  	"clear_cache" : true,
+            "soap": [
+                {
+                    "name": "id",
+                    "type": "xsd:string"
+                }
+            ]
+        },
+        {
+            "method": "delete_member",
+            "name": "Delete member",
+		  	"clear_cache" : true,
+            "soap": [
+                {
+                    "name": "id",
+                    "type": "xsd:string"
+                }
+            ]
+        }
+    ],
+	"test":
+	{
+		"enabled": true,
+		"create_member": [
+			{
+				"name": "username",
+				"type": "form_input",
+				"value": "test_person"
+			},
+			{
+				"name": "password",
+				"type": "form_input",
+				"value": "123456"
+			},
+			{
+				"name": "password_confirm",
+				"type": "form_input",
+				"value": "123456"
+			},
+			{
+				"name": "screen_name",
+				"type": "form_input",
+				"value": "Test person"
+			},
+			{
+				"name": "email",
+				"type": "form_input",
+				"value": "email@email.com"
+			},
+			{
+				"name": "group_id",
+				"type": "form_input",
+				"value": 4
+			},
+			{
+				"name": "bday_y",
+				"type": "form_input",
+				"value": "1989"
+			},
+			{
+				"name": "bday_m",
+				"type": "form_input",
+				"value": "11"
+			},
+			{
+				"name": "bday_d",
+				"type": "form_input",
+				"value": "22"
+			},
+			{
+				"name": "url",
+				"type": "form_input",
+				"value": "www.google.com"
+			}
+		],
+		"read_member": [
+			{
+				"name": "member_id",
+				"type": "form_input"
+			}
+		],
+		"update_member": [
+			{
+				"name": "member_id",
+				"type": "form_input"
+			},
+			{
+				"name": "username",
+				"type": "form_input",
+				"value": "test_person"
+			},
+			{
+				"name": "screen_name",
+				"type": "form_input",
+				"value": "Test person"
+			},
+			{
+				"name": "email",
+				"type": "form_input",
+				"value": "email_modified@email.com"
+			},
+			{
+				"name": "bday_y",
+				"type": "form_input",
+				"value": "1989"
+			},
+			{
+				"name": "bday_m",
+				"type": "form_input",
+				"value": "11"
+			},
+			{
+				"name": "bday_d",
+				"type": "form_input",
+				"value": "22"
+			},
+			{
+				"name": "url",
+				"type": "form_input",
+				"value": "www.google.com"
+			}
+		],
+		"delete_member": [
+			{
+				"name": "member_id",
+				"type": "form_input"
+			}
+		]
+	}
+}
