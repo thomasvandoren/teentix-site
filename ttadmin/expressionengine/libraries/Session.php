@@ -396,7 +396,7 @@ class EE_Session {
 	 */
 	public function create_new_session($member_id, $admin_session = FALSE)
 	{
-		if ($this->validation == 'c' AND $this->access_cp == TRUE)
+		if (isset($this->validation) AND $this->validation == 'c' AND $this->access_cp == TRUE)
 		{
 			$this->sdata['admin_sess'] = 1;
 		}
