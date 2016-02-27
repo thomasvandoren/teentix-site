@@ -221,3 +221,16 @@ sudo apachectl restart
 * The TeenTix site will be running at: [http://localhost:9000/](http://localhost:9000/)
 
 * You can access the admin console at: [http://localhost:9000/admin.php](http://localhost:9000/admin.php)
+
+### ExpressionEngine setup
+
+* Make sure the webservice add on is installed.
+
+* Create an API User for the webservice add on. Go to Webservice > Overview > Add API User.
+
+* A good way to create the API key is running this in the terminal (it will put
+  the api key on your clipboard):
+
+```bash
+python -c 'import uuid ; print uuid.uuid4()' | pbcopy
+```
