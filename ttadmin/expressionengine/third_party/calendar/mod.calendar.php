@@ -58,6 +58,11 @@ class Calendar extends Module_builder_calendar
 		'day'		=> array()
 	);
 
+	// TEENTIX CODE
+	protected $event_cache;
+	protected $row_cache;
+	protected $categories_cache;
+
 	// --------------------------------------------------------------------
 
 	/**
@@ -1783,6 +1788,11 @@ class Calendar extends Module_builder_calendar
 		$tagdata = $this->parse_pagination($channel->return_data);
 
 		//ee()->TMPL->log_item('Calendar: Done!');
+
+		// TEENTIX CODE
+		$this->event_cache = $events;
+		$this->row_cache = $row;
+		$this->categories_cache = $channel->categories;
 
 		return $tagdata;
 	}
