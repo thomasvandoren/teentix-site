@@ -352,7 +352,7 @@ class Webservice_rest
                 if ($method_is_clear_cache && property_exists(ee(), "cache")) {
                     ee()->cache->delete('/webservice/rest/' . $api_name . '/');
                 } else {
-                    // Skipping the cache clear.
+                    // TEENTIX: Skipping the cache clear.
                 }
 
                 //unset the response txt
