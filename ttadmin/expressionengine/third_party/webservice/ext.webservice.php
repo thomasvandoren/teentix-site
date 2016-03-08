@@ -290,9 +290,11 @@ class Webservice_ext
 	 */
 	public function entry_submission_end($entry_id, $meta, $data)
 	{
-		if(ee()->config->item('new_posts_clear_caches') == 'y')
+		if(ee()->config->item('new_posts_clear_caches') == 'y' && property_exists(ee(), "cache"))
 		{
 			ee()->cache->delete('/webservice/');
+		} else {
+			// TEENTIX: skipping cache clear...
 		}
 	}
 

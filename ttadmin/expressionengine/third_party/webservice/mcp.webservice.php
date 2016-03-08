@@ -104,7 +104,11 @@ class Webservice_mcp {
 		//de we need to delete
 		if(isset($_GET['clear']))
 		{
-			ee()->cache->delete('/webservice/');
+			if (property_exists(ee(), "cache")) {
+				ee()->cache->delete('/webservice/');
+			} else {
+				// TEENTIX: skipping cache clear;
+			}
 
 			ee()->session->set_flashdata('message_success', lang('webservice_cache_cleared_succes'));
 			ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=webservice');

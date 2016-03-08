@@ -5,3 +5,4 @@ ttadmin/expressionengine/cache
 
 /php.ini
 /php_errors.log
+/xdebug.log
