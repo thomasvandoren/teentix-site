@@ -117,27 +117,31 @@ class Event {
     $this->start_date = $this->date_from_string($solspace_event->default_data['start_date']);
     $this->end_date = $this->date_from_string($solspace_event->default_data['last_date']);
 
-
     $this->categories = array();
     foreach($categories as $category_array) {
       array_push($this->categories, new Category($category_array));
     }
 
-
-
+    $event_organization_id = $row['field_id_46'];  // 3927
+    $event_venue_id = $row['field_id_47'];  // 3928
     $this->partner = new Organization();
     $this->location = new Location();
-    $this->images = array(new Image());
-    $this->reviews = array(new Review());
-    $this->upcoming_occurrences = array();
 
-    $d = new DateTime("2016-03-05");
-    $end = new DateTime("2016-05-08");
-    while ($d->getTimestamp() <= $end->getTimestamp()) {
-      array_push($this->upcoming_occurrences, $d);
-      $d = clone $d;
-      $d->add(new DateInterval("P1D"));
-    }
+
+
+
+    // FIXME: add this stuff in later!
+//    $this->images = array(new Image());
+//    $this->reviews = array(new Review());
+//    $this->upcoming_occurrences = array();
+//
+//    $d = new DateTime("2016-03-05");
+//    $end = new DateTime("2016-05-08");
+//    while ($d->getTimestamp() <= $end->getTimestamp()) {
+//      array_push($this->upcoming_occurrences, $d);
+//      $d = clone $d;
+//      $d->add(new DateInterval("P1D"));
+//    }
   }
 
   private function date_from_string($date_string) {
