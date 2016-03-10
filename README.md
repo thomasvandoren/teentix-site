@@ -228,9 +228,4 @@ sudo apachectl restart
 
 * Create an API User for the webservice add on. Go to Webservice > Overview > Add API User.
 
-* A good way to create the API key is running this in the terminal (it will put
-  the api key on your clipboard):
-
-```bash
-python -c 'import uuid ; print uuid.uuid4()' | pbcopy
-```
+* Ask a dev, like Thomas, for the API key.
