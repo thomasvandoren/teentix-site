@@ -574,7 +574,7 @@ class Webservice_mcp {
 
 				$rows[] = array(
 					WEBSERVICE_MAP.'_log_id' => $val->log_id,
-					WEBSERVICE_MAP.'_time' => $val->time != '' ? ee()->localize->format_date('%d-%m-%Y %g:%i:%s', $val->time, false) : '-',
+					WEBSERVICE_MAP.'_time' => $val->time != '' ? date('%d-%m-%Y %g:%i:%s', $val->time) /* ee()->localize->format_date('%d-%m-%Y %g:%i:%s', $val->time, false) */ : '-',
 					WEBSERVICE_MAP.'_username' => $val->username,
 					WEBSERVICE_MAP.'_ip' => $val->ip,
 					WEBSERVICE_MAP.'_service' => $val->service,
