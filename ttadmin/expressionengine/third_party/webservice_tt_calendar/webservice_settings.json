@@ -1,0 +1,10 @@
+{
+  "name" : "tt_calendar",
+  "label": "TT Calendar",
+  "version" : "1.0",
+  "auth": false,
+  "public": false,
+  "enabled": true,
+  "methods": [],
+  "test": {}
+}
