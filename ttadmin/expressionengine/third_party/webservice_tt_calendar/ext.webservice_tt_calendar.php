@@ -8,15 +8,13 @@ class Webservice_tt_calendar_ext
     var $settings_exist = 'y';
     var $docs_url = '';
 
-    var $settings = array();
-
     /**
      * Webservice_tt_calendar_ext constructor.
      * @param array $settings
      */
     public function __construct(array $settings = null)
     {
-        $this->settings = $settings != null ? $settings : array();
+//        $this->settings = $settings != null ? $settings : array();
     }
 
     public function activate_extension()
@@ -25,7 +23,6 @@ class Webservice_tt_calendar_ext
             'class' => __CLASS__,
             'method' => 'webservice_entry_row',
             'hook' => 'webservice_entry_row',
-            'settings' => serialize($this->settings),
             'priority' => 10,
             'version' => $this->version,
             'enabled' => 'y'
@@ -57,6 +54,11 @@ class Webservice_tt_calendar_ext
         return true;
     }
 
+    public function disable_extension() {
+        ee()->db->where('class', __CLASS__);
+        ee()->db->delete('extensions');
+    }
+
     public function webservice_entry_row($data = null, $fields = array())
     {
         //loop over the fields to get the relationship or playa field
@@ -66,6 +68,7 @@ class Webservice_tt_calendar_ext
                     //is there data or is the field set
                     if (isset($data[$field_name]) && !empty($data[$field_name])) {
                         // FIXME: figure out where to get data for this... (thomasvandoren, 2016-03-12)
+                        $some_calendar_event_id = $data[$field_name];
                         $new_data = array("some_calendar" => $data[$field_name]);
                         $data[$field_name] = $new_data;
                     }
