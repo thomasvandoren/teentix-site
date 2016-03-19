@@ -5,7 +5,7 @@ class Webservice_tt_calendar_ext
     var $name = 'Webservice TT Calendar Extension';
     var $version = '1.0';
     var $description = '';
-    var $settings_exist = 'y';
+    var $settings_exist = 'n';
     var $docs_url = '';
 
     /**
@@ -14,7 +14,6 @@ class Webservice_tt_calendar_ext
      */
     public function __construct($settings = null)
     {
-//        $this->settings = $settings != null ? $settings : array();
     }
 
     public function activate_extension()
