@@ -12,7 +12,7 @@ class Webservice_tt_calendar_ext
      * Webservice_tt_calendar_ext constructor.
      * @param array $settings
      */
-    public function __construct(array $settings = null)
+    public function __construct($settings = null)
     {
 //        $this->settings = $settings != null ? $settings : array();
     }
@@ -61,35 +61,43 @@ class Webservice_tt_calendar_ext
 
     public function webservice_entry_row($data = null, $fields = array())
     {
+        $entry_id = $data['entry_id'];
+
         //loop over the fields to get the relationship or playa field
         if (!empty($fields)) {
             foreach ($fields as $field_name => $field) {
                 if ($field['field_type'] == 'calendar') {
                     //is there data or is the field set
                     if (isset($data[$field_name]) && !empty($data[$field_name])) {
-                        // FIXME: figure out where to get data for this... (thomasvandoren, 2016-03-12)
-                        $some_calendar_event_id = $data[$field_name];
-                        $new_data = array("some_calendar" => $data[$field_name]);
-                        $data[$field_name] = $new_data;
+                        $calendar_id = $data[$field_name];
+
+                        ee()->db->select('*')->from('exp_calendar_events');
+                        ee()->db->where('calendar_id', $calendar_id);
+                        ee()->db->where('entry_id', $entry_id);
+                        $query = ee()->db->get();
+
+                        if ($query->num_rows() > 0) {
+                            foreach($query->result_array() as $key => $row) {
+                                $data[$field_name] = $row;
+                                break; // in case there somehow is more than one row
+                            }
+                        }
                     }
                 } else if ($field['field_type'] == 'rel') {
                     //is there data or is the field set
                     if (isset($data[$field_name]) && !empty($data[$field_name])) {
-                        // FIXME: figure out where to get data for this... (thomasvandoren, 2016-03-12)
-                        $data[$field_name] = array("some_rel" => $data[$field_name]);
-                    }
-                } else if ($field['field_type'] == 'relationship' || $field['field_type'] == 'playa') {
-                    //is there data or is the field set
-                    if (isset($data[$field_name]) && !empty($data[$field_name])) {
-                        $new_data = array();
+                        $rel_id = $data[$field_name];
+                        ee()->db->select('rel_child_id')->from('exp_relationships')->where('rel_id', $rel_id);
+                        $query = ee()->db->get();
 
-                        //get for each item the data
-                        foreach ($data[$field_name] as $entry_data) {
-                            $new_data[] = ee()->webservice_lib->get_entry($entry_data['entry_id'], array('*'), true);
+                        if ($query->num_rows() > 0) {
+                            foreach($query->result_array() as $key => $row){
+                                $rel_entry_id = $row['rel_child_id'];
+                                $new_data = ee()->webservice_lib->get_entry($rel_entry_id, array('*'), true);
+                                $data[$field_name] = $new_data;
+                                break; // in case there somehow is more than one row
+                            }
                         }
-
-                        //assign the data back
-                        $data[$field_name] = $new_data;
                     }
                 }
             }
