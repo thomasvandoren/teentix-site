@@ -98,6 +98,17 @@ class Webservice_tt_calendar_ext
                             }
                         }
                     }
+                } else if ($field['field_type'] == 'matrix') {
+                    //is there data or is the field set
+                    if (isset($data[$field_name]) && !empty($data[$field_name])) {
+                        $image_array = $data[$field_name];
+
+                        foreach($image_array as $key => $row) {
+                            if (array_key_exists('image', $row)) {
+                                $data[$field_name][$key]['url'] = ee()->typography->parse_file_paths($row['image']);
+                            }
+                        }
+                    }
                 }
             }
         }
