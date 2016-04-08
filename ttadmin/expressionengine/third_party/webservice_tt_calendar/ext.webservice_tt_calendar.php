@@ -57,7 +57,7 @@ class Webservice_tt_calendar_ext
         ee()->db->where('class', __CLASS__);
         ee()->db->delete('extensions');
     }
-
+    
     public function webservice_entry_row($data = null, $fields = array())
     {
         $entry_id = $data['entry_id'];
