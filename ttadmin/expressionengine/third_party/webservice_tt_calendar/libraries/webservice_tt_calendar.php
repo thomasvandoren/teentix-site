@@ -23,6 +23,11 @@ class Webservice_tt_calendar
     public $total_results;
     public $absolute_results;
 
+    public function __construct()
+    {
+        ee()->load->library('api/entry/fieldtypes/webservice_fieldtype');
+    }
+
     public function calendar_range($post_data = array()) {
         $post_data = Webservice_helper::add_hook('calendar_range_start', $post_data);
 
@@ -52,14 +57,21 @@ class Webservice_tt_calendar
         //save it to the cache
         ee()->session->set_cache('webservice', 'output_fields', $post_data['output_fields']);
 
-        // FIXME: get parameters here... (thomasvandoren, 2016-04-02)
-        $calendar_events = $this->_get_events_in_range(null, null);
-
         /** ---------------------------------------
         /**  Get the fields
         /** ---------------------------------------*/
-        // FIXME: is this needed? (thomasvandoren, 2016-04-02)
-//        $this->fields = $this->_get_fieldtypes();
+        $this->fields = $this->_get_fieldtypes();
+
+        $start_date = null;
+        $days = null;
+        foreach ($post_data as $field_name => $field_value) {
+            if ($field_name == 'start_date') {
+                $start_date = $field_value;
+            } else if ($field_name == 'days') {
+                $days = $field_value;
+            }
+        }
+        $calendar_events = $this->_get_events_in_range($start_date, $days);
 
 
         if(!$calendar_events || !is_array($calendar_events))
@@ -166,8 +178,51 @@ class Webservice_tt_calendar
     }
 
     // FIXME: implement me! (thomasvandoren, 2016-04-02)
-    private function _get_events_in_range($start_date, $days) {
-        return array();
+    private function _get_events_in_range($start_date_str, $days_str) {
+        if ($start_date_str == null || $days_str == null) {
+            return '"start_date" and "days"';
+        }
+        $start_date = new DateTime($start_date_str, new DateTimeZone('UTC'));
+        $days = new DateInterval('P'.$days_str.'D');
+        $last_date = new DateTime($start_date_str, new DateTimeZone('UTC'));
+        $last_date->add($days);
+
+        $db = ee()->db;
+
+        $db_start_date = $db->escape($start_date->format('Ymd'));
+        $db_last_date = $db->escape($last_date->format('Ymd'));
+
+        $db->select('entry_id')->from('exp_calendar_events');
+        $where = '(start_date <= '.$db_last_date.' AND last_date >= '.$db_start_date.') OR '.
+            '(last_date >= '.$db_start_date.' AND start_date <= '.$db_last_date.')';
+        $db->where($where);
+        $query = $db->get();
+
+        $row_count = $query->num_rows();
+        $results = array();
+        if ($row_count > 0) {
+            foreach ($query->result_array() as $key => $row) {
+                $entry_id = $row['entry_id'];
+                $results[] = ee()->webservice_lib->get_entry($entry_id, array('*'), true);
+            }
+        }
+
+        return $results;
+    }
+
+    /**
+     * Search an entry based on the given values
+     *
+     * @access	public
+     * @param	parameter list
+     * @return	void
+     */
+    private function _get_fieldtypes()
+    {
+        $channel_id = isset($this->channel['channel_id']) ? $this->channel['channel_id'] : null ;
+        $channel_fields = ee()->channel_data->get_channel_fields($channel_id)->result_array();
+        $fields = ee()->channel_data->utility->reindex($channel_fields, 'field_name');
+        return $fields;
     }
 
 }
