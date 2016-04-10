@@ -5,6 +5,19 @@
   "auth": false,
   "public": false,
   "enabled": true,
-  "methods": [],
+  "methods": [
+    {
+      "method": "calendar_range",
+      "name": "Calendar Range",
+      "cacheable": true,
+      "free_api": true,
+      "soap": [
+        {
+          "name": "data",
+          "type": "xsd:ObjectList"
+        }
+      ]
+    }
+  ],
   "test": {}
 }
