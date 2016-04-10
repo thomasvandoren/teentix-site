@@ -110,6 +110,12 @@ class Webservice_tt_calendar_ext
                         }
                     }
                 }
+
+                // PHP can deal with a false value or an object. Other, statically typed languages don't deal with
+                // that.
+                if ($field_name == 'event_featured_image' && $data[$field_name] == false) {
+                    $data[$field_name] = null;
+                }
             }
         }
         return $data;
