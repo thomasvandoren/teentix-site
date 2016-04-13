@@ -192,6 +192,8 @@ class Webservice_tt_calendar
         $db_start_date = $db->escape($start_date->format('Ymd'));
         $db_last_date = $db->escape($last_date->format('Ymd'));
 
+        // TODO: See Calendar_data()->fetch_event_ids() !!! (thomasvandoren, 2016-04-12)
+
         $db->select('entry_id')->from('exp_calendar_events');
         $where = '(last_date = 0 AND start_date >= '.$db_start_date.' AND start_date <='.$db_last_date.') OR '.
             '(start_date <= '.$db_last_date.' AND last_date >= '.$db_start_date.') OR '.
