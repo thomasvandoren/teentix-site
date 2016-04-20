@@ -8,8 +8,6 @@ class Webservice_tt_calendar_ext
     var $settings_exist = 'n';
     var $docs_url = '';
 
-    private static $rel_cache = array();
-
     /**
      * Webservice_tt_calendar_ext constructor.
      * @param array $settings
@@ -88,20 +86,15 @@ class Webservice_tt_calendar_ext
                     //is there data or is the field set
                     if (isset($data[$field_name]) && !empty($data[$field_name])) {
                         $rel_id = $data[$field_name];
-                        if (array_key_exists($rel_id, self::$rel_cache)) {
-                            $data[$field_name] = self::$rel_cache[$rel_id];
-                        } else {
-                            ee()->db->select('rel_child_id')->from('exp_relationships')->where('rel_id', $rel_id);
-                            $query = ee()->db->get();
+                        ee()->db->select('rel_child_id')->from('exp_relationships')->where('rel_id', $rel_id);
+                        $query = ee()->db->get();
 
-                            if ($query->num_rows() > 0) {
-                                foreach ($query->result_array() as $key => $row) {
-                                    $rel_entry_id = $row['rel_child_id'];
-                                    $new_data = ee()->webservice_lib->get_entry($rel_entry_id, array('*'), true);
-                                    self::$rel_cache[$rel_id] = $new_data;
-                                    $data[$field_name] = $new_data;
-                                    break; // in case there somehow is more than one row
-                                }
+                        if ($query->num_rows() > 0) {
+                            foreach($query->result_array() as $key => $row){
+                                $rel_entry_id = $row['rel_child_id'];
+                                $new_data = ee()->webservice_lib->get_entry($rel_entry_id, array('*'), true);
+                                $data[$field_name] = $new_data;
+                                break; // in case there somehow is more than one row
                             }
                         }
                     }
