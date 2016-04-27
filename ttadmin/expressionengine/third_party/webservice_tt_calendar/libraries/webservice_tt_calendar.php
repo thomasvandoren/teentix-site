@@ -16,7 +16,20 @@
  */
 require_once PATH_THIRD.'webservice/config.php';
 
-class Webservice_tt_calendar
+if (! class_exists('Module_build_calendar')) {
+    require_once PATH_THIRD.'calendar/addon_builder/module_builder.php';
+}
+
+if (! class_exists('Calendar')) {
+    require_once PATH_THIRD.'calendar/mod.calendar.php';
+}
+
+if (! class_exists('Calendar_event')) {
+    require_once PATH_THIRD.'calendar/calendar.event.php';
+}
+
+
+class Webservice_tt_calendar extends Module_builder_calendar
 {
     public $limit;
     public $offset;
@@ -25,6 +38,7 @@ class Webservice_tt_calendar
 
     public function __construct()
     {
+        parent::__construct('calendar');
         ee()->load->library('api/entry/fieldtypes/webservice_fieldtype');
     }
 
@@ -94,12 +108,13 @@ class Webservice_tt_calendar
         }
         else
         {
-            $return_entry_data = array();
+            $return_entry_data = array(
+                'events' => array(),
+                'dates' => $calendar_events['dates'],
+            );
 
-            foreach($calendar_events as $data)
+            foreach($calendar_events['entry_ids'] as $entry_id)
             {
-                $entry_id = $data['entry_id'];
-
                 /** ---------------------------------------
                 /**  get the entry data and check if the entry exists
                 /**  Also get the "categories" and preform the ee()->webservice_fieldtype->pre_process() call
@@ -141,7 +156,7 @@ class Webservice_tt_calendar
                 // -------------------------------------------
 
                 //assign the data to the array
-                $return_entry_data[] = $entry_data;
+                $return_entry_data['events'][$entry_id] = $entry_data;
 
             };
 
@@ -155,11 +170,7 @@ class Webservice_tt_calendar
             /** ---------------------------------------
             /** Lets collect all the entry_ids so we can return
             /** ---------------------------------------*/
-            $entry_ids = array();
-            foreach($return_entry_data as $row)
-            {
-                $entry_ids[] = $row['entry_id'];
-            }
+            $entry_ids = array_keys($return_entry_data['events']);
 
             /** ---------------------------------------
             /** return response
@@ -192,6 +203,8 @@ class Webservice_tt_calendar
         $db_start_date = $db->escape($start_date->format('Ymd'));
         $db_last_date = $db->escape($last_date->format('Ymd'));
 
+        // TODO: See Calendar_data()->fetch_event_ids() !!! (thomasvandoren, 2016-04-12)
+
         $db->select('entry_id')->from('exp_calendar_events');
         $where = '(last_date = 0 AND start_date >= '.$db_start_date.' AND start_date <='.$db_last_date.') OR '.
             '(start_date <= '.$db_last_date.' AND last_date >= '.$db_start_date.') OR '.
@@ -200,13 +213,35 @@ class Webservice_tt_calendar
         $query = $db->get();
 
         $row_count = $query->num_rows();
-        $results = array();
+        $event_ids = array();
         if ($row_count > 0) {
             foreach ($query->result_array() as $key => $row) {
-                $entry_id = $row['entry_id'];
-                $results[] = ee()->webservice_lib->get_entry($entry_id, array('*'), true);
+                $event_ids[] = $row['entry_id'];
             }
         }
+
+        $event_data = $this->data->fetch_all_event_data($event_ids);
+
+        $events = array();
+        foreach ($event_data as $k => $edata) {
+            $events[] = new Calendar_event($edata, $start_date->format('Ymd'), $last_date->format('Ymd'), 0);
+        }
+
+        $dates = array();
+        foreach ($events as $event) {
+            foreach ($event->dates as $date => $time_array) {
+                if (!array_key_exists($date, $dates)) {
+                    $dates[$date] = array();
+                }
+
+                $dates[$date][] = $event->default_data['entry_id'];
+            }
+        }
+
+        $results = array(
+            'entry_ids' => $event_ids,
+            'dates' => $dates,
+        );
 
         return $results;
     }

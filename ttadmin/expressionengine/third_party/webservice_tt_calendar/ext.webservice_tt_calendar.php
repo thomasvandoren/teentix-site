@@ -93,6 +93,15 @@ class Webservice_tt_calendar_ext
                             foreach($query->result_array() as $key => $row){
                                 $rel_entry_id = $row['rel_child_id'];
                                 $new_data = ee()->webservice_lib->get_entry($rel_entry_id, array('*'), true);
+
+                                // PHP can deal with an empty string or a list of objects. Other, statically typed languages don't deal
+                                // with that.
+                                foreach (array('org_email', 'location_email') as $k) {
+                                    if (array_key_exists($k, $new_data) && $new_data[$k] == "") {
+                                        unset($new_data[$k]);
+                                    }
+                                }
+
                                 $data[$field_name] = $new_data;
                                 break; // in case there somehow is more than one row
                             }
