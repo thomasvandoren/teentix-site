@@ -142,7 +142,7 @@ class Webservice_tt_calendar_ext
 
                 // PHP can deal with a false value or an object. Other, statically typed languages don't deal with
                 // that.
-                if ($field_name == 'event_featured_image' && $data[$field_name] == false) {
+                if ($field_name == 'event_featured_image' && array_key_exists($field_name, $data) && $data[$field_name] == false) {
                     $data[$field_name] = null;
                 }
             }
@@ -164,7 +164,7 @@ class Webservice_tt_calendar_ext
 
     private function sanitize_fields($data) {
         foreach ($data as $i => $entry) {
-            if (array_key_exists('event_venue', $entry)) {
+            if (is_array($entry) && array_key_exists('event_venue', $entry)) {
                 $event_venue = $entry['event_venue'];
                 if (array_key_exists('location_logo', $event_venue) && $event_venue['location_logo'] == false) {
                     $data[$i]['event_venue']['location_logo'] = null;
