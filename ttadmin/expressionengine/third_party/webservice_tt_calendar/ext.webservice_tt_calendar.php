@@ -164,9 +164,21 @@ class Webservice_tt_calendar_ext
 
     private function sanitize_fields($data) {
         foreach ($data as $i => $entry) {
-            if (is_array($entry) && array_key_exists('event_venue', $entry)) {
+            if (!is_array($entry)) {
+                continue;
+            }
+
+            $possible_falsey_keys = array('event_venue', 'event_organization');
+            foreach ($possible_falsey_keys as $k) {
+                if (array_key_exists($k, $entry) && $entry[$k] == '0') {
+                    $data[$i][$k] = null;
+                }
+            }
+
+            if (array_key_exists('event_venue', $entry)) {
                 $event_venue = $entry['event_venue'];
-                if (array_key_exists('location_logo', $event_venue) && $event_venue['location_logo'] == false) {
+                if (is_array($event_venue) && array_key_exists('location_logo', $event_venue)
+                        && $event_venue['location_logo'] == false) {
                     $data[$i]['event_venue']['location_logo'] = null;
                 }
             }
