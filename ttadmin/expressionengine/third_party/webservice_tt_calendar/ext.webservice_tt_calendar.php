@@ -26,7 +26,6 @@ class Webservice_tt_calendar_ext
             'version' => $this->version,
             'enabled' => 'y'
         );
-
         ee()->db->insert('extensions', $entry_row_data);
 
         $search_entry_end_data = array(
@@ -37,8 +36,18 @@ class Webservice_tt_calendar_ext
             'version' => $this->version,
             'enabled' => 'y'
         );
-
         ee()->db->insert('extensions', $search_entry_end_data);
+
+
+        $calendar_range_end_data = array(
+            'class' => __CLASS__,
+            'method' => 'webservice_calendar_range_end',
+            'hook' => 'webservice_calendar_range_end',
+            'priority' => 10,
+            'version' => $this->version,
+            'enabled' => 'y'
+        );
+        ee()->db->insert('extensions', $calendar_range_end_data);
 
         return true;
     }
@@ -143,6 +152,17 @@ class Webservice_tt_calendar_ext
 
     public function webservice_search_entry_end($data = null, $fields = array())
     {
+        return $this->sanitize_fields($data);
+    }
+
+    public function webservice_calendar_range_end($data = null, $fields = array())
+    {
+        $events = $data['events'];
+        $data['events'] = $this->sanitize_fields($events);
+        return $data;
+    }
+
+    private function sanitize_fields($data) {
         foreach ($data as $i => $entry) {
             if (array_key_exists('event_venue', $entry)) {
                 $event_venue = $entry['event_venue'];
