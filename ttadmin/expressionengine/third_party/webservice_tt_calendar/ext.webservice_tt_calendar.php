@@ -18,7 +18,7 @@ class Webservice_tt_calendar_ext
 
     public function activate_extension()
     {
-        $data = array(
+        $entry_row_data = array(
             'class' => __CLASS__,
             'method' => 'webservice_entry_row',
             'hook' => 'webservice_entry_row',
@@ -27,7 +27,18 @@ class Webservice_tt_calendar_ext
             'enabled' => 'y'
         );
 
-        ee()->db->insert('extensions', $data);
+        ee()->db->insert('extensions', $entry_row_data);
+
+        $search_entry_end_data = array(
+            'class' => __CLASS__,
+            'method' => 'webservice_search_entry_end',
+            'hook' => 'webservice_search_entry_end',
+            'priority' => 10,
+            'version' => $this->version,
+            'enabled' => 'y'
+        );
+
+        ee()->db->insert('extensions', $search_entry_end_data);
 
         return true;
     }
@@ -57,7 +68,7 @@ class Webservice_tt_calendar_ext
         ee()->db->where('class', __CLASS__);
         ee()->db->delete('extensions');
     }
-    
+
     public function webservice_entry_row($data = null, $fields = array())
     {
         $entry_id = $data['entry_id'];
@@ -124,6 +135,19 @@ class Webservice_tt_calendar_ext
                 // that.
                 if ($field_name == 'event_featured_image' && $data[$field_name] == false) {
                     $data[$field_name] = null;
+                }
+            }
+        }
+        return $data;
+    }
+
+    public function webservice_search_entry_end($data = null, $fields = array())
+    {
+        foreach ($data as $i => $entry) {
+            if (array_key_exists('event_venue', $entry)) {
+                $event_venue = $entry['event_venue'];
+                if (array_key_exists('location_logo', $event_venue) && $event_venue['location_logo'] == false) {
+                    $data[$i]['event_venue']['location_logo'] = null;
                 }
             }
         }
