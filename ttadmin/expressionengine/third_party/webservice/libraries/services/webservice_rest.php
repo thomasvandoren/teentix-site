@@ -880,23 +880,20 @@ class Webservice_rest
      */
     protected function _parse_data_from_headers($vars = array())
     {
-        foreach ($_SERVER as $name => $value)
-        {
-            if (substr($name, 0, 5) == 'HTTP_')
-            {
-                $name = strtolower(str_replace('HTTP_', '', $name));
+        $request_headers = apache_request_headers();
 
-                //fetch auth values
-                if(substr($name, 0, 16) == 'webservice_auth_')
-                {
-                    $name = strtolower(str_replace('webservice_auth_', '', $name));
-                    $vars['auth'][$name] = $value;
-                }
-                else if(substr($name, 0, 16) == 'webservice_data_')
-                {
-                    $name = strtolower(str_replace('webservice_data_', '', $name));
-                    $vars['auth'][$name] = $value;
-                }
+        foreach ($request_headers as $name => $value)
+        {
+            //fetch auth values
+            if(substr($name, 0, 16) == 'webservice_auth_')
+            {
+                $name = strtolower(str_replace('webservice_auth_', '', $name));
+                $vars['auth'][$name] = $value;
+            }
+            else if(substr($name, 0, 16) == 'webservice_data_')
+            {
+                $name = strtolower(str_replace('webservice_data_', '', $name));
+                $vars['data'][$name] = $value;
             }
         }
 
