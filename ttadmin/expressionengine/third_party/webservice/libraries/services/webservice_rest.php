@@ -901,19 +901,22 @@ class Webservice_rest
     }
 
     private function _get_request_headers() {
+        $headers = null;
         if (function_exists('getallheaders')) {
-            return getallheaders();
-        }
-
-        $headers = array();
-        foreach ($_SERVER as $name => $value)
-        {
-            if (substr($name, 0, 5) == 'HTTP_')
-            {
-                $headers[str_replace(' ', '_', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            $headers = getallheaders();
+        } else {
+            $headers = array();
+            foreach ($_SERVER as $name => $value) {
+                if (substr($name, 0, 5) == 'HTTP_') {
+                    $headers[ucwords(strtolower(str_replace('-', '_', substr($name, 5))))] = $value;
+                }
             }
         }
-        return $headers;
+        $canonical_headers = array();
+        foreach ($headers as $key => $value) {
+            $canonical_headers[str_replace('-', '_', strtolower($key))] = $value;
+        }
+        return $canonical_headers;
     }
 
 }
