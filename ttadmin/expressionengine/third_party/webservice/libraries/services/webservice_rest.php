@@ -880,7 +880,7 @@ class Webservice_rest
      */
     protected function _parse_data_from_headers($vars = array())
     {
-        $request_headers = apache_request_headers();
+        $request_headers = $this->_get_request_headers();
 
         foreach ($request_headers as $name => $value)
         {
@@ -900,6 +900,21 @@ class Webservice_rest
         return $vars;
     }
 
+    private function _get_request_headers() {
+        if (function_exists('getallheaders')) {
+            return getallheaders();
+        }
+
+        $headers = array();
+        foreach ($_SERVER as $name => $value)
+        {
+            if (substr($name, 0, 5) == 'HTTP_')
+            {
+                $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+            }
+        }
+        return $headers;
+    }
 
 }
 /* End of file webservice_rest.php */
