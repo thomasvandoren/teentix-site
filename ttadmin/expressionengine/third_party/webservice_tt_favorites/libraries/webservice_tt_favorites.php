@@ -212,7 +212,7 @@ class Webservice_tt_favorites extends Module_builder_favorites
         $member_id = ee()->session->userdata['member_id'];
 
         $entry_id_to_favorite = null;
-        if (!array_key_exists('entry_id', $post_data)) {
+        if (array_key_exists('entry_id', $post_data)) {
             $entry_id_to_favorite = $post_data['entry_id'];
         }
         $saved_event = $this->_create_favorite($member_id, $entry_id_to_favorite, $site_id);
@@ -304,7 +304,7 @@ class Webservice_tt_favorites extends Module_builder_favorites
         $member_id = ee()->session->userdata['member_id'];
 
         $entry_id_to_delete = null;
-        if (!array_key_exists('entry_id', $post_data)) {
+        if (array_key_exists('entry_id', $post_data)) {
             $entry_id_to_delete = $post_data['entry_id'];
         }
         $deleted_event = $this->_delete_favorite($member_id, $entry_id_to_delete, $site_id);
