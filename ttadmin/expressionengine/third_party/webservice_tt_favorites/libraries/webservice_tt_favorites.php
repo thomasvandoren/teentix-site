@@ -52,6 +52,7 @@ class Webservice_tt_favorites extends Module_builder_favorites
         if(!isset($post_data['site_id']) || $post_data['site_id'] == '') {
             $post_data['site_id'] = 1;
         }
+        $site_id = $post_data['site_id'];
 
         /** ---------------------------------------
         /**  Set the show_fields param
@@ -71,10 +72,10 @@ class Webservice_tt_favorites extends Module_builder_favorites
         /**  Get the fields
         /** ---------------------------------------*/
         $this->fields = $this->_get_fieldtypes();
-        
+
         $member_id = ee()->session->userdata['member_id'];
 
-        $favorite_events = $this->_get_favorites($member_id);
+        $favorite_events = $this->_get_favorites($member_id, $site_id);
 
         if(!$favorite_events || !is_array($favorite_events))
         {
@@ -173,14 +174,197 @@ class Webservice_tt_favorites extends Module_builder_favorites
         }
     }
 
-    private function _get_favorites($member_id) {
-        $db = ee()->db;
+    public function create_favorite($post_data = array()) {
+        $post_data = Webservice_helper::add_hook('create_favorite_start', $post_data);
 
+        /** ---------------------------------------
+        /**  Validate data
+        /** ---------------------------------------*/
+        $data_errors = array();
+
+        /** ---------------------------------------
+        /**  Set the site_id is empty
+        /** ---------------------------------------*/
+        if(!isset($post_data['site_id']) || $post_data['site_id'] == '') {
+            $post_data['site_id'] = 1;
+        }
+        $site_id = $post_data['site_id'];
+
+        /** ---------------------------------------
+        /**  Set the show_fields param
+        /** ---------------------------------------*/
+        if(!isset($post_data['output_fields']) || $post_data['output_fields'] == '') {
+            $post_data['output_fields'] = array();
+        }
+        else
+        {
+            $post_data['output_fields'] = explode("|", $post_data['output_fields']);
+        }
+
+        //save it to the cache
+        ee()->session->set_cache('webservice', 'output_fields', $post_data['output_fields']);
+
+        /** ---------------------------------------
+        /**  Get the fields
+        /** ---------------------------------------*/
+        $this->fields = $this->_get_fieldtypes();
+
+        $member_id = ee()->session->userdata['member_id'];
+
+        $entry_id_to_favorite = null;
+        if (!array_key_exists('entry_id', $post_data)) {
+            $entry_id_to_favorite = $post_data['entry_id'];
+        }
+        $saved_event = $this->_create_favorite($member_id, $entry_id_to_favorite, $site_id);
+
+        if(is_string($saved_event) || !$saved_event) {
+            /** ---------------------------------------
+            /** return response
+            /** ---------------------------------------*/
+            if(!$saved_event)
+            {
+                return array(
+                    'message' => 'No Entry found'
+                );
+            }
+            else
+            {
+                return array(
+                    'message' => 'The following fields are not filled in: '.$saved_event
+                );
+            }
+        }
+        else
+        {
+            $return_entry_data = $saved_event;
+
+            /* -------------------------------------------
+            /* 'webservice_search_entry_end' hook.
+            /*  - Added: 2.2
+            */
+            $return_entry_data = Webservice_helper::add_hook('create_favorite_end', $return_entry_data, false, $post_data);
+            // -------------------------------------------
+
+            /** ---------------------------------------
+            /** Lets collect all the entry_ids so we can return
+            /** ---------------------------------------*/
+            $entry_ids = array_keys($entry_id_to_favorite);
+
+            /** ---------------------------------------
+            /** return response
+            /** ---------------------------------------*/
+            $this->service_error['success_read']['metadata'] = array(
+                'id' => implode('|', $entry_ids),
+                'limit' => $this->limit,
+                'offset' => $this->offset,
+                'total_results' => $this->total_results,
+                'absolute_results' => $this->absolute_results
+            );
+            $this->service_error['success_read']['success'] = true;
+            $this->service_error['success_read']['data'] = $return_entry_data;
+            return $this->service_error['success_read'];
+        }
+    }
+
+    public function delete_favorite($post_data = array()) {
+        $post_data = Webservice_helper::add_hook('delete_favorite_start', $post_data);
+
+        /** ---------------------------------------
+        /**  Validate data
+        /** ---------------------------------------*/
+        $data_errors = array();
+
+        /** ---------------------------------------
+        /**  Set the site_id is empty
+        /** ---------------------------------------*/
+        if(!isset($post_data['site_id']) || $post_data['site_id'] == '') {
+            $post_data['site_id'] = 1;
+        }
+        $site_id = $post_data['site_id'];
+
+        /** ---------------------------------------
+        /**  Set the show_fields param
+        /** ---------------------------------------*/
+        if(!isset($post_data['output_fields']) || $post_data['output_fields'] == '') {
+            $post_data['output_fields'] = array();
+        }
+        else
+        {
+            $post_data['output_fields'] = explode("|", $post_data['output_fields']);
+        }
+
+        //save it to the cache
+        ee()->session->set_cache('webservice', 'output_fields', $post_data['output_fields']);
+
+        /** ---------------------------------------
+        /**  Get the fields
+        /** ---------------------------------------*/
+        $this->fields = $this->_get_fieldtypes();
+
+        $member_id = ee()->session->userdata['member_id'];
+
+        $entry_id_to_delete = null;
+        if (!array_key_exists('entry_id', $post_data)) {
+            $entry_id_to_delete = $post_data['entry_id'];
+        }
+        $deleted_event = $this->_delete_favorite($member_id, $entry_id_to_delete, $site_id);
+
+        if(is_string($deleted_event) || !$deleted_event) {
+            /** ---------------------------------------
+            /** return response
+            /** ---------------------------------------*/
+            if(!$deleted_event)
+            {
+                return array(
+                    'message' => 'No Entry found'
+                );
+            }
+            else
+            {
+                return array(
+                    'message' => 'The following fields are not filled in: '.$deleted_event
+                );
+            }
+        }
+        else
+        {
+            $return_entry_data = $deleted_event;
+
+            /* -------------------------------------------
+            /* 'webservice_search_entry_end' hook.
+            /*  - Added: 2.2
+            */
+            $return_entry_data = Webservice_helper::add_hook('delete_favorite_end', $return_entry_data, false, $post_data);
+            // -------------------------------------------
+
+            /** ---------------------------------------
+            /** Lets collect all the entry_ids so we can return
+            /** ---------------------------------------*/
+            $entry_ids = array_keys($entry_id_to_delete);
+
+            /** ---------------------------------------
+            /** return response
+            /** ---------------------------------------*/
+            $this->service_error['success_read']['metadata'] = array(
+                'id' => implode('|', $entry_ids),
+                'limit' => $this->limit,
+                'offset' => $this->offset,
+                'total_results' => $this->total_results,
+                'absolute_results' => $this->absolute_results
+            );
+            $this->service_error['success_read']['success'] = true;
+            $this->service_error['success_read']['data'] = $return_entry_data;
+            return $this->service_error['success_read'];
+        }
+    }
+
+    private function _get_favorites($member_id, $site_id) {
+        $db = ee()->db;
         $db->select('entry_id')->from('exp_favorites');
         $db->where('member_id', $member_id);
-        // TODO: should this check site_id, channel_id? (thomasvandoren, 2016-05-19)
+        $db->where('site_id', $site_id);
         $query = $db->get();
-        
+
         $row_count = $query->num_rows();
         $event_ids = array();
         if ($row_count > 0) {
@@ -190,64 +374,76 @@ class Webservice_tt_favorites extends Module_builder_favorites
         }
         return $event_ids;
     }
-//
-//    // FIXME: implement me! (thomasvandoren, 2016-04-02)
-//    private function _get_events_in_range($start_date_str, $days_str) {
-//        if ($start_date_str == null || $days_str == null) {
-//            return '"start_date" and "days"';
-//        }
-//        $start_date = new DateTime($start_date_str, new DateTimeZone('UTC'));
-//        $days = new DateInterval('P'.$days_str.'D');
-//        $last_date = new DateTime($start_date_str, new DateTimeZone('UTC'));
-//        $last_date->add($days);
-//
-//        $db = ee()->db;
-//
-//        $db_start_date = $db->escape($start_date->format('Ymd'));
-//        $db_last_date = $db->escape($last_date->format('Ymd'));
-//
-//        // TODO: See Calendar_data()->fetch_event_ids() !!! (thomasvandoren, 2016-04-12)
-//
-//        $db->select('entry_id')->from('exp_calendar_events');
-//        $where = '(last_date = 0 AND start_date >= '.$db_start_date.' AND start_date <='.$db_last_date.') OR '.
-//            '(start_date <= '.$db_last_date.' AND last_date >= '.$db_start_date.') OR '.
-//            '(last_date >= '.$db_start_date.' AND start_date <= '.$db_last_date.')';
-//        $db->where($where);
-//        $query = $db->get();
-//
-//        $row_count = $query->num_rows();
-//        $event_ids = array();
-//        if ($row_count > 0) {
-//            foreach ($query->result_array() as $key => $row) {
-//                $event_ids[] = $row['entry_id'];
-//            }
-//        }
-//
-//        $event_data = $this->data->fetch_all_event_data($event_ids);
-//
-//        $events = array();
-//        foreach ($event_data as $k => $edata) {
-//            $events[] = new Calendar_event($edata, $start_date->format('Ymd'), $last_date->format('Ymd'), 0);
-//        }
-//
-//        $dates = array();
-//        foreach ($events as $event) {
-//            foreach ($event->dates as $date => $time_array) {
-//                if (!array_key_exists($date, $dates)) {
-//                    $dates[$date] = array();
-//                }
-//
-//                $dates[$date][] = $event->default_data['entry_id'];
-//            }
-//        }
-//
-//        $results = array(
-//            'entry_ids' => $event_ids,
-//            'dates' => $dates,
-//        );
-//
-//        return $results;
-//    }
+
+    private function _create_favorite($member_id, $entry_id, $site_id) {
+        if (!$entry_id) {
+            return '"entry_id"';
+        }
+        $db = ee()->db;
+
+        $db->select('entry_id')->from('exp_channel_data');
+        $db->where('entry_id', $entry_id);
+        $db->where('site_id', $site_id);
+        $entry_count = $db->count_all_results();
+
+        // Will return not found error.
+        if ($entry_count <= 0) {
+            return false;
+        }
+
+        $db->select('favorites_id')->from('exp_favorites');
+        $db->where('member_id', $member_id);
+        $db->where('entry_id', $entry_id);
+        $db->where('site_id', $site_id);
+        $existing_favorite_count = $db->count_all_results();
+
+        // Will return success result.
+        if ($existing_favorite_count > 0) {
+            return true;
+        }
+
+        $row_data = array(
+            'entry_id' => $entry_id,
+            'member_id' => $member_id,
+            'site_id' => $site_id,
+        );
+        $db->insert('exp_favorites', $row_data);
+        return true;
+    }
+
+    private function _delete_favorite($member_id, $entry_id, $site_id) {
+        if (!$entry_id) {
+            return '"entry_id"';
+        }
+        $db = ee()->db;
+        $db->select('entry_id')->from('exp_channel_data');
+        $db->where('entry_id', $entry_id);
+        $db->where('site_id', $site_id);
+        $entry_count = $db->count_all_results();
+
+        // Will return not found error.
+        if ($entry_count <= 0) {
+            return false;
+        }
+
+        $db->select('favorites_id')->from('exp_favorites');
+        $db->where('member_id', $member_id);
+        $db->where('entry_id', $entry_id);
+        $db->where('site_id', $site_id);
+        $existing_favorite_count = $db->count_all_results();
+
+        // Will return success result.
+        if ($existing_favorite_count <= 0) {
+            return true;
+        }
+
+        $db->delete('exp_favorites', array(
+            'entry_id' => $entry_id,
+            'member_id' => $member_id,
+            'site_id' => $site_id,
+        ));
+        return true;
+    }
 
     /**
      * Search an entry based on the given values

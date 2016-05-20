@@ -21,9 +21,19 @@ class Webservice_tt_favorites_api_static
     static function read_favorites($data, $type = '') {
         //load the api class
         ee()->load->library('webservice_tt_favorites');
-
         $return_data = ee()->webservice_tt_favorites->read_favorites($data);
+        return self::serialize_response($return_data, $type);
+    }
 
+    static function create_favorite($data, $type = '') {
+        ee()->load->library('webservice_tt_favorites');
+        $return_data = ee()->webservice_tt_favorites->create_favorite($data);
+        return self::serialize_response($return_data, $type);
+    }
+
+    static function delete_favorite($data, $type = '') {
+        ee()->load->library('webservice_tt_favorites');
+        $return_data = ee()->webservice_tt_favorites->delete_favorite($data);
         return self::serialize_response($return_data, $type);
     }
 
