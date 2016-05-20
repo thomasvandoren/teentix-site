@@ -193,10 +193,12 @@ class Webservice_base_api
 			}	
 		}
 
+		$tt_is_authed = ee()->webservice_lib->tt_favorites_api_and_is_member($method, ee()->session->userdata('member_id'));
+
 		/** ---------------------------------------
 		/**  (1) Service check, is the services active
 		/** ---------------------------------------*/
-		if(ee()->webservice_lib->has_free_access($method, ee()->session->userdata('username')) != 1)
+		if(!$tt_is_authed && ee()->webservice_lib->has_free_access($method, ee()->session->userdata('username')) != 1)
 		{	
 			if( (!isset($this->servicedata->active) || ! $this->servicedata->active) && $this->servicedata->admin == false )
 			{
@@ -211,7 +213,7 @@ class Webservice_base_api
 		/** ---------------------------------------
 		/**  (2) Service check, is the services selected (check by uri)
 		/** ---------------------------------------*/
-		if(ee()->webservice_lib->has_free_access($method, ee()->session->userdata('username')) != 1)
+		if(!$tt_is_authed && ee()->webservice_lib->has_free_access($method, ee()->session->userdata('username')) != 1)
 		{	
 			if( ( (@stripos($this->servicedata->services, ee()->uri->segment(2)) === false) && (@stripos($this->servicedata->services, ee()->session->cache[WEBSERVICE_MAP]['API']) === false))  && $this->servicedata->admin == false)
 			//if( (@stripos($this->servicedata->services, ee()->uri->segment(2)) === false)  && $this->servicedata->admin == false)
@@ -240,7 +242,7 @@ class Webservice_base_api
 		/** ---------------------------------------
 		/**  API check, runs this api for this server
 		/** ---------------------------------------*/
-		if(ee()->webservice_lib->has_free_access($method, ee()->session->userdata('username')) != 1)
+		if(!$tt_is_authed && ee()->webservice_lib->has_free_access($method, ee()->session->userdata('username')) != 1)
 		{
 			if( (@stripos($this->servicedata->apis, $this->api_type) === false)  && $this->servicedata->admin == false)
 			{

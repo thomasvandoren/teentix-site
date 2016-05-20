@@ -102,6 +102,15 @@ class Webservice_lib
 		return 0;
     }
 
+	public function tt_favorites_api_and_is_member($method = '', $member_id = '') {
+		return strlen($member_id) > 0 && ($this->tt_ends_with($method, 'favorites') || $this->tt_ends_with($method, 'favorite'));
+	}
+
+	private function tt_ends_with($haystack, $needle) {
+		// search forward starting from end minus needle length characters
+		return $needle === "" || (($temp = strlen($haystack) - strlen($needle)) >= 0 && strpos($haystack, $needle, $temp) !== false);
+	}
+
     // --------------------------------------------------------------------
         
     /**
