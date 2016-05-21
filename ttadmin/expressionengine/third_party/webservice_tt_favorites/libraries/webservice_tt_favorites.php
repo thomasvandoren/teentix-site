@@ -246,15 +246,10 @@ class Webservice_tt_favorites extends Module_builder_favorites
             // -------------------------------------------
 
             /** ---------------------------------------
-            /** Lets collect all the entry_ids so we can return
-            /** ---------------------------------------*/
-            $entry_ids = array_keys($entry_id_to_favorite);
-
-            /** ---------------------------------------
             /** return response
             /** ---------------------------------------*/
             $this->service_error['success_read']['metadata'] = array(
-                'id' => implode('|', $entry_ids),
+                'id' => $entry_id_to_favorite,
                 'limit' => $this->limit,
                 'offset' => $this->offset,
                 'total_results' => $this->total_results,
@@ -338,15 +333,10 @@ class Webservice_tt_favorites extends Module_builder_favorites
             // -------------------------------------------
 
             /** ---------------------------------------
-            /** Lets collect all the entry_ids so we can return
-            /** ---------------------------------------*/
-            $entry_ids = array_keys($entry_id_to_delete);
-
-            /** ---------------------------------------
             /** return response
             /** ---------------------------------------*/
             $this->service_error['success_read']['metadata'] = array(
-                'id' => implode('|', $entry_ids),
+                'id' => $entry_id_to_delete,
                 'limit' => $this->limit,
                 'offset' => $this->offset,
                 'total_results' => $this->total_results,
