@@ -77,7 +77,7 @@ class Webservice_tt_favorites extends Module_builder_favorites
 
         $favorite_events = $this->_get_favorites($member_id, $site_id);
 
-        if(!$favorite_events || !is_array($favorite_events))
+        if(!is_array($favorite_events))
         {
             /** ---------------------------------------
             /** return response
