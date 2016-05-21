@@ -158,6 +158,11 @@ class Webservice_tt_favorites extends Module_builder_favorites
             /** ---------------------------------------*/
             $entry_ids = array_keys($return_entry_data);
 
+            // Make sure that we always return an object here, even if it is empty.
+            if (count($return_entry_data) == 0) {
+                $return_entry_data = new stdClass();
+            }
+
             /** ---------------------------------------
             /** return response
             /** ---------------------------------------*/
