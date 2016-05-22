@@ -1,0 +1,48 @@
+{
+  "name" : "tt_favorites",
+  "label": "TT Favorites",
+  "version" : "1.0",
+  "auth": true,
+  "public": false,
+  "enabled": true,
+  "methods": [
+    {
+      "method": "read_favorites",
+      "name": "Read Favorites",
+      "cacheable": true,
+      "soap": [
+        {
+          "name": "data",
+          "type": "xsd:ObjectList"
+        },
+        {
+          "name": "id",
+          "type": "xsd:string"
+        }
+      ]
+    },
+    {
+      "method": "create_favorite",
+      "name": "Create Favorite",
+      "clear_cache": true,
+      "soap": [
+        {
+          "name": "id",
+          "type": "xsd:string"
+        }
+      ]
+    },
+    {
+      "method": "delete_favorite",
+      "name": "Delete Favorite",
+      "clear_cache": true,
+      "soap": [
+        {
+          "name": "id",
+          "type": "xsd:string"
+        }
+      ]
+    }
+  ],
+  "test": {}
+}
