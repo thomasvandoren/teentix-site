@@ -172,7 +172,13 @@ class Webservice_tt_calendar extends Module_builder_calendar
             /** ---------------------------------------*/
             $entry_ids = array_keys($return_entry_data['events']);
 
-            // FIXME: ensure $return_entry_data['events'] is always an object, even if empty, in json response. Same for $return_entry_data['dates']. (thomasvandoren, 2016-05-21)
+            // Make sure that we always return an object here, even if it is empty.
+            if (count($return_entry_data['events']) == 0) {
+                $return_entry_data['events'] = new stdClass();
+            }
+            if (count($return_entry_data['dates']) == 0) {
+                $return_entry_data['dates'] = new stdClass();
+            }
 
             /** ---------------------------------------
             /** return response
