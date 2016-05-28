@@ -122,7 +122,7 @@ class Webservice_tt_calendar_ext
                                     }
                                 }
 
-                                $data[$field_name] = $new_data;
+                                $data[$field_name] = self::add_plain_fields_for_wygwam_fields($new_data, $fields);
                                 break; // in case there somehow is more than one row
                             }
                         }
@@ -147,7 +147,21 @@ class Webservice_tt_calendar_ext
                 }
             }
         }
+        $data = self::add_plain_fields_for_wygwam_fields($data, $fields);
         return $data;
+    }
+
+    private static function add_plain_fields_for_wygwam_fields($d, $fields = array()) {
+        //loop over the fields to get the relationship or playa field
+        if (!empty($fields)) {
+            foreach ($fields as $field_name => $field) {
+                if ($field['field_type'] == 'wygwam' && array_key_exists($field_name, $d) && !empty($d[$field_name])) {
+                    $orig = $d[$field_name];
+                    $d[$field_name . '_plain'] = strip_tags($orig);
+                }
+            }
+        }
+        return $d;
     }
 
     public function webservice_search_entry_end($data = null, $fields = array())
