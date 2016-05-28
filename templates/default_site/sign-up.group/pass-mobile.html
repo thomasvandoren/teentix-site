@@ -1,0 +1,25 @@
+{embed="inc/.mobile-header"}
+
+{exp:freeform:entries
+entry_id="{segment_3}"
+form_name="pass_application"
+status="not closed"
+}
+<div class="row">
+    <div class="twelve columns">
+        <h1 id="page-name">Welcome to TeenTix {freeform:field:first_name}!</h1>
+    </div>
+</div>
+
+<div class="row">
+
+    <div id="left" class="five columns">
+
+        {application_confirm_pass_content}
+
+    </div>
+
+</div>
+{/exp:freeform:entries}
+
+{embed="inc/.mobile-footer"}
