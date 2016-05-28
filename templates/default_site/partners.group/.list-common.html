@@ -1,0 +1,29 @@
+<div class="row">
+    <div class="twelve columns">
+        {add_partner}
+        <h1 id="page-name">Partner Organizations</h1>
+        <div class="page-description">
+            {if embed:hide_links != "true"}
+            {description_partners}
+            {if:else}
+            <!--{exp:strip_html keep="p"}{exp:low_variables:parse var="description_partners"}{/exp:strip_html}-->
+            {/if}
+        </div>
+    </div>
+    <div class="twelve columns">
+        <ul id="org-grid" class="block-grid five-up">
+            {exp:channel:entries channel="partners" limit="200" orderby="title" sort="asc"}
+            <li class="org">
+                <div class="org-logo">
+                    {if embed:hide_links != "true"}<a href="{url_title_path='partners'}">{/if}
+                        {exp:ce_img:pair src="{org_image}" width="140" height="140" filter="grayscale"}
+                        <img src="{made}" alt="" width="{width}" height="{height}" />
+                        {/exp:ce_img:pair}
+                    {if embed:hide_links != "true"}</a>{/if}
+                </div>
+                <h4 class="org-name sans">{if embed:hide_links != "true"}<a href="{url_title_path='partners'}">{/if}{title}{if embed:hide_links != "true"}</a>{/if}</h4>
+            </li>
+            {/exp:channel:entries}
+        </ul>
+    </div>
+</div>
