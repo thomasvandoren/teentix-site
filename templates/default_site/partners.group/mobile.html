@@ -1,23 +1,5 @@
 {embed="inc/.mobile-header"}
-    <div class="row">
-        <div class="twelve columns">
-            {add_partner}
-            <h1 id="page-name">Partner Organizations</h1>
-            <!--<div class="page-description">{description_partners}</div>-->
-        </div>
-        <div class="twelve columns">
-            <ul id="org-grid" class="block-grid five-up">
-                {exp:channel:entries channel="partners" limit="200" orderby="title" sort="asc"}
-                <li class="org">
-                    <div class="org-logo">
-                        {exp:ce_img:pair src="{org_image}" width="140" height="140" filter="grayscale"}
-                        <img src="{made}" alt="" width="{width}" height="{height}" />
-                        {/exp:ce_img:pair}
-                    </div>
-                    <h4 class="org-name sans">{title}</h4>
-                </li>
-                {/exp:channel:entries}
-            </ul>
-        </div>
-    </div>
+{embed="partners/.list-common"
+  hide_description='true'
+}
 {embed="inc/.mobile-footer"}
