@@ -145,6 +145,11 @@ class Webservice_tt_calendar_ext
                 if ($field_name == 'event_featured_image' && array_key_exists($field_name, $data) && $data[$field_name] == false) {
                     $data[$field_name] = null;
                 }
+
+                if ($field['field_type'] == 'wygwam' && array_key_exists($field_name, $data) && !empty($data[$field_name])) {
+                    $orig = $data[$field_name];
+                    $data[$field_name.'_plain'] = strip_tags($orig);
+                }
             }
         }
         return $data;
