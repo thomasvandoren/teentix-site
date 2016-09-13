@@ -285,7 +285,8 @@ class Webservice_base_api
 			$res_auth = $this->auth_data = $this->base_authenticate_username($auth['username'], $auth['password']);
 
 			//is response false?
-			if(!$res_auth['success'])
+			if((array_key_exists('success', $res_auth) && !$res_auth['success']) ||
+				(array_key_exists('succes', $res_auth) && !$res_auth['succes']))
 			{
 				$this->error_str = $res_auth['message'];
 				return false;
@@ -519,14 +520,18 @@ class Webservice_base_api
 		//no username
 		if(empty($username))
 		{
-			return $this->service_error['error_auth'];
+			$response = $this->service_error['error_auth'];
+			$response['success'] = false;
+			return $response;
 		}
 
 		// get member id
         $query = ee()->db->get_where('members', array('username' => $username));
         if ($query == false || $query->num_rows() == 0)
         {
-        	return $this->service_error['error_auth'];
+        	$response = $this->service_error['error_auth'];
+			$response['success'] = false;
+			return $response;
         }
 
         $row = $query->row();
