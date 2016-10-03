@@ -1,0 +1,19 @@
+{embed="inc/.header"
+	title="Terms of Service"
+	body_class="blog"
+	og_description="Terms of Service"
+	canonical="{site_url}terms"
+}
+
+{embed="inc/.nav"
+	{if segment_2=="archives"}
+	end_title="{segment_3} Archives"
+	{/if}
+	{if segment_2=="category"}
+	end_title="{exp:channel:category_heading channel="blog"}{category_name}{/exp:channel:category_heading}"
+	{/if}
+}
+{embed="terms/.terms-common"
+  hide_links='false'
+}
+{embed="inc/.footer"}
