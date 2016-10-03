@@ -1,0 +1,19 @@
+{embed="inc/.header"
+	title="Privacy"
+	body_class="blog"
+	og_description="Privacy"
+	canonical="{site_url}privacy"
+}
+
+{embed="inc/.nav"
+	{if segment_2=="archives"}
+	end_title="{segment_3} Archives"
+	{/if}
+	{if segment_2=="category"}
+	end_title="{exp:channel:category_heading channel="blog"}{category_name}{/exp:channel:category_heading}"
+	{/if}
+}
+{embed="privacy/.privacy-common"
+  hide_links='false'
+}
+{embed="inc/.footer"}
