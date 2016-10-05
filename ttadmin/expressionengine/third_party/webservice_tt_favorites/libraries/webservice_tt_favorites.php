@@ -24,6 +24,10 @@ if (! class_exists('Favorites')) {
     require_once PATH_THIRD.'favorites/mod.favorites.php';
 }
 
+if (! class_exists('Webservice_tt_calendar_ext')) {
+    require_once PATH_THIRD.'webservice_tt_calendar/ext.webservice_tt_calendar.php';
+}
+
 
 class Webservice_tt_favorites extends Module_builder_favorites
 {
@@ -125,6 +129,8 @@ class Webservice_tt_favorites extends Module_builder_favorites
 //						}
 //					}
 //				}
+
+                Webservice_tt_calendar_ext::sanitize_single_entry($entry_data);
 
 
                 /* -------------------------------------------
