@@ -142,7 +142,7 @@ class Webservice_tt_calendar_ext
 
                 // PHP can deal with a false value or an object. Other, statically typed languages don't deal with
                 // that.
-                if ($field_name == 'event_featured_image' && array_key_exists($field_name, $data) && $data[$field_name] == false) {
+                if ($field_name == 'event_featured_image' && is_array($data) && array_key_exists($field_name, $data) && $data[$field_name] == false) {
                     $data[$field_name] = null;
                 }
             }
@@ -155,7 +155,7 @@ class Webservice_tt_calendar_ext
         //loop over the fields to get the relationship or playa field
         if (!empty($fields)) {
             foreach ($fields as $field_name => $field) {
-                if ($field['field_type'] == 'wygwam' && array_key_exists($field_name, $d) && !empty($d[$field_name])) {
+                if ($field['field_type'] == 'wygwam' && is_array($d) && array_key_exists($field_name, $d) && !empty($d[$field_name])) {
                     $orig = $d[$field_name];
                     $d[$field_name . '_plain'] = strip_tags($orig);
                 }
@@ -166,38 +166,42 @@ class Webservice_tt_calendar_ext
 
     public function webservice_search_entry_end($data = null, $fields = array())
     {
-        return $this->sanitize_fields($data);
+        return self::sanitize_fields($data);
     }
 
     public function webservice_calendar_range_end($data = null, $fields = array())
     {
         $events = $data['events'];
-        $data['events'] = $this->sanitize_fields($events);
+        $data['events'] = self::sanitize_fields($events);
         return $data;
     }
 
-    private function sanitize_fields($data) {
+    public static function sanitize_fields($data) {
         foreach ($data as $i => $entry) {
-            if (!is_array($entry)) {
-                continue;
-            }
-
-            $possible_falsey_keys = array('event_venue', 'event_organization');
-            foreach ($possible_falsey_keys as $k) {
-                if (array_key_exists($k, $entry) && $entry[$k] == '0') {
-                    $data[$i][$k] = null;
-                }
-            }
-
-            if (array_key_exists('event_venue', $entry)) {
-                $event_venue = $entry['event_venue'];
-                if (is_array($event_venue) && array_key_exists('location_logo', $event_venue)
-                        && $event_venue['location_logo'] == false) {
-                    $data[$i]['event_venue']['location_logo'] = null;
-                }
-            }
+            self::sanitize_single_entry($data[$i]);
         }
         return $data;
+    }
+
+    public static function sanitize_single_entry(&$entry) {
+        if (!is_array($entry)) {
+            return;
+        }
+
+        $possible_falsey_keys = array('event_venue', 'event_organization');
+        foreach ($possible_falsey_keys as $k) {
+            if (array_key_exists($k, $entry) && $entry[$k] == '0') {
+                $entry[$k] = null;
+            }
+        }
+
+        if (array_key_exists('event_venue', $entry)) {
+            $event_venue = $entry['event_venue'];
+            if (is_array($event_venue) && array_key_exists('location_logo', $event_venue)
+                && $event_venue['location_logo'] == false) {
+                $entry['event_venue']['location_logo'] = null;
+            }
+        }
     }
 }
 
