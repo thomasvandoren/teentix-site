@@ -101,13 +101,12 @@ class Freeform_tt_address_validation_ext
         if (count(array_keys($addr_info)) > 0) {
             $verified_address = $this->verify_address($addr_info);
 
-            // TODO: store the changed values in separate columns so TeenTix admins can compare original vs. updated. (thomasvandoren, 2017-02-12)
-            // Replace the original values with the verified versions.
-            $inputs['street1'] = trim($verified_address['address']['address_line1'] . ' ' . $verified_address['address']['address_line2']);
-            $inputs['city'] = $verified_address['address']['address_city'];
-            $inputs['state'] = $verified_address['address']['address_state'];
-            $inputs['zip_code'] = $verified_address['address']['address_zip'];
-            $inputs['country'] = $verified_address['address']['address_country'];
+            // Store the mailing address values next to the originals.
+            $inputs['mailing_street1'] = trim($verified_address['address']['address_line1'] . ' ' . $verified_address['address']['address_line2']);
+            $inputs['mailing_city'] = $verified_address['address']['address_city'];
+            $inputs['mailing_state'] = $verified_address['address']['address_state'];
+            $inputs['mailing_zip_code'] = $verified_address['address']['address_zip'];
+            $inputs['mailing_country'] = $verified_address['address']['address_country'];
         }
 
         //must return input array
