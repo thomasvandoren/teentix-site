@@ -135,7 +135,7 @@ class Freeform_tt_address_validation_ext
         $resp_body = array('message' => $default_err);
         try {
             $response = $this->lob_client->request('POST', '/v1/verify', [
-                'auth' => [ee()->config->item('lob_api_key'), ''],
+                'auth' => array(ee()->config->item('lob_api_key'), ''),
                 'json' => $addr_info
             ]);
             $resp_body = json_decode($response->getBody()->getContents(), $assoc=TRUE);
