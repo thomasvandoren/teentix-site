@@ -134,10 +134,10 @@ class Freeform_tt_address_validation_ext
         $default_err = 'Server failure';
         $resp_body = array('message' => $default_err);
         try {
-            $response = $this->lob_client->request('POST', '/v1/verify', [
+            $response = $this->lob_client->request('POST', '/v1/verify', array(
                 'auth' => array(ee()->config->item('lob_api_key'), ''),
                 'json' => $addr_info
-            ]);
+            ));
             $resp_body = json_decode($response->getBody()->getContents(), $assoc=TRUE);
         } catch (GuzzleHttp\Exception\RequestException $e) {
             if ($e->hasResponse()) {
