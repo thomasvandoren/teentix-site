@@ -81,7 +81,7 @@ class Freeform_tt_address_validation_ext
             $verified_address = $this->verify_address($addr_info);
 
             if (array_key_exists('message', $verified_address)) {
-                $errors['address'] = $verified_address['message'];
+                $errors['address'] = $verified_address['message'] . ' ' . 'Try re-entering the address and double check it is correct. If you experience any issues, please report them to <a href="mailto:info@teentix.org">info@teentix.org</a>.';
             }
         }
 
@@ -131,11 +131,26 @@ class Freeform_tt_address_validation_ext
             );
         }
 
-        $response = $this->lob_client->request('POST', '/v1/verify', [
-            'auth' => [ee()->config->item('lob_api_key'), ''],
-            'json' => $addr_info
-        ]);
-        $resp_body = json_decode($response->getBody()->getContents(), $assoc=TRUE);
+        $default_err = 'Server failure';
+        $resp_body = array('message' => $default_err);
+        try {
+            $response = $this->lob_client->request('POST', '/v1/verify', [
+                'auth' => [ee()->config->item('lob_api_key'), ''],
+                'json' => $addr_info
+            ]);
+            $resp_body = json_decode($response->getBody()->getContents(), $assoc=TRUE);
+        } catch (GuzzleHttp\Exception\RequestException $e) {
+            if ($e->hasResponse()) {
+                $err_body = json_decode($e->getResponse()->getBody()->getContents(), $assoc=TRUE);
+                if (array_key_exists('error', $err_body) && array_key_exists('message', $err_body['error'])) {
+                    $resp_body = array('message' => $err_body['error']['message'] . '.');
+                } else {
+                    $resp_body = array('message' => $default_err . ' (request error ' . $e->getCode() . ').');
+                }
+            } else {
+                $resp_body = array('message' => $default_err . ' (no response).');
+            }
+        }
         return $resp_body;
     }
 
