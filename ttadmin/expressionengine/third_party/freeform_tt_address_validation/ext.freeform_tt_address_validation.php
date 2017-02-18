@@ -17,7 +17,7 @@ class Freeform_tt_address_validation_ext
      */
     public function __construct($settings = null)
     {
-        $this->lob_client = new GuzzleHttp\Client(['base_uri' => 'https://api.lob.com']);
+        $this->lob_client = new GuzzleHttp\Client(array('base_uri' => 'https://api.lob.com'));
     }
 
     public function activate_extension()
