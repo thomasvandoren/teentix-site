@@ -1,6 +1,7 @@
 <?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-require_once(PATH_THIRD . 'freeform_tt_address_validation/vendor/guzzle.phar');
+// http://guzzle3.readthedocs.io/docs.html
+require_once(PATH_THIRD . 'freeform_tt_address_validation/vendor/guzzle-3.8.1.phar');
 
 class Freeform_tt_address_validation_ext
 {
@@ -17,7 +18,8 @@ class Freeform_tt_address_validation_ext
      */
     public function __construct($settings = null)
     {
-        $this->lob_client = new GuzzleHttp\Client(['base_uri' => 'https://api.lob.com']);
+        $this->lob_client = new Guzzle\Http\Client('https://api.lob.com');
+        $this->lob_client->setDefaultOption('auth', array(ee()->config->item('lob_api_key'), '', 'Basic'));
     }
 
     public function activate_extension()
@@ -134,22 +136,23 @@ class Freeform_tt_address_validation_ext
         $default_err = 'Server failure';
         $resp_body = array('message' => $default_err);
         try {
-            $response = $this->lob_client->request('POST', '/v1/verify', [
-                'auth' => [ee()->config->item('lob_api_key'), ''],
-                'json' => $addr_info
-            ]);
-            $resp_body = json_decode($response->getBody()->getContents(), $assoc=TRUE);
-        } catch (GuzzleHttp\Exception\RequestException $e) {
-            if ($e->hasResponse()) {
-                $err_body = json_decode($e->getResponse()->getBody()->getContents(), $assoc=TRUE);
-                if (array_key_exists('error', $err_body) && array_key_exists('message', $err_body['error'])) {
-                    $resp_body = array('message' => $err_body['error']['message'] . '.');
-                } else {
-                    $resp_body = array('message' => $default_err . ' (request error ' . $e->getCode() . ').');
-                }
+            $json_body = json_encode($addr_info);
+            $request = $this->lob_client->post('/v1/verify', array(
+                'Content-Type' => 'application/json'
+            ), array());
+            $request->setBody($json_body);
+            $response = $request->send();
+            $resp_body = json_decode($response->getBody(), $assoc = TRUE);
+        } catch (Guzzle\Http\Exception\BadResponseException $bre) {
+            $err_body = json_decode($bre->getResponse()->getBody(/* asString */ true), $assoc=TRUE);
+            if (array_key_exists('error', $err_body) && array_key_exists('message', $err_body['error'])) {
+                $resp_body = array('message' => $err_body['error']['message'] . '.');
             } else {
-                $resp_body = array('message' => $default_err . ' (no response).');
+                $resp_body = array('message' => $default_err . ' (request error ' . $bre->getCode() . ').');
             }
+        } catch (Guzzle\Http\Exception\RequestException $re) {
+            $statusCode = $re->getRequest()->getResponse()->getStatusCode();
+            $resp_body = array('message' => $default_err . ' (request error ' . $statusCode . ').');
         }
         return $resp_body;
     }
