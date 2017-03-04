@@ -83,7 +83,8 @@ class Freeform_tt_address_validation_ext
             $verified_address = $this->verify_address($addr_info);
 
             if (array_key_exists('message', $verified_address)) {
-                $errors['address'] = $verified_address['message'] . ' ' . 'Try re-entering the address and double check it is correct. If you experience any issues, please report them to <a href="mailto:info@teentix.org">info@teentix.org</a>.';
+                $errors['address'] = $verified_address['message'] . ' ' . 'Try re-entering the address and double check it is correct.<br/><br/>
+If you experience any issues, or if you keep getting redirected to this error page, please report that to <a target="_blank" rel="noopener" href="mailto:memberservices@teentix.org?subject=Issue+with+Mailing+Address+on+TeenTix.org+Sign-Up">memberservices@teentix.org</a> and include your full mailing address.';
             }
         }
 
