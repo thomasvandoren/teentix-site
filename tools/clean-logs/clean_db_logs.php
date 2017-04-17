@@ -7,6 +7,11 @@ $db_pass = readline('DB password: ');
 
 $db = @mysql_connect('localhost', $db_user, $db_pass);
 
+function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+  throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+}
+set_error_handler("exception_error_handler");
+
 try {
   $db_selected = @mysql_select_db($db_name, $db);
   if (!$db_selected) {
@@ -24,6 +29,12 @@ try {
   $min_log_id = $min_max_arr['min_log_id'];
   $max_log_id = $min_max_arr['max_log_id'];
 
+  if (is_null($min_log_id) || is_null($max_log_id)) {
+    echo "WARN No log rows to delete.\n";
+    $min_log_id = 0;
+    $max_log_id = -1;
+  }
+
   $batch_size = 100;
   $batches = floor(($max_log_id+1 - $min_log_id) / $batch_size);
 
@@ -37,6 +48,8 @@ try {
       echo $batch_no.'/'.$batches." batches complete\n";
     }
   }
-} finally {
   @mysql_close($db);
+} catch (Exception $e) {
+  @mysql_close($db);
+  throw $e;
 }
