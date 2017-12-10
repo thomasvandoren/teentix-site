@@ -118,7 +118,10 @@ If you experience any issues, or if you keep getting redirected to this error pa
 
     private function verify_address($addr_info) {
         // Do not try to verify international addresses.
-        if ($addr_info['address_country'] != 'US') {
+	// FIXME: temp fix to disable lob verification until we can really fix.
+	//        50% of addresses are currently failing, which is not good.
+	//        (thomasvandoren, 2017-12-10)
+        if (true || $addr_info['address_country'] != 'US') {
             return array(
                 'address' => array_merge(
                     array(
