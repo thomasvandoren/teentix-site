@@ -12,6 +12,12 @@ Record of core library and add-on changes.
 * Add CORS headers in index.php.
   https://github.com/teentix/site/commit/bdb609e6b3dacf09ca277e1abe4886357e9332be
 
+## Calendar add-on
+
+* Update `data.calendar.php` to use `$this->_default_preferences()` instead of
+  `Calendar_udp::_default_preferences()`. The latter was causing a PHP error.
+  https://github.com/teentix/site/commit/caeab40052a749fa62675d52d0dd111ee6b73405
+
 ## Webservice add-on
 
 * Check for and avoid `ee()->cache` as that seems to be something that is not
