@@ -137,14 +137,12 @@ class Webservice_tt_calendar extends Module_builder_calendar
                 $entry_data = Webservice_helper::add_hook('entry_row', $entry_data, false, $this->fields);
                 // -------------------------------------------
 
-                if (!is_null($org_id) && $org_id !== $entry_data['event_organization']['entry_id']) {
-                    continue;
-                }
-
                 //assign the data to the array
                 $return_entry_data['events'][$entry_id] = $entry_data;
 
             };
+
+            $return_entry_data = $this->_filter_events_by_org($return_entry_data, $org_id);
 
             /* -------------------------------------------
             /* 'webservice_search_entry_end' hook.
@@ -180,6 +178,35 @@ class Webservice_tt_calendar extends Module_builder_calendar
             $this->service_error['success_read']['data'] = $return_entry_data;
             return $this->service_error['success_read'];
         }
+    }
+
+    private function _filter_events_by_org($return_entry_data, $org_id) {
+        if (is_null($org_id)) {
+            return $return_entry_data;
+        }
+
+        $filtered = array(
+            'events' => array(),
+            'dates' => array()
+        );
+
+        foreach ($return_entry_data['events'] as $event_id => $event) {
+            if ($org_id === $event['event_organization']['entry_id']) {
+                $filtered['events'][$event_id] = $event;
+            }
+        }
+
+        foreach ($return_entry_data['dates'] as $date_str => $date_array) {
+            $events_to_keep = array();
+            foreach ($date_array as $event_id) {
+                if (array_key_exists($event_id, $filtered['events'])) {
+                    $events_to_keep[] = $event_id;
+                }
+            }
+            $filtered['dates'][$date_str] = $events_to_keep;
+        }
+
+        return $filtered;
     }
 
     private function _get_events_in_range($start_date_str, $days_str) {
