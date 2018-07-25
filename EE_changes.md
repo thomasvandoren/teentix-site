@@ -38,3 +38,9 @@ Record of core library and add-on changes.
   that have a valid session and are accessing a favorites endpoint
   (read_favorites, create_favorite, delete_favorite) to be authenticated.
   https://github.com/teentix/site/commit/e3cbdd83bf20182899f51af69fac73678ce7cdc8
+
+* Update `webservice_entry.php` to use EE APIs that exist. Webservice add-on
+  was using save_entry() API, which was not added until EE 2.6. Revert back
+  to submit_new_entry() and update_entry() calls.
+  https://docs.expressionengine.com/latest/development/legacy/api/api_channel_entries.html#save-entry
+  https://github.com/teentix/site/commit/8389e6fe727816778f1faaabd3fc3fadf56423e0
