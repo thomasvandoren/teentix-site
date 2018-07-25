@@ -293,8 +293,8 @@ class Webservice_entry
 		
 		/** ---------------------------------
 		/**  add the entry data
-		/** ---------------------------------*/		
-		if ( ! ee()->api_channel_entries->save_entry($entry_data, $this->channel['channel_id']))
+		/** ---------------------------------*/
+		if ( ! ee()->api_channel_entries->submit_new_entry($this->channel['channel_id'], $entry_data))
 		{
 			//return een fout bericht met de errors
 			$errors = ee()->api_channel_entries->get_errors();
@@ -561,8 +561,8 @@ class Webservice_entry
 		/** ---------------------------------------
 		/**  update entry
 		/** ---------------------------------------*/
-		$r = ee()->api_channel_entries->save_entry($entry_data, null, $entry_data['entry_id']);
-		
+		$r = ee()->api_channel_entries->update_entry($entry_data['entry_id'], $entry_data);
+
 		//Any errors?
 		if ( ! $r)
 		{
