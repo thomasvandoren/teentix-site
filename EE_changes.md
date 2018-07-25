@@ -9,6 +9,9 @@ Record of core library and add-on changes.
   create_new_session(). This works around an issue with webservice
   code. https://github.com/teentix/site/commit/5c780b66ca8a13be6374ab2dd9cba2d937b172f8
 
+* Add CORS headers in index.php.
+  https://github.com/teentix/site/commit/bdb609e6b3dacf09ca277e1abe4886357e9332be
+
 ## Webservice add-on
 
 * Check for and avoid `ee()->cache` as that seems to be something that is not
