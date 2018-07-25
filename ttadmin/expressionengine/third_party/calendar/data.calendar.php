@@ -335,7 +335,7 @@ class Calendar_data extends Addon_builder_data_calendar
 			require_once CALENDAR_PATH . 'upd.calendar' . EXT;
 		}
 
-		$prefs 	= Calendar_upd::_default_preferences();
+		$prefs 	= $this->_default_preferences();
 
 		$data	= unserialize($prefs);
 
