@@ -78,15 +78,17 @@ class Webservice_tt_calendar extends Module_builder_calendar
 
         $start_date = null;
         $days = null;
+        $org_id = null;
         foreach ($post_data as $field_name => $field_value) {
             if ($field_name == 'start_date') {
                 $start_date = $field_value;
             } else if ($field_name == 'days') {
                 $days = $field_value;
+            } else if ($field_name == 'organization_id') {
+                $org_id = $field_value;
             }
         }
         $calendar_events = $this->_get_events_in_range($start_date, $days);
-
 
         if(!$calendar_events || !is_array($calendar_events))
         {
@@ -121,26 +123,6 @@ class Webservice_tt_calendar extends Module_builder_calendar
                 /** ---------------------------------------*/
                 $entry_data = ee()->webservice_lib->get_entry($entry_id, array('*'), true);
 
-//				/** ---------------------------------------
-//				/** Get the categories
-//				/** ---------------------------------------*/
-//				$entry_data['categories'] = (ee()->webservice_category_model->get_entry_categories(array($entry_data['entry_id'])));
-//
-//				/** ---------------------------------------
-//				/**  Process the data per field
-//				/** ---------------------------------------*/
-//				if(!empty($this->fields))
-//				{
-//					foreach($this->fields as $key=>$val)
-//					{
-//						if(isset($entry_data[$val['field_name']]))
-//						{
-//							$entry_data[$val['field_name']] = ee()->webservice_fieldtype->pre_process($entry_data[$val['field_name']], $val['field_type'], $val['field_name'], $val, null, 'search_entry', $entry_id);
-//						}
-//					}
-//				}
-
-
                 /* -------------------------------------------
                 /* 'webservice_search_entry_end' hook.
                 /*  - Added: 3.2
@@ -154,6 +136,10 @@ class Webservice_tt_calendar extends Module_builder_calendar
                 */
                 $entry_data = Webservice_helper::add_hook('entry_row', $entry_data, false, $this->fields);
                 // -------------------------------------------
+
+                if (!is_null($org_id) && $org_id !== $entry_data['event_organization']['entry_id']) {
+                    continue;
+                }
 
                 //assign the data to the array
                 $return_entry_data['events'][$entry_id] = $entry_data;
@@ -196,7 +182,6 @@ class Webservice_tt_calendar extends Module_builder_calendar
         }
     }
 
-    // FIXME: implement me! (thomasvandoren, 2016-04-02)
     private function _get_events_in_range($start_date_str, $days_str) {
         if ($start_date_str == null || $days_str == null) {
             return '"start_date" and "days"';
